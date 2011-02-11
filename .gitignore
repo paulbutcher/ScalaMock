@@ -1,0 +1,6 @@
+project/boot/
+project/build/target/
+target/
+lib_managed/
+*.tmproj
+.DS_Store
