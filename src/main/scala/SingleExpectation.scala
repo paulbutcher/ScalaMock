@@ -1,8 +1,9 @@
 package com.borachio
 
-class SingleExpectation(expectedArguments: Option[Product] = None, 
-                        returnValue: Option[Any] = None, 
-                        count: Option[Int] = None)
+class SingleExpectation(
+    expectedArguments: Option[Product] = None, 
+    returnValue: Option[Any] = None, 
+    count: Option[Int] = None)
   extends Expectation {
   
   override def withArguments(arguments: Product) = {
