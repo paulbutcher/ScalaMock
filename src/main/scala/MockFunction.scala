@@ -1,7 +1,7 @@
 package com.borachio
 
 trait MockFunction {
-  def returns(r: Any)(implicit expectations: Expectations) {
+  def returning(r: Any)(implicit expectations: Expectations) {
     //! TODO
   }
 }

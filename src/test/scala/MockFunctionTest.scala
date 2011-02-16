@@ -12,7 +12,7 @@ class MockTest extends WordSpec with MockFactory {
     
     "return what it's told to return" ignore {
       val m = mockFunction0[Int]
-      m.returns(42)
+      m.returning(42)
       expect(42) { m() }
     }
   }
