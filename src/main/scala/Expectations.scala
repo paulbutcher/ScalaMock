@@ -6,7 +6,7 @@ abstract class Expectations(val expectations: List[Expectation]) extends Expecta
     applyToLast(_.withArguments(arguments))
     
   override def returning(value: Any) =
-    applyToLast(_.returning(returnValue))
+    applyToLast(_.returning(value))
 
   override def times(n: Int) =
     applyToLast(_.times(n))

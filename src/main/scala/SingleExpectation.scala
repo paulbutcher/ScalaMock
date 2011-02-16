@@ -12,12 +12,12 @@ class SingleExpectation(expectedArguments: Option[Product] = None,
   
   override def returning(value: Any) = {
     require(!returnValue.isDefined, "return value can only be set once")
-    new SingleExpectation(arguments, Some(value), count)
+    new SingleExpectation(expectedArguments, Some(value), count)
   }
   
   override def times(n: Int) = {
     require(!count.isDefined, "count can only be set once")
-    new SingleExpectation(arguments, returnValue, Some(n))
+    new SingleExpectation(expectedArguments, returnValue, Some(n))
   }
   
   override def then = new OrderedExpectations(List(this, new SingleExpectation))
