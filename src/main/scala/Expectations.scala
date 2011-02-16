@@ -5,16 +5,14 @@ abstract class Expectations(val expectations: List[Expectation]) extends Expecta
   override def withArguments(arguments: Product) =
     applyToLast(_.withArguments(arguments))
     
-  override def returning(returnValue: Any) =
+  override def returning(value: Any) =
     applyToLast(_.returning(returnValue))
 
-  override def times(count: Int) =
-    applyToLast(_.times(count))
+  override def times(n: Int) =
+    applyToLast(_.times(n))
   
   override def then = newInstance(expectations :+ new SingleExpectation)
 
-  override def toString = expectations.mkString("[\n", "\n", "\n]")
-  
   protected def newInstance(expectations: List[Expectation]) : Expectations
   
   private def applyToLast(what: (Expectation) => Expectation) = 

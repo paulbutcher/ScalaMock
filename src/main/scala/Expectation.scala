@@ -2,8 +2,8 @@ package com.borachio
 
 trait Expectation {
   def withArguments(arguments: Product): Expectation
-  def returning(returnValue: Any): Expectation
-  def times(count: Int): Expectation
+  def returning(value: Any): Expectation
+  def times(n: Int): Expectation
   def then: Expectation
 
   def never = times(0)

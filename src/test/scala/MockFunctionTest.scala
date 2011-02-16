@@ -2,7 +2,7 @@ package com.borachio
 
 import org.scalatest.WordSpec
 
-class MockTest extends WordSpec with MockFactory {
+class MockTest extends WordSpec {
   
   "A mock function" should {
     "return null unless told otherwise" in {
