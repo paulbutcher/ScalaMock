@@ -1,6 +1,7 @@
 package com.borachio
 
 class SingleExpectation(
+    target: AnyRef,
     expectedArguments: Option[Product] = None, 
     returnValue: Option[Any] = None, 
     count: Option[Int] = None)
