@@ -23,4 +23,21 @@ class SingleExpectation(
   }
   
   override def then = new OrderedExpectations(List(this, new SingleExpectation(target)))
+  
+  override def handle(arguments: Product) = {
+    actualCount += 1
+    returnValue.getOrElse(null)
+  }
+  
+  override def satisfied = count match {
+    case Some(c) => c == actualCount
+    case None => actualCount > 0
+  }
+  
+  override def exhausted = count match {
+    case Some(c) => c == actualCount
+    case None => false
+  }
+  
+  var actualCount = 0
 }

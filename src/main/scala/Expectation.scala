@@ -9,4 +9,9 @@ trait Expectation {
   def never = times(0)
   def once = times(1)
   def twice = times(2)
+  
+  def handle(arguments: Product): Any
+  
+  def satisfied: Boolean
+  def exhausted: Boolean
 }
