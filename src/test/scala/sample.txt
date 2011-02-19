@@ -1,0 +1,46 @@
+// Create mock functions
+
+val mf1 = mockFunction2[Int, Int, Double]
+val mf2 = mockFunction1[String, Int]
+val mf3 = mockFunction2[Int, Int, Unit]
+
+// Expectations on those mock functions
+
+// These calls can happen in any order
+mf1 expects (42, 42) returning 1.2 once
+mf2 returns 0 // returns is an alias for returning - accepts any arguments
+
+// The following must happen in sequence
+inSequence {
+  mf3 expects (1, 2) once
+  mf1 expects (10, 10) returning 1.2
+  mf2 returns 42 times 3
+}
+
+// Mocking a class using mock functions
+
+class Foo {
+  def m1(x: Int, y: Int): Double = { ... }
+  def m2(x: String): Int = { ... }
+}
+
+val mockFoo = new Foo {
+  override def m1(x: Int, y: Int) = mf1(x, y)
+  override def m2(x: String) = mf2(x)
+}
+
+// Proxy-style mocking (slightly less verbose way to mock interfaces, but uses mock functions internally)
+
+val m1 = mock[SomeInterface]
+m1 expects 'foo  // A least one call, any arguments, returns the mock function that's mocking foo
+m1 expects 'bar withArguments (20, 40) returning 0 once
+m1 expects 'baz returning 12
+
+val m2 = mock[SomeOtherInterface]
+
+inSequence {
+  m2 expects 'something 
+  m2 expects 'somethingelse
+  m1 expects 'foo
+  m2 expects 'somethingelse
+}
