@@ -2,6 +2,11 @@ package com.borachio
 
 class Expectation(target: MockFunction) {
   
+  def expects(arguments: Product = None) = {
+    expectedArguments = Some(arguments)
+    this
+  }
+  
   def returns(value: Any) = {
     returnValue = Some(value)
     this
@@ -20,7 +25,8 @@ class Expectation(target: MockFunction) {
   private[borachio] def canHandle(mock: MockFunction) = mock == target
   
   private[borachio] def handle() = returnValue.getOrElse(null)
-  
+
+  private var expectedArguments: Option[Product] = None
   private var returnValue: Option[Any] = None
   private var expected: Option[Int] = None
 
