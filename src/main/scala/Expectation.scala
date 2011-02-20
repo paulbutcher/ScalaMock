@@ -27,16 +27,16 @@ class Expectation(target: MockFunction) extends Handler {
   
   def repeat(count: Int): Expectation = repeat(count to count)
   
-  def never = repeat(0)
-  def once = repeat(1)
-  def twice = repeat(2)
+  def never() = repeat(0)
+  def once() = repeat(1)
+  def twice() = repeat(2)
   
-  def anyNumberOfTimes = repeat(0 to scala.Int.MaxValue)
-  def atLeastOnce = repeat(1 to scala.Int.MaxValue)
-  def atLeastTwice = repeat(2 to scala.Int.MaxValue)
+  def anyNumberOfTimes() = repeat(0 to scala.Int.MaxValue)
+  def atLeastOnce() = repeat(1 to scala.Int.MaxValue)
+  def atLeastTwice() = repeat(2 to scala.Int.MaxValue)
 
-  def noMoreThanOnce = repeat(0 to 1)
-  def noMoreThanTwice = repeat(0 to 2)
+  def noMoreThanOnce() = repeat(0 to 1)
+  def noMoreThanTwice() = repeat(0 to 2)
 
   override def toString = 
     Seq(target.toString, argumentsString, returnString, expectedCallsString, actualCallsString).

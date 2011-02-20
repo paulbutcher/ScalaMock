@@ -137,7 +137,7 @@ class MockTest extends WordSpec with MockFactory {
       val m = mockFunction[Int, Int]
       inSequence {
         m expects (42) returning 10 repeat (3 to 7)
-        m expects (43) returning 11 repeat 1
+        m expects (43) returning 11 once;
         m expects (44) returning 12 twice
       }
       repeat(5) { m(42) }
