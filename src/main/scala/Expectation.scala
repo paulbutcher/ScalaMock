@@ -44,12 +44,12 @@ class Expectation(target: MockFunction) {
   }
   
   private[borachio] def exhausted = expectedCalls match {
-    case Some(r) => r contains actualCalls
+    case Some(r) => r.last == actualCalls
     case None => false
   }
   
   private[borachio] def handle(mock: MockFunction, arguments: Product): Option[Any] = {
-    if (mock == target) {
+    if (mock == target && !exhausted) {
       if (!expectedArguments.isDefined || expectedArguments.get == arguments) {
         actualCalls += 1
         return Some(returnValue.getOrElse(null))
