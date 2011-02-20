@@ -1,7 +1,22 @@
 package com.borachio
 
-trait MockFactory {
+import org.scalatest.{BeforeAndAfterEach, Suite}
+
+trait MockFactory extends BeforeAndAfterEach { this: Suite =>
   
+  override def beforeEach() {
+    expectations = new UnorderedExpectations
+  }
+  
+  override def afterEach() {
+    if (autoVerify)
+      verifyExpectations
+  }
+
+  protected def verifyExpectations() {
+    //! TODO
+  }
+
   implicit def MockFunctionToExpectation(m: MockFunction) = {
     val expectation = new Expectation(m)
     expectations.add(expectation)
@@ -12,5 +27,6 @@ trait MockFactory {
   def mockFunction[T1, R] = new MockFunction1[T1, R](expectations)
   def mockFunction[T1, T2, R] = new MockFunction2[T1, T2, R](expectations)
   
-  private val expectations = new UnorderedExpectations
+  protected var autoVerify = true
+  private var expectations = new UnorderedExpectations
 }

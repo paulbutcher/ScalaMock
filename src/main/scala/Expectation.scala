@@ -7,6 +7,9 @@ class Expectation(target: MockFunction) {
     this
   }
   
+  // Special case to handle a single argument
+  def expects[T](argument: T): Expectation = expects(new Tuple1(argument))
+  
   def returns(value: Any) = {
     returnValue = Some(value)
     this
