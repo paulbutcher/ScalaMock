@@ -14,7 +14,7 @@ trait MockFactory extends BeforeAndAfterEach { this: Suite =>
   }
 
   protected def verifyExpectations() {
-    //! TODO
+    expectations.verify
   }
 
   implicit def MockFunctionToExpectation(m: MockFunction) = {

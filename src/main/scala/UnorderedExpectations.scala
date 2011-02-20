@@ -10,4 +10,11 @@ class UnorderedExpectations extends Expectations {
     }
     throw new ExpectationException("Put better message here")
   }
+  
+  private[borachio] def verify() {
+    expectations.foreach { expectation =>
+      if (!expectation.satisfied)
+        throw new ExpectationException("Put better message here")
+    }
+  }
 }

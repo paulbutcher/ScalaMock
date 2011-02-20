@@ -4,6 +4,8 @@ import org.scalatest.WordSpec
 
 class MockTest extends WordSpec with MockFactory {
   
+  autoVerify = false
+  
   "A mock function" should {
     "return null unless told otherwise" in {
       val m = mockFunction[String]
@@ -44,6 +46,12 @@ class MockTest extends WordSpec with MockFactory {
       expect(3.45) { m(0, "baz") }
       expect(1.23) { m(42, "foo") }
       expect(2.34) { m(10, "bar") }
+    }
+    
+    "fail if an expectation is not met" in {
+      val m = mockFunction[Int]
+      m expects ()
+      intercept[ExpectationException] { verifyExpectations }
     }
   }
 }
