@@ -22,9 +22,15 @@ class Expectation(target: MockFunction) {
     case None => false
   }
   
-  private[borachio] def canHandle(mock: MockFunction) = mock == target
-  
-  private[borachio] def handle() = returnValue.getOrElse(null)
+  private[borachio] def handle(mock: MockFunction, arguments: Product): Option[Any] = {
+    if (mock == target) {
+      if (!expectedArguments.isDefined || expectedArguments.get == arguments) {
+        actual += 1
+        return Some(returnValue.getOrElse(null))
+      }
+    }
+    None
+  }
 
   private var expectedArguments: Option[Product] = None
   private var returnValue: Option[Any] = None

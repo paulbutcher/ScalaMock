@@ -8,7 +8,7 @@ abstract class Expectations {
     expectations += expectation
   }
   
-  private[borachio] def handle(mock: MockFunction): Any
+  private[borachio] def handle(mock: MockFunction, arguments: Product): Any
   
   protected val expectations = new ListBuffer[Expectation]
 }
