@@ -8,6 +8,6 @@ class UnorderedExpectations extends Expectations {
       if (r.isDefined)
         return r.get
     }
-    throw new ExpectationException("Put better message here")
+    throw new ExpectationException("Unexpected: "+ mock + " with arguments: "+ arguments)
   }
 }
