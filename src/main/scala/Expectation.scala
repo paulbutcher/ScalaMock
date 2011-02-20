@@ -1,6 +1,6 @@
 package com.borachio
 
-class Expectation(target: MockFunction) {
+class Expectation(target: MockFunction) extends Handler {
   
   def expects(arguments: Product = None) = {
     require(!expectedArguments.isDefined, "arguments can only be set once")

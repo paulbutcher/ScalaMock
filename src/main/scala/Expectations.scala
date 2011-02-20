@@ -5,17 +5,17 @@ import scala.collection.mutable.ListBuffer
 abstract class Expectations {
   
   private[borachio] def add(expectation: Expectation) {
-    expectations += expectation
+    handlers += expectation
   }
   
   private[borachio] def handle(mock: MockFunction, arguments: Product): Any
   
   private[borachio] def verify() {
-    expectations.foreach { expectation =>
-      if (!expectation.satisfied)
-        throw new ExpectationException("Unsatisfied expectation: "+ expectation)
+    handlers.foreach { handler =>
+      if (!handler.satisfied)
+        throw new ExpectationException("Unsatisfied expectation: "+ handler)
     }
   }
   
-  protected val expectations = new ListBuffer[Expectation]
+  protected val handlers = new ListBuffer[Handler]
 }
