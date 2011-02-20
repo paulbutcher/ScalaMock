@@ -4,8 +4,8 @@ import scala.collection.mutable.ListBuffer
 
 abstract class Expectations {
   
-  private[borachio] def add(expectation: Expectation) {
-    handlers += expectation
+  private[borachio] def add(handler: Handler) {
+    handlers += handler
   }
   
   private[borachio] def verify() {

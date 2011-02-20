@@ -100,5 +100,25 @@ class MockTest extends WordSpec with MockFactory {
       m expects () repeat (3 to 7)
       intercept[ExpectationException] { repeat(8) { m() } }
     }
+    
+    "handle a degenerate sequence" in {
+      val m = mockFunction[Int, Int]
+      inSequence {
+        m expects (42) returning 10
+      }
+      expect(10) { m(42) }
+    }
+    
+    "handle a sequence of calls" in {
+      val m = mockFunction[Int, Int]
+      inSequence {
+        m expects (42) returning 10 repeat (3 to 7)
+        m expects (43) returning 11 repeat 1
+        m expects (44) returning 12 twice
+      }
+      repeat(5) { expect(10) { m(42) } }
+      repeat(1) { expect(11) { m(43) } }
+      repeat(2) { expect(12) { m(44) } }
+    }
   }
 }
