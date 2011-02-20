@@ -8,8 +8,6 @@ abstract class Expectations {
     handlers += expectation
   }
   
-  private[borachio] def handle(mock: MockFunction, arguments: Product): Any
-  
   private[borachio] def verify() {
     handlers.foreach { handler =>
       if (!handler.satisfied)
