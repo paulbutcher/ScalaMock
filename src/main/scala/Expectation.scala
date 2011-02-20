@@ -12,6 +12,8 @@ class Expectation(target: MockFunction) {
     this
   }
   
+  def returning(value: Any) = returns(value)
+  
   private[borachio] def satisfied = expected match {
     case Some(n) => actual == n
     case None => actual > 0

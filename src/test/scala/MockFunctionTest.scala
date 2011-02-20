@@ -16,5 +16,17 @@ class MockTest extends WordSpec with MockFactory {
       m returns "foo"
       expect("foo") { m() }
     }
+    
+    "match arguments" in {
+      val m = mockFunction[Int, String, Double]
+      m expects (42, "foo") returning 1.23
+      expect(1.23) { m(42, "foo") }
+    }
+    
+    "fail if there are no matching arguments" in {
+      val m = mockFunction[Int, String, Double]
+      m expects (42, "foo") returning 1.23
+      intercept[ExpectationException] { m(42, "bar") }
+    }
   }
 }
