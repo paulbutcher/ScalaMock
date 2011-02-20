@@ -119,6 +119,58 @@ class MockTest extends WordSpec with MockFactory {
       repeat(5) { expect(10) { m(42) } }
       repeat(1) { expect(11) { m(43) } }
       repeat(2) { expect(12) { m(44) } }
+      verifyExpectations
+    }
+    
+    "fail if functions are called out of sequence" in {
+      val m = mockFunction[Int, Int]
+      inSequence {
+        m expects (42) returning 10 repeat (3 to 7)
+        m expects (43) returning 11 repeat 1
+        m expects (44) returning 12 twice
+      }
+      repeat(5) { m(42) }
+      intercept[ExpectationException] { m(44) }
+    }
+    
+    "fail if the entire sequence isn't called" in {
+      val m = mockFunction[Int, Int]
+      inSequence {
+        m expects (42) returning 10 repeat (3 to 7)
+        m expects (43) returning 11 repeat 1
+        m expects (44) returning 12 twice
+      }
+      repeat(5) { m(42) }
+      repeat(1) { m(43) }
+      intercept[ExpectationException] { verifyExpectations }
+    }
+    
+    "handle a combination of ordered and unordered expectations" in {
+      val m = mockFunction[Int, Unit]
+
+      m expects (1)
+      inSequence {
+        m expects (11)
+        m expects (12)
+        m expects (13)
+      }
+      m expects (21)
+      inSequence {
+        m expects (31)
+        m expects (32)
+      }
+      m expects (41)
+      
+      m(21)
+      m(31)
+      m(11)
+      m(12)
+      m(1)
+      m(32)
+      m(41)
+      m(13)
+      
+      verifyExpectations
     }
   }
 }
