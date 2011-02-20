@@ -172,5 +172,18 @@ class MockTest extends WordSpec with MockFactory {
       
       verifyExpectations
     }
+    
+    "handle a sequence in which a functions are called zero times" in {
+      val m = mockFunction[Int, Unit]
+      inSequence {
+        m expects (1) once;
+        m expects (2) never;
+        m expects (3) noMoreThanTwice;
+        m expects (4) once
+      }
+      m(1)
+      m(4)
+      verifyExpectations
+    }
   }
 }
