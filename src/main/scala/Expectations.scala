@@ -13,7 +13,7 @@ abstract class Expectations {
   private[borachio] def verify() {
     expectations.foreach { expectation =>
       if (!expectation.satisfied)
-        throw new ExpectationException("Put better message here")
+        throw new ExpectationException("Unsatisfied expectation: "+ expectation)
     }
   }
   

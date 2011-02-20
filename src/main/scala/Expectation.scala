@@ -37,6 +37,10 @@ class Expectation(target: MockFunction) {
 
   def noMoreThanOnce = repeat(0 to 1)
   def noMoreThanTwice = repeat(0 to 2)
+
+  override def toString = 
+    Seq(target.toString, argumentsString, returnString, expectedCallsString, actualCallsString).
+      filterNot(_.isEmpty).mkString(", ")
   
   private[borachio] def satisfied = expectedCalls match {
     case Some(r) => r contains actualCalls
@@ -57,6 +61,24 @@ class Expectation(target: MockFunction) {
     }
     None
   }
+  
+  private[borachio] def argumentsString = expectedArguments match {
+    case Some(a) => "with arguments: "+ a
+    case None => ""
+  }
+  
+  private[borachio] def returnString = returnValue match {
+    case Some(r) => "returning: "+ r
+    case None => ""
+  }
+  
+  private[borachio] def expectedCallsString = expectedCalls match {
+    case Some(c) if c.start == c.last => "expected calls: "+ c.start
+    case Some(c) => "expected calls: "+ c.start +" to "+ c.last
+    case None => ""
+  }
+  
+  private[borachio] def actualCallsString = "actual calls: " + actualCalls
 
   private var expectedArguments: Option[Product] = None
   private var returnValue: Option[Any] = None
