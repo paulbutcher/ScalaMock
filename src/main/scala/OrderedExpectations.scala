@@ -1,6 +1,6 @@
 package com.borachio
 
-class OrderedExpectations extends Expectations with Handler {
+private[borachio] class OrderedExpectations extends Expectations with Handler {
 
   private[borachio] def handle(mock: MockFunction, arguments: Product): Option[Any] = {
     for (i <- currentIndex until handlers.length) {

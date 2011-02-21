@@ -2,7 +2,7 @@ package com.borachio
 
 import java.lang.reflect.{InvocationHandler, Method, Proxy => JavaProxy}
 
-object Proxy {
+private[borachio] object Proxy {
   
   def interfacesFor(clazz: Class[_]): Array[Class[_]] = 
     if (clazz.isInterface)

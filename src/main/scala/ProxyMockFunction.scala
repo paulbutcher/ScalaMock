@@ -1,6 +1,6 @@
 package com.borachio
 
-class ProxyMockFunction(expectations: UnorderedExpectations) extends MockFunction(expectations) {
+private[borachio] class ProxyMockFunction(expectations: UnorderedExpectations) extends MockFunction(expectations) {
 
   def apply(args: Array[AnyRef]) = handle(argsToProduct(args))
   
