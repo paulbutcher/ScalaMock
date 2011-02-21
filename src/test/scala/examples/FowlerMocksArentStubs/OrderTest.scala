@@ -1,4 +1,4 @@
-package com.paulbutcher.smock.example
+package com.borachio.examples.mocksarentstubs
 
 import org.scalatest.WordSpec
 import com.borachio.MockFactory

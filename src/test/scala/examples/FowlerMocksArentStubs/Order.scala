@@ -1,4 +1,4 @@
-package com.paulbutcher.smock.example
+package com.borachio.examples.mocksarentstubs
 
 class Order(product: String, quantity: Int) {
   

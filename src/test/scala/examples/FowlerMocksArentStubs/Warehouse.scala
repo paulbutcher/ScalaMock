@@ -1,4 +1,4 @@
-package com.paulbutcher.smock.example
+package com.borachio.examples.mocksarentstubs
 
 trait Warehouse {
   def hasInventory(product: String, quantity: Int): Boolean
