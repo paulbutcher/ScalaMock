@@ -5,7 +5,7 @@ import org.scalatest.{BeforeAndAfterEach, Suite}
 trait MockFactory extends BeforeAndAfterEach { this: Suite =>
   
   override def beforeEach() {
-    expectations = new UnorderedExpectations
+    expectations.reset
     expectationContext = expectations
   }
   
@@ -46,6 +46,6 @@ trait MockFactory extends BeforeAndAfterEach { this: Suite =>
   protected def mockFunction[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R] = new MockFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](expectations)
   
   protected var autoVerify = true
-  private var expectations: UnorderedExpectations = _
+  private val expectations = new UnorderedExpectations
   private var expectationContext: Expectations = _
 }

@@ -15,5 +15,9 @@ abstract class Expectations {
     }
   }
   
+  private[borachio] def reset() {
+    handlers.clear
+  }
+  
   protected val handlers = new ListBuffer[Handler]
 }
