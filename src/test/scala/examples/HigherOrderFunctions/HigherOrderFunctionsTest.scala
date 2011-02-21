@@ -9,9 +9,9 @@ class HigherOrderFunctionsTest extends Suite with MockFactory {
     val f = mockFunction[Int, String]
     
     inSequence {
-      f expects (1) returns "one" once;
-      f expects (2) returns "two" once;
-      f expects (3) returns "three" once;
+      f expects (1) returning "one" once;
+      f expects (2) returning "two" once;
+      f expects (3) returning "three" once;
     }
     
     expect(Seq("one", "two", "three")) { Seq(1, 2, 3) map f }
@@ -33,10 +33,10 @@ class HigherOrderFunctionsTest extends Suite with MockFactory {
     val f = mockFunction[String, Int, String]
     
     inSequence {
-      f expects ("zero", 1) returns "one" once;
-      f expects ("one", 2) returns "two" once;
-      f expects ("two", 3) returns "three" once;
-      f expects ("three", 4) returns "four" once;
+      f expects ("zero", 1) returning "one" once;
+      f expects ("one", 2) returning "two" once;
+      f expects ("two", 3) returning "three" once;
+      f expects ("three", 4) returning "four" once;
     }
 
     expect("four") { Seq(1, 2, 3, 4).foldLeft("zero")(f) }
