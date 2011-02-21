@@ -10,7 +10,7 @@ object Proxy {
     else 
       clazz.getInterfaces
 
-  def create(classes: Class[_]*)(f: (Symbol, Array[AnyRef]) => AnyRef) = {
+  def create(classes: Class[_]*)(f: (AnyRef, Symbol, Array[AnyRef]) => AnyRef) = {
     
     val interfaces = for (clazz <- classes; interface <- interfacesFor(clazz)) yield interface
 
@@ -18,7 +18,7 @@ object Proxy {
 
     val handler = new InvocationHandler {
       def invoke(proxy: AnyRef, method: Method, args: Array[AnyRef]) =
-        f(Symbol(method.getName), args)
+        f(proxy, Symbol(method.getName), args)
     }
 
     JavaProxy.newProxyInstance(classLoader, interfaces.distinct.toArray, handler)

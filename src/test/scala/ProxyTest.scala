@@ -10,7 +10,7 @@ abstract class Class1 extends Trait1 with Trait2
 
 class ProxyTest extends WordSpec {
   
-  def unimplemented(name: Symbol, args: Array[AnyRef]): AnyRef = error("unimplemented")
+  def unimplemented(proxy: AnyRef, name: Symbol, args: Array[AnyRef]): AnyRef = error("unimplemented")
   
   "A proxy" should {
     
@@ -40,7 +40,7 @@ class ProxyTest extends WordSpec {
     }
     
     "forward calls" in {
-      val p = Proxy.create(classOf[Trait1]) { (name: Symbol, args: Array[AnyRef]) =>
+      val p = Proxy.create(classOf[Trait1]) { (proxy: AnyRef, name: Symbol, args: Array[AnyRef]) =>
         expect(name) { 'method1 }
         expect(2) { args.length }
         expect(42) { args(0).asInstanceOf[Int] }
