@@ -2,7 +2,7 @@ package com.borachio
 
 import org.scalatest.WordSpec
 
-class MockTest extends WordSpec with MockFactory {
+class MockFunctionTest extends WordSpec with MockFactory {
   
   autoVerify = false
   

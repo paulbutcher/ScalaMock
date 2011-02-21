@@ -11,6 +11,9 @@ class Expectation(target: MockFunction) extends Handler {
   // Special case to handle a single argument
   def expects[T](argument: T): Expectation = expects(new Tuple1(argument))
   
+  def withArguments(arguments: Product = None) = expects(arguments)
+  def withArguments[T](argument: T): Expectation = expects(argument)
+  
   def returns(value: Any) = {
     require(!returnValue.isDefined, "return value can only be set once")
     returnValue = Some(value)

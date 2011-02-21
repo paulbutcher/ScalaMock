@@ -3,22 +3,15 @@ package com.borachio.examples.mocksarentstubs
 import org.scalatest.WordSpec
 import com.borachio.MockFactory
 
-class OrderTest extends WordSpec with MockFactory {
-  
-  val hasInventoryMock = mockFunction[String, Int, Boolean]
-  val removeMock = mockFunction[String, Int, Unit]
-
-  val mockWarehouse = new Warehouse {
-    def hasInventory(product: String, quantity: Int) = hasInventoryMock(product, quantity)
-    def remove(product: String, quantity: Int) = removeMock(product, quantity)
-  }
+class OrderTestWithProxies extends WordSpec with MockFactory {
   
   "An order" when {
     "in stock" should {
       "remove inventory" in {
+        val mockWarehouse = mock[Warehouse]
         inSequence {
-          hasInventoryMock expects ("Talisker", 50) returning true once;
-          removeMock expects ("Talisker", 50) once
+          mockWarehouse expects 'hasInventory withArguments ("Talisker", 50) returning true once;
+          mockWarehouse expects 'remove withArguments ("Talisker", 50) once
         }
         
         val order = new Order("Talisker", 50)
@@ -30,7 +23,8 @@ class OrderTest extends WordSpec with MockFactory {
     
     "out of stock" should {
       "remove nothing" in {
-        hasInventoryMock returns false once
+        val mockWarehouse = mock[Warehouse]
+        mockWarehouse expects 'hasInventory returns false once
         
         val order = new Order("Talisker", 50)
         order.fill(mockWarehouse)
