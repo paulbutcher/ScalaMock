@@ -5,6 +5,18 @@ import com.borachio.MockFactory
 
 class HigherOrderFunctionsTest extends Suite with MockFactory {
   
+  def testMap() {
+    val f = mockFunction[Int, String]
+    
+    inSequence {
+      f expects (1) returns "one" once;
+      f expects (2) returns "two" once;
+      f expects (3) returns "three" once;
+    }
+    
+    expect(Seq("one", "two", "three")) { Seq(1, 2, 3) map f }
+  }
+  
   def testRepeat() {
     def repeat(n: Int)(what: => Unit) {
       for (i <- 0 until n)
