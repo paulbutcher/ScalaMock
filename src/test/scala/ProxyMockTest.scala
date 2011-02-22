@@ -10,7 +10,7 @@ class ProxyMockTest extends Suite with MockFactory {
     def penUp()
     def penDown()
     def forward(distance: Double): (Double, Double)
-    def turn(angle: Double): Double
+    def turn(angle: Double)
     def getAngle: Double
     def getPosition(): (Double, Double)
     def setPosition(x: Double, y: Double): (Double, Double)
@@ -44,10 +44,10 @@ class ProxyMockTest extends Suite with MockFactory {
     m1.setPosition(0.0, 0.0)
     m1.penDown
     m2.turn(90.0)
-    m1.forward(1.0)
+    m1.forward(10.0)
     m2.forward(1.0)
     m1.penUp
-    expect(2.0, 1.0) { m2.getPosition }
+    expect((2.0, 1.0)) { m2.getPosition }
 
     verifyExpectations
   }
