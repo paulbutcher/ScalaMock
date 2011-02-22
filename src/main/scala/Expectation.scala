@@ -16,11 +16,21 @@ class Expectation(target: MockFunction) extends Handler {
   
   def returns(value: Any) = {
     require(!returnValue.isDefined, "return value can only be set once")
+    require(!exception.isDefined, "either return value or exception can be set, not both")
     returnValue = Some(value)
     this
   }
   
   def returning(value: Any) = returns(value)
+  
+  def throws(e: Throwable) = {
+    require(!exception.isDefined, "exception can only be set once")
+    require(!returnValue.isDefined, "either return value or exception can be set, not both")
+    exception = Some(e)
+    this
+  }
+  
+  def throwing(e: Throwable) = throws(e)
   
   def repeat(range: Range) = {
     require(!expectedCalls.isDefined, "expected number of calls can only be set once")
@@ -59,7 +69,10 @@ class Expectation(target: MockFunction) extends Handler {
     if (mock == target && !exhausted) {
       if (!expectedArguments.isDefined || expectedArguments.get == arguments) {
         actualCalls += 1
-        return Some(returnValue.getOrElse(null))
+        exception match {
+          case Some(e) => throw e
+          case None => return Some(returnValue.getOrElse(null))
+        }
       }
     }
     None
@@ -85,6 +98,7 @@ class Expectation(target: MockFunction) extends Handler {
 
   private var expectedArguments: Option[Product] = None
   private var returnValue: Option[Any] = None
+  private var exception: Option[Throwable] = None
   private var expectedCalls: Option[Range] = None
 
   private var actualCalls = 0

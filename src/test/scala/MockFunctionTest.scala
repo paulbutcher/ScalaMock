@@ -11,29 +11,42 @@ class MockFunctionTest extends WordSpec with MockFactory {
       what
   }
   
+  case class TestException() extends RuntimeException
+  
   "A mock function" should {
     "return null unless told otherwise" in {
       val m = mockFunction[String]
       m expects ()
       expect(null) { m() }
+      verifyExpectations
     }
     
     "return what it's told to" in {
       val m = mockFunction[String]
       m returns "foo"
       expect("foo") { m() }
+      verifyExpectations
+    }
+    
+    "throw what it's told to" in {
+      val m = mockFunction[String]
+      m throws new TestException
+      intercept[TestException] { m() }
+      verifyExpectations
     }
     
     "match arguments" in {
       val m = mockFunction[Int, String, Double]
       m expects (42, "foo") returning 1.23
       expect(1.23) { m(42, "foo") }
+      verifyExpectations
     }
     
     "match single element arguments" in {
       val m = mockFunction[Int, Int]
       m expects (42) returning 43
       expect(43) { m(42) }
+      verifyExpectations
     }
     
     "fail if there are no matching arguments" in {
@@ -48,6 +61,7 @@ class MockFunctionTest extends WordSpec with MockFactory {
       expect(1.23) { m(1, "foo") }
       expect(1.23) { m(2, "bar") }
       expect(1.23) { m(-1, null) }
+      verifyExpectations
     }
     
     "match multiple expectations in any order" in {
@@ -60,6 +74,7 @@ class MockFunctionTest extends WordSpec with MockFactory {
       expect(3.45) { m1(0, "baz") }
       expect(1.23) { m1(42, "foo") }
       expect("bar") { m2("foo") }
+      verifyExpectations
     }
     
     "fail if an expectation is not met" in {
@@ -72,6 +87,7 @@ class MockFunctionTest extends WordSpec with MockFactory {
       val m = mockFunction[Int]
       m expects ()
       repeat(3) { m() }
+      verifyExpectations
     }
     
     "succeed with the minimum number of calls in a range" in {
@@ -107,6 +123,7 @@ class MockFunctionTest extends WordSpec with MockFactory {
         m expects (42) returning 10
       }
       expect(10) { m(42) }
+      verifyExpectations
     }
     
     "handle a sequence of calls" in {
