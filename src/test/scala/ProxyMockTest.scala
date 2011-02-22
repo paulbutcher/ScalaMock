@@ -1,8 +1,8 @@
 package com.borachio
 
-import org.scalatest.WordSpec
+import org.scalatest.Suite
 
-class ProxyMockTest extends WordSpec with MockFactory {
+class ProxyMockTest extends Suite with MockFactory {
   
   autoVerify = false
   
@@ -16,11 +16,9 @@ class ProxyMockTest extends WordSpec with MockFactory {
     def setPosition(x: Double, y: Double): (Double, Double)
   }
 
-  "a proxy mock" should {
-    "..." in {
-      val m = mock[Turtle]
-      m expects 'setPosition withArguments (1.0, 2.0) returning (3.0, 4.0)
-      expect((3.0, 4.0)) { m.setPosition(1.0, 2.0) }
-    }
+  def testSingleExpectation {
+    val m = mock[Turtle]
+    m expects 'setPosition withArguments (1.0, 2.0) returning (3.0, 4.0)
+    expect((3.0, 4.0)) { m.setPosition(1.0, 2.0) }
   }
 }

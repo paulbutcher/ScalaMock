@@ -1,4 +1,4 @@
-package com.borachio.examples.mocksarentstubs
+package com.borachio.examples
 
 class Order(product: String, quantity: Int) {
   

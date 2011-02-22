@@ -1,4 +1,4 @@
-package com.borachio.examples.mocksarentstubs
+package com.borachio.examples
 
 import org.scalatest.Suite
 import com.borachio.MockFactory
