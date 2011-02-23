@@ -15,6 +15,11 @@ class ProxyMockTest extends Suite with MockFactory {
     def getPosition(): (Double, Double)
     def setPosition(x: Double, y: Double): (Double, Double)
   }
+  
+  def testUnexpectedCall {
+    val m = mock[Turtle]
+    intercept[ExpectationException] { m.penDown }
+  }
 
   def testSingleExpectation {
     val m = mock[Turtle]

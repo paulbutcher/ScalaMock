@@ -7,9 +7,19 @@ trait ProxyMockFactory { self: MockFactory =>
   protected def mock[T: ClassManifest] = {
     val proxy = Proxy.create(classOf[Mock], classManifest[T].erasure) {
       (proxy: AnyRef, name: Symbol, args: Array[AnyRef]) =>
-        name match {
-          case 'expects => self.MockFunctionToExpectation(getOrCreate(proxy, args(0).asInstanceOf[Symbol]))
-          case _ => methodsFor(proxy)(name)(args).asInstanceOf[AnyRef]
+        try {
+          name match {
+            case 'expects => self.MockFunctionToExpectation(getOrCreate(proxy, args(0).asInstanceOf[Symbol]))
+            case _ => methodsFor(proxy)(name)(args).asInstanceOf[AnyRef]
+          }
+        } catch {
+          case e: NoSuchElementException => {
+            val argsString = if (args != null)
+              " with arguments: "+ args.mkString("(", ", ", ")")
+            else
+              ""
+            throw new ExpectationException("Unexpected: "+ name + argsString)
+          }
         }
     }
     proxies += (proxy -> Map[Symbol, ProxyMockFunction]())
