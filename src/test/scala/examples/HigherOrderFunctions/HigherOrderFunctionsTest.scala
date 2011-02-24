@@ -33,12 +33,12 @@ class HigherOrderFunctionsTest extends Suite with MockFactory {
     val f = mockFunction[String, Int, String]
     
     inSequence {
-      f expects ("zero", 1) returning "one" once;
-      f expects ("one", 2) returning "two" once;
-      f expects ("two", 3) returning "three" once;
-      f expects ("three", 4) returning "four" once;
+      f expects ("initial", 0) returning "intermediate one" once;
+      f expects ("intermediate one", 1) returning "intermediate two" once;
+      f expects ("intermediate two", 2) returning "intermediate three" once;
+      f expects ("intermediate three", 3) returning "final" once;
     }
 
-    expect("four") { Seq(1, 2, 3, 4).foldLeft("zero")(f) }
+    expect("final") { Seq(0, 1, 2, 3).foldLeft("initial")(f) }
   }
 }
