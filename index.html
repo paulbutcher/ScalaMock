@@ -3,12 +3,12 @@
 <head>
   <meta charset='utf-8'>
 
-  <title>paulbutcher/borachio @ GitHub</title>
+  <title>Borachio</title>
 
   <style type="text/css">
     body {
       margin-top: 1.0em;
-      background-color: #c647ad;
+      background-color: #ffffff;
       font-family: "Helvetica,Arial,FreeSans";
       color: #000000;
     }
@@ -16,15 +16,15 @@
       margin: 0 auto;
       width: 700px;
     }
-    h1 { font-size: 3.8em; color: #39b852; margin-bottom: 3px; }
+    h1 { font-size: 3.8em; margin-bottom: 3px; }
     h1 .small { font-size: 0.4em; }
     h1 a { text-decoration: none }
-    h2 { font-size: 1.5em; color: #39b852; }
-    h3 { text-align: center; color: #39b852; }
+    h2 { font-size: 1.5em; }
+    h3 { text-align: center; }
     a { color: #39b852; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
+    .description { font-size: 1.2em; font-style: italic;}
     .download { float: right; }
-    pre { background: #000; color: #fff; padding: 15px;}
+    pre { background: #ddd; color: #000; padding: 15px; margin-left: 3em; }
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
     .footer { text-align:center; padding-top:30px; font-style: italic; }
   </style>
@@ -42,33 +42,43 @@
         <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
     </div>
 
-    <h1><a href="http://github.com/paulbutcher/borachio">borachio</a>
-      <span class="small">by <a href="http://github.com/paulbutcher">paulbutcher</a></span></h1>
+    <h1><a href="http://github.com/paulbutcher/borachio">Borachio</a></h1>
 
     <div class="description">
       Native Scala mocking framework
     </div>
-
-    <h2>Authors</h2>
-<p>Paul Butcher (paul@paulbutcher.com)<br/><br/>      </p>
-<h2>Contact</h2>
-<p>Paul Butcher (paul@paulbutcher.com)<br/>      </p>
-
-
-    <h2>Download</h2>
+    
+    <h2>Quick Start</h2>
+    
     <p>
-      You can download this project in either
-      <a href="http://github.com/paulbutcher/borachio/zipball/master">zip</a> or
-      <a href="http://github.com/paulbutcher/borachio/tarball/master">tar</a> formats.
+      Interface mocking:
     </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/paulbutcher/borachio</pre>
-    </p>
+    
+    <pre>def testTurtle {
+  val t = mock[Turtle]
 
-    <div class="footer">
-      get the source code on GitHub : <a href="http://github.com/paulbutcher/borachio">paulbutcher/borachio</a>
-    </div>
+  t expects 'penDown
+  t expects 'turn withArgs (90.0)
+  t expects 'forward withArgs (10.0)
+  t expects 'getPosition returning (0.0, 10.0)
+  
+  drawLine(t)
+}</pre>
+
+    <p>
+      Function mocking:
+    </p>
+    
+    <pre>def testFoldLeft() {
+  val f = mockFunction[String, Int, String]
+
+  f expects ("initial", 0) returning "intermediate one"
+  f expects ("intermediate one", 1) returning "intermediate two"
+  f expects ("intermediate two", 2) returning "intermediate three"
+  f expects ("intermediate three", 3) returning "final"
+
+  expect("final") { Seq(0, 1, 2, 3).foldLeft("initial")(f) }
+}</pre>
 
   </div>
 
