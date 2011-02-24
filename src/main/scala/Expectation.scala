@@ -14,6 +14,9 @@ class Expectation(target: MockFunction) extends Handler {
   def withArguments(arguments: Product = None) = expects(arguments)
   def withArguments[T](argument: T): Expectation = expects(argument)
   
+  def withArgs(arguments: Product = None) = expects(arguments)
+  def withArgs[T](argument: T): Expectation = expects(argument)
+
   def returns(value: Any) = {
     require(!returnValue.isDefined, "return value can only be set once")
     require(!exception.isDefined, "either return value or exception can be set, not both")
