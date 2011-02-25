@@ -41,7 +41,7 @@
       Native Scala mocking
     </div>
     
-    <h2>Interface mocking</h2>
+    <h2>Mocking objects</h2>
     
     <pre>def testTurtle {
   val t = mock[Turtle]
@@ -54,7 +54,7 @@
   drawLine(t)
 }</pre>
 
-    <h2>Function mocking</h2>
+    <h2>Mocking functions</h2>
     
     <pre>def testFoldLeft() {
   val f = mockFunction[String, Int, String]
@@ -67,7 +67,7 @@
   expect("final") { Seq(0, 1, 2, 3).foldLeft("initial")(f) }
 }</pre>
 
-    <h2>Install</h2>
+    <h2>Installing</h2>
     
     <p>
       Borachio is <a href="https://github.com/paulbutcher/borachio">hosted on GitHub</a>. Sbt and Maven integration coming soon.
