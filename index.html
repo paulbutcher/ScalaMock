@@ -35,24 +35,13 @@
 
   <div id="container">
 
-    <div class="download">
-      <a href="http://github.com/paulbutcher/borachio/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/paulbutcher/borachio/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
-    </div>
-
     <h1><a href="http://github.com/paulbutcher/borachio">Borachio</a></h1>
 
     <div class="description">
-      Native Scala mocking framework
+      Native Scala mocking
     </div>
     
-    <h2>Quick Start</h2>
-    
-    <p>
-      Interface mocking:
-    </p>
+    <h2>Interface mocking</h2>
     
     <pre>def testTurtle {
   val t = mock[Turtle]
@@ -65,9 +54,7 @@
   drawLine(t)
 }</pre>
 
-    <p>
-      Function mocking:
-    </p>
+    <h2>Function mocking</h2>
     
     <pre>def testFoldLeft() {
   val f = mockFunction[String, Int, String]
