@@ -70,6 +70,15 @@ trait MockFactory extends ProxyMockFactory with BeforeAndAfterEach { this: Suite
   protected def mockFunction[T1, T2, T3, T4, T5, T6, T7, T8, T9, R] = new MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](expectations)
   protected def mockFunction[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R] = new MockFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](expectations)
   
+  protected def * = new MatchAny
+  
+  protected class EpsilonMatcher(d: Double) {
+    def unary_~() = new MatchEpsilon(d)
+  }
+  protected implicit def doubleToEpsilon(d: Double) = new EpsilonMatcher(d)
+  
+  protected def ^(args: Any*) = new ArgumentMatcher(args: _*)
+  
   protected var autoVerify = true
 
   private[borachio] val expectations = new UnorderedExpectations

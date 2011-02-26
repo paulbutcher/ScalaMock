@@ -222,5 +222,29 @@ class MockFunctionTest extends WordSpec with MockFactory {
       m(4)
       verifyExpectations
     }
+    
+    "match wildcard arguments" in {
+      val m = mockFunction[Int, String, Unit]
+      m expects ^(42, "foo")
+      m expects ^(*, "bar")
+      m expects ^(0, *)
+      
+      m(42, "foo")
+      m(1, "bar")
+      m(2, "bar")
+      m(0, "something")
+      m(0, null)
+      intercept[ExpectationException] { m(1, "something") }
+    }
+    
+    "match epsilon arguments" in {
+      val m = mockFunction[Double, Double]
+      m expects ^(~42.0) returning 1.0
+      m expects ^(~0.0)
+      
+      m(42.0001)
+      m(-0.0001)
+      intercept[ExpectationException] { m(42.1) }
+    }
   }
 }

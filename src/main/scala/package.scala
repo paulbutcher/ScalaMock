@@ -74,14 +74,61 @@ package com
  *
  * ===Arguments===
  *
- * At the moment, Borachio only supports simple argument equality matching. An expectation is met
- * if the actual arguments equal the expected arguments. In the future more sophisticated matching
- * will be suported.
- * 
  * To specify expected arguments for a functional mock, use `expects`. To specify expected
  * arguments for a proxy mock, use `withArgs` or `withArguments`.
  *
  * If no expected arguments are given, mocks accept any arguments.
+ *
+ * To specify arguments that should simply be tested for equality, provide the expected arguments
+ * as a tuple:
+ *
+ * {{{
+ * m expects ("this", "that")
+ * }}}
+ *
+ * To specify arguments that should be matched more generally, use the `^` (caret) method.
+ * Borachio currently supports two types of generalized matching: ''wildcards'' and ''epsilon 
+ * matching''.
+ *
+ * ====Wildcards====
+ *
+ * Wildcard values are specified with an `*` (asterisk). For example:
+ * 
+ * {{{
+ * m expects ^("this", *)
+ * }}}
+ * 
+ * will match any of the following:
+ *
+ * {{{
+ * m("this", 42)
+ * m("this", 1.0)
+ * m("this", null)
+ * }}}
+ *
+ * ====Epsilon matching====
+ *
+ * Epsilon matching is useful when dealing with floating point values. An epsilon match is
+ * specified with the `~` (tilde) operator:
+ *
+ * {{{
+ * m expects ^(~42.0)
+ * }}}
+ *
+ * will match:
+ *
+ * {{{
+ * m(42.0)
+ * m(42.0001)
+ * m(41.9999)
+ * }}}
+ *
+ * but will not match:
+ *
+ * {{{
+ * m(43.0)
+ * m(42.1)
+ * }}}
  *
  * ===Return value===
  *
