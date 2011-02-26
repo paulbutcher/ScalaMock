@@ -54,7 +54,6 @@ Existing Java mocking libraries work with Scala but:
 
 ## To do
 
-* Argument matchers
 * Better handling of overloaded methods
 * Better handling of primitive types (when returning them from a proxy mock)
 
