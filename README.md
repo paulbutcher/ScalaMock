@@ -32,9 +32,15 @@ Native Scala mocking.
 
 For more examples, see `src/test/scala/examples`.
 
-## Building
+## Installation
 
-Build with [sbt](http://code.google.com/p/simple-build-tool/):
+To use Borachio in [sbt](http://code.google.com/p/simple-build-tool/) add the following to your project file:
+
+    val borachio = "com.borachio" %% "borachio" % "latest.integration"
+    
+[Maven](http://maven.apache.org/) users [look here](http://scala-tools.org/repo-releases/com/borachio/) to find the POM.
+
+## Building
 
     sbt update
     sbt test
