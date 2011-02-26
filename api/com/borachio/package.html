@@ -49,10 +49,29 @@ m expects 'forward withArgs (5.0)
 m expects 'getPosition returning (15.0, 10.0)
 </pre><h4>Expectations</h4><p>Expectations can be set on the arguments a function or method is called with and how many times
 it should be called. In addition, mocks can be instructed to return a particular value or throw
-an exception when that expectation is met.</p><h5>Arguments</h5><p>At the moment, Borachio only supports simple argument equality matching. An expectation is met
-if the actual arguments equal the expected arguments. In the future more sophisticated matching
-will be suported.</p><p>To specify expected arguments for a functional mock, use <code>expects</code>. To specify expected
-arguments for a proxy mock, use <code>withArgs</code> or <code>withArguments</code>.</p><p>If no expected arguments are given, mocks accept any arguments.</p><h5>Return value</h5><p>Mocks can be instructed to return a specific value with <code>returns</code> or <code>returning</code>:</p><pre>
+an exception when that expectation is met.</p><h5>Arguments</h5><p>To specify expected arguments for a functional mock, use <code>expects</code>. To specify expected
+arguments for a proxy mock, use <code>withArgs</code> or <code>withArguments</code>.</p><p>If no expected arguments are given, mocks accept any arguments.</p><p>To specify arguments that should simply be tested for equality, provide the expected arguments
+as a tuple:</p><pre>
+m expects (&quot;this&quot;, &quot;that&quot;)
+</pre><p>To specify arguments that should be matched more generally, use the <code>^</code> (caret) method.
+Borachio currently supports two types of generalized matching: <i>wildcards</i> and <i>epsilon
+matching</i>.</p><h6>Wildcards</h6><p>Wildcard values are specified with an <code>*</code> (asterisk). For example:</p><pre>
+m expects ^(&quot;this&quot;, *)
+</pre><p>will match any of the following:</p><pre>
+m(&quot;this&quot;, 42)
+m(&quot;this&quot;, 1.0)
+m(&quot;this&quot;, null)
+</pre><h6>Epsilon matching</h6><p>Epsilon matching is useful when dealing with floating point values. An epsilon match is
+specified with the <code>~</code> (tilde) operator:</p><pre>
+m expects ^(~42.0)
+</pre><p>will match:</p><pre>
+m(42.0)
+m(42.0001)
+m(41.9999)
+</pre><p>but will not match:</p><pre>
+m(43.0)
+m(42.1)
+</pre><h5>Return value</h5><p>Mocks can be instructed to return a specific value with <code>returns</code> or <code>returning</code>:</p><pre>
 m1 returns 42
 m2 expects (&quot;this&quot;, &quot;that&quot;) returning &quot;the other&quot;
 </pre><p>If no return value is specified, functional mocks return <code>null.asInstanceOf[R]</code> where <code>R</code> is the
@@ -132,7 +151,19 @@ expect((2.0, 1.0)) { m2.getPosition }
 
         <div class="types members" id="types">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" data-isabs="false" name="com.borachio.Expectation">
+              <ol><li visbl="pub" data-isabs="false" name="com.borachio.ArgumentMatcher">
+      <a id="ArgumentMatcher:ArgumentMatcher"></a>
+      <h4 class="signature"><a href="ArgumentMatcher.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">ArgumentMatcher</span>
+        
+        
+        <span class="result"> extends Product</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.borachio.Expectation">
       <a id="Expectation:Expectation"></a>
       <h4 class="signature"><a href="Expectation.html">
       <span class="kind">class</span>
@@ -154,6 +185,30 @@ expect((2.0, 1.0)) { m2.getPosition }
         
         <span class="params">(<span name="msg">msg: String</span>)</span>
         <span class="result"> extends RuntimeException with Product</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.borachio.MatchAny">
+      <a id="MatchAny:MatchAny"></a>
+      <h4 class="signature"><a href="MatchAny.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">MatchAny</span>
+        
+        
+        <span class="result"> extends Equals</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.borachio.MatchEpsilon">
+      <a id="MatchEpsilon:MatchEpsilon"></a>
+      <h4 class="signature"><a href="MatchEpsilon.html">
+      <span class="kind">class</span>
+      <span class="symbol">
+        <span class="name">MatchEpsilon</span>
+        
+        
+        <span class="result"> extends Equals</span>
       </span>
       </a></h4>
       
@@ -346,7 +401,22 @@ mocking support.</p>
     </li></ol>
             </div>
 
+        <div class="values members" id="values">
+              <h3>Value Members</h3>
+              <ol><li visbl="pub" data-isabs="false" name="com.borachio.MatchEpsilon">
+      <a id="MatchEpsilon:MatchEpsilon"></a>
+      <h4 class="signature"><a href="MatchEpsilon$.html">
+      <span class="kind">object</span>
+      <span class="symbol">
+        <span class="name">MatchEpsilon</span>
         
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li></ol>
+            </div>
 
         
 
