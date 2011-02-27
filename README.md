@@ -30,6 +30,8 @@ Native Scala mocking.
       expect("final") { Seq(0, 1, 2, 3).foldLeft("initial")(f) }
     }
 
+[Full worked example](http://www.paulbutcher.com/2011/02/mocking-in-scala-with-borachio-step-by-step/).
+
 For more examples, see `src/test/scala/examples`.
 
 ## Installation
