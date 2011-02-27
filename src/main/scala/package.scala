@@ -86,7 +86,6 @@ package com
  * m expects ("this", "that")
  * }}}
  *
- * To specify arguments that should be matched more generally, use the `^` (caret) method.
  * Borachio currently supports two types of generalized matching: ''wildcards'' and ''epsilon 
  * matching''.
  *
@@ -95,7 +94,7 @@ package com
  * Wildcard values are specified with an `*` (asterisk). For example:
  * 
  * {{{
- * m expects ^("this", *)
+ * m expects ("this", *)
  * }}}
  * 
  * will match any of the following:
@@ -112,7 +111,7 @@ package com
  * specified with the `~` (tilde) operator:
  *
  * {{{
- * m expects ^(~42.0)
+ * m expects (~42.0)
  * }}}
  *
  * will match:
