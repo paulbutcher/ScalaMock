@@ -22,7 +22,7 @@ package com.borachio
 
 private[borachio] class UnorderedExpectations extends Expectations {
 
-  private[borachio] def handle(mock: MockFunction, arguments: Product): Any = {
+  private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Any = {
     for (handler <- handlers) {
       val r = handler.handle(mock, arguments)
       if (r.isDefined)

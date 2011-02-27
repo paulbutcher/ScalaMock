@@ -25,20 +25,15 @@ package com.borachio
  */
 class Expectation(target: MockFunction) extends Handler {
   
-  def expects(arguments: Product = None) = {
+  def expects(arguments: Any*) = {
     require(!expectedArguments.isDefined, "arguments can only be set once")
-    expectedArguments = Some(arguments)
+    expectedArguments = Some(arguments.toArray)
     this
   }
   
-  // Special case to handle a single argument
-  def expects[T](argument: T): Expectation = expects(new Tuple1(argument))
+  def withArguments(arguments: Any*) = expects(arguments: _*)
   
-  def withArguments(arguments: Product = None) = expects(arguments)
-  def withArguments[T](argument: T): Expectation = expects(argument)
-  
-  def withArgs(arguments: Product = None) = expects(arguments)
-  def withArgs[T](argument: T): Expectation = expects(argument)
+  def withArgs(arguments: Any*) = expects(arguments: _*)
 
   def returns(value: Any) = {
     require(!returnValue.isDefined, "return value can only be set once")
@@ -95,9 +90,9 @@ class Expectation(target: MockFunction) extends Handler {
     case None => false
   }
   
-  private[borachio] def handle(mock: MockFunction, arguments: Product): Option[Any] = {
+  private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Option[Any] = {
     if (mock == target && !exhausted) {
-      if (!expectedArguments.isDefined || expectedArguments.get == arguments) {
+      if (!expectedArguments.isDefined || (expectedArguments.get sameElements arguments)) {
         actualCalls += 1
         exception match {
           case Some(e) => throw e
@@ -126,7 +121,7 @@ class Expectation(target: MockFunction) extends Handler {
   
   private[borachio] def actualCallsString = "actual calls: " + actualCalls
 
-  private var expectedArguments: Option[Product] = None
+  private var expectedArguments: Option[Array[Any]] = None
   private var returnValue: Option[Any] = None
   private var exception: Option[Throwable] = None
   private var expectedCalls: Option[Range] = None

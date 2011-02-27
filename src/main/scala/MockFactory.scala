@@ -77,8 +77,6 @@ trait MockFactory extends ProxyMockFactory with BeforeAndAfterEach { this: Suite
   }
   protected implicit def doubleToEpsilon(d: Double) = new EpsilonMatcher(d)
   
-  protected def ^(args: Any*) = new ArgumentMatcher(args: _*)
-  
   protected var autoVerify = true
 
   private[borachio] val expectations = new UnorderedExpectations
