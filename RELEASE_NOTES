@@ -1,3 +1,7 @@
+Version 0.3:
+
+- Rethink argument matching to do away with the need for the ^ method
+
 Version 0.2:
 
 - Add support for wildcard and epsilon argument matchers
