@@ -20,9 +20,39 @@
 
 package com.borachio
 
-private[borachio] class ProxyMockFunction(name: Symbol, expectations: UnorderedExpectations) extends MockFunction(expectations) {
-  
-  override def toString = name.toString
+import org.scalatest.WordSpec
 
-  def apply(args: Array[AnyRef]) = handle(if (args != null) args.map(_.asInstanceOf[Any]) else Array[Any]())
+class ErrorMessageTest extends WordSpec with MockFactory {
+
+  "A mock function" when {
+    "called unexpectedly" should {
+      "generate a sensible error message" ignore {
+        val m = mockFunction[Int, String, Float]
+        m(42, "foo")
+      }
+    }
+    
+    "unsatisfied" should {
+      "generate a sensible error message" ignore {
+        val m = mockFunction[Int, String, Float]
+        m expects (42, "foo") returning 1.0
+      }
+    }
+  }
+
+  "A proxy mock" when {
+    "called unexpectedly" should {
+      "generate a sensible error message" ignore {
+        val m = mock[Seq[String]]
+        m.indexOf("foo", 10)
+      }
+    }
+    
+    "unsatisfied" should {
+      "generate a sensible error message" ignore {
+        val m = mock[Seq[String]]
+        m expects 'indexOf withArgs ("foo", 10) returning 42
+      }
+    }
+  }
 }

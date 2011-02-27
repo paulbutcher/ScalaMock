@@ -1,6 +1,7 @@
 Version 0.3:
 
 - Rethink argument matching to do away with the need for the ^ method
+- Improve error messages
 
 Version 0.2:
 

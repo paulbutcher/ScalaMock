@@ -104,7 +104,7 @@ class Expectation(target: MockFunction) extends Handler {
   }
   
   private[borachio] def argumentsString = expectedArguments match {
-    case Some(a) => "with arguments: "+ a
+    case Some(a) => "with arguments: "+ a.mkString("(", ", ", ")")
     case None => ""
   }
   

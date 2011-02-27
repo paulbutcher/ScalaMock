@@ -28,6 +28,6 @@ private[borachio] class UnorderedExpectations extends Expectations {
       if (r.isDefined)
         return r.get
     }
-    throw new ExpectationException("Unexpected: "+ mock +" with arguments: "+ arguments)
+    throw new ExpectationException("Unexpected: "+ mock +" with arguments: "+ arguments.mkString("(", ", ", ")"))
   }
 }
