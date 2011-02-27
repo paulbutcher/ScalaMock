@@ -53,17 +53,16 @@ an exception when that expectation is met.</p><h5>Arguments</h5><p>To specify ex
 arguments for a proxy mock, use <code>withArgs</code> or <code>withArguments</code>.</p><p>If no expected arguments are given, mocks accept any arguments.</p><p>To specify arguments that should simply be tested for equality, provide the expected arguments
 as a tuple:</p><pre>
 m expects (&quot;this&quot;, &quot;that&quot;)
-</pre><p>To specify arguments that should be matched more generally, use the <code>^</code> (caret) method.
-Borachio currently supports two types of generalized matching: <i>wildcards</i> and <i>epsilon
+</pre><p>Borachio currently supports two types of generalized matching: <i>wildcards</i> and <i>epsilon
 matching</i>.</p><h6>Wildcards</h6><p>Wildcard values are specified with an <code>*</code> (asterisk). For example:</p><pre>
-m expects ^(&quot;this&quot;, *)
+m expects (&quot;this&quot;, *)
 </pre><p>will match any of the following:</p><pre>
 m(&quot;this&quot;, 42)
 m(&quot;this&quot;, 1.0)
 m(&quot;this&quot;, null)
 </pre><h6>Epsilon matching</h6><p>Epsilon matching is useful when dealing with floating point values. An epsilon match is
 specified with the <code>~</code> (tilde) operator:</p><pre>
-m expects ^(~42.0)
+m expects (~42.0)
 </pre><p>will match:</p><pre>
 m(42.0)
 m(42.0001)
@@ -151,19 +150,7 @@ expect((2.0, 1.0)) { m2.getPosition }
 
         <div class="types members" id="types">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" data-isabs="false" name="com.borachio.ArgumentMatcher">
-      <a id="ArgumentMatcher:ArgumentMatcher"></a>
-      <h4 class="signature"><a href="ArgumentMatcher.html">
-      <span class="kind">class</span>
-      <span class="symbol">
-        <span class="name">ArgumentMatcher</span>
-        
-        
-        <span class="result"> extends Product</span>
-      </span>
-      </a></h4>
-      
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.Expectation">
+              <ol><li visbl="pub" data-isabs="false" name="com.borachio.Expectation">
       <a id="Expectation:Expectation"></a>
       <h4 class="signature"><a href="Expectation.html">
       <span class="kind">class</span>
