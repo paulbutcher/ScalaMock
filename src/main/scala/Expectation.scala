@@ -78,7 +78,7 @@ class Expectation(target: MockFunction) extends Handler {
 
   override def toString = 
     Seq(target.toString, argumentsString, returnString, expectedCallsString, actualCallsString).
-      filterNot(_.isEmpty).mkString(", ")
+      filter(_.length > 0).mkString(", ")
   
   private[borachio] def satisfied = expectedCalls match {
     case Some(r) => r contains actualCalls
