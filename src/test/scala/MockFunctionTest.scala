@@ -20,6 +20,7 @@
 
 package com.borachio
 
+import com.borachio.scalatest.MockFactory
 import org.scalatest.WordSpec
 
 class MockFunctionTest extends WordSpec with MockFactory {

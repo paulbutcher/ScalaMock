@@ -22,7 +22,7 @@ package com.borachio
 
 import scala.collection.mutable.{ListBuffer, Map}
 
-trait ProxyMockFactory { self: MockFactory =>
+trait ProxyMockFactory { self: AbstractMockFactory =>
   
   protected def mock[T: ClassManifest] = {
     val proxy = Proxy.create(classOf[Mock], classManifest[T].erasure) {

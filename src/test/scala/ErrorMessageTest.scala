@@ -20,6 +20,7 @@
 
 package com.borachio
 
+import com.borachio.scalatest.MockFactory
 import org.scalatest.WordSpec
 
 class ErrorMessageTest extends WordSpec with MockFactory {

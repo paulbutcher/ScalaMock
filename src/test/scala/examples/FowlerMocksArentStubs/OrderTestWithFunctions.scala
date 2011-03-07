@@ -21,7 +21,7 @@
 package com.borachio.examples
 
 import org.scalatest.WordSpec
-import com.borachio.MockFactory
+import com.borachio.scalatest.MockFactory
 
 // This is a reworked version of the example from Martin Fowler's article
 // Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html

@@ -22,21 +22,11 @@ package com.borachio
 
 import org.scalatest.{BeforeAndAfterEach, Suite}
 
-/** Trait that can be mixed into a [[http://www.scalatest.org/ ScalaTest]] suite to provide
-  * mocking support.
-  *
-  * See [[com.borachio]] for overview documentation.
-  */
-trait MockFactory extends ProxyMockFactory with BeforeAndAfterEach { this: Suite =>
+trait AbstractMockFactory extends ProxyMockFactory {
   
-  override def beforeEach() {
+  protected def resetExpectations() {
     expectations.reset
     expectationContext = expectations
-  }
-  
-  override def afterEach() {
-    if (autoVerify)
-      verifyExpectations
   }
 
   protected def verifyExpectations() {
@@ -76,8 +66,6 @@ trait MockFactory extends ProxyMockFactory with BeforeAndAfterEach { this: Suite
     def unary_~() = new MatchEpsilon(d)
   }
   protected implicit def doubleToEpsilon(d: Double) = new EpsilonMatcher(d)
-  
-  protected var autoVerify = true
 
   private[borachio] val expectations = new UnorderedExpectations
   private var expectationContext: Expectations = _
