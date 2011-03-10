@@ -23,11 +23,18 @@ package com
 /**
  * =Borachio: Native Scala mocking=
  *
- * Borachio integrates with [[http://www.scalatest.org/ ScalaTest]] and adds native mocking support.
- * To use it, mix the [[com.borachio.MockFactory]] trait into a ScalaTest Suite:
+ * To use Borachio with ScalaTest, mix the [[com.borachio.scalatest.MockFactory]] trait into a
+ * Suite:
  *
  * {{{
  * class MyTest extends Suite with MockFactory
+ * }}}
+ *
+ * To use Borachio with JUnit3, mix the [[com.borachio.junit3.MockFactory]] trait into a
+ * TestCase:
+ *
+ * {{{
+ * class MyTest extends TestCase with MockFactory
  * }}}
  * 
  * Borachio supports two different mocking styles - ''Functional mocking'' and ''Proxy mocking''.
