@@ -20,8 +20,6 @@
 
 package com.borachio
 
-import org.scalatest.{BeforeAndAfterEach, Suite}
-
 trait AbstractMockFactory extends ProxyMockFactory {
   
   protected def resetExpectations() {
