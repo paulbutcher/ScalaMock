@@ -59,7 +59,7 @@ package com
  * ==Proxy mocking==
  *
  * Proxy mocks are created with `mock`. The following, for example, creates a mock which implements
- * all the traits (interfaces) implemented by the `Turtle` class:
+ * all the `Turtle` trait (interface):
  *
  * {{{
  * val m = mock[Turtle]

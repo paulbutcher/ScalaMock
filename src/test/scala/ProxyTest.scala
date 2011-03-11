@@ -46,17 +46,8 @@ class ProxyTest extends WordSpec {
       assert(p.isInstanceOf[Trait3])
     }
     
-    "implement all the interfaces of a class" in {
-      val p = Proxy.create(classOf[Class1]) { unimplemented _ }
-      assert(p.isInstanceOf[Trait1])
-      assert(p.isInstanceOf[Trait2])
-    }
-    
-    "implement a mixture of classes and interfaces" in {
-      val p = Proxy.create(classOf[Class1], classOf[Trait3]) { unimplemented _ }
-      assert(p.isInstanceOf[Trait1])
-      assert(p.isInstanceOf[Trait2])
-      assert(p.isInstanceOf[Trait3])
+    "fail if given a class" in {
+      intercept[IllegalArgumentException] { val p = Proxy.create(classOf[Class1]) { unimplemented _ } }
     }
     
     "forward calls" in {
