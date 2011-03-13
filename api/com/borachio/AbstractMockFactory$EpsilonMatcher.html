@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>com.borachio.ArgumentMatcher</title>
+          <title>com.borachio.AbstractMockFactory.EpsilonMatcher</title>
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../lib/template.css" rel="stylesheet" type="text/css" media="screen" />
@@ -14,24 +14,26 @@
         </head>
         <body class="type" onload="windowTitle();">
 
-      <p id="owner"><a href="../package.html" class="extype" name="com">com</a>.<a href="package.html" class="extype" name="com.borachio">borachio</a></p>
+      <p id="owner"><a href="../package.html" class="extype" name="com">com</a>.<a href="package.html" class="extype" name="com.borachio">borachio</a>.<a href="AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a></p>
 
       <div id="definition">
         <img src="../../lib/class_big.png" />
-        <h1>ArgumentMatcher</h1>
+        <h1>EpsilonMatcher</h1>
       </div>
 
       <h4 class="signature" id="signature">
       <span class="kind">class</span>
       <span class="symbol">
-        <span class="name">ArgumentMatcher</span>
+        <span class="name">EpsilonMatcher</span>
         
         
-        <span class="result"> extends <span class="extype" name="scala.Product">Product</span></span>
+        <span class="result"> extends AnyRef</span>
       </span>
       </h4>
       <div class="fullcomment" id="comment"><div class="block">
-            linear super types: <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, AnyRef, <span class="extype" name="scala.Any">Any</span>
+          attributes: protected 
+        </div><div class="block">
+            linear super types: AnyRef, <span class="extype" name="scala.Any">Any</span>
           </div></div>
 
       <div id="template">
@@ -45,7 +47,7 @@
           <div id="ancestors">
                 <span class="filtertype">Inherited</span>
                 <ol><li class="hideall">Hide All</li><li class="showall">Show all</li></ol>
-                <ol id="linearization"><li class="in" name="com.borachio.ArgumentMatcher">ArgumentMatcher</li><li class="in" name="scala.Product">Product</li><li class="in" name="scala.Equals">Equals</li><li class="in" name="scala.AnyRef">AnyRef</li><li class="in" name="scala.Any">Any</li></ol>
+                <ol id="linearization"><li class="in" name="com.borachio.AbstractMockFactory.EpsilonMatcher">EpsilonMatcher</li><li class="in" name="scala.AnyRef">AnyRef</li><li class="in" name="scala.Any">Any</li></ol>
               </div>
           <div id="visbl">
               <span class="filtertype">Visibility</span>
@@ -59,14 +61,14 @@
 
         <div class="members" id="constructors">
               <h3>Instance constructors</h3>
-              <ol><li visbl="pub" data-isabs="false" name="com.borachio.ArgumentMatcher#this">
-      <a id="this:ArgumentMatcher"></a>
+              <ol><li visbl="pub" data-isabs="false" name="com.borachio.AbstractMockFactory.EpsilonMatcher#this">
+      <a id="this:EpsilonMatcher"></a>
       <h4 class="signature">
       <span class="kind">new</span>
       <span class="symbol">
-        <span class="name">ArgumentMatcher</span>
+        <span class="name">EpsilonMatcher</span>
         
-        <span class="params">(<span name="arguments">arguments: <span class="extype" name="scala.Any">Any</span>*</span>)</span>
+        <span class="params">(<span name="d">d: <span class="extype" name="scala.Double">Double</span></span>)</span>
         
       </span>
       </h4>
@@ -251,23 +253,6 @@ part of compilation it is not possible to check whether the contents of the list
             
           </div>
           
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.ArgumentMatcher#canEqual">
-      <a id="canEqual(Any):Boolean"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">canEqual</span>
-        
-        <span class="params">(<span name="that">that: <span class="extype" name="scala.Any">Any</span></span>)</span>
-        <span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
-      </span>
-      </h4>
-      
-            
-            <div class="fullcomment"><div class="block">
-          definition classes: <a href="" class="extype" name="com.borachio.ArgumentMatcher">ArgumentMatcher</a> → Equals
-        </div></div>
-          
     </li><li visbl="prt" data-isabs="false" name="scala.AnyRef#clone">
       <a id="clone():AnyRef"></a>
       <h4 class="signature">
@@ -329,14 +314,14 @@ should be equal to each other (<code>o1 == o2</code>) and they should hash to th
             
           </div>
           
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.ArgumentMatcher#equals">
+    </li><li visbl="pub" data-isabs="false" name="scala.AnyRef#equals">
       <a id="equals(Any):Boolean"></a>
       <h4 class="signature">
       <span class="kind">def</span>
       <span class="symbol">
         <span class="name">equals</span>
         
-        <span class="params">(<span name="that">that: <span class="extype" name="scala.Any">Any</span></span>)</span>
+        <span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span>
         <span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
@@ -353,8 +338,8 @@ Additionally, when overriding this method it is often necessary to override <cod
 that are &quot;equal&quot; (<code>o1.equals(o2)</code> returns <code>true</code>) hash to the same 
 scala.Int
 (<code>o1.hashCode.equals(o2.hashCode)</code>).
-</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p><code>true</code> if the receiver object is equivalent to the argument; <code>false</code> otherwise.</p></dd></dl><div class="block">
-          definition classes: <a href="" class="extype" name="com.borachio.ArgumentMatcher">ArgumentMatcher</a> → Equals → AnyRef → Any
+</p></div><dl class="paramcmts block"><dt class="param">arg0</dt><dd class="cmt"><p>the object to compare against this object for equality.</p></dd><dt>returns</dt><dd class="cmt"><p><code>true</code> if the receiver object is equivalent to the argument; <code>false</code> otherwise.</p></dd></dl><div class="block">
+          definition classes: AnyRef → Any
         </div>
             
             
@@ -532,93 +517,6 @@ possible to check whether the contents of the list are of the requested typed.
             
           </div>
           
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.ArgumentMatcher#productArity">
-      <a id="productArity:Int"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">productArity</span>
-        
-        
-        <span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4>
-      
-            
-            <div class="fullcomment"><div class="block">
-          definition classes: <a href="" class="extype" name="com.borachio.ArgumentMatcher">ArgumentMatcher</a> → Product
-        </div></div>
-          
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.ArgumentMatcher#productElement">
-      <a id="productElement(Int):Any"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">productElement</span>
-        
-        <span class="params">(<span name="n">n: <span class="extype" name="scala.Int">Int</span></span>)</span>
-        <span class="result">: <span class="extype" name="scala.Any">Any</span></span>
-      </span>
-      </h4>
-      
-            
-            <div class="fullcomment"><div class="block">
-          definition classes: <a href="" class="extype" name="com.borachio.ArgumentMatcher">ArgumentMatcher</a> → Product
-        </div></div>
-          
-    </li><li visbl="pub" data-isabs="false" name="scala.Product#productElements">
-      <a id="productElements:Iterator[Any]"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name deprecated">productElements</span>
-        
-        
-        <span class="result">: Iterator[<span class="extype" name="scala.Any">Any</span>]</span>
-      </span>
-      </h4>
-      
-            
-            <div class="fullcomment"><div class="block">
-          definition classes: Product
-        </div><div class="block"><ol>deprecated:
-          <li><p>use productIterator instead</p></li>
-        </ol></div></div>
-          
-    </li><li visbl="pub" data-isabs="false" name="scala.Product#productIterator">
-      <a id="productIterator:Iterator[Any]"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">productIterator</span>
-        
-        
-        <span class="result">: Iterator[<span class="extype" name="scala.Any">Any</span>]</span>
-      </span>
-      </h4>
-      
-            
-            <div class="fullcomment"><div class="block">
-          definition classes: Product
-        </div></div>
-          
-    </li><li visbl="pub" data-isabs="false" name="scala.Product#productPrefix">
-      <a id="productPrefix:String"></a>
-      <h4 class="signature">
-      <span class="kind">def</span>
-      <span class="symbol">
-        <span class="name">productPrefix</span>
-        
-        
-        <span class="result">: <span class="extype" name="java.lang.String">String</span></span>
-      </span>
-      </h4>
-      
-            
-            <div class="fullcomment"><div class="block">
-          definition classes: Product
-        </div></div>
-          
     </li><li visbl="pub" data-isabs="false" name="scala.AnyRef#synchronized">
       <a id="synchronized[T0](T0):T0"></a>
       <h4 class="signature">
@@ -660,6 +558,18 @@ possible to check whether the contents of the list are of the requested typed.
             
           </div>
           
+    </li><li visbl="pub" data-isabs="false" name="com.borachio.AbstractMockFactory.EpsilonMatcher#unary_~">
+      <a id="unary_~():MatchEpsilon"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">unary_~</span>
+        
+        <span class="params">()</span>
+        <span class="result">: <a href="MatchEpsilon.html" class="extype" name="com.borachio.MatchEpsilon">MatchEpsilon</a></span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" data-isabs="false" name="scala.AnyRef#wait">
       <a id="wait():Unit"></a>
       <h4 class="signature">
@@ -720,11 +630,7 @@ possible to check whether the contents of the list are of the requested typed.
     </li></ol>
             </div>
 
-        <div class="parent" name="scala.Product">
-              <h3>Inherited from <span class="extype" name="scala.Product">Product</span></h3>
-            </div><div class="parent" name="scala.Equals">
-              <h3>Inherited from <span class="extype" name="scala.Equals">Equals</span></h3>
-            </div><div class="parent" name="scala.AnyRef">
+        <div class="parent" name="scala.AnyRef">
               <h3>Inherited from AnyRef</h3>
             </div><div class="parent" name="scala.Any">
               <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>

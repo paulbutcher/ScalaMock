@@ -30,9 +30,12 @@
         
       </span>
       </h4>
-      <div class="fullcomment" id="comment"><div class="comment cmt"><h3>Borachio: Native Scala mocking</h3><p>Borachio integrates with <a href="http://www.scalatest.org/">ScalaTest</a> and adds native mocking support.
-To use it, mix the <a href="MockFactory.html" class="extype" name="com.borachio.MockFactory">MockFactory</a> trait into a ScalaTest Suite:</p><pre>
+      <div class="fullcomment" id="comment"><div class="comment cmt"><h3>Borachio: Native Scala mocking</h3><p>To use Borachio with ScalaTest, mix the <a href="scalatest/MockFactory.html" class="extype" name="com.borachio.scalatest.MockFactory">MockFactory</a> trait into a
+Suite:</p><pre>
 class MyTest extends Suite with MockFactory
+</pre><p>To use Borachio with JUnit3, mix the <a href="junit3/MockFactory.html" class="extype" name="com.borachio.junit3.MockFactory">MockFactory</a> trait into a
+TestCase:</p><pre>
+class MyTest extends TestCase with MockFactory
 </pre><p>Borachio supports two different mocking styles - <i>Functional mocking</i> and <i>Proxy mocking</i>.</p><h4>Functional mocking</h4><p>Functional mocks are created with <code>mockFunction</code>. The following, for example, creates a mock
 function taking a single <code>Int</code> argument and returning a <code>String</code>:</p><pre>
 val m = mockFunction[Int, String]
@@ -41,7 +44,7 @@ mock to be called once with the argument <code>42</code>, and that when called l
 value <code>&quot;Forty two&quot;</code>:</p><pre>
 m expects (42) returning &quot;Forty two&quot; once
 </pre><h4>Proxy mocking</h4><p>Proxy mocks are created with <code>mock</code>. The following, for example, creates a mock which implements
-all the traits (interfaces) implemented by the <code>Turtle</code> class:</p><pre>
+all the <code>Turtle</code> trait (interface):</p><pre>
 val m = mock[Turtle]
 </pre><p>Expectations can then be set on each of the methods within those traits. For example:</p><pre>
 m expects 'setPosition withArgs (10.0, 10.0)
@@ -150,7 +153,19 @@ expect((2.0, 1.0)) { m2.getPosition }
 
         <div class="types members" id="types">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" data-isabs="false" name="com.borachio.Expectation">
+              <ol><li visbl="pub" data-isabs="true" name="com.borachio.AbstractMockFactory">
+      <a id="AbstractMockFactory:AbstractMockFactory"></a>
+      <h4 class="signature"><a href="AbstractMockFactory.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">AbstractMockFactory</span>
+        
+        
+        <span class="result"> extends ProxyMockFactory</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.borachio.Expectation">
       <a id="Expectation:Expectation"></a>
       <h4 class="signature"><a href="Expectation.html">
       <span class="kind">class</span>
@@ -211,19 +226,6 @@ expect((2.0, 1.0)) { m2.getPosition }
       </span>
       </a></h4>
       
-    </li><li visbl="pub" data-isabs="true" name="com.borachio.MockFactory">
-      <a id="MockFactory:MockFactory"></a>
-      <h4 class="signature"><a href="MockFactory.html">
-      <span class="kind">trait</span>
-      <span class="symbol">
-        <span class="name">MockFactory</span>
-        
-        
-        <span class="result"> extends ProxyMockFactory with BeforeAndAfterEach</span>
-      </span>
-      </a></h4>
-      <p class="comment cmt">Trait that can be mixed into a <a href="http://www.scalatest.org/">ScalaTest</a> suite to provide
-mocking support.</p>
     </li><li visbl="pub" data-isabs="true" name="com.borachio.MockFunction">
       <a id="MockFunction:MockFunction"></a>
       <h4 class="signature"><a href="MockFunction.html">
@@ -399,6 +401,30 @@ mocking support.</p>
         
         
         <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.borachio.junit3">
+      <a id="junit3:junit3"></a>
+      <h4 class="signature"><a href="junit3/package.html">
+      <span class="kind">package</span>
+      <span class="symbol">
+        <span class="name">junit3</span>
+        
+        
+        
+      </span>
+      </a></h4>
+      
+    </li><li visbl="pub" data-isabs="false" name="com.borachio.scalatest">
+      <a id="scalatest:scalatest"></a>
+      <h4 class="signature"><a href="scalatest/package.html">
+      <span class="kind">package</span>
+      <span class="symbol">
+        <span class="name">scalatest</span>
+        
+        
+        
       </span>
       </a></h4>
       
