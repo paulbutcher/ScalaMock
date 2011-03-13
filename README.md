@@ -34,6 +34,8 @@ Native Scala mocking.
 
 For more examples, see `src/test/scala/examples`.
 
+[Using Borachio on Android](http://www.paulbutcher.com/2011/03/mock-objects-on-android-with-borachio-part-1/).
+
 ## Installation
 
 To use Borachio in [sbt](http://code.google.com/p/simple-build-tool/) add the following to your project file:
