@@ -1,3 +1,7 @@
+Version 0.5:
+
+- Improved error messages for inSequence expectations
+
 Version 0.4:
 
 - Add Junit3 support

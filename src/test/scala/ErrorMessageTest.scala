@@ -56,4 +56,17 @@ class ErrorMessageTest extends WordSpec with MockFactory {
       }
     }
   }
+  
+  "A sequence of expectations" when {
+    "unsatisfied" should {
+      "generate a sensible error message" ignore {
+        val m = mockFunction[Int, String, Float]
+        inSequence {
+          m expects (42, "foo")
+          m expects (1, "bar")
+        }
+        m(42, "foo")
+      }
+    }
+  }
 }

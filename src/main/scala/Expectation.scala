@@ -113,11 +113,13 @@ class Expectation(target: MockFunction) extends Handler {
     case None => ""
   }
   
-  private[borachio] def expectedCallsString = expectedCalls match {
-    case Some(c) if c.start == c.last => "expected calls: "+ c.start
-    case Some(c) => "expected calls: "+ c.start +" to "+ c.last
-    case None => ""
-  }
+  private[borachio] def expectedCallsString = "expected calls: "+ (
+    expectedCalls match {
+      case Some(c) if c.start == c.last => c.start
+      case Some(c) => c.start +" to "+ c.last
+      case None => "1"
+    }
+  )
   
   private[borachio] def actualCallsString = "actual calls: " + actualCalls
 

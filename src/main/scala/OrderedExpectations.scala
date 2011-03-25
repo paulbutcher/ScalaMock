@@ -37,6 +37,8 @@ private[borachio] class OrderedExpectations extends Expectations with Handler {
   }
   
   private[borachio] def satisfied = handlers.forall { _.satisfied }
+  
+  override def toString = handlers.mkString("inSequence {\n  ", "\n  ", "\n}")
 
   var currentIndex = 0
 }
