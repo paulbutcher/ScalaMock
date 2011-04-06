@@ -65,9 +65,9 @@ class Expectation(target: MockFunction) extends Handler {
   def once() = repeat(1)
   def twice() = repeat(2)
   
-  def anyNumberOfTimes() = repeat(0 to scala.Int.MaxValue)
-  def atLeastOnce() = repeat(1 to scala.Int.MaxValue)
-  def atLeastTwice() = repeat(2 to scala.Int.MaxValue)
+  def anyNumberOfTimes() = repeat(0 to scala.Int.MaxValue - 1)
+  def atLeastOnce() = repeat(1 to scala.Int.MaxValue - 1)
+  def atLeastTwice() = repeat(2 to scala.Int.MaxValue - 1)
 
   def noMoreThanOnce() = repeat(0 to 1)
   def noMoreThanTwice() = repeat(0 to 2)
