@@ -27,6 +27,48 @@ import junit.framework.TestCase
   * mocking support.
   *
   * See [[com.borachio]] for overview documentation.
+  *
+  * Borachio requires that you call reset expectations before each test and 
+  * verify them afterwards. You can achieve this in two different ways: with
+  * the `withExpectations` method (recommended), or by overriding `setUp` and `tearDown`.
+  *
+  * == withExpectations ==
+  *
+  * {{{
+  * def testSomething {
+  *   withExpectations {
+  *     // Setup expectations
+  *     // Exercise code under test
+  *   }
+  * }
+  * }}}
+  *
+  * == setUp and tearDown ==
+  *
+  * This is not the recommended approach, because JUnit calls `tearDown` even if a
+  * test fails, and exceptions in `tearDown` override exceptions thrown by the test.
+  * This will result in the original cause of the failure being masked.
+  *
+  * {{{
+  * override def setUp() {
+  *   resetExpectations
+  * }
+  *
+  * override def tearDown() {
+  *   verifyExpectations
+  * }
+  *
+  * def testSomething {
+  *   // Setup expectations
+  *   // Exercise code under test
+  * }
+  * }}}
   */
 trait MockFactory extends AbstractMockFactory { this: TestCase =>
+
+  protected def withExpectations(what: => Unit) {
+    resetExpectations
+    what
+    verifyExpectations
+  }
 }
