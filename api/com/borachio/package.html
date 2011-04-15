@@ -127,6 +127,9 @@ m1.forward(10.0)
 m2.forward(1.0)
 m1.penUp
 expect((2.0, 1.0)) { m2.getPosition }
+</pre><h4> Debugging </h4><p>If faced with a difficult to debug failing expectation, consider mixing
+the <a href="VerboseErrors.html" class="extype" name="com.borachio.VerboseErrors">VerboseErrors</a> trait into your test suite:</p><pre>
+class MyTest extends Suite with MockFactory with VerboseErrors
 </pre></div>
             
             
@@ -387,6 +390,19 @@ expect((2.0, 1.0)) { m2.getPosition }
       </span>
       </a></h4>
       
+    </li><li visbl="pub" data-isabs="true" name="com.borachio.VerboseErrors">
+      <a id="VerboseErrors:VerboseErrors"></a>
+      <h4 class="signature"><a href="VerboseErrors.html">
+      <span class="kind">trait</span>
+      <span class="symbol">
+        <span class="name">VerboseErrors</span>
+        
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </a></h4>
+      <p class="comment cmt">Trait that can be mixed into a <a href="AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a> to switch on
+verbose error messages.</p>
     </li></ol>
             </div>
 
