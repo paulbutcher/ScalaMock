@@ -1,3 +1,9 @@
+Version 0.6:
+
+- Add VerboseErrors trait
+- Add withExpectations for JUnit3
+- Fix anyNumberOfTimes, which didn't work because the range (0 to scala.Int.MaxValue) is actually empty
+
 Version 0.5:
 
 - Improved error messages for inSequence expectations
