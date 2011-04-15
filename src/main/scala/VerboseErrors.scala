@@ -20,33 +20,15 @@
 
 package com.borachio
 
-private[borachio] class UnorderedExpectations extends Expectations {
+/**
+ * Trait that can be mixed into a [[com.borachio.AbstractMockFactory]] to switch on
+ * verbose error messages.
+ *
+ * {{{
+ * class MyTest extends Suite with MockFactory with VerboseErrors
+ * }}}
+ */
+trait VerboseErrors { self: AbstractMockFactory =>
 
-  private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Any = {
-    for (handler <- handlers) {
-      val r = handler.handle(mock, arguments)
-      if (r.isDefined)
-        return r.get
-    }
-    throw new ExpectationException(
-      "Unexpected: "+ mock +" with arguments: "+ arguments.mkString("(", ", ", ")") + verboseMessage)
-  }
-  
-  private[borachio] def verify() {
-    handlers.foreach { handler =>
-      if (!handler.satisfied)
-        throw new ExpectationException("Unsatisfied expectation: "+ handler + verboseMessage)
-    }
-  }
-  
-  private[borachio] def reset(verbose: Boolean) {
-    handlers.clear
-    this.verbose = verbose
-  }
-  
-  private[borachio] def verboseMessage = if (verbose) "\n\nExpectations:\n" + toString else ""
-  
-  override def toString = handlers.map(_.toString).mkString("\n")
-  
-  private var verbose = false
+  override private[borachio] val verbose = true
 }

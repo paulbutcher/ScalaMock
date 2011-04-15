@@ -231,5 +231,14 @@ package com
  * m1.penUp
  * expect((2.0, 1.0)) { m2.getPosition }
  * }}}
+ *
+ * == Debugging ==
+ *
+ * If faced with a difficult to debug failing expectation, consider mixing 
+ * the [[com.borachio.VerboseErrors]] trait into your test suite:
+ * 
+ * {{{
+ * class MyTest extends Suite with MockFactory with VerboseErrors
+ * }}}
  */
 package object borachio

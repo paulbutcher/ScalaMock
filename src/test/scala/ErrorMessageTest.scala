@@ -23,7 +23,7 @@ package com.borachio
 import com.borachio.scalatest.MockFactory
 import org.scalatest.WordSpec
 
-class ErrorMessageTest extends WordSpec with MockFactory {
+class ErrorMessageTest extends WordSpec with MockFactory with VerboseErrors {
 
   "A mock function" when {
     "called unexpectedly" should {
@@ -67,6 +67,23 @@ class ErrorMessageTest extends WordSpec with MockFactory {
         }
         m(42, "foo")
       }
+    }
+  }
+  
+  "A complicated sequence of expectations" should {
+    "generate a sensible error message" ignore {
+      val m1 = mockFunction[Int, String, Float]
+      val m2 = mock[Seq[String]]
+      
+      m1 expects (42, "foo") returning 1.0 atLeastTwice;
+      inSequence {
+        m2 expects 'indexOf withArgs ("foo", 10) returning 42 once;
+        m1 expects (3, "bar") returning 1.23
+      }
+      m2 expects 'head throwing (new NoSuchElementException)
+      
+      m2.indexOf("foo", 10)
+      m2.isEmpty
     }
   }
 }

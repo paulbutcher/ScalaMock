@@ -40,5 +40,5 @@ private[borachio] class OrderedExpectations extends Expectations with Handler {
   
   override def toString = handlers.mkString("inSequence {\n  ", "\n  ", "\n}")
 
-  var currentIndex = 0
+  private var currentIndex = 0
 }
