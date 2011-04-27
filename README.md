@@ -42,7 +42,7 @@ To use Borachio in [sbt](http://code.google.com/p/simple-build-tool/) add the fo
 
     val borachio = "com.borachio" %% "borachio" % "latest.integration"
     
-[Maven](http://maven.apache.org/) users [look here](http://scala-tools.org/repo-releases/com/borachio/) to find the POM.
+[Maven](http://maven.apache.org/) users, or if you just want to download the JAR, [look here](http://scala-tools.org/repo-releases/com/borachio/).
 
 ## Building
 
