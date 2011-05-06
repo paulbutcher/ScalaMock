@@ -86,4 +86,18 @@ class ErrorMessageTest extends WordSpec with MockFactory with VerboseErrors {
       m2.isEmpty
     }
   }
+  
+  "A SUT that swallows exceptions" should {
+    "generate a sensible error message" ignore {
+      val m = mockFunction[Int, Unit]
+      m expects (1)
+      
+      try {
+        m(1)
+        m(2)
+      } catch {
+        case _ => m(3)
+      }
+    }
+  }
 }

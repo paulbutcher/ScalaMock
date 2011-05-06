@@ -1,3 +1,7 @@
+Version 0.7:
+
+- Stop expectation errors being lost when the SUT swallows exceptions
+
 Version 0.6:
 
 - Add VerboseErrors trait

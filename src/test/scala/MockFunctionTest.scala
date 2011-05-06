@@ -247,5 +247,16 @@ class MockFunctionTest extends WordSpec with MockFactory {
       m(-0.0001)
       intercept[ExpectationException] { m(42.1) }
     }
+    
+    "Cope with a SUT that swallows exceptions" in {
+      val m = mockFunction[Unit]
+      
+      try {
+        m()
+      } catch {
+        case _ => // do nothing
+      }
+      intercept[ExpectationException] { verifyExpectations }
+    }
   }
 }

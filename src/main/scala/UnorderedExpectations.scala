@@ -20,6 +20,8 @@
 
 package com.borachio
 
+import scala.collection.mutable.ListBuffer
+
 private[borachio] class UnorderedExpectations extends Expectations {
 
   private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Any = {
@@ -28,11 +30,13 @@ private[borachio] class UnorderedExpectations extends Expectations {
       if (r.isDefined)
         return r.get
     }
-    throw new ExpectationException(
-      "Unexpected: "+ mock +" with arguments: "+ arguments.mkString("(", ", ", ")") + verboseMessage)
+    handleUnexpectedCall("Unexpected: "+ mock +" with arguments: "+ arguments.mkString("(", ", ", ")"))
   }
   
   private[borachio] def verify() {
+    if (!unexpectedCalls.isEmpty)
+      throw new ExpectationException(unexpectedCallsMessage + verboseMessage)
+
     handlers.foreach { handler =>
       if (!handler.satisfied)
         throw new ExpectationException("Unsatisfied expectation: "+ handler + verboseMessage)
@@ -41,12 +45,21 @@ private[borachio] class UnorderedExpectations extends Expectations {
   
   private[borachio] def reset(verbose: Boolean) {
     handlers.clear
+    unexpectedCalls.clear
     this.verbose = verbose
+  }
+  
+  private[borachio] def handleUnexpectedCall(message: String) = {
+    unexpectedCalls += message
+    throw new ExpectationException(unexpectedCallsMessage + verboseMessage)
   }
   
   private[borachio] def verboseMessage = if (verbose) "\n\nExpectations:\n" + toString else ""
   
+  private[borachio] def unexpectedCallsMessage = unexpectedCalls.mkString("\n")
+  
   override def toString = handlers.map(_.toString).mkString("\n")
   
   private var verbose = false
+  private val unexpectedCalls = new ListBuffer[String]
 }
