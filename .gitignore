@@ -4,3 +4,7 @@ target/
 lib_managed/
 *.tmproj
 .DS_Store
+*.iml
+*.ipr
+*.iws
+.idea/
