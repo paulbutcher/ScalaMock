@@ -2,39 +2,43 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>com.borachio.AbstractMockFactory</title>
+          <title>com.borachio.specs2.MockFactory</title>
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link href="../../lib/template.css" rel="stylesheet" type="text/css" media="screen" />
-      <script type="text/javascript" src="../../lib/jquery.js"></script>
-      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
-      <script type="text/javascript" src="../../lib/template.js"></script>
-      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+      <link href="../../../lib/template.css" rel="stylesheet" type="text/css" media="screen" />
+      <script type="text/javascript" src="../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
     
         </head>
         <body class="type" onload="windowTitle();">
 
-      <p id="owner"><a href="../package.html" class="extype" name="com">com</a>.<a href="package.html" class="extype" name="com.borachio">borachio</a></p>
+      <p id="owner"><a href="../../package.html" class="extype" name="com">com</a>.<a href="../package.html" class="extype" name="com.borachio">borachio</a>.<a href="package.html" class="extype" name="com.borachio.specs2">specs2</a></p>
 
       <div id="definition">
-        <img src="../../lib/trait_big.png" />
-        <h1>AbstractMockFactory</h1>
+        <img src="../../../lib/trait_big.png" />
+        <h1>MockFactory</h1>
       </div>
 
       <h4 class="signature" id="signature">
       <span class="kind">trait</span>
       <span class="symbol">
-        <span class="name">AbstractMockFactory</span>
+        <span class="name">MockFactory</span>
         
         
-        <span class="result"> extends <a href="ProxyMockFactory.html" class="extype" name="com.borachio.ProxyMockFactory">ProxyMockFactory</a></span>
+        <span class="result"> extends <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a> with <span class="extype" name="org.specs2.specification.BeforeExample">BeforeExample</span> with <span class="extype" name="org.specs2.specification.AfterExample">AfterExample</span></span>
       </span>
       </h4>
-      <div class="fullcomment" id="comment"><div class="block">
-            linear super types: <a href="ProxyMockFactory.html" class="extype" name="com.borachio.ProxyMockFactory">ProxyMockFactory</a>, AnyRef, <span class="extype" name="scala.Any">Any</span>
-          </div><div class="block">
-            known subclasses: <a href="specs2/MockFactory.html" class="extype" name="com.borachio.specs2.MockFactory">MockFactory</a>, <a href="scalatest/MockFactory.html" class="extype" name="com.borachio.scalatest.MockFactory">MockFactory</a>, <a href="junit3/MockFactory.html" class="extype" name="com.borachio.junit3.MockFactory">MockFactory</a>
-          </div></div>
+      <div class="fullcomment" id="comment"><div class="comment cmt"><p>A trait that can be mixed into a <a href="http://etorreborre.github.com/specs2/">Specs2</a> specification to provide
+mocking support.
+</p></div><div class="block">
+            linear super types: <span class="extype" name="org.specs2.specification.AfterExample">AfterExample</span>, <span class="extype" name="org.specs2.specification.AfterContextExample">AfterContextExample</span>, <span class="extype" name="org.specs2.specification.BeforeExample">BeforeExample</span>, <span class="extype" name="org.specs2.specification.BeforeContextExample">BeforeContextExample</span>, <span class="extype" name="org.specs2.specification.FragmentsBuilder">FragmentsBuilder</span>, <span class="extype" name="org.specs2.specification.RegexSteps">RegexSteps</span>, <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a>, <a href="../ProxyMockFactory.html" class="extype" name="com.borachio.ProxyMockFactory">ProxyMockFactory</a>, AnyRef, <span class="extype" name="scala.Any">Any</span>
+          </div>
+            
+            
+            
+          </div>
 
       <div id="template">
 
@@ -47,7 +51,7 @@
           <div id="ancestors">
                 <span class="filtertype">Inherited</span>
                 <ol><li class="hideall">Hide All</li><li class="showall">Show all</li></ol>
-                <ol id="linearization"><li class="in" name="com.borachio.AbstractMockFactory">AbstractMockFactory</li><li class="in" name="com.borachio.ProxyMockFactory">ProxyMockFactory</li><li class="in" name="scala.AnyRef">AnyRef</li><li class="in" name="scala.Any">Any</li></ol>
+                <ol id="linearization"><li class="in" name="com.borachio.specs2.MockFactory">MockFactory</li><li class="in" name="org.specs2.specification.AfterExample">AfterExample</li><li class="in" name="org.specs2.specification.AfterContextExample">AfterContextExample</li><li class="in" name="org.specs2.specification.BeforeExample">BeforeExample</li><li class="in" name="org.specs2.specification.BeforeContextExample">BeforeContextExample</li><li class="in" name="org.specs2.specification.FragmentsBuilder">FragmentsBuilder</li><li class="in" name="org.specs2.specification.RegexSteps">RegexSteps</li><li class="in" name="com.borachio.AbstractMockFactory">AbstractMockFactory</li><li class="in" name="com.borachio.ProxyMockFactory">ProxyMockFactory</li><li class="in" name="scala.AnyRef">AnyRef</li><li class="in" name="scala.Any">Any</li></ol>
               </div>
           <div id="visbl">
               <span class="filtertype">Visibility</span>
@@ -65,7 +69,7 @@
               <h3>Type Members</h3>
               <ol><li visbl="prt" data-isabs="false" name="com.borachio.AbstractMockFactory.EpsilonMatcher">
       <a id="EpsilonMatcher:EpsilonMatcher"></a>
-      <h4 class="signature"><a href="AbstractMockFactory$EpsilonMatcher.html">
+      <h4 class="signature"><a href="../AbstractMockFactory$EpsilonMatcher.html">
       <span class="kind">class</span>
       <span class="symbol">
         <span class="name">EpsilonMatcher</span>
@@ -193,13 +197,15 @@
         <span class="name">*</span>
         
         
-        <span class="result">: <a href="MatchAny.html" class="extype" name="com.borachio.MatchAny">MatchAny</a></span>
+        <span class="result">: <a href="../MatchAny.html" class="extype" name="com.borachio.MatchAny">MatchAny</a></span>
       </span>
       </h4>
       
             
             <div class="fullcomment"><div class="block">
           attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a>
         </div></div>
           
     </li><li visbl="pub" data-isabs="false" name="scala.AnyRef#==">
@@ -257,14 +263,90 @@
       <span class="symbol">
         <span class="name">MockFunctionToExpectation</span>
         
-        <span class="params">(<span name="m">m: <a href="MockFunction.html" class="extype" name="com.borachio.MockFunction">MockFunction</a></span>)</span>
-        <span class="result">: <a href="Expectation.html" class="extype" name="com.borachio.Expectation">Expectation</a></span>
+        <span class="params">(<span name="m">m: <a href="../MockFunction.html" class="extype" name="com.borachio.MockFunction">MockFunction</a></span>)</span>
+        <span class="result">: <a href="../Expectation.html" class="extype" name="com.borachio.Expectation">Expectation</a></span>
       </span>
       </h4>
       
             
             <div class="fullcomment"><div class="block">
           attributes: protected implicit 
+        </div><div class="block">
+          definition classes: <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a>
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.specs2.specification.RegexSteps#RegexFragmentToFragments">
+      <a id="RegexFragmentToFragments(RegexFragment):Fragments"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol">
+        <span class="name">RegexFragmentToFragments</span>
+        
+        <span class="params">(<span name="r">r: <span class="extype" name="org.specs2.specification.RegexSteps.RegexFragment">RegexFragment</span></span>)</span>
+        <span class="result">: <span class="extype" name="org.specs2.specification.Fragments">Fragments</span></span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: implicit 
+        </div><div class="block">
+          definition classes: RegexSteps
+        </div></div>
+          
+    </li><li visbl="prt" data-isabs="false" name="com.borachio.specs2.MockFactory#after">
+      <a id="after:Any"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">after</span>
+        
+        
+        <span class="result">: <span class="extype" name="scala.Any">Any</span></span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="" class="extype" name="com.borachio.specs2.MockFactory">MockFactory</a> → AfterExample
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.specs2.specification.AfterExample#afterContext">
+      <a id="afterContext:After"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">afterContext</span>
+        
+        
+        <span class="result">: <span class="extype" name="org.specs2.specification.After">After</span></span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          definition classes: AfterExample → AfterContextExample
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.specs2.specification.FragmentsBuilder#argumentsFragment">
+      <a id="argumentsFragment(Arguments):FragmentsFragment"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol">
+        <span class="name">argumentsFragment</span>
+        
+        <span class="params">(<span name="a">a: <span class="extype" name="org.specs2.main.Arguments">Arguments</span></span>)</span>
+        <span class="result">: <span class="extype" name="org.specs2.specification.FragmentsBuilder.FragmentsFragment">FragmentsFragment</span></span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: implicit 
+        </div><div class="block">
+          definition classes: FragmentsBuilder
         </div></div>
           
     </li><li visbl="pub" data-isabs="false" name="scala.Any#asInstanceOf">
@@ -291,6 +373,59 @@ part of compilation it is not possible to check whether the contents of the list
             
             
           </div>
+          
+    </li><li visbl="prt" data-isabs="false" name="com.borachio.specs2.MockFactory#autoverify">
+      <a id="autoverify:Boolean"></a>
+      <h4 class="signature">
+      <span class="kind">var</span>
+      <span class="symbol">
+        <span class="name">autoverify</span>
+        
+        
+        <span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: protected 
+        </div></div>
+          
+    </li><li visbl="prt" data-isabs="false" name="com.borachio.specs2.MockFactory#before">
+      <a id="before:Unit"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">before</span>
+        
+        
+        <span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="" class="extype" name="com.borachio.specs2.MockFactory">MockFactory</a> → BeforeExample
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.specs2.specification.BeforeExample#beforeContext">
+      <a id="beforeContext:Before"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol">
+        <span class="name">beforeContext</span>
+        
+        
+        <span class="result">: <span class="extype" name="org.specs2.specification.Before">Before</span></span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          definition classes: BeforeExample → BeforeContextExample
+        </div></div>
           
     </li><li visbl="prt" data-isabs="false" name="scala.AnyRef#clone">
       <a id="clone():AnyRef"></a>
@@ -324,13 +459,15 @@ part of compilation it is not possible to check whether the contents of the list
         <span class="name">doubleToEpsilon</span>
         
         <span class="params">(<span name="d">d: <span class="extype" name="scala.Double">Double</span></span>)</span>
-        <span class="result">: <a href="AbstractMockFactory$EpsilonMatcher.html" class="extype" name="com.borachio.AbstractMockFactory.EpsilonMatcher">EpsilonMatcher</a></span>
+        <span class="result">: <a href="../AbstractMockFactory$EpsilonMatcher.html" class="extype" name="com.borachio.AbstractMockFactory.EpsilonMatcher">EpsilonMatcher</a></span>
       </span>
       </h4>
       
             
             <div class="fullcomment"><div class="block">
           attributes: protected implicit 
+        </div><div class="block">
+          definition classes: <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a>
         </div></div>
           
     </li><li visbl="pub" data-isabs="false" name="scala.AnyRef#eq">
@@ -427,6 +564,101 @@ there are no more references to the object.</p><p>The details of when and if the
             
           </div>
           
+    </li><li visbl="pub" data-isabs="false" name="org.specs2.specification.FragmentsBuilder#forExample">
+      <a id="forExample(String):ExampleDesc"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol">
+        <span class="name">forExample</span>
+        
+        <span class="params">(<span name="s">s: String</span>)</span>
+        <span class="result">: <span class="extype" name="org.specs2.specification.FragmentsBuilder.ExampleDesc">ExampleDesc</span></span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: implicit 
+        </div><div class="block">
+          definition classes: FragmentsBuilder
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.specs2.specification.FragmentsBuilder#fragmentFragments">
+      <a id="fragmentFragments(⇒ Fragment):FragmentsFragment"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol">
+        <span class="name">fragmentFragments</span>
+        
+        <span class="params">(<span name="f">f: ⇒ <span class="extype" name="org.specs2.specification.Fragment">Fragment</span></span>)</span>
+        <span class="result">: <span class="extype" name="org.specs2.specification.FragmentsBuilder.FragmentsFragment">FragmentsFragment</span></span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: implicit 
+        </div><div class="block">
+          definition classes: FragmentsBuilder
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.specs2.specification.FragmentsBuilder#fragments">
+      <a id="fragments(⇒ Fragment):Fragments"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol">
+        <span class="name">fragments</span>
+        
+        <span class="params">(<span name="f">f: ⇒ <span class="extype" name="org.specs2.specification.Fragment">Fragment</span></span>)</span>
+        <span class="result">: <span class="extype" name="org.specs2.specification.Fragments">Fragments</span></span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: implicit 
+        </div><div class="block">
+          definition classes: FragmentsBuilder
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.specs2.specification.FragmentsBuilder#fragmentsFragmentToFragments">
+      <a id="fragmentsFragmentToFragments(FragmentsFragment):Fragments"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol">
+        <span class="name">fragmentsFragmentToFragments</span>
+        
+        <span class="params">(<span name="fs">fs: <span class="extype" name="org.specs2.specification.FragmentsBuilder.FragmentsFragment">FragmentsFragment</span></span>)</span>
+        <span class="result">: <span class="extype" name="org.specs2.specification.Fragments">Fragments</span></span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: implicit 
+        </div><div class="block">
+          definition classes: FragmentsBuilder
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.specs2.specification.FragmentsBuilder#fragmentsFragments">
+      <a id="fragmentsFragments(⇒ Fragments):FragmentsFragment"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol">
+        <span class="name">fragmentsFragments</span>
+        
+        <span class="params">(<span name="fs">fs: ⇒ <span class="extype" name="org.specs2.specification.Fragments">Fragments</span></span>)</span>
+        <span class="result">: <span class="extype" name="org.specs2.specification.FragmentsBuilder.FragmentsFragment">FragmentsFragment</span></span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: implicit 
+        </div><div class="block">
+          definition classes: FragmentsBuilder
+        </div></div>
+          
     </li><li visbl="pub" data-isabs="false" name="scala.AnyRef#getClass">
       <a id="getClass():java.lang.Class[_]"></a>
       <h4 class="signature">
@@ -477,6 +709,25 @@ to verify that the behavior is consistent with the <code>equals</code> method.
             
           </div>
           
+    </li><li visbl="pub" data-isabs="false" name="org.specs2.specification.FragmentsBuilder#inScope">
+      <a id="inScope(Scope):Success"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol">
+        <span class="name">inScope</span>
+        
+        <span class="params">(<span name="s">s: <span class="extype" name="org.specs2.specification.Scope">Scope</span></span>)</span>
+        <span class="result">: <span class="extype" name="org.specs2.execute.Success">Success</span></span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: implicit 
+        </div><div class="block">
+          definition classes: FragmentsBuilder
+        </div></div>
+          
     </li><li visbl="prt" data-isabs="false" name="com.borachio.AbstractMockFactory#inSequence">
       <a id="inSequence(⇒ Unit):Unit"></a>
       <h4 class="signature">
@@ -492,6 +743,8 @@ to verify that the behavior is consistent with the <code>equals</code> method.
             
             <div class="fullcomment"><div class="block">
           attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a>
         </div></div>
           
     </li><li visbl="pub" data-isabs="false" name="scala.Any#isInstanceOf">
@@ -528,7 +781,7 @@ possible to check whether the contents of the list are of the requested typed.
         <span class="name">mock</span>
         <span class="tparams">[<span name="T">T</span>]</span>
         <span class="params">(<span class="implicit">implicit </span><span name="arg0">arg0: ClassManifest[T]</span>)</span>
-        <span class="result">: T with <a href="Mock.html" class="extype" name="com.borachio.Mock">Mock</a></span>
+        <span class="result">: T with <a href="../Mock.html" class="extype" name="com.borachio.Mock">Mock</a></span>
       </span>
       </h4>
       
@@ -536,7 +789,7 @@ possible to check whether the contents of the list are of the requested typed.
             <div class="fullcomment"><div class="block">
           attributes: protected 
         </div><div class="block">
-          definition classes: <a href="ProxyMockFactory.html" class="extype" name="com.borachio.ProxyMockFactory">ProxyMockFactory</a>
+          definition classes: <a href="../ProxyMockFactory.html" class="extype" name="com.borachio.ProxyMockFactory">ProxyMockFactory</a>
         </div></div>
           
     </li><li visbl="prt" data-isabs="false" name="com.borachio.AbstractMockFactory#mockFunction">
@@ -547,13 +800,15 @@ possible to check whether the contents of the list are of the requested typed.
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="T10">T10</span>, <span name="R">R</span>]</span>
         
-        <span class="result">: <a href="MockFunction10.html" class="extype" name="com.borachio.MockFunction10">MockFunction10</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]</span>
+        <span class="result">: <a href="../MockFunction10.html" class="extype" name="com.borachio.MockFunction10">MockFunction10</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]</span>
       </span>
       </h4>
       
             
             <div class="fullcomment"><div class="block">
           attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a>
         </div></div>
           
     </li><li visbl="prt" data-isabs="false" name="com.borachio.AbstractMockFactory#mockFunction">
@@ -564,13 +819,15 @@ possible to check whether the contents of the list are of the requested typed.
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span>
         
-        <span class="result">: <a href="MockFunction9.html" class="extype" name="com.borachio.MockFunction9">MockFunction9</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]</span>
+        <span class="result">: <a href="../MockFunction9.html" class="extype" name="com.borachio.MockFunction9">MockFunction9</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]</span>
       </span>
       </h4>
       
             
             <div class="fullcomment"><div class="block">
           attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a>
         </div></div>
           
     </li><li visbl="prt" data-isabs="false" name="com.borachio.AbstractMockFactory#mockFunction">
@@ -581,13 +838,15 @@ possible to check whether the contents of the list are of the requested typed.
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span>
         
-        <span class="result">: <a href="MockFunction8.html" class="extype" name="com.borachio.MockFunction8">MockFunction8</a>[T1, T2, T3, T4, T5, T6, T7, T8, R]</span>
+        <span class="result">: <a href="../MockFunction8.html" class="extype" name="com.borachio.MockFunction8">MockFunction8</a>[T1, T2, T3, T4, T5, T6, T7, T8, R]</span>
       </span>
       </h4>
       
             
             <div class="fullcomment"><div class="block">
           attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a>
         </div></div>
           
     </li><li visbl="prt" data-isabs="false" name="com.borachio.AbstractMockFactory#mockFunction">
@@ -598,13 +857,15 @@ possible to check whether the contents of the list are of the requested typed.
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span>
         
-        <span class="result">: <a href="MockFunction7.html" class="extype" name="com.borachio.MockFunction7">MockFunction7</a>[T1, T2, T3, T4, T5, T6, T7, R]</span>
+        <span class="result">: <a href="../MockFunction7.html" class="extype" name="com.borachio.MockFunction7">MockFunction7</a>[T1, T2, T3, T4, T5, T6, T7, R]</span>
       </span>
       </h4>
       
             
             <div class="fullcomment"><div class="block">
           attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a>
         </div></div>
           
     </li><li visbl="prt" data-isabs="false" name="com.borachio.AbstractMockFactory#mockFunction">
@@ -615,13 +876,15 @@ possible to check whether the contents of the list are of the requested typed.
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span>
         
-        <span class="result">: <a href="MockFunction6.html" class="extype" name="com.borachio.MockFunction6">MockFunction6</a>[T1, T2, T3, T4, T5, T6, R]</span>
+        <span class="result">: <a href="../MockFunction6.html" class="extype" name="com.borachio.MockFunction6">MockFunction6</a>[T1, T2, T3, T4, T5, T6, R]</span>
       </span>
       </h4>
       
             
             <div class="fullcomment"><div class="block">
           attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a>
         </div></div>
           
     </li><li visbl="prt" data-isabs="false" name="com.borachio.AbstractMockFactory#mockFunction">
@@ -632,13 +895,15 @@ possible to check whether the contents of the list are of the requested typed.
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span>
         
-        <span class="result">: <a href="MockFunction5.html" class="extype" name="com.borachio.MockFunction5">MockFunction5</a>[T1, T2, T3, T4, T5, R]</span>
+        <span class="result">: <a href="../MockFunction5.html" class="extype" name="com.borachio.MockFunction5">MockFunction5</a>[T1, T2, T3, T4, T5, R]</span>
       </span>
       </h4>
       
             
             <div class="fullcomment"><div class="block">
           attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a>
         </div></div>
           
     </li><li visbl="prt" data-isabs="false" name="com.borachio.AbstractMockFactory#mockFunction">
@@ -649,13 +914,15 @@ possible to check whether the contents of the list are of the requested typed.
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span>
         
-        <span class="result">: <a href="MockFunction4.html" class="extype" name="com.borachio.MockFunction4">MockFunction4</a>[T1, T2, T3, T4, R]</span>
+        <span class="result">: <a href="../MockFunction4.html" class="extype" name="com.borachio.MockFunction4">MockFunction4</a>[T1, T2, T3, T4, R]</span>
       </span>
       </h4>
       
             
             <div class="fullcomment"><div class="block">
           attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a>
         </div></div>
           
     </li><li visbl="prt" data-isabs="false" name="com.borachio.AbstractMockFactory#mockFunction">
@@ -666,13 +933,15 @@ possible to check whether the contents of the list are of the requested typed.
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span>
         
-        <span class="result">: <a href="MockFunction3.html" class="extype" name="com.borachio.MockFunction3">MockFunction3</a>[T1, T2, T3, R]</span>
+        <span class="result">: <a href="../MockFunction3.html" class="extype" name="com.borachio.MockFunction3">MockFunction3</a>[T1, T2, T3, R]</span>
       </span>
       </h4>
       
             
             <div class="fullcomment"><div class="block">
           attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a>
         </div></div>
           
     </li><li visbl="prt" data-isabs="false" name="com.borachio.AbstractMockFactory#mockFunction">
@@ -683,13 +952,15 @@ possible to check whether the contents of the list are of the requested typed.
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span>
         
-        <span class="result">: <a href="MockFunction2.html" class="extype" name="com.borachio.MockFunction2">MockFunction2</a>[T1, T2, R]</span>
+        <span class="result">: <a href="../MockFunction2.html" class="extype" name="com.borachio.MockFunction2">MockFunction2</a>[T1, T2, R]</span>
       </span>
       </h4>
       
             
             <div class="fullcomment"><div class="block">
           attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a>
         </div></div>
           
     </li><li visbl="prt" data-isabs="false" name="com.borachio.AbstractMockFactory#mockFunction">
@@ -700,13 +971,15 @@ possible to check whether the contents of the list are of the requested typed.
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span>
         
-        <span class="result">: <a href="MockFunction1.html" class="extype" name="com.borachio.MockFunction1">MockFunction1</a>[T1, R]</span>
+        <span class="result">: <a href="../MockFunction1.html" class="extype" name="com.borachio.MockFunction1">MockFunction1</a>[T1, R]</span>
       </span>
       </h4>
       
             
             <div class="fullcomment"><div class="block">
           attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a>
         </div></div>
           
     </li><li visbl="prt" data-isabs="false" name="com.borachio.AbstractMockFactory#mockFunction">
@@ -717,13 +990,15 @@ possible to check whether the contents of the list are of the requested typed.
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="R">R</span>]</span>
         
-        <span class="result">: <a href="MockFunction0.html" class="extype" name="com.borachio.MockFunction0">MockFunction0</a>[R]</span>
+        <span class="result">: <a href="../MockFunction0.html" class="extype" name="com.borachio.MockFunction0">MockFunction0</a>[R]</span>
       </span>
       </h4>
       
             
             <div class="fullcomment"><div class="block">
           attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a>
         </div></div>
           
     </li><li visbl="pub" data-isabs="false" name="scala.AnyRef#ne">
@@ -811,6 +1086,46 @@ possible to check whether the contents of the list are of the requested typed.
             
             <div class="fullcomment"><div class="block">
           attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a>
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.specs2.specification.FragmentsBuilder#stringToHtmlLinkFragments">
+      <a id="stringToHtmlLinkFragments(String):HtmlLinkFragments"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol">
+        <span class="name">stringToHtmlLinkFragments</span>
+        
+        <span class="params">(<span name="s">s: String</span>)</span>
+        <span class="result">: <span class="extype" name="org.specs2.specification.FragmentsBuilder.HtmlLinkFragments">HtmlLinkFragments</span></span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: implicit 
+        </div><div class="block">
+          definition classes: FragmentsBuilder
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.specs2.specification.FragmentsBuilder#stringToHtmlLinkFragments2">
+      <a id="stringToHtmlLinkFragments2(String):HtmlLinkFragments2"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol">
+        <span class="name">stringToHtmlLinkFragments2</span>
+        
+        <span class="params">(<span name="s">s: String</span>)</span>
+        <span class="result">: <span class="extype" name="org.specs2.specification.FragmentsBuilder.HtmlLinkFragments2">HtmlLinkFragments2</span></span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: implicit 
+        </div><div class="block">
+          definition classes: FragmentsBuilder
         </div></div>
           
     </li><li visbl="pub" data-isabs="false" name="scala.AnyRef#synchronized">
@@ -830,6 +1145,63 @@ possible to check whether the contents of the list are of the requested typed.
           attributes: final 
         </div><div class="block">
           definition classes: AnyRef
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.specs2.specification.FragmentsBuilder#textFragment">
+      <a id="textFragment(String):FragmentsFragment"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol">
+        <span class="name">textFragment</span>
+        
+        <span class="params">(<span name="s">s: String</span>)</span>
+        <span class="result">: <span class="extype" name="org.specs2.specification.FragmentsBuilder.FragmentsFragment">FragmentsFragment</span></span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: implicit 
+        </div><div class="block">
+          definition classes: FragmentsBuilder
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.specs2.specification.FragmentsBuilder#textStart">
+      <a id="textStart(String):Fragments"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol">
+        <span class="name">textStart</span>
+        
+        <span class="params">(<span name="s">s: String</span>)</span>
+        <span class="result">: <span class="extype" name="org.specs2.specification.Fragments">Fragments</span></span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: implicit 
+        </div><div class="block">
+          definition classes: FragmentsBuilder
+        </div></div>
+          
+    </li><li visbl="pub" data-isabs="false" name="org.specs2.specification.FragmentsBuilder#title">
+      <a id="title(String):SpecTitle"></a>
+      <h4 class="signature">
+      <span class="kind">implicit def</span>
+      <span class="symbol">
+        <span class="name">title</span>
+        
+        <span class="params">(<span name="s">s: String</span>)</span>
+        <span class="result">: <span class="extype" name="org.specs2.specification.FragmentsBuilder.SpecTitle">SpecTitle</span></span>
+      </span>
+      </h4>
+      
+            
+            <div class="fullcomment"><div class="block">
+          attributes: implicit 
+        </div><div class="block">
+          definition classes: FragmentsBuilder
         </div></div>
           
     </li><li visbl="pub" data-isabs="false" name="scala.AnyRef#toString">
@@ -869,6 +1241,8 @@ possible to check whether the contents of the list are of the requested typed.
             
             <div class="fullcomment"><div class="block">
           attributes: protected 
+        </div><div class="block">
+          definition classes: <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a>
         </div></div>
           
     </li><li visbl="pub" data-isabs="false" name="scala.AnyRef#wait">
@@ -931,8 +1305,22 @@ possible to check whether the contents of the list are of the requested typed.
     </li></ol>
             </div>
 
-        <div class="parent" name="com.borachio.ProxyMockFactory">
-              <h3>Inherited from <a href="ProxyMockFactory.html" class="extype" name="com.borachio.ProxyMockFactory">ProxyMockFactory</a></h3>
+        <div class="parent" name="org.specs2.specification.AfterExample">
+              <h3>Inherited from <span class="extype" name="org.specs2.specification.AfterExample">AfterExample</span></h3>
+            </div><div class="parent" name="org.specs2.specification.AfterContextExample">
+              <h3>Inherited from <span class="extype" name="org.specs2.specification.AfterContextExample">AfterContextExample</span></h3>
+            </div><div class="parent" name="org.specs2.specification.BeforeExample">
+              <h3>Inherited from <span class="extype" name="org.specs2.specification.BeforeExample">BeforeExample</span></h3>
+            </div><div class="parent" name="org.specs2.specification.BeforeContextExample">
+              <h3>Inherited from <span class="extype" name="org.specs2.specification.BeforeContextExample">BeforeContextExample</span></h3>
+            </div><div class="parent" name="org.specs2.specification.FragmentsBuilder">
+              <h3>Inherited from <span class="extype" name="org.specs2.specification.FragmentsBuilder">FragmentsBuilder</span></h3>
+            </div><div class="parent" name="org.specs2.specification.RegexSteps">
+              <h3>Inherited from <span class="extype" name="org.specs2.specification.RegexSteps">RegexSteps</span></h3>
+            </div><div class="parent" name="com.borachio.AbstractMockFactory">
+              <h3>Inherited from <a href="../AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a></h3>
+            </div><div class="parent" name="com.borachio.ProxyMockFactory">
+              <h3>Inherited from <a href="../ProxyMockFactory.html" class="extype" name="com.borachio.ProxyMockFactory">ProxyMockFactory</a></h3>
             </div><div class="parent" name="scala.AnyRef">
               <h3>Inherited from AnyRef</h3>
             </div><div class="parent" name="scala.Any">
