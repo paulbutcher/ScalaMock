@@ -1,3 +1,7 @@
+Version 0.8:
+
+- Integration with specs2 [Daniel Westheide](https://github.com/dwestheide)
+
 Version 0.7:
 
 - Stop expectation errors being lost when the SUT swallows exceptions
