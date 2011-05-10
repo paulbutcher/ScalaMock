@@ -30,6 +30,8 @@ class MatchEpsilon(value: Double) extends Equals {
     case n: Number => abs(value - n.doubleValue) < MatchEpsilon.epsilon
     case _ => false
   }
+  
+  override def toString = "~"+ value
 }
 
 object MatchEpsilon {
