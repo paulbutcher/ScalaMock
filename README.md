@@ -71,6 +71,8 @@ Borachio is a character from _Much Ado About Nothing_, the plot of which revolve
 
 ## Thanks
 
-The inner workings of Borachio's proxy mocks were inspired by [`scala.tools.reflect.Mock`](http://lampsvn.epfl.ch/svn-repos/scala/scala/trunk/src/compiler/scala/tools/reflect/Mock.scala) written by Paul Philips in the Scala compiler.
+* The inner workings of Borachio's proxy mocks were inspired by [`scala.tools.reflect.Mock`](http://lampsvn.epfl.ch/svn-repos/scala/scala/trunk/src/compiler/scala/tools/reflect/Mock.scala) written by Paul Philips in the Scala compiler.
 
-Thanks also to Bill Venners for discussion and suggestions.
+* Bill Venners for discussion and suggestions.
+
+* [Daniel Westheide](https://github.com/dwestheide) for [specs2](http://etorreborre.github.com/specs2/) integration.

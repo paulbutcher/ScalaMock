@@ -1,3 +1,8 @@
+Version 1.0:
+
+- Scala 2.9.0 support
+- Test frameworks are now optional dependencies
+
 Version 0.8:
 
 - Integration with specs2 [Daniel Westheide](https://github.com/dwestheide)
