@@ -5,35 +5,33 @@
           <title>com.borachio</title>
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link href="../../lib/template.css" rel="stylesheet" type="text/css" media="screen" />
+      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
       <script type="text/javascript" src="../../lib/jquery.js"></script>
       <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
       <script type="text/javascript" src="../../lib/template.js"></script>
       <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
     
         </head>
-        <body class="value" onload="windowTitle();">
-
-      <p id="owner"><a href="../package.html" class="extype" name="com">com</a></p>
-
+        <body class="value">
       <div id="definition">
         <img src="../../lib/package_big.png" />
+        <p id="owner"><a name="com" class="extype" href="../package.html">com</a></p>
         <h1>borachio</h1>
       </div>
 
       <h4 class="signature" id="signature">
       <span class="kind">package</span>
-      <span class="symbol">
+      <span class="symbol"> 
         <span class="name">borachio</span>
-        
         
         
       </span>
       </h4>
-      <div class="fullcomment" id="comment"><div class="comment cmt"><h3>Borachio: Native Scala mocking</h3><p>To use Borachio with ScalaTest, mix the <a href="scalatest/MockFactory.html" class="extype" name="com.borachio.scalatest.MockFactory">MockFactory</a> trait into a
+      
+          <div class="fullcommenttop" id="comment"><div class="comment cmt"><h3>Borachio: Native Scala mocking</h3><p>To use Borachio with ScalaTest, mix the <a name="com.borachio.scalatest.MockFactory" class="extype" href="scalatest/MockFactory.html">MockFactory</a> trait into a
 Suite:</p><pre>
 class MyTest extends Suite with MockFactory
-</pre><p>To use Borachio with JUnit3, mix the <a href="junit3/MockFactory.html" class="extype" name="com.borachio.junit3.MockFactory">MockFactory</a> trait into a
+</pre><p>To use Borachio with JUnit3, mix the <a name="com.borachio.junit3.MockFactory" class="extype" href="junit3/MockFactory.html">MockFactory</a> trait into a
 TestCase:</p><pre>
 class MyTest extends TestCase with MockFactory
 </pre><p>Borachio supports two different mocking styles - <i>Functional mocking</i> and <i>Proxy mocking</i>.</p><h4>Functional mocking</h4><p>Functional mocks are created with <code>mockFunction</code>. The following, for example, creates a mock
@@ -78,7 +76,8 @@ m1 returns 42
 m2 expects (&quot;this&quot;, &quot;that&quot;) returning &quot;the other&quot;
 </pre><p>If no return value is specified, functional mocks return <code>null.asInstanceOf[R]</code> where <code>R</code> is the
 return type (which equates to <code>0</code> for <code>Int</code>, <code>0.0</code> for <code>Double</code> etc.).</p><p>If no return value is specified, proxy mocks return <code>null</code>. This works correctly for most return
-types, but not for methods returning primitive types (<code>Int</code>, <code>Double</code> etc.), where returning<code>null</code> leads to a <code>NullPointerException</code>. So you will need to explicitly specify a return value
+types, but not for methods returning primitive types (<code>Int</code>, <code>Double</code> etc.), where returning
+<code>null</code> leads to a <code>NullPointerException</code>. So you will need to explicitly specify a return value
 for such methods. This restriction may be lifted in the future.</p><h5>Exceptions</h5><p>Instead of a return value, a mock can be instructed to throw:</p><pre>
 m expects (&quot;this&quot;, &quot;that&quot;) throws new RuntimeException(&quot;what's that?&quot;)
 </pre><h5>Call count</h5><p>By default, mocks expect one or more calls (i.e. only fail if the function or method is never
@@ -89,7 +88,7 @@ m2 expects (3) repeat 10
 m1 expects (&quot;this&quot;, &quot;that&quot;) once
 m2 returns &quot;foo&quot; noMoreThanTwice
 m3 expects (42) repeated 3 times
-</pre><p>For a full list, see <a href="Expectation.html" class="extype" name="com.borachio.Expectation">Expectation</a>.</p><h4>Ordering</h4><p>By default, expectations can be satisfied in any order. For example:</p><pre>
+</pre><p>For a full list, see <a name="com.borachio.Expectation" class="extype" href="Expectation.html">Expectation</a>.</p><h4>Ordering</h4><p>By default, expectations can be satisfied in any order. For example:</p><pre>
 m expects (1)
 m expects (2)
 m(2)
@@ -128,13 +127,11 @@ m2.forward(1.0)
 m1.penUp
 expect((2.0, 1.0)) { m2.getPosition }
 </pre><h4> Debugging </h4><p>If faced with a difficult to debug failing expectation, consider mixing
-the <a href="VerboseErrors.html" class="extype" name="com.borachio.VerboseErrors">VerboseErrors</a> trait into your test suite:</p><pre>
-class MyTest extends Suite with MockFactory with VerboseErrors
-</pre></div>
-            
-            
-            
-          </div>
+one or both of the <a name="com.borachio.VerboseErrors" class="extype" href="VerboseErrors.html">VerboseErrors</a> or <a name="com.borachio.CallLogging" class="extype" href="CallLogging.html">CallLogging</a> traits
+into your test suite:</p><pre>
+class MyTest extends Suite with MockFactory with VerboseErrors with CallLogging
+</pre></div></div>
+        
 
       <div id="template">
 
@@ -144,11 +141,7 @@ class MyTest extends Suite with MockFactory with VerboseErrors
           
           <div id="visbl">
               <span class="filtertype">Visibility</span>
-              <ol><li class="public in">Public</li><li class="all out">All</li></ol>
-            </div>
-          <div id="impl">
-              <span class="filtertype">Impl.</span>
-              <ol><li class="concrete in">Concrete</li><li class="abstract in">Abstract</li></ol>
+              <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
             </div>
         </div>
 
@@ -156,305 +149,290 @@ class MyTest extends Suite with MockFactory with VerboseErrors
 
         <div class="types members" id="types">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" data-isabs="true" name="com.borachio.AbstractMockFactory">
+              <ol><li visbl="pub" name="com.borachio.AbstractMockFactory" data-isabs="true">
       <a id="AbstractMockFactory:AbstractMockFactory"></a>
-      <h4 class="signature"><a href="AbstractMockFactory.html">
+      <h4 class="signature">
       <span class="kind">trait</span>
-      <span class="symbol">
-        <span class="name">AbstractMockFactory</span>
-        
+      <span class="symbol"> 
+        <a href="AbstractMockFactory.html"><span class="name">AbstractMockFactory</span></a>
         
         <span class="result"> extends ProxyMockFactory</span>
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.Expectation">
-      <a id="Expectation:Expectation"></a>
-      <h4 class="signature"><a href="Expectation.html">
-      <span class="kind">class</span>
-      <span class="symbol">
-        <span class="name">Expectation</span>
+    </li><li visbl="pub" name="com.borachio.CallLogging" data-isabs="true">
+      <a id="CallLogging:CallLogging"></a>
+      <h4 class="signature">
+      <span class="kind">trait</span>
+      <span class="symbol"> 
+        <a href="CallLogging.html"><span class="name">CallLogging</span></a>
         
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Trait that can be mixed into a <a name="com.borachio.AbstractMockFactory" class="extype" href="AbstractMockFactory.html">AbstractMockFactory</a> to switch on
+call logging.</p>
+    </li><li visbl="pub" name="com.borachio.Expectation" data-isabs="false">
+      <a id="Expectation:Expectation"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="Expectation.html"><span class="name">Expectation</span></a>
         
         <span class="result"> extends Handler</span>
       </span>
-      </a></h4>
+      </h4>
       <p class="comment cmt">Represents a single expectation
 </p>
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.ExpectationException">
+    </li><li visbl="pub" name="com.borachio.ExpectationException" data-isabs="false">
       <a id="ExpectationException:ExpectationException"></a>
-      <h4 class="signature"><a href="ExpectationException.html">
+      <h4 class="signature">
       <span class="kind">case class</span>
-      <span class="symbol">
-        <span class="name">ExpectationException</span>
+      <span class="symbol"> 
+        <a href="ExpectationException.html"><span class="name">ExpectationException</span></a>
         
-        <span class="params">(<span name="msg">msg: String</span>)</span>
-        <span class="result"> extends RuntimeException with Product</span>
+        <span class="params">(<span name="msg">msg: String</span>)</span><span class="result"> extends RuntimeException with Product with Serializable</span>
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.MatchAny">
+    </li><li visbl="pub" name="com.borachio.MatchAny" data-isabs="false">
       <a id="MatchAny:MatchAny"></a>
-      <h4 class="signature"><a href="MatchAny.html">
+      <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol">
-        <span class="name">MatchAny</span>
-        
+      <span class="symbol"> 
+        <a href="MatchAny.html"><span class="name">MatchAny</span></a>
         
         <span class="result"> extends Equals</span>
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.MatchEpsilon">
+    </li><li visbl="pub" name="com.borachio.MatchEpsilon" data-isabs="false">
       <a id="MatchEpsilon:MatchEpsilon"></a>
-      <h4 class="signature"><a href="MatchEpsilon.html">
+      <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol">
-        <span class="name">MatchEpsilon</span>
-        
+      <span class="symbol"> 
+        <a href="MatchEpsilon.html"><span class="name">MatchEpsilon</span></a>
         
         <span class="result"> extends Equals</span>
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="true" name="com.borachio.Mock">
+    </li><li visbl="pub" name="com.borachio.Mock" data-isabs="true">
       <a id="Mock:Mock"></a>
-      <h4 class="signature"><a href="Mock.html">
+      <h4 class="signature">
       <span class="kind">trait</span>
-      <span class="symbol">
-        <span class="name">Mock</span>
-        
+      <span class="symbol"> 
+        <a href="Mock.html"><span class="name">Mock</span></a>
         
         <span class="result"> extends AnyRef</span>
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="true" name="com.borachio.MockFunction">
+    </li><li visbl="pub" name="com.borachio.MockFunction" data-isabs="true">
       <a id="MockFunction:MockFunction"></a>
-      <h4 class="signature"><a href="MockFunction.html">
+      <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol">
-        <span class="name">MockFunction</span>
-        
+      <span class="symbol"> 
+        <a href="MockFunction.html"><span class="name">MockFunction</span></a>
         
         <span class="result"> extends AnyRef</span>
       </span>
-      </a></h4>
-      
-            
-            <div class="fullcomment"><div class="block">
-          attributes: abstract 
-        </div></div>
-          
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.MockFunction0">
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>abstract </dd></dl></div>
+    </li><li visbl="pub" name="com.borachio.MockFunction0" data-isabs="false">
       <a id="MockFunction0:MockFunction0[R]"></a>
-      <h4 class="signature"><a href="MockFunction0.html">
+      <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol">
-        <span class="name">MockFunction0</span>
+      <span class="symbol"> 
+        <a href="MockFunction0.html"><span class="name">MockFunction0</span></a>
         <span class="tparams">[<span name="R">R</span>]</span>
-        
         <span class="result"> extends MockFunction with () ⇒ R</span>
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.MockFunction1">
+    </li><li visbl="pub" name="com.borachio.MockFunction1" data-isabs="false">
       <a id="MockFunction1:MockFunction1[T1, R]"></a>
-      <h4 class="signature"><a href="MockFunction1.html">
+      <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol">
-        <span class="name">MockFunction1</span>
+      <span class="symbol"> 
+        <a href="MockFunction1.html"><span class="name">MockFunction1</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span>
-        
         <span class="result"> extends MockFunction with (T1) ⇒ R</span>
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.MockFunction10">
+    </li><li visbl="pub" name="com.borachio.MockFunction10" data-isabs="false">
       <a id="MockFunction10:MockFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]"></a>
-      <h4 class="signature"><a href="MockFunction10.html">
+      <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol">
-        <span class="name">MockFunction10</span>
+      <span class="symbol"> 
+        <a href="MockFunction10.html"><span class="name">MockFunction10</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="T10">T10</span>, <span name="R">R</span>]</span>
-        
         <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) ⇒ R</span>
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.MockFunction2">
+    </li><li visbl="pub" name="com.borachio.MockFunction2" data-isabs="false">
       <a id="MockFunction2:MockFunction2[T1, T2, R]"></a>
-      <h4 class="signature"><a href="MockFunction2.html">
+      <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol">
-        <span class="name">MockFunction2</span>
+      <span class="symbol"> 
+        <a href="MockFunction2.html"><span class="name">MockFunction2</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span>
-        
         <span class="result"> extends MockFunction with (T1, T2) ⇒ R</span>
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.MockFunction3">
+    </li><li visbl="pub" name="com.borachio.MockFunction3" data-isabs="false">
       <a id="MockFunction3:MockFunction3[T1, T2, T3, R]"></a>
-      <h4 class="signature"><a href="MockFunction3.html">
+      <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol">
-        <span class="name">MockFunction3</span>
+      <span class="symbol"> 
+        <a href="MockFunction3.html"><span class="name">MockFunction3</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span>
-        
         <span class="result"> extends MockFunction with (T1, T2, T3) ⇒ R</span>
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.MockFunction4">
+    </li><li visbl="pub" name="com.borachio.MockFunction4" data-isabs="false">
       <a id="MockFunction4:MockFunction4[T1, T2, T3, T4, R]"></a>
-      <h4 class="signature"><a href="MockFunction4.html">
+      <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol">
-        <span class="name">MockFunction4</span>
+      <span class="symbol"> 
+        <a href="MockFunction4.html"><span class="name">MockFunction4</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span>
-        
         <span class="result"> extends MockFunction with (T1, T2, T3, T4) ⇒ R</span>
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.MockFunction5">
+    </li><li visbl="pub" name="com.borachio.MockFunction5" data-isabs="false">
       <a id="MockFunction5:MockFunction5[T1, T2, T3, T4, T5, R]"></a>
-      <h4 class="signature"><a href="MockFunction5.html">
+      <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol">
-        <span class="name">MockFunction5</span>
+      <span class="symbol"> 
+        <a href="MockFunction5.html"><span class="name">MockFunction5</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span>
-        
         <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5) ⇒ R</span>
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.MockFunction6">
+    </li><li visbl="pub" name="com.borachio.MockFunction6" data-isabs="false">
       <a id="MockFunction6:MockFunction6[T1, T2, T3, T4, T5, T6, R]"></a>
-      <h4 class="signature"><a href="MockFunction6.html">
+      <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol">
-        <span class="name">MockFunction6</span>
+      <span class="symbol"> 
+        <a href="MockFunction6.html"><span class="name">MockFunction6</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span>
-        
         <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6) ⇒ R</span>
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.MockFunction7">
+    </li><li visbl="pub" name="com.borachio.MockFunction7" data-isabs="false">
       <a id="MockFunction7:MockFunction7[T1, T2, T3, T4, T5, T6, T7, R]"></a>
-      <h4 class="signature"><a href="MockFunction7.html">
+      <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol">
-        <span class="name">MockFunction7</span>
+      <span class="symbol"> 
+        <a href="MockFunction7.html"><span class="name">MockFunction7</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span>
-        
         <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6, T7) ⇒ R</span>
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.MockFunction8">
+    </li><li visbl="pub" name="com.borachio.MockFunction8" data-isabs="false">
       <a id="MockFunction8:MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R]"></a>
-      <h4 class="signature"><a href="MockFunction8.html">
+      <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol">
-        <span class="name">MockFunction8</span>
+      <span class="symbol"> 
+        <a href="MockFunction8.html"><span class="name">MockFunction8</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span>
-        
         <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6, T7, T8) ⇒ R</span>
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.MockFunction9">
+    </li><li visbl="pub" name="com.borachio.MockFunction9" data-isabs="false">
       <a id="MockFunction9:MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]"></a>
-      <h4 class="signature"><a href="MockFunction9.html">
+      <h4 class="signature">
       <span class="kind">class</span>
-      <span class="symbol">
-        <span class="name">MockFunction9</span>
+      <span class="symbol"> 
+        <a href="MockFunction9.html"><span class="name">MockFunction9</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span>
-        
         <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6, T7, T8, T9) ⇒ R</span>
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="true" name="com.borachio.ProxyMockFactory">
+    </li><li visbl="pub" name="com.borachio.ProxyMockFactory" data-isabs="true">
       <a id="ProxyMockFactory:ProxyMockFactory"></a>
-      <h4 class="signature"><a href="ProxyMockFactory.html">
+      <h4 class="signature">
       <span class="kind">trait</span>
-      <span class="symbol">
-        <span class="name">ProxyMockFactory</span>
-        
+      <span class="symbol"> 
+        <a href="ProxyMockFactory.html"><span class="name">ProxyMockFactory</span></a>
         
         <span class="result"> extends AnyRef</span>
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="true" name="com.borachio.VerboseErrors">
+    </li><li visbl="pub" name="com.borachio.VerboseErrors" data-isabs="true">
       <a id="VerboseErrors:VerboseErrors"></a>
-      <h4 class="signature"><a href="VerboseErrors.html">
+      <h4 class="signature">
       <span class="kind">trait</span>
-      <span class="symbol">
-        <span class="name">VerboseErrors</span>
-        
+      <span class="symbol"> 
+        <a href="VerboseErrors.html"><span class="name">VerboseErrors</span></a>
         
         <span class="result"> extends AnyRef</span>
       </span>
-      </a></h4>
-      <p class="comment cmt">Trait that can be mixed into a <a href="AbstractMockFactory.html" class="extype" name="com.borachio.AbstractMockFactory">AbstractMockFactory</a> to switch on
+      </h4>
+      <p class="comment cmt">Trait that can be mixed into a <a name="com.borachio.AbstractMockFactory" class="extype" href="AbstractMockFactory.html">AbstractMockFactory</a> to switch on
 verbose error messages.</p>
     </li></ol>
             </div>
+        
+        
 
         <div class="values members" id="values">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" data-isabs="false" name="com.borachio.MatchEpsilon">
+              <ol><li visbl="pub" name="com.borachio.MatchEpsilon" data-isabs="false">
       <a id="MatchEpsilon:MatchEpsilon"></a>
-      <h4 class="signature"><a href="MatchEpsilon$.html">
+      <h4 class="signature">
       <span class="kind">object</span>
-      <span class="symbol">
-        <span class="name">MatchEpsilon</span>
-        
+      <span class="symbol"> 
+        <a href="MatchEpsilon$.html"><span class="name">MatchEpsilon</span></a>
         
         <span class="result"> extends AnyRef</span>
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.junit3">
+    </li><li visbl="pub" name="com.borachio.junit3" data-isabs="false">
       <a id="junit3:junit3"></a>
-      <h4 class="signature"><a href="junit3/package.html">
+      <h4 class="signature">
       <span class="kind">package</span>
-      <span class="symbol">
-        <span class="name">junit3</span>
-        
+      <span class="symbol"> 
+        <a href="junit3/package.html"><span class="name">junit3</span></a>
         
         
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.scalatest">
+    </li><li visbl="pub" name="com.borachio.scalatest" data-isabs="false">
       <a id="scalatest:scalatest"></a>
-      <h4 class="signature"><a href="scalatest/package.html">
+      <h4 class="signature">
       <span class="kind">package</span>
-      <span class="symbol">
-        <span class="name">scalatest</span>
-        
+      <span class="symbol"> 
+        <a href="scalatest/package.html"><span class="name">scalatest</span></a>
         
         
       </span>
-      </a></h4>
+      </h4>
       
-    </li><li visbl="pub" data-isabs="false" name="com.borachio.specs2">
+    </li><li visbl="pub" name="com.borachio.specs2" data-isabs="false">
       <a id="specs2:specs2"></a>
-      <h4 class="signature"><a href="specs2/package.html">
+      <h4 class="signature">
       <span class="kind">package</span>
-      <span class="symbol">
-        <span class="name">specs2</span>
-        
+      <span class="symbol"> 
+        <a href="specs2/package.html"><span class="name">specs2</span></a>
         
         
       </span>
-      </a></h4>
+      </h4>
       
     </li></ol>
             </div>
