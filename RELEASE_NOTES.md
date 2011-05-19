@@ -1,3 +1,7 @@
+Version 1.1:
+
+- Add the CallLogging trait
+
 Version 1.0:
 
 - Scala 2.9.0 support
@@ -5,7 +9,7 @@ Version 1.0:
 
 Version 0.8:
 
-- Integration with specs2 [Daniel Westheide](https://github.com/dwestheide)
+- Integration with specs2 - [Daniel Westheide](https://github.com/dwestheide)
 
 Version 0.7:
 
