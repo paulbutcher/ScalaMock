@@ -235,10 +235,11 @@ package com
  * == Debugging ==
  *
  * If faced with a difficult to debug failing expectation, consider mixing 
- * the [[com.borachio.VerboseErrors]] trait into your test suite:
+ * one or both of the [[com.borachio.VerboseErrors]] or [[com.borachio.CallLogging]] traits
+ * into your test suite:
  * 
  * {{{
- * class MyTest extends Suite with MockFactory with VerboseErrors
+ * class MyTest extends Suite with MockFactory with VerboseErrors with CallLogging
  * }}}
  */
 package object borachio

@@ -38,7 +38,7 @@ trait ProxyMockFactory { self: AbstractMockFactory =>
               " with arguments: "+ args.mkString("(", ", ", ")")
             else
               ""
-            self.expectations.handleUnexpectedCall("Unexpected: "+ name + argsString)
+            self.expectations.handleUnexpectedCall(name + argsString)
           }
         }
     }

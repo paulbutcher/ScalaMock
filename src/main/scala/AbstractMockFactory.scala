@@ -23,7 +23,7 @@ package com.borachio
 trait AbstractMockFactory extends ProxyMockFactory {
   
   protected def resetExpectations() {
-    expectations.reset(verbose)
+    expectations.reset(verbose, callLogging)
     expectationContext = expectations
   }
 
@@ -66,6 +66,7 @@ trait AbstractMockFactory extends ProxyMockFactory {
   protected implicit def doubleToEpsilon(d: Double) = new EpsilonMatcher(d)
 
   private[borachio] val verbose = false
+  private[borachio] val callLogging = false
   private[borachio] val expectations = new UnorderedExpectations
   private var expectationContext: Expectations = _
 }
