@@ -3,6 +3,7 @@ import sbt._
 class Borachio(info: ProjectInfo) extends ParentProject(info) {
   
   lazy val library = project("library", "Library", new LibraryProject(_))
+  lazy val plugin = project("plugin", "Plugin", new PluginProject(_), library)
   
   class LibraryProject(info: ProjectInfo) extends DefaultProject(info) {
 
@@ -27,4 +28,6 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
     def specs2Framework = new TestFramework("org.specs2.runner.SpecsFramework")
     override def testFrameworks = super.testFrameworks ++ Seq(specs2Framework)
   }
+  
+  class PluginProject(info: ProjectInfo) extends DefaultProject(info)
 }

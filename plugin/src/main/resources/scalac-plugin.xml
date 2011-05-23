@@ -1,0 +1,4 @@
+<plugin>
+  <name>borachio</name>
+  <classname>com.borachio.plugin.BorachioPlugin</classname>
+</plugin>
