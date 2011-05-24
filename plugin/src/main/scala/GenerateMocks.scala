@@ -30,12 +30,28 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   with TypingTransformers
 {
   import global._
+  import definitions.getClass
 
   val runsAfter = List[String]("typer")
   val phaseName = "generatemocks"
 
+  val MockAnnotation = definitions.getClass("com.borachio.mocks")
+
   def newTransformer(unit: CompilationUnit) = new MocksTransformer(unit)
 
   class MocksTransformer(unit: CompilationUnit) extends TypingTransformer(unit) {
+    
+    override def transform(tree: Tree) = {
+      val newTree = tree match {
+        case ClassDef(mods, name, tparams, impl) =>
+          if (tree.symbol hasAnnotation MockAnnotation) {
+            log(name.toString +" has the @mocks annotation")
+          }
+          tree
+        
+        case _ => tree
+      }
+      super.transform(newTree)
+    }
   }
 }
