@@ -21,14 +21,10 @@
 package com.borachio.plugin
 
 import scala.tools.nsc
-import nsc.Global
+import nsc._
 import nsc.plugins.PluginComponent
-import nsc.transform.{Transform, TypingTransformers}
 
-class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginComponent
-  with Transform
-  with TypingTransformers
-{
+class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginComponent {
   import global._
   import definitions.getClass
 
@@ -36,22 +32,19 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   val phaseName = "generatemocks"
 
   val MockAnnotation = definitions.getClass("com.borachio.mocks")
-
-  def newTransformer(unit: CompilationUnit) = new MocksTransformer(unit)
-
-  class MocksTransformer(unit: CompilationUnit) extends TypingTransformer(unit) {
-    
-    override def transform(tree: Tree) = {
-      val newTree = tree match {
-        case ClassDef(mods, name, tparams, impl) =>
-          if (tree.symbol hasAnnotation MockAnnotation) {
-            log(name.toString +" has the @mocks annotation")
-          }
-          tree
-        
-        case _ => tree
-      }
-      super.transform(newTree)
+  
+  def newPhase(prev: Phase) = new StdPhase(prev) {
+    def apply(unit: CompilationUnit) {
+      new ForeachTreeTraverser(findMocks).traverse(unit.body)
+    }
+  }
+  
+  def findMocks(tree: Tree) {
+    tree match {
+      case ClassDef(mods, name, tparams, impl) =>
+        if (tree.hasSymbol && (tree.symbol hasAnnotation MockAnnotation))
+          log(name.toString +" has the @mocks annotation")
+      case _ =>
     }
   }
 }
