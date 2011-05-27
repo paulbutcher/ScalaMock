@@ -31,7 +31,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   val runsAfter = List[String]("typer")
   val phaseName = "generatemocks"
 
-  val MockAnnotation = definitions.getClass("com.borachio.mocks")
+  val MockAnnotation = definitions.getClass("com.borachio.mock")
   
   def newPhase(prev: Phase) = new StdPhase(prev) {
     def apply(unit: CompilationUnit) {
@@ -43,7 +43,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     tree match {
       case ClassDef(mods, name, tparams, impl) =>
         if (tree.hasSymbol && (tree.symbol hasAnnotation MockAnnotation))
-          log(name.toString +" has the @mocks annotation")
+          log(name.toString +" has the @mock annotation")
       case _ =>
     }
   }

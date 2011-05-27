@@ -28,7 +28,7 @@ class BorachioPlugin(val global: Global) extends Plugin {
   import global._
 
   val name = "borachio"
-  val description = "support for the @mocks annotation"
+  val description = "support for the @mock annotation"
 
   val components = List[PluginComponent](
     new GenerateMocks(this, global)
