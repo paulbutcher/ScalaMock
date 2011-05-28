@@ -44,23 +44,46 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       case ClassDef(mods, name, tparams, impl) =>
         if (tree.hasSymbol && (tree.symbol hasAnnotation MockAnnotation)) {
           log(name.toString +" has the @mock annotation")
-        
-          val methods = methodsToMock(tree.symbol)
-          methods foreach outputMethod _
+
+          mockClass(tree.symbol)
         }
       case _ =>
     }
   }
   
+  def mockClass(symbol: Symbol) {
+    outputPackage(symbol)
+
+    val methods = methodsToMock(symbol)
+    methods foreach outputMethod _
+  }
+  
   def methodsToMock(symbol: Symbol) = symbol.info.nonPrivateMembers filter { s => s.isMethod && !s.isConstructor }
   
+  def outputPackage(symbol: Symbol) {
+    log(symbol.enclosingPackage)
+  }
+  
   def outputMethod(method: Symbol) {
-    log("method: "+ method.name +" of type: "+ method.info.getClass)
     method.info match {
-      case MethodType(params, result) => log("params: "+ params); log("result: "+ result)
-      case NullaryMethodType(result) => log("result: "+ result)
-      case PolyType(params, result) => log("params: "+ params); log("result: "+ result)
+      case MethodType(params, result) => log(mockMethod(method.name, params, result))
+      case NullaryMethodType(result) => log("Borachio doesn't (yet) handle nullary methods")
+      case PolyType(params, result) => log("Borachio doesn't (yet) handle type-parameterised methods")
       case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
     }
   }
+  
+  def mockMethod(name: Name, params: List[Symbol], result: Type) =
+    mockDeclaration(name, params) +" = "+ mockBody(name, params, result)
+    
+  def mockDeclaration(name: Name, params: List[Symbol]) = 
+    "  def "+ name.decode + (params map parameterDeclaration _).mkString("(", ", ", ")")
+    
+  def mockBody(name: Name, params: List[Symbol], result: Type) =
+    "mocks("+ Symbol(name.toString) +")("+ forwardParams(params) +").asInstanceOf["+ result +"]"
+    
+  def forwardParams(params: List[Symbol]) = 
+    (params map (_.name +".asInstanceOf[AnyRef]")).mkString("Array[AnyRef](", ", ", ")")
+  
+  def parameterDeclaration(parameter: Symbol) = parameter.name +": "+ parameter.tpe
 }
