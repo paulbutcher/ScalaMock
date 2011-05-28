@@ -42,9 +42,25 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   def findMocks(tree: Tree) {
     tree match {
       case ClassDef(mods, name, tparams, impl) =>
-        if (tree.hasSymbol && (tree.symbol hasAnnotation MockAnnotation))
+        if (tree.hasSymbol && (tree.symbol hasAnnotation MockAnnotation)) {
           log(name.toString +" has the @mock annotation")
+        
+          val methods = methodsToMock(tree.symbol)
+          methods foreach outputMethod _
+        }
       case _ =>
+    }
+  }
+  
+  def methodsToMock(symbol: Symbol) = symbol.info.nonPrivateMembers filter { s => s.isMethod && !s.isConstructor }
+  
+  def outputMethod(method: Symbol) {
+    log("method: "+ method.name +" of type: "+ method.info.getClass)
+    method.info match {
+      case MethodType(params, result) => log("params: "+ params); log("result: "+ result)
+      case NullaryMethodType(result) => log("result: "+ result)
+      case PolyType(params, result) => log("params: "+ params); log("result: "+ result)
+      case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
     }
   }
 }
