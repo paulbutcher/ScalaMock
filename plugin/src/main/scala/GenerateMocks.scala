@@ -31,7 +31,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   val runsAfter = List[String]("typer")
   val phaseName = "generatemocks"
 
-  val MockAnnotation = definitions.getClass("com.borachio.mock")
+  val MockAnnotation = definitions.getClass("com.borachio.annotation.mock")
   
   def newPhase(prev: Phase) = new StdPhase(prev) {
     def apply(unit: CompilationUnit) {
