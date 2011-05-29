@@ -29,7 +29,7 @@ trait ProxyMockFactory { self: AbstractMockFactory =>
       (proxy: AnyRef, name: Symbol, args: Array[AnyRef]) =>
         try {
           name match {
-            case 'expects => self.MockFunctionToExpectation(getOrCreate(proxy, args(0).asInstanceOf[Symbol]))
+            case 'expects => getOrCreate(proxy, args(0).asInstanceOf[Symbol]).toExpectation
             case _ => methodsFor(proxy)(name)(args).asInstanceOf[AnyRef]
           }
         } catch {

@@ -39,11 +39,9 @@ trait AbstractMockFactory extends ProxyMockFactory {
     what
     expectationContext = expectations
   }
-
-  protected implicit def MockFunctionToExpectation(m: MockFunction) = {
-    val expectation = new Expectation(m)
+  
+  private[borachio] def add(expectation: Expectation) {
     expectationContext.add(expectation)
-    expectation
   }
   
   protected def mockFunction[R] = new MockFunction0[R](this)

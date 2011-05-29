@@ -30,7 +30,7 @@ class TypesafeMockTest extends Suite with MockFactory {
 
   class MockTurtle extends Turtle {
     
-    def expects(name: Symbol) = mocks(name)
+    def expects(name: Symbol) = mocks(name).toExpectation
     
     def penUp() { mocks('penUp)(Array[AnyRef]()) }
     def penDown() { mocks('penDown)(Array[AnyRef]()) }

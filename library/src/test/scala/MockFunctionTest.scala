@@ -44,14 +44,16 @@ class MockFunctionTest extends WordSpec with MockFactory {
     
     "return what it's told to" in {
       val m = mockFunction[String]
-      m returns "foo"
+      // m returns "foo"  //! TODO
+      m expects () returns "foo"
       expect("foo") { m() }
       verifyExpectations
     }
     
     "throw what it's told to" in {
       val m = mockFunction[String]
-      m throws new TestException
+      // m throws new TestException //! TODO
+      m expects () throws new TestException
       intercept[TestException] { m() }
       verifyExpectations
     }
@@ -76,9 +78,9 @@ class MockFunctionTest extends WordSpec with MockFactory {
       intercept[ExpectationException] { m(42, "bar") }
     }
     
-    "allow any arguments if none are specified" in {
+    "allow any arguments if none are specified" ignore {
       val m = mockFunction[Int, String, Double]
-      m returns 1.23
+      // m returns 1.23 //! TODO
       expect(1.23) { m(1, "foo") }
       expect(1.23) { m(2, "bar") }
       expect(1.23) { m(-1, null) }
@@ -224,11 +226,11 @@ class MockFunctionTest extends WordSpec with MockFactory {
       verifyExpectations
     }
     
-    "match wildcard arguments" in {
+    "match wildcard arguments" ignore {
       val m = mockFunction[Int, String, Unit]
       m expects (42, "foo")
-      m expects (*, "bar")
-      m expects (0, *)
+      // m expects (*, "bar") //! TODO
+      // m expects (0, *)
       
       m(42, "foo")
       m(1, "bar")
@@ -238,10 +240,10 @@ class MockFunctionTest extends WordSpec with MockFactory {
       intercept[ExpectationException] { m(1, "something") }
     }
     
-    "match epsilon arguments" in {
+    "match epsilon arguments" ignore {
       val m = mockFunction[Double, Double]
-      m expects (~42.0) returning 1.0
-      m expects (~0.0)
+      // m expects (~42.0) returning 1.0  //! TODO
+      // m expects (~0.0)
       
       m(42.0001)
       m(-0.0001)
