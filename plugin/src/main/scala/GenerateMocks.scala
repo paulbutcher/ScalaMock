@@ -64,19 +64,19 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   def mockClass(symbol: Symbol) =
     packageStatement(symbol) + "\n\n" +
       classDeclaration(symbol) + " {\n" +
-      mockMethods(symbol) + "\n\n" +
-      mockMap(symbol) + "\n" +
+        mockMethods(symbol) + "\n\n" +
+        mockMembers(symbol) + "\n" +
       "}\n"
       
   def classDeclaration(symbol: Symbol) = 
-    "class "+ mockName(symbol) +"(expectations: com.borachio.UnorderedExpectations)"+ 
+    "class "+ mockClassName(symbol) +"(expectations: com.borachio.UnorderedExpectations)"+ 
       mockParents(symbol).mkString(" extends ", " with ", "")
       
   def mockMethods(symbol: Symbol) = (methodsToMock(symbol) map mockMethod _).mkString("\n")
   
-  def mockName(symbol: Symbol) = "Mock"+ symbol.name
+  def mockClassName(symbol: Symbol) = "Mock"+ symbol.name
   
-  def mockFilename(symbol: Symbol) = packageName(symbol) +"."+ mockName(symbol) +".scala"
+  def mockFilename(symbol: Symbol) = packageName(symbol) +"."+ mockClassName(symbol) +".scala"
   
   def methodsToMock(symbol: Symbol) = 
     symbol.info.nonPrivateMembers filter { s => s.isMethod && !s.isConstructor && !s.isFinal }
@@ -101,25 +101,22 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   def mockDeclaration(name: Name, params: List[Symbol]) = 
     "  override def "+ name.decode + (params map parameterDeclaration _).mkString("(", ", ", ")")
     
-  def mockBody(name: Name, params: List[Symbol], result: Type) =
-    "mocks("+ Symbol(name.toString) +")("+ forwardParams(params) +").asInstanceOf["+ result +"]"
+  def mockBody(name: Name, params: List[Symbol], result: Type) = 
+    mockMethodName(name) +"("+ forwardParams(params) +").asInstanceOf["+ result +"]"
     
   def forwardParams(params: List[Symbol]) = 
     (params map (_.name +".asInstanceOf[AnyRef]")).mkString("Array[AnyRef](", ", ", ")")
   
   def parameterDeclaration(parameter: Symbol) = parameter.name +": "+ parameter.tpe
   
-  def mockMap(symbol: Symbol) = 
-    "  private val mocks = scala.collection.mutable.Map[Symbol, com.borachio.ProxyMockFunction](\n" +
-      mockMapEntries(symbol) + "\n" + 
-      "    )"
-      
-  def mockMapEntries(symbol: Symbol) = (methodsToMock(symbol) map mockMapEntry _).mkString(",\n")
+  def mockMembers(symbol: Symbol) = (methodsToMock(symbol) map mockMember _).mkString("\n")
   
-  def mockMapEntry(symbol: Symbol) = {
-    val sym = Symbol(symbol.name.toString)
-    "      "+ sym +" -> "+ "new com.borachio.ProxyMockFunction("+ sym +", expectations)"
+  def mockMember(symbol: Symbol) = {
+    "  private val "+ mockMethodName(symbol.name) +
+      " = new com.borachio.ProxyMockFunction("+ Symbol(symbol.name.toString) +", expectations)"
   }
+  
+  def mockMethodName(name: Name) = "mock$"+ name
   
   def createOutputDirectory {
     new File(outputDirectory).mkdirs
