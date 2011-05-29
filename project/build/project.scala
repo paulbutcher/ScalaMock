@@ -2,8 +2,8 @@ import sbt._
 
 class Borachio(info: ProjectInfo) extends ParentProject(info) {
   
-  lazy val library = project("library", "Library", new LibraryProject(_))
-  lazy val plugin = project("plugin", "Plugin", new PluginProject(_), library)
+  lazy val library = project("library", "Borachio Library", new LibraryProject(_))
+  lazy val plugin = project("plugin", "Borachio Plugin", new PluginProject(_), library)
   
   class LibraryProject(info: ProjectInfo) extends DefaultProject(info) {
 
