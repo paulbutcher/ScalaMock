@@ -54,6 +54,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   }
   
   def createMock(symbol: Symbol) {
+    log("Creating mock for: "+ symbol)
     createOutputDirectory
     val writer = new FileWriter(new File(outputDirectory, mockFilename(symbol)))
     writer.write(mockClass(symbol))
@@ -63,28 +64,34 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   def mockClass(symbol: Symbol) =
     packageStatement(symbol) + "\n\n" +
       classDeclaration(symbol) + " {\n" +
-      mockMethods(symbol) + "\n}\n"
+      mockMethods(symbol) + "\n\n" +
+      mockMap(symbol) + "\n" +
+      "}\n"
       
   def classDeclaration(symbol: Symbol) = 
-    "class "+ symbol.name + symbol.info.parents.mkString(" extends ", " with ", "")
+    "class "+ mockName(symbol) +"(expectations: com.borachio.UnorderedExpectations)"+ 
+      mockParents(symbol).mkString(" extends ", " with ", "")
       
   def mockMethods(symbol: Symbol) = (methodsToMock(symbol) map mockMethod _).mkString("\n")
   
   def mockName(symbol: Symbol) = "Mock"+ symbol.name
   
-  def mockFilename(symbol: Symbol) = packageName(symbol) +"."+ mockName(symbol)
+  def mockFilename(symbol: Symbol) = packageName(symbol) +"."+ mockName(symbol) +".scala"
   
-  def methodsToMock(symbol: Symbol) = symbol.info.nonPrivateMembers filter { s => s.isMethod && !s.isConstructor }
+  def methodsToMock(symbol: Symbol) = 
+    symbol.info.nonPrivateMembers filter { s => s.isMethod && !s.isConstructor && !s.isFinal }
   
   def packageStatement(symbol: Symbol) = "package "+ packageName(symbol)
   
   def packageName(symbol: Symbol) = symbol.enclosingPackage.fullName.toString
   
+  def mockParents(symbol: Symbol) = symbol.info.parents filter { _.toString != "ScalaObject" }
+  
   def mockMethod(method: Symbol): String =
     method.info match {
       case MethodType(params, result) => mockMethod(method.name, params, result)
-      case NullaryMethodType(result) => log("Borachio doesn't (yet) handle nullary methods: "+ method); ""
-      case PolyType(params, result) => log("Borachio doesn't (yet) handle type-parameterised methods: "+ method); ""
+      case NullaryMethodType(result) => "  //"+ method +" // Borachio doesn't (yet) handle nullary methods"
+      case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
       case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
     }
   
@@ -92,7 +99,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     mockDeclaration(name, params) +" = "+ mockBody(name, params, result)
     
   def mockDeclaration(name: Name, params: List[Symbol]) = 
-    "  def "+ name.decode + (params map parameterDeclaration _).mkString("(", ", ", ")")
+    "  override def "+ name.decode + (params map parameterDeclaration _).mkString("(", ", ", ")")
     
   def mockBody(name: Name, params: List[Symbol], result: Type) =
     "mocks("+ Symbol(name.toString) +")("+ forwardParams(params) +").asInstanceOf["+ result +"]"
@@ -101,6 +108,18 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     (params map (_.name +".asInstanceOf[AnyRef]")).mkString("Array[AnyRef](", ", ", ")")
   
   def parameterDeclaration(parameter: Symbol) = parameter.name +": "+ parameter.tpe
+  
+  def mockMap(symbol: Symbol) = 
+    "  private val mocks = scala.collection.mutable.Map[Symbol, com.borachio.ProxyMockFunction](\n" +
+      mockMapEntries(symbol) + "\n" + 
+      "    )"
+      
+  def mockMapEntries(symbol: Symbol) = (methodsToMock(symbol) map mockMapEntry _).mkString(",\n")
+  
+  def mockMapEntry(symbol: Symbol) = {
+    val sym = Symbol(symbol.name.toString)
+    "      "+ sym +" -> "+ "new com.borachio.ProxyMockFunction("+ sym +", expectations)"
+  }
   
   def createOutputDirectory {
     new File(outputDirectory).mkdirs
