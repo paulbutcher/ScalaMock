@@ -28,7 +28,7 @@ import java.io.{File, FileWriter}
 
 class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginComponent {
   import global._
-  import definitions.getClass
+  import definitions._
   
   val outputDirectory = "mocks"
 
@@ -85,7 +85,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   
   def packageName(symbol: Symbol) = symbol.enclosingPackage.fullName.toString
   
-  def mockParents(symbol: Symbol) = symbol.info.parents filter { _.toString != "ScalaObject" }
+  def mockParents(symbol: Symbol) = symbol.info.parents filter { _.typeSymbol != ScalaObjectClass }
   
   def mockMethod(method: Symbol): String =
     method.info match {
