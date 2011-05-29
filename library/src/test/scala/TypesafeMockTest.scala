@@ -28,7 +28,7 @@ class TypesafeMockTest extends Suite with MockFactory {
   
   autoVerify = false
 
-  class MockTurtle(expectations: UnorderedExpectations) extends Turtle {
+  class MockTurtle extends Turtle {
     
     def expects(name: Symbol) = mocks(name)
     
@@ -41,23 +41,23 @@ class TypesafeMockTest extends Suite with MockFactory {
     def setPosition(x: Double, y: Double): (Double, Double) = mocks('setPosition)(Array[AnyRef](x.asInstanceOf[AnyRef], y.asInstanceOf[AnyRef])).asInstanceOf[(Double, Double)]
   
     private val mocks = Map[Symbol, ProxyMockFunction](
-        'penUp -> new ProxyMockFunction('penUp, expectations),
-        'penDown -> new ProxyMockFunction('penDown, expectations),
-        'forward -> new ProxyMockFunction('forward, expectations),
-        'turn -> new ProxyMockFunction('turn, expectations),
-        'getAngle -> new ProxyMockFunction('getAngle, expectations),
-        'getPosition -> new ProxyMockFunction('getPosition, expectations),
-        'setPosition -> new ProxyMockFunction('setPosition, expectations)
+        'penUp -> new ProxyMockFunction('penUp, TypesafeMockTest.this),
+        'penDown -> new ProxyMockFunction('penDown, TypesafeMockTest.this),
+        'forward -> new ProxyMockFunction('forward, TypesafeMockTest.this),
+        'turn -> new ProxyMockFunction('turn, TypesafeMockTest.this),
+        'getAngle -> new ProxyMockFunction('getAngle, TypesafeMockTest.this),
+        'getPosition -> new ProxyMockFunction('getPosition, TypesafeMockTest.this),
+        'setPosition -> new ProxyMockFunction('setPosition, TypesafeMockTest.this)
       )
   }
   
   def testUnexpectedCall {
-    val m = new MockTurtle(expectations)
+    val m = new MockTurtle
     intercept[ExpectationException] { m.penDown }
   }
 
   def testSingleExpectation {
-    val m = new MockTurtle(expectations)
+    val m = new MockTurtle
     m expects 'setPosition withArguments (1.0, 2.0) returning (3.0, 4.0)
     expect((3.0, 4.0)) { m.setPosition(1.0, 2.0) }
     verifyExpectations
