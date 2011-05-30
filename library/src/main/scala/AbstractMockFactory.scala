@@ -62,6 +62,12 @@ trait AbstractMockFactory extends ProxyMockFactory {
     def unary_~() = new MatchEpsilon(d)
   }
   protected implicit def doubleToEpsilon(d: Double) = new EpsilonMatcher(d)
+  
+  protected implicit def toMockParameter[T](v: T) = new MockParameter(v)
+  
+  protected implicit def MatchAnyToMockParameter[T](m: MatchAny) = new MockParameter[T](m)
+  
+  protected implicit def MatchEpsilonToMockParameter[T](m: MatchEpsilon) = new EpsilonMockParameter(m)
 
   private[borachio] val verbose = false
   private[borachio] val callLogging = false
