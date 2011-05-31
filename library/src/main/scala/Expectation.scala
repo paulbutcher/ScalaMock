@@ -25,15 +25,13 @@ package com.borachio
  */
 class Expectation(target: MockFunction) extends Handler {
   
-  def expects(arguments: Any*) = {
+  def withArguments(arguments: Any*) = {
     require(!expectedArguments.isDefined, "arguments can only be set once")
     expectedArguments = Some(arguments.toArray)
     this
   }
   
-  def withArguments(arguments: Any*) = expects(arguments: _*)
-  
-  def withArgs(arguments: Any*) = expects(arguments: _*)
+  def withArgs(arguments: Any*) = withArguments(arguments: _*)
 
   def returns(value: Any) = {
     require(!returnValue.isDefined, "return value can only be set once")
