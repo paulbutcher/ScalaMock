@@ -21,5 +21,5 @@
 package com.borachio
 
 trait Mock {
-  def expects(name: Symbol): Expectation
+  def expects(name: Symbol): TypeUnsafeExpectation
 }

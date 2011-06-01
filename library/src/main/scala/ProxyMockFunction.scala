@@ -25,4 +25,10 @@ private[borachio] class ProxyMockFunction(name: Symbol, factory: AbstractMockFac
   override def toString = name.toString
 
   def apply(args: Array[AnyRef]) = handle(if (args != null) args.map(_.asInstanceOf[Any]) else Array[Any]())
+
+  private[borachio] def toExpectation() = {
+    val expectation = new TypeUnsafeExpectation(this)
+    factory.add(expectation)
+    expectation
+  }
 }

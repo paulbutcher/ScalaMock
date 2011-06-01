@@ -28,14 +28,14 @@ class ErrorMessageTest extends WordSpec with MockFactory with VerboseErrors with
   "A mock function" when {
     "called unexpectedly" should {
       "generate a sensible error message" ignore {
-        val m = mockFunction[Int, String, Float]
+        val m = mockFunction[Int, String, Double]
         m(42, "foo")
       }
     }
     
     "unsatisfied" should {
       "generate a sensible error message" ignore {
-        val m = mockFunction[Int, String, Float]
+        val m = mockFunction[Int, String, Double]
         m expects (42, "foo") returning 1.0
       }
     }
@@ -60,7 +60,7 @@ class ErrorMessageTest extends WordSpec with MockFactory with VerboseErrors with
   "A sequence of expectations" when {
     "unsatisfied" should {
       "generate a sensible error message" ignore {
-        val m = mockFunction[Int, String, Float]
+        val m = mockFunction[Int, String, Double]
         inSequence {
           m expects (42, "foo")
           m expects (1, "bar")
@@ -72,7 +72,7 @@ class ErrorMessageTest extends WordSpec with MockFactory with VerboseErrors with
   
   "A complicated sequence of expectations" should {
     "generate a sensible error message" ignore {
-      val m1 = mockFunction[Int, String, Float]
+      val m1 = mockFunction[Int, String, Double]
       val m2 = mock[Seq[String]]
       
       m1 expects (42, "foo") returning 1.0 atLeastTwice;

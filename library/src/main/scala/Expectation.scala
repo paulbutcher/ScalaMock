@@ -23,24 +23,18 @@ package com.borachio
 /**
  * Represents a single expectation
  */
-class Expectation(target: MockFunction) extends Handler {
+abstract class Expectation(target: MockFunction) extends Handler {
   
-  def withArguments(arguments: Any*) = {
+  private[borachio] def setArguments(arguments: Any*) {
     require(!expectedArguments.isDefined, "arguments can only be set once")
     expectedArguments = Some(arguments.toArray)
-    this
   }
   
-  def withArgs(arguments: Any*) = withArguments(arguments: _*)
-
-  def returns(value: Any) = {
+  private[borachio] def setReturn(value: Any) {
     require(!returnValue.isDefined, "return value can only be set once")
     require(!exception.isDefined, "either return value or exception can be set, not both")
     returnValue = Some(value)
-    this
   }
-  
-  def returning(value: Any) = returns(value)
   
   def throws(e: Throwable) = {
     require(!exception.isDefined, "exception can only be set once")
@@ -127,4 +121,28 @@ class Expectation(target: MockFunction) extends Handler {
   private var expectedCalls: Option[Range] = None
 
   private var actualCalls = 0
+}
+
+class TypeUnsafeExpectation(target: MockFunction) extends Expectation(target) {
+  
+  def withArguments(arguments: Any*) = {
+    setArguments(arguments: _*)
+    this
+  }
+  def withArgs(arguments: Any*) = withArguments(arguments: _*)
+
+  def returns(value: Any) = {
+    setReturn(value)
+    this
+  }
+  def returning(value: Any) = returns(value)
+}
+
+class TypeSafeExpectation[R](target: MockFunction) extends Expectation(target) {
+
+  def returns(value: R) = {
+    setReturn(value)
+    this
+  }
+  def returning(value: R) = returns(value)
 }
