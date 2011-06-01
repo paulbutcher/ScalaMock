@@ -53,7 +53,7 @@ trait ProxyMockFactory { self: AbstractMockFactory =>
     if (methods contains name) {
       methods(name)
     } else {
-      val m = new ProxyMockFunction(name, self)
+      val m = new ProxyMockFunction(self, name)
       methods += name -> m
       m
     }

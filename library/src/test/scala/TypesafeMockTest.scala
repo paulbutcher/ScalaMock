@@ -41,13 +41,13 @@ class TypesafeMockTest extends Suite with MockFactory {
     def setPosition(x: Double, y: Double): (Double, Double) = mocks('setPosition)(Array[AnyRef](x.asInstanceOf[AnyRef], y.asInstanceOf[AnyRef])).asInstanceOf[(Double, Double)]
   
     private val mocks = Map[Symbol, ProxyMockFunction](
-        'penUp -> new ProxyMockFunction('penUp, TypesafeMockTest.this),
-        'penDown -> new ProxyMockFunction('penDown, TypesafeMockTest.this),
-        'forward -> new ProxyMockFunction('forward, TypesafeMockTest.this),
-        'turn -> new ProxyMockFunction('turn, TypesafeMockTest.this),
-        'getAngle -> new ProxyMockFunction('getAngle, TypesafeMockTest.this),
-        'getPosition -> new ProxyMockFunction('getPosition, TypesafeMockTest.this),
-        'setPosition -> new ProxyMockFunction('setPosition, TypesafeMockTest.this)
+        'penUp -> new ProxyMockFunction(TypesafeMockTest.this, 'penUp),
+        'penDown -> new ProxyMockFunction(TypesafeMockTest.this, 'penDown),
+        'forward -> new ProxyMockFunction(TypesafeMockTest.this, 'forward),
+        'turn -> new ProxyMockFunction(TypesafeMockTest.this, 'turn),
+        'getAngle -> new ProxyMockFunction(TypesafeMockTest.this, 'getAngle),
+        'getPosition -> new ProxyMockFunction(TypesafeMockTest.this, 'getPosition),
+        'setPosition -> new ProxyMockFunction(TypesafeMockTest.this, 'setPosition)
       )
   }
   

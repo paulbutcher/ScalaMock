@@ -20,10 +20,8 @@
 
 package com.borachio
 
-private[borachio] class ProxyMockFunction(name: Symbol, factory: AbstractMockFactory) extends MockFunction(factory) {
+private[borachio] class ProxyMockFunction(factory: AbstractMockFactory, name: Symbol) extends MockFunction(factory, name) {
   
-  override def toString = name.toString
-
   def apply(args: Array[AnyRef]) = handle(if (args != null) args.map(_.asInstanceOf[Any]) else Array[Any]())
 
   private[borachio] def toExpectation() = {
