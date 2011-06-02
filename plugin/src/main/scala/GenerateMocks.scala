@@ -30,16 +30,18 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   import global._
   import definitions._
   
-  val outputDirectory = "mocks"
-
   val runsAfter = List[String]("typer")
   val phaseName = "generatemocks"
 
-  val MockAnnotation = definitions.getClass("com.borachio.annotation.mock")
+  lazy val MockAnnotation = definitions.getClass("com.borachio.annotation.mock")
+  lazy val outputDirectory = plugin.outputDirectory.get
   
   def newPhase(prev: Phase) = new StdPhase(prev) {
     def apply(unit: CompilationUnit) {
-      new ForeachTreeTraverser(findMocks).traverse(unit.body)
+      if (plugin.outputDirectory.isDefined) {
+        createOutputDirectory
+        new ForeachTreeTraverser(findMocks).traverse(unit.body)
+      }
     }
   }
   
@@ -61,15 +63,14 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
     def generate() {
       log("Creating mock for: "+ classSymbol)
-      createOutputDirectory
       val writer = new FileWriter(new File(outputDirectory, mockFilename))
       writer.write(mock)
       writer.close
     }
 
-    val mockFilename = packageName +"."+ className +".scala"  
+    lazy val mockFilename = packageName +"."+ className +".scala"  
 
-    val mock =
+    lazy val mock =
       packageStatement + "\n\n" +
         classDeclaration + " {\n" +
           mockMethods + "\n\n" +
@@ -77,26 +78,26 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
           mockMembers + "\n" +
         "}\n"
 
-    val packageStatement = "package "+ packageName
+    lazy val packageStatement = "package "+ packageName
 
-    val classDeclaration = 
+    lazy val classDeclaration = 
       "class "+ className +"(factory: com.borachio.AbstractMockFactory)"+ parents.mkString(" extends ", " with ", "")
 
-    val mockMethods = (methodsToMock map mockMethod _).mkString("\n")
+    lazy val mockMethods = (methodsToMock map mockMethod _).mkString("\n")
 
-    val expectForwarders = "  val expects = new {\n"+
+    lazy val expectForwarders = "  val expects = new {\n"+
         (methodsToMock map expectForwarder _).mkString("\n") +
       "\n  }"
 
-    val mockMembers = (methodsToMock map mockMember _).mkString("\n")
+    lazy val mockMembers = (methodsToMock map mockMember _).mkString("\n")
 
-    val packageName = classSymbol.enclosingPackage.fullName.toString
+    lazy val packageName = classSymbol.enclosingPackage.fullName.toString
 
-    val className = "Mock"+ classSymbol.name
+    lazy val className = "Mock"+ classSymbol.name
 
-    val parents = classSymbol.info.parents filter { _.typeSymbol != ScalaObjectClass }
+    lazy val parents = classSymbol.info.parents filter { _.typeSymbol != ScalaObjectClass }
 
-    val methodsToMock = classSymbol.info.nonPrivateMembers filter { s => s.isMethod && !s.isConstructor && !s.isFinal }
+    lazy val methodsToMock = classSymbol.info.nonPrivateMembers filter { s => s.isMethod && !s.isConstructor && !s.isFinal }
 
     def mockMethod(method: Symbol): String =
       method.info match {

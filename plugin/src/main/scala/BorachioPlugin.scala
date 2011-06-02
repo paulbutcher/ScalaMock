@@ -33,4 +33,19 @@ class BorachioPlugin(val global: Global) extends Plugin {
   val components = List[PluginComponent](
     new GenerateMocks(this, global)
   )
+  
+  var outputDirectory: Option[String] = None
+
+  override def processOptions(options: List[String], error: String => Unit) {
+    for (option <- options) {
+      if (option.startsWith("generatemocks:")) {
+        outputDirectory = Some(option.substring("generatemocks:".length))
+      } else {
+        error("Option not understood: "+ option)
+      }
+    }
+  }
+  
+  override val optionsHelp: Option[String] = Some(
+    "  -P:borachio:generatemocks:<path>  Generate mock objects in directory <path>")
 }
