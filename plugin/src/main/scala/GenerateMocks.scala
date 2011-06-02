@@ -105,7 +105,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
   def forwardParams(params: List[Symbol]) = (params map (_.name)).mkString("(", ", ", ")")
   
-  def parameterDeclaration(parameter: Symbol) = parameter.name +": "+ parameter.tpe
+  def parameterDeclaration(parameter: Symbol) = parameter.name +": "+ parameter.tpe.typeSymbol.fullName
   
   def mockMembers(symbol: Symbol) = (methodsToMock(symbol) map mockMember _).mkString("\n")
   
