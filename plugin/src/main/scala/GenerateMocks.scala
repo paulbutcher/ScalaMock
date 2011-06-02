@@ -47,104 +47,105 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     tree match {
       case ClassDef(_, _, _, _) =>
         if (tree.hasSymbol && (tree.symbol hasAnnotation MockAnnotation))
-          createMock(tree.symbol)
+          new MockClass(tree.symbol).generate
 
       case _ =>
     }
   }
   
-  def createMock(symbol: Symbol) {
-    log("Creating mock for: "+ symbol)
-    createOutputDirectory
-    val writer = new FileWriter(new File(outputDirectory, mockFilename(symbol)))
-    writer.write(mockClass(symbol))
-    writer.close
-  }
-  
-  def mockClass(symbol: Symbol) =
-    packageStatement(symbol) + "\n\n" +
-      classDeclaration(symbol) + " {\n" +
-        mockMethods(symbol) + "\n\n" +
-        expectForwarders(symbol) + "\n\n" +
-        mockMembers(symbol) + "\n" +
-      "}\n"
-      
-  def classDeclaration(symbol: Symbol) = 
-    "class "+ mockClassName(symbol) +"(factory: com.borachio.AbstractMockFactory)"+ 
-      mockParents(symbol).mkString(" extends ", " with ", "")
-      
-  def mockMethods(symbol: Symbol) = (methodsToMock(symbol) map mockMethod _).mkString("\n")
-  
-  def expectForwarders(symbol: Symbol) = "  val expects = new {\n"+
-      (methodsToMock(symbol) map expectForwarder _).mkString("\n") +
-    "\n  }"
-    
-  def expectForwarder(method: Symbol): String =
-    method.info match {
-      case MethodType(params, result) => expectForwarder(method.name, params)
-      case NullaryMethodType(result) => "  //"+ method +" // Borachio doesn't (yet) handle nullary methods"
-      case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
-      case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
-    }
-    
-  def expectForwarder(name: Name, params: List[Symbol]) =
-    "  "+ mockDeclaration(name, params) +" = "+ mockMethodName(name) + forwardParams(params)
-  
-  def mockClassName(symbol: Symbol) = "Mock"+ symbol.name
-  
-  def mockFilename(symbol: Symbol) = packageName(symbol) +"."+ mockClassName(symbol) +".scala"
-  
-  def methodsToMock(symbol: Symbol) = 
-    symbol.info.nonPrivateMembers filter { s => s.isMethod && !s.isConstructor && !s.isFinal }
-  
-  def packageStatement(symbol: Symbol) = "package "+ packageName(symbol)
-  
-  def packageName(symbol: Symbol) = symbol.enclosingPackage.fullName.toString
-  
-  def mockParents(symbol: Symbol) = symbol.info.parents filter { _.typeSymbol != ScalaObjectClass }
-  
-  def mockMethod(method: Symbol): String =
-    method.info match {
-      case MethodType(params, result) => mockMethod(method.name, params)
-      case NullaryMethodType(result) => "  //"+ method +" // Borachio doesn't (yet) handle nullary methods"
-      case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
-      case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
-    }
-  
-  def mockMethod(name: Name, params: List[Symbol]) =
-    mockDeclaration(name, params) +" = "+ mockBody(name, params)
-    
-  def mockDeclaration(name: Name, params: List[Symbol]) = 
-    "  override def "+ name.decode + (params map parameterDeclaration _).mkString("(", ", ", ")")
-    
-  def mockBody(name: Name, params: List[Symbol]) = mockMethodName(name) + forwardParams(params)
-    
-  def forwardParams(params: List[Symbol]) = (params map (_.name)).mkString("(", ", ", ")")
-  
-  def parameterDeclaration(parameter: Symbol) = parameter.name +": "+ parameter.tpe.typeSymbol.fullName
-  
-  def mockMembers(symbol: Symbol) = (methodsToMock(symbol) map mockMember _).mkString("\n")
-  
-  def mockMember(method: Symbol): String = 
-    method.info match {
-      case MethodType(params, result) => mockMember(method.name, params, result)
-      case NullaryMethodType(result) => "  //"+ method +" // Borachio doesn't (yet) handle nullary methods"
-      case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
-      case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
-    }
-    
-  def mockMember(name: Name, params: List[Symbol], result: Type) =
-    "  private val "+ mockMethodName(name) + mockFunction(params, result) +"(factory, "+ Symbol(name.toString) +")"
-      
-  def mockFunction(params: List[Symbol], result: Type) =
-    " = new com.borachio.MockFunction"+ params.length +"["+ 
-      (paramTypes(params) :+ result.typeSymbol.fullName).mkString(", ") +"]"
-    
-  def paramTypes(params: List[Symbol]) = params map (_.tpe.typeSymbol.fullName)
-  
-  def mockMethodName(name: Name) = "mock$"+ name
-  
   def createOutputDirectory {
     new File(outputDirectory).mkdirs
+  }
+
+  class MockClass(classSymbol: Symbol) {
+    
+    def generate() {
+      log("Creating mock for: "+ classSymbol)
+      createOutputDirectory
+      val writer = new FileWriter(new File(outputDirectory, mockFilename))
+      writer.write(mock)
+      writer.close
+    }
+
+    val mockFilename = packageName +"."+ className +".scala"  
+
+    val mock =
+      packageStatement + "\n\n" +
+        classDeclaration + " {\n" +
+          mockMethods + "\n\n" +
+          expectForwarders + "\n\n" +
+          mockMembers + "\n" +
+        "}\n"
+
+    val packageStatement = "package "+ packageName
+
+    val classDeclaration = 
+      "class "+ className +"(factory: com.borachio.AbstractMockFactory)"+ parents.mkString(" extends ", " with ", "")
+
+    val mockMethods = (methodsToMock map mockMethod _).mkString("\n")
+
+    val expectForwarders = "  val expects = new {\n"+
+        (methodsToMock map expectForwarder _).mkString("\n") +
+      "\n  }"
+
+    val mockMembers = (methodsToMock map mockMember _).mkString("\n")
+
+    val packageName = classSymbol.enclosingPackage.fullName.toString
+
+    val className = "Mock"+ classSymbol.name
+
+    val parents = classSymbol.info.parents filter { _.typeSymbol != ScalaObjectClass }
+
+    val methodsToMock = classSymbol.info.nonPrivateMembers filter { s => s.isMethod && !s.isConstructor && !s.isFinal }
+
+    def mockMethod(method: Symbol): String =
+      method.info match {
+        case MethodType(params, result) => mockMethod(method.name, params)
+        case NullaryMethodType(result) => "  //"+ method +" // Borachio doesn't (yet) handle nullary methods"
+        case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
+        case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
+      }
+
+    def mockMethod(name: Name, params: List[Symbol]) =
+      mockDeclaration(name, params) +" = "+ mockBody(name, params)
+
+    def mockDeclaration(name: Name, params: List[Symbol]) = 
+      "  override def "+ name.decode + (params map parameterDeclaration _).mkString("(", ", ", ")")
+
+    def parameterDeclaration(parameter: Symbol) = parameter.name +": "+ parameter.tpe.typeSymbol.fullName
+
+    def mockBody(name: Name, params: List[Symbol]) = mockMethodName(name) + forwardParams(params)
+
+    def mockMethodName(name: Name) = "mock$"+ name
+
+    def forwardParams(params: List[Symbol]) = (params map (_.name)).mkString("(", ", ", ")")
+
+    def expectForwarder(method: Symbol): String =
+      method.info match {
+        case MethodType(params, result) => expectForwarder(method.name, params)
+        case NullaryMethodType(result) => "  //"+ method +" // Borachio doesn't (yet) handle nullary methods"
+        case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
+        case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
+      }
+
+    def expectForwarder(name: Name, params: List[Symbol]) =
+      "  "+ mockDeclaration(name, params) +" = "+ mockMethodName(name) + forwardParams(params)
+
+    def mockMember(method: Symbol): String = 
+      method.info match {
+        case MethodType(params, result) => mockMember(method.name, params, result)
+        case NullaryMethodType(result) => "  //"+ method +" // Borachio doesn't (yet) handle nullary methods"
+        case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
+        case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
+      }
+
+    def mockMember(name: Name, params: List[Symbol], result: Type) =
+      "  private val "+ mockMethodName(name) + mockFunction(params, result) +"(factory, "+ Symbol(name.toString) +")"
+
+    def mockFunction(params: List[Symbol], result: Type) =
+      " = new com.borachio.MockFunction"+ params.length +"["+ 
+        (paramTypes(params) :+ result.typeSymbol.fullName).mkString(", ") +"]"
+
+    def paramTypes(params: List[Symbol]) = params map (_.tpe.typeSymbol.fullName)
   }
 }
