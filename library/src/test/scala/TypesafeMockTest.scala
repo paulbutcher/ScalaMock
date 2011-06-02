@@ -30,25 +30,31 @@ class TypesafeMockTest extends Suite with MockFactory {
 
   class MockTurtle extends Turtle {
     
-    def expects(name: Symbol) = mocks(name).toExpectation
+    val expects = new {
+      def penUp() = mock$penUp.expects
+      def penDown() = mock$penDown.expects
+      def forward(distance:Double) = mock$forward.expects(distance)
+      def turn(angle: Double) = mock$turn(angle)
+      def getAngle = mock$getAngle
+      def getPosition = mock$getPosition
+      def setPosition(x: Double, y: Double) = mock$setPosition.expects(x, y)
+    }
     
-    def penUp() { mocks('penUp)(Array[AnyRef]()) }
-    def penDown() { mocks('penDown)(Array[AnyRef]()) }
-    def forward(distance: Double) = mocks('forward)(Array[AnyRef](distance.asInstanceOf[AnyRef])).asInstanceOf[Double]
-    def turn(angle: Double) { mocks('turn)(Array[AnyRef](angle.asInstanceOf[AnyRef])) }
-    def getAngle: Double = mocks('getAngle)(Array[AnyRef]()).asInstanceOf[Double]
-    def getPosition(): (Double, Double) = mocks('getPosition)(Array[AnyRef]()).asInstanceOf[(Double, Double)]
-    def setPosition(x: Double, y: Double): (Double, Double) = mocks('setPosition)(Array[AnyRef](x.asInstanceOf[AnyRef], y.asInstanceOf[AnyRef])).asInstanceOf[(Double, Double)]
-  
-    private val mocks = Map[Symbol, ProxyMockFunction](
-        'penUp -> new ProxyMockFunction(TypesafeMockTest.this, 'penUp),
-        'penDown -> new ProxyMockFunction(TypesafeMockTest.this, 'penDown),
-        'forward -> new ProxyMockFunction(TypesafeMockTest.this, 'forward),
-        'turn -> new ProxyMockFunction(TypesafeMockTest.this, 'turn),
-        'getAngle -> new ProxyMockFunction(TypesafeMockTest.this, 'getAngle),
-        'getPosition -> new ProxyMockFunction(TypesafeMockTest.this, 'getPosition),
-        'setPosition -> new ProxyMockFunction(TypesafeMockTest.this, 'setPosition)
-      )
+    def penUp() = mock$penUp()
+    def penDown() = mock$penDown()
+    def forward(distance: Double) = mock$forward(distance)
+    def turn(angle: Double) = mock$turn(angle)
+    def getAngle = mock$getAngle()
+    def getPosition = mock$getPosition()
+    def setPosition(x: Double, y: Double) = mock$setPosition(x, y)
+
+    private val mock$penUp = new MockFunction0[Unit](TypesafeMockTest.this, 'penUp)
+    private val mock$penDown = new MockFunction0[Unit](TypesafeMockTest.this, 'penDown)
+    private val mock$forward = new MockFunction1[Double, Unit](TypesafeMockTest.this, 'forward)
+    private val mock$turn = new MockFunction1[Double, Unit](TypesafeMockTest.this, 'turn)
+    private val mock$getAngle = new MockFunction0[Double](TypesafeMockTest.this, 'getAngle)
+    private val mock$getPosition = new MockFunction0[(Double, Double)](TypesafeMockTest.this, 'getPosition)
+    private val mock$setPosition = new MockFunction2[Double, Double, (Double, Double)](TypesafeMockTest.this, 'setPosition)
   }
   
   def testUnexpectedCall {
@@ -58,7 +64,7 @@ class TypesafeMockTest extends Suite with MockFactory {
 
   def testSingleExpectation {
     val m = new MockTurtle
-    m expects 'setPosition withArguments (1.0, 2.0) returning (3.0, 4.0)
+    m.expects.setPosition(1.0, 2.0) returning(3.0, 4.0)
     expect((3.0, 4.0)) { m.setPosition(1.0, 2.0) }
     verifyExpectations
   }
