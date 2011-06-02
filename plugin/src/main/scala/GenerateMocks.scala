@@ -65,6 +65,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     packageStatement(symbol) + "\n\n" +
       classDeclaration(symbol) + " {\n" +
         mockMethods(symbol) + "\n\n" +
+        expectForwarders(symbol) + "\n\n" +
         mockMembers(symbol) + "\n" +
       "}\n"
       
@@ -73,6 +74,21 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       mockParents(symbol).mkString(" extends ", " with ", "")
       
   def mockMethods(symbol: Symbol) = (methodsToMock(symbol) map mockMethod _).mkString("\n")
+  
+  def expectForwarders(symbol: Symbol) = "  val expects = new {\n"+
+      (methodsToMock(symbol) map expectForwarder _).mkString("\n") +
+    "\n  }"
+    
+  def expectForwarder(method: Symbol): String =
+    method.info match {
+      case MethodType(params, result) => expectForwarder(method.name, params)
+      case NullaryMethodType(result) => "  //"+ method +" // Borachio doesn't (yet) handle nullary methods"
+      case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
+      case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
+    }
+    
+  def expectForwarder(name: Name, params: List[Symbol]) =
+    "  "+ mockDeclaration(name, params) +" = "+ mockMethodName(name) + forwardParams(params)
   
   def mockClassName(symbol: Symbol) = "Mock"+ symbol.name
   

@@ -31,12 +31,12 @@ class TypesafeMockTest extends Suite with MockFactory {
   class MockTurtle extends Turtle {
     
     val expects = new {
-      def penUp() = mock$penUp.expects
-      def penDown() = mock$penDown.expects
+      def penUp() = mock$penUp.expects()
+      def penDown() = mock$penDown.expects()
       def forward(distance:Double) = mock$forward.expects(distance)
       def turn(angle: Double) = mock$turn(angle)
-      def getAngle = mock$getAngle
-      def getPosition = mock$getPosition
+      def getAngle = mock$getAngle()
+      def getPosition = mock$getPosition()
       def setPosition(x: Double, y: Double) = mock$setPosition.expects(x, y)
     }
     
