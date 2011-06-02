@@ -69,7 +69,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "}\n"
       
   def classDeclaration(symbol: Symbol) = 
-    "class "+ mockClassName(symbol) +"(expectations: com.borachio.UnorderedExpectations)"+ 
+    "class "+ mockClassName(symbol) +"(factory: com.borachio.AbstractMockFactory)"+ 
       mockParents(symbol).mkString(" extends ", " with ", "")
       
   def mockMethods(symbol: Symbol) = (methodsToMock(symbol) map mockMethod _).mkString("\n")
@@ -89,32 +89,42 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   
   def mockMethod(method: Symbol): String =
     method.info match {
-      case MethodType(params, result) => mockMethod(method.name, params, result)
+      case MethodType(params, result) => mockMethod(method.name, params)
       case NullaryMethodType(result) => "  //"+ method +" // Borachio doesn't (yet) handle nullary methods"
       case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
       case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
     }
   
-  def mockMethod(name: Name, params: List[Symbol], result: Type) =
-    mockDeclaration(name, params) +" = "+ mockBody(name, params, result)
+  def mockMethod(name: Name, params: List[Symbol]) =
+    mockDeclaration(name, params) +" = "+ mockBody(name, params)
     
   def mockDeclaration(name: Name, params: List[Symbol]) = 
     "  override def "+ name.decode + (params map parameterDeclaration _).mkString("(", ", ", ")")
     
-  def mockBody(name: Name, params: List[Symbol], result: Type) = 
-    mockMethodName(name) +"("+ forwardParams(params) +").asInstanceOf["+ result +"]"
+  def mockBody(name: Name, params: List[Symbol]) = mockMethodName(name) + forwardParams(params)
     
-  def forwardParams(params: List[Symbol]) = 
-    (params map (_.name +".asInstanceOf[AnyRef]")).mkString("Array[AnyRef](", ", ", ")")
+  def forwardParams(params: List[Symbol]) = (params map (_.name)).mkString("(", ", ", ")")
   
   def parameterDeclaration(parameter: Symbol) = parameter.name +": "+ parameter.tpe
   
   def mockMembers(symbol: Symbol) = (methodsToMock(symbol) map mockMember _).mkString("\n")
   
-  def mockMember(symbol: Symbol) = {
-    "  private val "+ mockMethodName(symbol.name) +
-      " = new com.borachio.ProxyMockFunction("+ Symbol(symbol.name.toString) +", expectations)"
-  }
+  def mockMember(method: Symbol): String = 
+    method.info match {
+      case MethodType(params, result) => mockMember(method.name, params, result)
+      case NullaryMethodType(result) => "  //"+ method +" // Borachio doesn't (yet) handle nullary methods"
+      case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
+      case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
+    }
+    
+  def mockMember(name: Name, params: List[Symbol], result: Type) =
+    "  private val "+ mockMethodName(name) + mockFunction(params, result) +"(factory, "+ Symbol(name.toString) +")"
+      
+  def mockFunction(params: List[Symbol], result: Type) =
+    " = new com.borachio.MockFunction"+ params.length +"["+ 
+      (paramTypes(params) :+ result.typeSymbol.fullName).mkString(", ") +"]"
+    
+  def paramTypes(params: List[Symbol]) = params map (_.tpe.typeSymbol.fullName)
   
   def mockMethodName(name: Name) = "mock$"+ name
   
