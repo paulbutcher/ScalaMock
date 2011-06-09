@@ -20,12 +20,10 @@
 
 package com.borachio.plugin.test
 
-trait Turtle {
-  def penUp()
-  def penDown()
-  def forward(distance: Double)
-  def turn(angle: Double)
-  def getAngle: Double
-  def getPosition(): (Double, Double)
-  def setPosition(x: Double, y: Double): (Double, Double)
+import org.scalatest.Suite
+import com.borachio.scalatest.MockFactory
+import com.borachio.annotation.mock
+
+@mock(classOf[Turtle], classOf[Warehouse])
+class HigherOrderFunctionsTest extends Suite with MockFactory {
 }

@@ -40,17 +40,19 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     def apply(unit: CompilationUnit) {
       if (plugin.outputDirectory.isDefined) {
         createOutputDirectory
-        new ForeachTreeTraverser(findMocks).traverse(unit.body)
+        new ForeachTreeTraverser(findMockAnnotations).traverse(unit.body)
       }
     }
   }
   
-  def findMocks(tree: Tree) {
+  def findMockAnnotations(tree: Tree) {
     tree match {
-      case ClassDef(_, _, _, _) =>
-        if (tree.hasSymbol && (tree.symbol hasAnnotation MockAnnotation))
-          new MockClass(tree.symbol).generate
-
+      case ClassDef(_, _, _, _) if tree.hasSymbol =>
+        for {
+          AnnotationInfo(tp, args, _) <- tree.symbol.annotations if tp.typeSymbol == MockAnnotation
+          Literal(const) <- args
+        } new MockClass(const.typeValue.typeSymbol).generate
+          
       case _ =>
     }
   }

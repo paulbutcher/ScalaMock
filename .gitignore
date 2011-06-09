@@ -1,7 +1,7 @@
 project/boot/
 project/build/target/
 target/
-lib_managed/
+*_managed/
 *.tmproj
 .DS_Store
 *.iml

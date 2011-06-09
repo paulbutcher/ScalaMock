@@ -20,4 +20,4 @@
 
 package com.borachio.annotation
 
-class mock extends scala.annotation.StaticAnnotation
+class mock(classes: Class[_]*) extends scala.annotation.StaticAnnotation

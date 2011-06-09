@@ -20,9 +20,6 @@
 
 package com.borachio.plugin.test
 
-import com.borachio.annotation.mock
-
-@mock
 abstract class Warehouse {
   def hasInventory(product: String, quantity: Int): Boolean
   def remove(product: String, quantity: Int)
