@@ -41,7 +41,6 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       if (plugin.outputDirectory.isDefined) {
         createOutputDirectory
         new ForeachTreeTraverser(findMocks).traverse(unit.body)
-        sys.exit(0)
       }
     }
   }
