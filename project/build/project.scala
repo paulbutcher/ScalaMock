@@ -23,27 +23,38 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
   class PluginProject(info: ProjectInfo) extends DefaultProject(info)
   
   class PluginTestProject(info: ProjectInfo) extends DefaultProject(info) {
+    
+    def managedSources = "src_managed"
+    def managedTestSource = managedSources / "test" / "scala"
+    override def testSourceRoots = super.testSourceRoots +++ (managedTestSource##)
+    override def cleanAction = super.cleanAction dependsOn cleanTask(managedSources)
+    
+    def generateMocksSourceRoots = "src" / "generate_mocks" / "scala"
+    def generateMocksSources = sources(generateMocksSourceRoots)
 
-    val scalatest = "org.scalatest" %% "scalatest" % "1.4.1" % "optional"
+    val scalatest = "org.scalatest" %% "scalatest" % "1.4.1"
     
-    var generatingMocks = false
+    def generateMockCompileOptions = 
+      compileOptions(
+        "-Xplugin:plugin/target/scala_"+ buildScalaVersion +"/borachio-plugin_"+ buildScalaVersion +"-"+ projectVersion.value +".jar",
+        "-Xplugin-require:borachio",
+        "-P:borachio:generatemocks:plugin_test/src_managed/test/scala"
+      ) ++ super.compileOptions
     
-    override def compileOptions = 
-      if (generatingMocks)
-        compileOptions(
-          "-Xplugin:plugin/target/scala_"+ buildScalaVersion +"/borachio-plugin_"+ buildScalaVersion +"-"+ projectVersion.value +".jar",
-          "-Xplugin-require:borachio",
-          "-P:borachio:generatemocks:plugin_test/src_managed/test/scala"
-        ) ++ super.compileOptions
-      else
-        super.compileOptions
-    
+  	class GenerateMocksCompileConfig extends TestCompileConfig
+  	{
+  		override def baseCompileOptions = generateMockCompileOptions
+  		override def label = "generatemocks"
+      override def sourceRoots = generateMocksSourceRoots
+  		override def sources = generateMocksSources
+  	}
+  	def generateMocksCompileConfiguration = new GenerateMocksCompileConfig
+  	lazy val generateMocksCompileConditional = new CompileConditional(generateMocksCompileConfiguration, buildCompiler)
+
     lazy val generateMocks = generateMocksAction
     def generateMocksAction = generateMocksTask describedAs "Generates sources for classes with the @mock annotation"
     def generateMocksTask = task {
-      generatingMocks = true
-      testCompileConditional.run
-      generatingMocks = false
+      generateMocksCompileConditional.run
       None
     }
   }

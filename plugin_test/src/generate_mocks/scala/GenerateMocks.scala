@@ -20,16 +20,7 @@
 
 package com.borachio.plugin.test
 
-import org.scalatest.Suite
-import com.borachio.scalatest.MockFactory
+import com.borachio.annotation.mock
 
-class HigherOrderFunctionsTest extends Suite with MockFactory {
-  
-  def testTurtle {
-    // val m = new MockTurtle(this)
-    // 
-    // m.expects.penDown
-    // 
-    // m.penDown
-  }
-}
+@mock(classOf[Turtle], classOf[Warehouse])
+class Dummy
