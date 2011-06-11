@@ -29,7 +29,11 @@ class PluginTest extends Suite with MockFactory {
     val m = new MockTurtle(this)
     
     m.expects.penDown()
+    m.expects.setPosition(10.0, 12.0)
+    m.expects.getPosition returning (10.0, 12.0)
     
     m.penDown
+    m.setPosition(10.0, 12.0)
+    expect((10.0, 12.0)) { m.getPosition }
   }
 }
