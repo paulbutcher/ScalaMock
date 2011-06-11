@@ -34,9 +34,9 @@ class TypesafeMockTest extends Suite with MockFactory {
       def penUp() = mock$penUp.expects()
       def penDown() = mock$penDown.expects()
       def forward(distance:Double) = mock$forward.expects(distance)
-      def turn(angle: Double) = mock$turn(angle)
-      def getAngle = mock$getAngle()
-      def getPosition = mock$getPosition()
+      def turn(angle: Double) = mock$turn.expects(angle)
+      def getAngle = mock$getAngle.expects()
+      def getPosition = mock$getPosition.expects()
       def setPosition(x: Double, y: Double) = mock$setPosition.expects(x, y)
     }
     

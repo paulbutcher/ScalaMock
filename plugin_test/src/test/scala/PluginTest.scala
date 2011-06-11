@@ -23,13 +23,13 @@ package com.borachio.plugin.test
 import org.scalatest.Suite
 import com.borachio.scalatest.MockFactory
 
-class HigherOrderFunctionsTest extends Suite with MockFactory {
+class PluginTest extends Suite with MockFactory {
   
   def testTurtle {
-    // val m = new MockTurtle(this)
-    // 
-    // m.expects.penDown
-    // 
-    // m.penDown
+    val m = new MockTurtle(this)
+    
+    m.expects.penDown()
+    
+    m.penDown
   }
 }
