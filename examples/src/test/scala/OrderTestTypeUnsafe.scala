@@ -20,20 +20,39 @@
 
 package com.borachio.examples
 
-import org.scalatest.Suite
+import org.scalatest.WordSpec
 import com.borachio.scalatest.MockFactory
 
-class PluginTest extends Suite with MockFactory {
+// This is a reworked version of the example from Martin Fowler's article
+// Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
+class OrderTestTypeUnsafe extends WordSpec with MockFactory {
   
-  def testTurtle {
-    val m = new MockTurtle(this)
+  "An order" when {
+    "in stock" should {
+      "remove inventory" in {
+        val mockWarehouse = mock[Warehouse]
+        inSequence {
+          mockWarehouse expects 'hasInventory withArguments ("Talisker", 50) returning true once;
+          mockWarehouse expects 'remove withArguments ("Talisker", 50) once
+        }
+        
+        val order = new Order("Talisker", 50)
+        order.fill(mockWarehouse)
+        
+        assert(order.isFilled)
+      }
+    }
     
-    m.expects.penDown()
-    m.expects.setPosition(10.0, 12.0)
-    m.expects.getPosition returning (10.0, 12.0)
-    
-    m.penDown
-    m.setPosition(10.0, 12.0)
-    expect((10.0, 12.0)) { m.getPosition }
+    "out of stock" should {
+      "remove nothing" in {
+        val mockWarehouse = mock[Warehouse]
+        mockWarehouse expects 'hasInventory returns false once
+        
+        val order = new Order("Talisker", 50)
+        order.fill(mockWarehouse)
+        
+        assert(!order.isFilled)
+      }
+    }
   }
 }

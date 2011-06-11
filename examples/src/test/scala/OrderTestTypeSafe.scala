@@ -25,22 +25,15 @@ import com.borachio.scalatest.MockFactory
 
 // This is a reworked version of the example from Martin Fowler's article
 // Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
-class OrderTestWithFunctions extends WordSpec with MockFactory {
-  
-  val hasInventoryMock = mockFunction[String, Int, Boolean]
-  val removeMock = mockFunction[String, Int, Unit]
-
-  val mockWarehouse = new Warehouse {
-    def hasInventory(product: String, quantity: Int) = hasInventoryMock(product, quantity)
-    def remove(product: String, quantity: Int) = removeMock(product, quantity)
-  }
+class OrderTestTypeSafe extends WordSpec with MockFactory {
   
   "An order" when {
     "in stock" should {
       "remove inventory" in {
+        val mockWarehouse = new MockWarehouse(this)
         inSequence {
-          hasInventoryMock expects ("Talisker", 50) returning true once;
-          removeMock expects ("Talisker", 50) once
+          mockWarehouse.expects.hasInventory("Talisker", 50) returning true once;
+          mockWarehouse.expects.remove("Talisker", 50) once
         }
         
         val order = new Order("Talisker", 50)
@@ -51,8 +44,9 @@ class OrderTestWithFunctions extends WordSpec with MockFactory {
     }
     
     "out of stock" should {
-      "remove nothing" ignore {
-        // hasInventoryMock returns false once  //! TODO
+      "remove nothing" in {
+        val mockWarehouse = new MockWarehouse(this)
+        mockWarehouse.expects.hasInventory(*, *) returning false once
         
         val order = new Order("Talisker", 50)
         order.fill(mockWarehouse)

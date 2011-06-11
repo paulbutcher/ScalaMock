@@ -7,7 +7,7 @@ import com.borachio.specs2.MockFactory
  * This is a demonstration and test of the Specs2 integration, using the example from
  * Martin Fowler's article Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
  */
-class OrderSpecificationWithFunctions extends Specification with MockFactory {
+class OrderSpecification extends Specification with MockFactory {
   val hasInventoryMock = mockFunction[String, Int, Boolean]
   val removeMock = mockFunction[String, Int, Unit]
 
@@ -26,11 +26,12 @@ class OrderSpecificationWithFunctions extends Specification with MockFactory {
       order.fill(mockWarehouse)
       order.isFilled must beTrue
     }
-    // "remove nothing when out of stock" in {
-    //   // hasInventoryMock returns false once //! TODO
-    //   val order = new Order("Talisker", 50)
-    //   order.fill(mockWarehouse)
-    //   order.isFilled must beFalse
-    // }
+
+    "remove nothing when out of stock" in {
+      hasInventoryMock expects (*, *) returns false once
+      val order = new Order("Talisker", 50)
+      order.fill(mockWarehouse)
+      order.isFilled must beFalse
+    }
   }
 }

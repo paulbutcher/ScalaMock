@@ -78,15 +78,6 @@ class MockFunctionTest extends WordSpec with MockFactory {
       intercept[ExpectationException] { m(42, "bar") }
     }
     
-    "allow any arguments if none are specified" ignore {
-      val m = mockFunction[Int, String, Double]
-      // m returns 1.23 //! TODO
-      expect(1.23) { m(1, "foo") }
-      expect(1.23) { m(2, "bar") }
-      expect(1.23) { m(-1, null) }
-      verifyExpectations
-    }
-    
     "match multiple expectations in any order" in {
       val m1 = mockFunction[Int, String, Double]
       val m2 = mockFunction[String, String]
