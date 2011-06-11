@@ -83,7 +83,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val packageStatement = "package "+ packageName
 
     lazy val classDeclaration = 
-      "class "+ className +"(factory: com.borachio.AbstractMockFactory)"+ parents.mkString(" extends ", " with ", "")
+      "class "+ className +"(factory: com.borachio.AbstractMockFactory) extends "+ classSymbol.tpe
 
     lazy val mockMethods = (methodsToMock map mockMethod _).mkString("\n")
 
@@ -96,8 +96,6 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val packageName = classSymbol.enclosingPackage.fullName.toString
 
     lazy val className = "Mock"+ classSymbol.name
-
-    lazy val parents = classSymbol.info.parents filter { _.typeSymbol != ScalaObjectClass }
 
     lazy val methodsToMock = classSymbol.info.nonPrivateMembers filter { s => s.isMethod && !s.isConstructor && !s.isFinal }
 
@@ -113,10 +111,12 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       mockDeclaration(name, params) +" = "+ mockBody(name, params)
 
     def mockDeclaration(name: Name, params: List[Symbol]) = 
-      "  override def "+ name.decode + (params map parameterDeclaration _).mkString("(", ", ", ")")
-
-    def parameterDeclaration(parameter: Symbol) = parameter.name +": "+ parameter.tpe.typeSymbol.fullName
-
+      "  "+ overrideIfNecessary +"def "+ name.decode + (params map parameterDeclaration _).mkString("(", ", ", ")")
+      
+    lazy val overrideIfNecessary = if (!classSymbol.isTrait) "override " else ""
+      
+    def parameterDeclaration(parameter: Symbol) = parameter.name +": "+ parameter.tpe
+    
     def mockBody(name: Name, params: List[Symbol]) = mockMethodName(name) + forwardParams(params)
 
     def mockMethodName(name: Name) = "mock$"+ name
@@ -147,8 +147,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
     def mockFunction(params: List[Symbol], result: Type) =
       " = new com.borachio.MockFunction"+ params.length +"["+ 
-        (paramTypes(params) :+ result.typeSymbol.fullName).mkString(", ") +"]"
+        (paramTypes(params) :+ result).mkString(", ") +"]"
 
-    def paramTypes(params: List[Symbol]) = params map (_.tpe.typeSymbol.fullName)
+    def paramTypes(params: List[Symbol]) = params map (_.tpe)
   }
 }

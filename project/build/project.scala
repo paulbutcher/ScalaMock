@@ -38,6 +38,7 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
       compileOptions(
         "-Xplugin:plugin/target/scala_"+ buildScalaVersion +"/borachio-plugin_"+ buildScalaVersion +"-"+ projectVersion.value +".jar",
         "-Xplugin-require:borachio",
+        "-Ylog:generatemocks",
         "-P:borachio:generatemocks:plugin_test/src_managed/test/scala"
       ) ++ super.compileOptions
     
