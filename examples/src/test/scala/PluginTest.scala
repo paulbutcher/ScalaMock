@@ -18,14 +18,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.plugin.test
+package com.borachio.examples
 
-trait Turtle {
-  def penUp()
-  def penDown()
-  def forward(distance: Double)
-  def turn(angle: Double)
-  def getAngle: Double
-  def getPosition(): (Double, Double)
-  def setPosition(x: Double, y: Double): (Double, Double)
+import org.scalatest.Suite
+import com.borachio.scalatest.MockFactory
+
+class PluginTest extends Suite with MockFactory {
+  
+  def testTurtle {
+    val m = new MockTurtle(this)
+    
+    m.expects.penDown()
+    m.expects.setPosition(10.0, 12.0)
+    m.expects.getPosition returning (10.0, 12.0)
+    
+    m.penDown
+    m.setPosition(10.0, 12.0)
+    expect((10.0, 12.0)) { m.getPosition }
+  }
 }
