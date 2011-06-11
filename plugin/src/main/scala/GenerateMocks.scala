@@ -146,7 +146,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         mockMethodName(method.name) +".expects"+ forwardParams(params)
         
     def forwarderDeclaration(method: Symbol, params: Option[List[Symbol]]) =
-      "    "+ overrideIfNecessary(method) +"def "+ method.name.decode + forwarderParams(params)
+      "    def "+ method.name.decode + forwarderParams(params)
         
     def forwarderParams(params: Option[List[Symbol]]) = params match {
         case Some(ps) => (ps map forwarderParam _).mkString("(", ", ", ")")
