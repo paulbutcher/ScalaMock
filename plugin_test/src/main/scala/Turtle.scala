@@ -25,7 +25,7 @@ trait Turtle {
   def penDown()
   def forward(distance: Double)
   def turn(angle: Double)
-  // def getAngle: Double
+  def getAngle: Double
   def getPosition(): (Double, Double)
   def setPosition(x: Double, y: Double): (Double, Double)
 }
