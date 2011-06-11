@@ -97,7 +97,9 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
     lazy val className = "Mock"+ classSymbol.name
 
-    lazy val methodsToMock = classSymbol.info.nonPrivateMembers filter { s => s.isMethod && !s.isConstructor && !s.isFinal }
+    lazy val methodsToMock = classSymbol.info.nonPrivateMembers filter { s => 
+        s.isMethod && !s.isConstructor && !s.isEffectivelyFinal && !s.isMemberOf(ObjectClass)
+      }
 
     def mockMethod(method: Symbol): String =
       method.info match {
@@ -126,14 +128,23 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
     def expectForwarder(method: Symbol): String =
       method.info match {
-        case MethodType(params, result) => expectForwarder(method, params)
+        case MethodType(params, result) => expectForwarder(method, params, result)
         case NullaryMethodType(result) => "  //"+ method +" // Borachio doesn't (yet) handle nullary methods"
         case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
         case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
       }
 
-    def expectForwarder(method: Symbol, params: List[Symbol]) =
-      "  "+ mockDeclaration(method, params) +" = "+ mockMethodName(method.name) + forwardParams(params)
+    def expectForwarder(method: Symbol, params: List[Symbol], result: Type) =
+      forwarderDeclaration(method, params) +": "+ expectationType(result) +" = "+ 
+        mockMethodName(method.name) +".expects"+ forwardParams(params)
+        
+    def forwarderDeclaration(method: Symbol, params: List[Symbol]) =
+      "    "+ overrideIfNecessary(method) +"def "+ method.name.decode + 
+        (params map forwarderParam _).mkString("(", ", ", ")")
+      
+    def forwarderParam(parameter: Symbol) = parameter.name +": "+ "com.borachio.MockParameter["+ parameter.tpe +"]"
+    
+    def expectationType(result: Type) = "com.borachio.TypeSafeExpectation["+ result +"]"
 
     def mockMember(method: Symbol): String = 
       method.info match {
