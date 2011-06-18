@@ -73,17 +73,17 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val mockFilename = packageName +"."+ className +".scala"  
 
     lazy val mock =
-      packageStatement + "\n\n" +
-        classDeclaration + " {\n" +
-          mockMethods + "\n\n" +
-          expectForwarders + "\n\n" +
-          mockMembers + "\n" +
+      packageStatement +"\n\n"+
+        classDeclaration +" {\n"+
+          mockMethods +"\n\n"+
+          expectForwarders +"\n\n"+
+          mockMembers +"\n\n"+
+          "var factory: com.borachio.AbstractMockFactory = _\n"+
         "}\n"
 
     lazy val packageStatement = "package "+ packageName
 
-    lazy val classDeclaration = 
-      "class "+ className +"(factory: com.borachio.AbstractMockFactory) extends "+ classSymbol.tpe
+    lazy val classDeclaration = "class "+ className
 
     lazy val mockMethods = (methodsToMock map mockMethod _).mkString("\n")
 
@@ -95,12 +95,12 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
     lazy val packageName = classSymbol.enclosingPackage.fullName.toString
 
-    lazy val className = "Mock"+ classSymbol.name
+    lazy val className = classSymbol.name
 
     lazy val methodsToMock = classSymbol.info.nonPrivateMembers filter { s => 
         s.isMethod && !s.isConstructor && !s.isEffectivelyFinal && !s.isMemberOf(ObjectClass)
       }
-
+      
     def mockMethod(method: Symbol): String =
       method.info match {
         case MethodType(params, result) => mockMethod(method, Some(params))

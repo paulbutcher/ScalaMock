@@ -30,8 +30,6 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
     override def testFrameworks = super.testFrameworks ++ Seq(specs2Framework)
     
     def managedSources = "src_managed"
-    def managedTestSource = managedSources / "test" / "scala"
-    override def testSourceRoots = super.testSourceRoots +++ (managedTestSource##)
     override def cleanAction = super.cleanAction dependsOn cleanTask(managedSources)
     
     def generateMocksSourceRoots = "src" / "generate_mocks" / "scala"
@@ -42,11 +40,10 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
         "-Xplugin:plugin/target/scala_"+ buildScalaVersion +"/borachio-plugin_"+ buildScalaVersion +"-"+ projectVersion.value +".jar",
         "-Xplugin-require:borachio",
         "-Ylog:generatemocks",
-        "-P:borachio:generatemocks:examples/src_managed/test/scala"
+        "-P:borachio:generatemocks:examples/src_managed/mock/scala"
       ) ++ super.compileOptions
     
-  	class GenerateMocksCompileConfig extends TestCompileConfig
-  	{
+  	class GenerateMocksCompileConfig extends TestCompileConfig {
   		override def baseCompileOptions = generateMockCompileOptions
   		override def label = "generatemocks"
       override def sourceRoots = generateMocksSourceRoots
@@ -59,7 +56,27 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
     def generateMocksAction = generateMocksTask describedAs "Generates sources for classes with the @mock annotation"
     def generateMocksTask = task {
       generateMocksCompileConditional.run
-      None
+    }
+
+    def mockSourceRoots = managedSources / "mock" / "scala"
+    def mockSources = sources(mockSourceRoots)
+    def mockCompilePath = outputPath / "mock-classes"
+    def mockAnalysisPath = outputPath / "mock-analysis"
+    
+    class CompileMocksCompileConfig extends TestCompileConfig {
+      override def label = "compilemocks"
+      override def sourceRoots = mockSourceRoots
+      override def sources = mockSources
+      override def outputDirectory = mockCompilePath
+      override def analysisPath = mockAnalysisPath
+    }
+    def compileMocksCompileConfiguration = new CompileMocksCompileConfig
+    lazy val compileMocksCompileConditional = new CompileConditional(compileMocksCompileConfiguration, buildCompiler)
+    
+    lazy val compileMocks = compileMocksAction
+    def compileMocksAction = compileMocksTask dependsOn generateMocksTask describedAs "Compile mocks"
+    def compileMocksTask = task {
+      compileMocksCompileConditional.run
     }
   }
 }
