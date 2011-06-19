@@ -122,7 +122,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val mockTraitName = "Mock$"+ className
 
     lazy val methodsToMock = classSymbol.info.nonPrivateMembers filter { s => 
-        s.isMethod && !s.isConstructor && !s.isEffectivelyFinal && !s.isMemberOf(ObjectClass)
+        s.isMethod && !s.isConstructor && !s.isMemberOf(ObjectClass)
       }
       
     def mockMethod(method: Symbol): String =

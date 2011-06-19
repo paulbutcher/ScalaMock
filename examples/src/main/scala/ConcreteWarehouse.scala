@@ -20,7 +20,7 @@
 
 package com.borachio.examples
 
-class ConcreteWarehouse {
+final class ConcreteWarehouse {
   def hasInventory(product: String, quantity: Int) = true
   def remove(product: String, quantity: Int) {}
 }
