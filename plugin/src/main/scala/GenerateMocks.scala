@@ -34,13 +34,18 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   val phaseName = "generatemocks"
 
   lazy val MockAnnotation = definitions.getClass("com.borachio.annotation.mock")
-  lazy val outputDirectory = plugin.outputDirectory.get
+  lazy val mockOutputDirectory = plugin.mockOutputDirectory.get
+  lazy val testOutputDirectory = plugin.testOutputDirectory.get
   
   def newPhase(prev: Phase) = new StdPhase(prev) {
     def apply(unit: CompilationUnit) {
-      if (plugin.outputDirectory.isDefined) {
-        createOutputDirectory
-        new ForeachTreeTraverser(findMockAnnotations).traverse(unit.body)
+      if (plugin.mockOutputDirectory.isDefined) {
+        if (plugin.testOutputDirectory.isDefined) {
+          createOutputDirectories
+          new ForeachTreeTraverser(findMockAnnotations).traverse(unit.body)
+        } else {
+          globalError("Both -P:borachio:generatemocks and -P:borachio:generatetest must be given")
+        }
       }
     }
   }
@@ -57,17 +62,23 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     }
   }
   
-  def createOutputDirectory {
-    new File(outputDirectory).mkdirs
+  def createOutputDirectories {
+    new File(mockOutputDirectory).mkdirs
+    new File(testOutputDirectory).mkdirs
   }
 
   class MockClass(classSymbol: Symbol) {
     
     def generate() {
       log("Creating mock for: "+ classSymbol)
-      val writer = new FileWriter(new File(outputDirectory, mockFilename))
-      writer.write(mock)
-      writer.close
+
+      val mockWriter = new FileWriter(new File(mockOutputDirectory, mockFilename))
+      mockWriter.write(mock)
+      mockWriter.close
+      
+      val testWriter = new FileWriter(new File(testOutputDirectory, mockFilename))
+      testWriter.write(test)
+      testWriter.close
     }
 
     lazy val mockFilename = packageName +"."+ className +".scala"  
@@ -76,17 +87,19 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       packageStatement +"\n\n"+
         classDeclaration +" {\n"+
           mockMethods +"\n\n"+
-          mockMembers +"\n\n"+
-          "  var factory: com.borachio.AbstractMockFactory = _\n"+
-        "}\n\n"+
-        mockClassDeclaration +" {\n"+
-          "  factory = factory_\n\n"+
+          mockMembers +"\n"+
+        "}"
+        
+    lazy val test =
+      packageStatement +"\n\n"+
+        mockClassDeclaration +" { "+ mockSelfType +"\n"+
+          factoryDefinition +"\n\n"+
           expectForwarders +"\n"+
         "}\n"
 
     lazy val packageStatement = "package "+ packageName
 
-    lazy val classDeclaration = "class "+ className
+    lazy val classDeclaration = "class "+ className +" extends "+ mockClassName
 
     lazy val mockMethods = (methodsToMock map mockMethod _).mkString("\n")
 
@@ -96,9 +109,12 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
     lazy val mockMembers = (methodsToMock map mockMember _).mkString("\n")
     
-    lazy val mockClassDeclaration = "class "+ mockClassName +"(factory_ : com.borachio.AbstractMockFactory)"+
-      " extends "+ className
-
+    lazy val mockClassDeclaration = "class "+ mockClassName
+    
+    lazy val mockSelfType = "self: "+ className +" =>"
+    
+    lazy val factoryDefinition = "  var factory: com.borachio.AbstractMockFactory = _"
+    
     lazy val packageName = classSymbol.enclosingPackage.fullName.toString
 
     lazy val className = classSymbol.name
@@ -148,7 +164,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       }
 
     def expectForwarder(method: Symbol, params: Option[List[Symbol]], result: Type) =
-      forwarderDeclaration(method, params) +": "+ expectationType(result) +" = "+ 
+      forwarderDeclaration(method, params) +": "+ expectationType(result) +" = self."+ 
         mockMethodName(method.name) +".expects"+ forwardParams(params)
         
     def forwarderDeclaration(method: Symbol, params: Option[List[Symbol]]) =

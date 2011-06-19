@@ -34,12 +34,15 @@ class BorachioPlugin(val global: Global) extends Plugin {
     new GenerateMocks(this, global)
   )
   
-  var outputDirectory: Option[String] = None
+  var mockOutputDirectory: Option[String] = None
+  var testOutputDirectory: Option[String] = None
 
   override def processOptions(options: List[String], error: String => Unit) {
     for (option <- options) {
       if (option.startsWith("generatemocks:")) {
-        outputDirectory = Some(option.substring("generatemocks:".length))
+        mockOutputDirectory = Some(option.substring("generatemocks:".length))
+      } else if (option.startsWith("generatetest:")) {
+        testOutputDirectory = Some(option.substring("generatetest:".length))
       } else {
         error("Option not understood: "+ option)
       }
@@ -47,5 +50,6 @@ class BorachioPlugin(val global: Global) extends Plugin {
   }
   
   override val optionsHelp: Option[String] = Some(
-    "  -P:borachio:generatemocks:<path>  Generate mock objects in directory <path>")
+    "  -P:borachio:generatemocks:<path>  Generate mock objects in directory <path>\n"+
+    "  -P:borachio:generatetest:<path>   Generate test code in directory <path>")
 }

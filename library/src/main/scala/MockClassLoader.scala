@@ -36,7 +36,7 @@ class MockingClassLoader extends ClassLoader {
   
   override def loadClass(name: String): Class[_] = {
     if (shouldDefer(name)) {
-      println("++++ MockingClassLoader, deferring: "+ name)
+      println("++++ MockingClassLoader deferring: "+ name)
       defaultClassLoader.loadClass(name)
     } else {
       try {
@@ -60,5 +60,6 @@ class MockingClassLoader extends ClassLoader {
     }
   }
   
-  private def shouldDefer(name: String) = name.startsWith("scala.") || name.startsWith("org.scalatest.")
+  private def shouldDefer(name: String) =
+    name.startsWith("scala.") || name.startsWith("java.") || name.startsWith("org.scalatest.")
 }

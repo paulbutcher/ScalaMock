@@ -40,7 +40,8 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
         "-Xplugin:plugin/target/scala_"+ buildScalaVersion +"/borachio-plugin_"+ buildScalaVersion +"-"+ projectVersion.value +".jar",
         "-Xplugin-require:borachio",
         "-Ylog:generatemocks",
-        "-P:borachio:generatemocks:examples/src_managed/mock/scala"
+        "-P:borachio:generatemocks:examples/src_managed/mock/scala",
+        "-P:borachio:generatetest:examples/src_managed/test/scala"
       ) ++ super.compileOptions
     
   	class GenerateMocksCompileConfig extends TestCompileConfig {
@@ -58,7 +59,9 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
       generateMocksCompileConditional.run
     }
 
-    def mockSourceRoots = managedSources / "mock" / "scala"
+    def managedMockSource = managedSources / "mock" / "scala"
+    def managedTestSource = managedSources / "test" / "scala"
+    def mockSourceRoots = managedMockSource +++ managedTestSource
     def mockSources = sources(mockSourceRoots)
     def mockCompilePath = outputPath / "mock-classes"
     def mockAnalysisPath = outputPath / "mock-analysis"
@@ -78,5 +81,7 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
     def compileMocksTask = task {
       compileMocksCompileConditional.run
     }
+    
+    override def testSourceRoots = super.testSourceRoots +++ managedTestSource
   }
 }
