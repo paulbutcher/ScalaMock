@@ -16,7 +16,6 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
 
     val scalatest = "org.scalatest" %% "scalatest" % "1.4.1" % "optional"
     val junit = "junit" % "junit" % "3.8.2" % "optional"
-    val specs2 = "org.specs2" %% "specs2" % "1.3" % "optional"
   }
   
   class PluginProject(info: ProjectInfo) extends DefaultProject(info)
@@ -24,11 +23,7 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
   class ExamplesProject(info: ProjectInfo) extends DefaultProject(info) {
 
     val scalatest = "org.scalatest" %% "scalatest" % "1.4.1"
-    val specs2 = "org.specs2" %% "specs2" % "1.3"
 
-    def specs2Framework = new TestFramework("org.specs2.runner.SpecsFramework")
-    override def testFrameworks = super.testFrameworks ++ Seq(specs2Framework)
-    
     def managedSources = "src_managed"
     override def cleanAction = super.cleanAction dependsOn cleanTask(managedSources)
     
