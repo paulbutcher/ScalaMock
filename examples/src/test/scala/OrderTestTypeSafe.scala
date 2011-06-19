@@ -38,7 +38,7 @@ class OrderTestTypeSafe extends WordSpec with MockFactory {
           mockWarehouse.expects.remove("Talisker", 50) once
         }
         
-        val order = new Order("Talisker", 50)
+        val order = new ConcreteOrder("Talisker", 50)
         order.fill(warehouse)
         
         assert(order.isFilled)
@@ -60,7 +60,7 @@ class OrderTestTypeSafe extends WordSpec with MockFactory {
   
   def createMockWarehouse = {
     val clazz = Class.forName("com.borachio.examples.ConcreteWarehouse")
-    val mock = clazz.newInstance
+    val mock = clazz.newInstance.asInstanceOf[ConcreteWarehouse]
     val factorySetter = clazz.getMethod("factory_$eq", classOf[AbstractMockFactory])
     factorySetter.invoke(mock, this)
     mock
