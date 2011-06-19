@@ -76,9 +76,12 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       packageStatement +"\n\n"+
         classDeclaration +" {\n"+
           mockMethods +"\n\n"+
-          expectForwarders +"\n\n"+
           mockMembers +"\n\n"+
-          "var factory: com.borachio.AbstractMockFactory = _\n"+
+          "  var factory: com.borachio.AbstractMockFactory = _\n"+
+        "}\n\n"+
+        mockClassDeclaration +" {\n"+
+          "  factory = factory_\n\n"+
+          expectForwarders +"\n"+
         "}\n"
 
     lazy val packageStatement = "package "+ packageName
@@ -92,10 +95,15 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "\n  }"
 
     lazy val mockMembers = (methodsToMock map mockMember _).mkString("\n")
+    
+    lazy val mockClassDeclaration = "class "+ mockClassName +"(factory_ : com.borachio.AbstractMockFactory)"+
+      " extends "+ className
 
     lazy val packageName = classSymbol.enclosingPackage.fullName.toString
 
     lazy val className = classSymbol.name
+    
+    lazy val mockClassName = "Mock$"+ className
 
     lazy val methodsToMock = classSymbol.info.nonPrivateMembers filter { s => 
         s.isMethod && !s.isConstructor && !s.isEffectivelyFinal && !s.isMemberOf(ObjectClass)
@@ -165,8 +173,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
       }
 
-    def mockMember(name: Name, params: List[Symbol], result: Type) =
-      "  private val "+ mockMethodName(name) + mockFunction(params, result) +"(factory, "+ Symbol(name.toString) +")"
+    def mockMember(name: Name, params: List[Symbol], result: Type) = "  protected lazy val "+ 
+      mockMethodName(name) + mockFunction(params, result) +"(factory, "+ Symbol(name.toString) +")"
 
     def mockFunction(params: List[Symbol], result: Type) =
       " = new com.borachio.MockFunction"+ params.length +"["+ (paramTypes(params) :+ result).mkString(", ") +"]"
