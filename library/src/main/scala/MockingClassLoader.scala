@@ -35,23 +35,17 @@ class MockingClassLoader extends ClassLoader {
   private val normalClassLoader = new ClassLoaderInternal(defaultClassLoader.getURLs)
   
   override def loadClass(name: String): Class[_] = {
-    if (shouldDefer(name)) {
-      println("++++ MockingClassLoader deferring: "+ name)
+    if (useDefault(name)) {
       defaultClassLoader.loadClass(name)
     } else {
       try {
-        println("++++ MockingClassLoader load: "+ name)
         mockClassLoader.loadClassInternal(name)
       } catch {
         case _: ClassNotFoundException => {
-          println("++++ mock not found: "+ name)
           try {
             normalClassLoader.loadClassInternal(name)
           } catch {
-            case e: ClassNotFoundException => {
-              println("++++ class not found: "+ name)
-              println("++++ Current directory: "+ new File(".").getCanonicalPath)
-
+            case _: ClassNotFoundException => {
               defaultClassLoader.loadClass(name)
             }
           }
@@ -60,6 +54,6 @@ class MockingClassLoader extends ClassLoader {
     }
   }
   
-  private def shouldDefer(name: String) =
+  private def useDefault(name: String) =
     name.startsWith("scala.") || name.startsWith("java.") || name.startsWith("org.scalatest.")
 }
