@@ -20,7 +20,7 @@
 
 package com.borachio.examples
 
-import com.borachio.annotation.mock
-
-@mock(classOf[ConcreteWarehouse])
-class Dummy
+class ConcreteWarehouse {
+  def hasInventory(product: String, quantity: Int) = true
+  def remove(product: String, quantity: Int) {}
+}

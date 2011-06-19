@@ -121,14 +121,12 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       mockDeclaration(method, params) +" = "+ mockBody(method.name, params)
 
     def mockDeclaration(method: Symbol, params: Option[List[Symbol]]) = 
-      "  "+ overrideIfNecessary(method) +"def "+ method.name.decode + mockParams(params)
+      "  def "+ method.name.decode + mockParams(params)
         
     def mockParams(params: Option[List[Symbol]]) = params match {
         case Some(ps) => (ps map parameterDeclaration _).mkString("(", ", ", ")")
         case None => ""
       }
-      
-    def overrideIfNecessary(method: Symbol) = if (!method.isDeferred) "override " else ""
       
     def parameterDeclaration(parameter: Symbol) = parameter.name +": "+ parameter.tpe
     
