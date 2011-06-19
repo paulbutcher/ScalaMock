@@ -23,7 +23,7 @@ package com.borachio
 import com.borachio.scalatest.MockFactory
 import org.scalatest.Suite
 
-class ProxyMockTest extends Suite with MockFactory {
+class ProxyMockTest extends Suite with MockFactory with ProxyMockFactory {
   
   autoVerify = false
   

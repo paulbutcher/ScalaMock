@@ -20,7 +20,7 @@
 
 package com.borachio
 
-trait AbstractMockFactory extends ProxyMockFactory {
+trait AbstractMockFactory {
   
   protected def resetExpectations() {
     expectations.reset(verbose, callLogging)

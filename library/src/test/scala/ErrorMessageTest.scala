@@ -23,7 +23,7 @@ package com.borachio
 import com.borachio.scalatest.MockFactory
 import org.scalatest.WordSpec
 
-class ErrorMessageTest extends WordSpec with MockFactory with VerboseErrors with CallLogging {
+class ErrorMessageTest extends WordSpec with MockFactory with ProxyMockFactory with VerboseErrors with CallLogging {
 
   "A mock function" when {
     "called unexpectedly" should {

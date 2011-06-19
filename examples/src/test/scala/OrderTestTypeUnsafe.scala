@@ -21,11 +21,12 @@
 package com.borachio.examples
 
 import org.scalatest.WordSpec
+import com.borachio.ProxyMockFactory
 import com.borachio.scalatest.MockFactory
 
 // This is a reworked version of the example from Martin Fowler's article
 // Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
-class OrderTestTypeUnsafe extends WordSpec with MockFactory {
+class OrderTestTypeUnsafe extends WordSpec with MockFactory with ProxyMockFactory {
   
   "An order" when {
     "in stock" should {
