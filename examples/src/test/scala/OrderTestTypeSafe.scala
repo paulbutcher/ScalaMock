@@ -47,13 +47,14 @@ class OrderTestTypeSafe extends WordSpec with MockFactory {
     
     "out of stock" should {
       "remove nothing" in {
-        // val mockWarehouse = new Mock$Warehouse(this)
-        // mockWarehouse.expects.hasInventory(*, *) returning false once
-        // 
-        // val order = new Order("Talisker", 50)
-        // order.fill(mockWarehouse)
-        // 
-        // assert(!order.isFilled)
+        val warehouse = createMockWarehouse
+        val mockWarehouse = warehouse.asInstanceOf[Mock$ConcreteWarehouse]
+        mockWarehouse.expects.hasInventory(*, *) returning false once
+        
+        val order = new ConcreteOrder("Talisker", 50)
+        order.fill(warehouse)
+        
+        assert(!order.isFilled)
       }
     }
   }
