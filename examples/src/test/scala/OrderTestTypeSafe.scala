@@ -21,17 +21,17 @@
 package com.borachio.examples
 
 import org.scalatest.WordSpec
-import com.borachio.AbstractMockFactory
+import com.borachio.GeneratedMockFactory
 import com.borachio.scalatest.MockFactory
 
 // This is a reworked version of the example from Martin Fowler's article
 // Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
-class OrderTestTypeSafe extends WordSpec with MockFactory {
+class OrderTestTypeSafe extends WordSpec with MockFactory with GeneratedMockFactory {
   
   "An order" when {
     "in stock" should {
       "remove inventory" in {
-        val warehouse = createMockWarehouse
+        val warehouse = mock[ConcreteWarehouse]
         val mockWarehouse = warehouse.asInstanceOf[Mock$ConcreteWarehouse]
         inSequence {
           mockWarehouse.expects.hasInventory("Talisker", 50) returning true once;
@@ -47,7 +47,7 @@ class OrderTestTypeSafe extends WordSpec with MockFactory {
     
     "out of stock" should {
       "remove nothing" in {
-        val warehouse = createMockWarehouse
+        val warehouse = mock[ConcreteWarehouse]
         val mockWarehouse = warehouse.asInstanceOf[Mock$ConcreteWarehouse]
         mockWarehouse.expects.hasInventory(*, *) returning false once
         
@@ -57,13 +57,5 @@ class OrderTestTypeSafe extends WordSpec with MockFactory {
         assert(!order.isFilled)
       }
     }
-  }
-  
-  def createMockWarehouse = {
-    val clazz = Class.forName("com.borachio.examples.ConcreteWarehouse")
-    val mock = clazz.newInstance.asInstanceOf[ConcreteWarehouse]
-    val factorySetter = clazz.getMethod("factory_$eq", classOf[AbstractMockFactory])
-    factorySetter.invoke(mock, this)
-    mock
   }
 }
