@@ -21,6 +21,8 @@
 package com.borachio
 
 trait GeneratedMockFactoryBase { self: AbstractMockFactory =>
+  
+  override val classLoader: Option[ClassLoader] = Some(new MockingClassLoader)
 
   private[borachio] def mock[T: ClassManifest] = {
     val clazz = Class.forName(classManifest[T].erasure.getName)

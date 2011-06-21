@@ -22,6 +22,8 @@ package com.borachio
 
 trait AbstractMockFactory {
   
+  protected val classLoader: Option[ClassLoader] = None
+  
   protected def resetExpectations() {
     expectations.reset(verbose, callLogging)
     expectationContext = expectations

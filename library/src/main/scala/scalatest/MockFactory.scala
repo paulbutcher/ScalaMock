@@ -20,9 +20,8 @@
 
 package com.borachio.scalatest
 
-import com.borachio.{AbstractMockFactory, MockingClassLoader}
+import com.borachio.AbstractMockFactory
 import org.scalatest.{BeforeAndAfterEach, Distributor, Filter, Reporter, Stopper, Suite, Tracker}
-import java.net.URLClassLoader
 
 /** Trait that can be mixed into a [[http://www.scalatest.org/ ScalaTest]] suite to provide
   * mocking support.
@@ -42,13 +41,18 @@ trait MockFactory extends AbstractMockFactory with BeforeAndAfterEach { this: Su
   
   protected abstract override def runTests(testName: Option[String], reporter: Reporter, stopper: Stopper, filter: Filter,
     configMap: Map[String, Any], distributor: Option[Distributor], tracker: Tracker) {
-    
-    val clazz = Class.forName(getClass.getName, true, new MockingClassLoader)
-    val withMocks = clazz.newInstance
-    val methods = clazz.getMethods
-    val m = clazz.getMethod("runInternal", classOf[Option[String]], classOf[Reporter], classOf[Stopper],
-      classOf[Filter], classOf[Map[String, Any]], classOf[Option[Distributor]], classOf[Tracker])
-    m.invoke(withMocks, testName, reporter, stopper, filter, configMap, distributor, tracker)
+      
+    classLoader match {
+      case Some(cl) => {
+        val clazz = Class.forName(getClass.getName, true, cl)
+        val withMocks = clazz.newInstance
+        val runInternal = clazz.getMethod("runInternal", classOf[Option[String]], classOf[Reporter], classOf[Stopper],
+          classOf[Filter], classOf[Map[String, Any]], classOf[Option[Distributor]], classOf[Tracker])
+        runInternal.invoke(withMocks, testName, reporter, stopper, filter, configMap, distributor, tracker)
+      }
+        
+      case None => runInternal(testName, reporter, stopper, filter, configMap, distributor, tracker)
+    }
   }
   
   def runInternal(testName: Option[String], reporter: Reporter, stopper: Stopper, filter: Filter,
