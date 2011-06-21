@@ -25,6 +25,7 @@ import nsc._
 import nsc.plugins.PluginComponent
 
 import java.io.{File, FileWriter}
+import scala.collection.mutable.ListBuffer
 
 class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginComponent {
   import global._
@@ -32,6 +33,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   
   val runsAfter = List[String]("typer")
   val phaseName = "generatemocks"
+  
+  val mocks = new ListBuffer[(String, String)]
 
   lazy val MockAnnotation = definitions.getClass("com.borachio.annotation.mock")
   lazy val mockOutputDirectory = plugin.mockOutputDirectory.get
@@ -43,6 +46,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         if (plugin.testOutputDirectory.isDefined) {
           createOutputDirectories
           new ForeachTreeTraverser(findMockAnnotations).traverse(unit.body)
+          generateMockFactory
         } else {
           globalError("Both -P:borachio:generatemocks and -P:borachio:generatetest must be given")
         }
@@ -62,6 +66,22 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     }
   }
   
+  def generateMockFactory() {
+    val writer = new FileWriter(new File(testOutputDirectory, "GeneratedMockFactory.scala"))
+    writer.write(mockFactory)
+    writer.close
+  }
+  
+  def mockFactory = {
+    "package com.borachio.generated\n\n"+
+    "trait GeneratedMockFactory extends com.borachio.GeneratedMockFactoryBase { self: com.borachio.AbstractMockFactory =>\n"+
+      (mocks map { case (target, mock) => mockFactoryEntry(target, mock) }).mkString("\n") +"\n"+
+    "}"
+  }
+  
+  def mockFactoryEntry(target: String, mock: String) =
+    "  implicit def toMock(m: "+ target +") = m.asInstanceOf["+ mock +"]"
+  
   def createOutputDirectories {
     new File(mockOutputDirectory).mkdirs
     new File(testOutputDirectory).mkdirs
@@ -79,9 +99,11 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       val testWriter = new FileWriter(new File(testOutputDirectory, mockFilename))
       testWriter.write(test)
       testWriter.close
+      
+      mocks += (qualify(className) -> qualify(mockTraitName))
     }
 
-    lazy val mockFilename = packageName +"."+ className +".scala"  
+    lazy val mockFilename = qualify(className) +".scala"  
 
     lazy val mock =
       packageStatement +"\n\n"+
@@ -117,7 +139,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
     lazy val packageName = classSymbol.enclosingPackage.fullName.toString
 
-    lazy val className = classSymbol.name
+    lazy val className = classSymbol.name.toString
     
     lazy val mockTraitName = "Mock$"+ className
 
@@ -125,6 +147,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         s.isMethod && !s.isConstructor && !s.isMemberOf(ObjectClass)
       }
       
+    def qualify(name: String) = packageName +"."+ name
+    
     def mockMethod(method: Symbol): String =
       method.info match {
         case MethodType(params, result) => mockMethod(method, Some(params))

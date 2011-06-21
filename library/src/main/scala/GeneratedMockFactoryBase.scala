@@ -20,9 +20,9 @@
 
 package com.borachio
 
-trait GeneratedMockFactory { self: AbstractMockFactory =>
+trait GeneratedMockFactoryBase { self: AbstractMockFactory =>
 
-  protected def mock[T: ClassManifest] = {
+  private[borachio] def mock[T: ClassManifest] = {
     val clazz = Class.forName(classManifest[T].erasure.getName)
     val mock = clazz.newInstance.asInstanceOf[T]
     val factorySetter = clazz.getMethod("factory_$eq", classOf[AbstractMockFactory])

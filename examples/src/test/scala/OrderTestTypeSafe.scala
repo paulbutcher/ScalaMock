@@ -21,7 +21,7 @@
 package com.borachio.examples
 
 import org.scalatest.WordSpec
-import com.borachio.GeneratedMockFactory
+import com.borachio.generated.GeneratedMockFactory
 import com.borachio.scalatest.MockFactory
 
 // This is a reworked version of the example from Martin Fowler's article
@@ -31,15 +31,14 @@ class OrderTestTypeSafe extends WordSpec with MockFactory with GeneratedMockFact
   "An order" when {
     "in stock" should {
       "remove inventory" in {
-        val warehouse = mock[ConcreteWarehouse]
-        val mockWarehouse = warehouse.asInstanceOf[Mock$ConcreteWarehouse]
+        val mockWarehouse = mock[ConcreteWarehouse]
         inSequence {
           mockWarehouse.expects.hasInventory("Talisker", 50) returning true once;
           mockWarehouse.expects.remove("Talisker", 50) once
         }
         
         val order = new ConcreteOrder("Talisker", 50)
-        order.fill(warehouse)
+        order.fill(mockWarehouse)
         
         assert(order.isFilled)
       }
@@ -47,12 +46,11 @@ class OrderTestTypeSafe extends WordSpec with MockFactory with GeneratedMockFact
     
     "out of stock" should {
       "remove nothing" in {
-        val warehouse = mock[ConcreteWarehouse]
-        val mockWarehouse = warehouse.asInstanceOf[Mock$ConcreteWarehouse]
+        val mockWarehouse = mock[ConcreteWarehouse]
         mockWarehouse.expects.hasInventory(*, *) returning false once
         
         val order = new ConcreteOrder("Talisker", 50)
-        order.fill(warehouse)
+        order.fill(mockWarehouse)
         
         assert(!order.isFilled)
       }
