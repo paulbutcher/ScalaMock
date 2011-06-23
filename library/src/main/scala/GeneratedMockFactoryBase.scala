@@ -20,9 +20,13 @@
 
 package com.borachio
 
+import java.net.URL
+
 trait GeneratedMockFactoryBase { self: AbstractMockFactory =>
   
-  override val classLoader: Option[ClassLoader] = Some(new MockingClassLoader)
+  def mockClassPath: URL
+  
+  override val classLoader: Option[ClassLoader] = Some(new MockingClassLoader(mockClassPath))
 
   private[borachio] def mock[T: ClassManifest] = {
     val clazz = Class.forName(classManifest[T].erasure.getName)

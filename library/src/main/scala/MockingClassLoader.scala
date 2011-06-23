@@ -23,7 +23,7 @@ package com.borachio
 import java.io.{DataInputStream, File}
 import java.net.{URL, URLClassLoader}
 
-class MockingClassLoader extends ClassLoader {
+class MockingClassLoader(mockClassPath: URL) extends ClassLoader {
   
   private val defaultClassLoader = getClass.getClassLoader.asInstanceOf[URLClassLoader]
   
@@ -31,7 +31,7 @@ class MockingClassLoader extends ClassLoader {
     override def loadClass(name: String): Class[_] = MockingClassLoader.this.loadClass(name)
     def loadClassInternal(name: String) = super.loadClass(name)
   }
-  private val mockClassLoader = new ClassLoaderInternal(Array(new URL("file:examples/target/scala_2.9.0/mock-classes/")))
+  private val mockClassLoader = new ClassLoaderInternal(Array(mockClassPath))
   private val normalClassLoader = new ClassLoaderInternal(defaultClassLoader.getURLs)
   
   override def loadClass(name: String): Class[_] = {
