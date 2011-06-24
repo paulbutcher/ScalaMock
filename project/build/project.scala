@@ -9,8 +9,8 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
   Credentials(Path.userHome / ".ivy2" / ".credentials", log)
   
   lazy val library = project("library", "Borachio Library", new LibraryProject(_))
-  lazy val plugin = project("plugin", "Borachio Plugin", new PluginProject(_), library)
-  lazy val examples = project("examples", "Borachio Examples", new ExamplesProject(_), library, plugin)
+  lazy val compiler_plugin = project("compiler_plugin", "Borachio Compiler Plugin", new CompilerPluginProject(_), library)
+  lazy val examples = project("examples", "Borachio Examples", new ExamplesProject(_), library, compiler_plugin)
   
   class LibraryProject(info: ProjectInfo) extends DefaultProject(info) {
 
@@ -18,7 +18,7 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
     val junit = "junit" % "junit" % "3.8.2" % "optional"
   }
   
-  class PluginProject(info: ProjectInfo) extends DefaultProject(info)
+  class CompilerPluginProject(info: ProjectInfo) extends DefaultProject(info)
   
   class ExamplesProject(info: ProjectInfo) extends DefaultProject(info) {
 
@@ -34,7 +34,7 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
     
     def generateMockCompileOptions = 
       compileOptions(
-        "-Xplugin:plugin/target/scala_"+ buildScalaVersion +"/borachio-plugin_"+ buildScalaVersion +"-"+ projectVersion.value +".jar",
+        "-Xplugin:compiler_plugin/target/scala_"+ buildScalaVersion +"/borachio-compiler-plugin_"+ buildScalaVersion +"-"+ projectVersion.value +".jar",
         "-Xplugin-require:borachio",
         // "-Ylog:generatemocks",
         "-Ystop-after:generatemocks",
