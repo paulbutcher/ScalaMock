@@ -29,12 +29,15 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
     
     def generateMocksSourceRoots = "src" / "generate_mocks" / "scala"
     def generateMocksSources = sources(generateMocksSourceRoots)
+    def generateMocksCompilePath = outputPath / "generatemock-classes"
+    def generateMocksAnalysisPath = outputPath / "generatemock-analysis"
     
     def generateMockCompileOptions = 
       compileOptions(
         "-Xplugin:plugin/target/scala_"+ buildScalaVersion +"/borachio-plugin_"+ buildScalaVersion +"-"+ projectVersion.value +".jar",
         "-Xplugin-require:borachio",
-        "-Ylog:generatemocks",
+        // "-Ylog:generatemocks",
+        "-Ystop-after:generatemocks",
         "-P:borachio:generatemocks:examples/src_managed/mock/scala",
         "-P:borachio:generatetest:examples/src_managed/test/scala"
       ) ++ super.compileOptions
@@ -44,6 +47,8 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
   		override def label = "generatemocks"
       override def sourceRoots = generateMocksSourceRoots
   		override def sources = generateMocksSources
+      override def outputDirectory = generateMocksCompilePath
+      override def analysisPath = generateMocksAnalysisPath
   	}
   	def generateMocksCompileConfiguration = new GenerateMocksCompileConfig
   	lazy val generateMocksCompileConditional = new CompileConditional(generateMocksCompileConfiguration, buildCompiler)
