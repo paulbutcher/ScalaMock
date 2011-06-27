@@ -18,30 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio
+package com.borachio.plugin.test
 
-import java.net.URL
-
-trait GeneratedMockFactoryBase { self: AbstractMockFactory =>
-  
-  def mockClassPath: URL
-  
-  override val classLoader: Option[ClassLoader] = Some(new MockingClassLoader(mockClassPath))
-  
-  private[borachio] def classToCreate[T: ClassManifest] = {
-    val erasure = classManifest[T].erasure
-    val clazz = Class.forName(erasure.getName)
-    if (clazz.isInterface)
-      Class.forName(erasure.getPackage.getName +".Mock$"+ erasure.getSimpleName)
-    else
-      clazz
-  }
-
-  private[borachio] def mock[T: ClassManifest] = {
-    val clazz = classToCreate[T]
-    val mock = clazz.newInstance.asInstanceOf[T]
-    val factorySetter = clazz.getMethod("factory_$eq", classOf[AbstractMockFactory])
-    factorySetter.invoke(mock, self)
-    mock
-  }
+trait SimpleTrait {
+  def nullMethod
+  def methodWithZeroArguments()
+  def methodWithOneArgument(x: Int): String
+  def methodWithTwoArguments(x: Int, y: Int): String
 }

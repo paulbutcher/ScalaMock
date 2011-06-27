@@ -92,9 +92,11 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     def generate() {
       log("Creating mock for: "+ classSymbol)
 
-      val mockWriter = new FileWriter(new File(mockOutputDirectory, mockFilename))
-      mockWriter.write(mock)
-      mockWriter.close
+      if (isClass) {
+        val mockWriter = new FileWriter(new File(mockOutputDirectory, mockFilename))
+        mockWriter.write(mock)
+        mockWriter.close
+      }
       
       val testWriter = new FileWriter(new File(testOutputDirectory, mockFilename))
       testWriter.write(test)
@@ -116,8 +118,15 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       packageStatement +"\n\n"+
         mockTraitDeclaration +" {\n"+
           factoryDefinition +"\n\n"+
-          expectForwarders +"\n"+
+          expectForwarders +"\n"+ (
+          if (!isClass) {
+            "\n"+
+            mockMethods +"\n\n"+
+            mockMembers +"\n"
+          })+
         "}\n"
+        
+    lazy val isClass = !classSymbol.isTrait
 
     lazy val packageStatement = "package "+ packageName
 
@@ -133,7 +142,11 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
     lazy val mockMembers = (methodsToMock map mockMember _).mkString("\n")
     
-    lazy val mockTraitDeclaration = "trait "+ mockTraitName
+    lazy val mockTraitDeclaration = 
+      if (isClass)
+        "trait "+ mockTraitName
+      else
+        "class "+ mockTraitName +" extends "+ className
     
     lazy val factoryDefinition = "  var factory: com.borachio.AbstractMockFactory = _"
     
