@@ -48,4 +48,14 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory {
     mockFinalClass.nullMethod
     expect("Expected return value") { mockFinalClass.methodWithOneArgument(42) }
   }
+  
+  def testClassWithFinalMethod {
+    val mockClassWithFinalMethod = mock[ClassWithFinalMethod]
+    
+    mockClassWithFinalMethod.expects.nullMethod
+    mockClassWithFinalMethod.expects.methodWithOneArgument(42) returning "Expected return value"
+    
+    mockClassWithFinalMethod.nullMethod
+    expect("Expected return value") { mockClassWithFinalMethod.methodWithOneArgument(42) }
+  }
 }
