@@ -102,7 +102,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       testWriter.write(test)
       testWriter.close
       
-      mocks += (qualify(className) -> qualify(mockTraitName))
+      mocks += (qualify(className) -> qualify(mockTraitOrClassName))
     }
 
     lazy val mockFilename = qualify(className) +".scala"  
@@ -116,37 +116,40 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         
     lazy val test =
       packageStatement +"\n\n"+
-        mockTraitDeclaration +" {\n"+
+        mockTraitOrClassDeclaration +" {\n"+
           factoryDefinition +"\n\n"+
           expectForwarders +"\n"+ (
-          if (!isClass) {
-            "\n"+
-            mockMethods +"\n\n"+
-            mockMembers +"\n"
-          })+
+            if (!isClass) {
+              "\n"+
+              mockMethods +"\n\n"+
+              mockMembers +"\n"
+            } else {
+              ""
+            }
+          ) +
         "}\n"
         
     lazy val isClass = !classSymbol.isTrait
 
     lazy val packageStatement = "package "+ packageName
 
-    lazy val classDeclaration = "class "+ className +" extends "+ mockTraitName
+    lazy val classDeclaration = "class "+ className +" extends "+ mockTraitOrClassName
 
     lazy val mockMethods = (methodsToMock map mockMethod _).mkString("\n")
 
     lazy val expectForwarders = "  val expects = new {\n"+
-        "    lazy val clazz = "+ mockTraitName +".this.getClass\n\n"+
+        "    lazy val clazz = "+ mockTraitOrClassName +".this.getClass\n\n"+
         (methodsToMock map expectForwarder _).mkString("\n") +"\n\n"+
         (methodsToMock map cachedMockMethod _).mkString("\n") + "\n"+
       "  }"
 
     lazy val mockMembers = (methodsToMock map mockMember _).mkString("\n")
     
-    lazy val mockTraitDeclaration = 
+    lazy val mockTraitOrClassDeclaration = 
       if (isClass)
-        "trait "+ mockTraitName
+        "trait "+ mockTraitOrClassName
       else
-        "class "+ mockTraitName +" extends "+ className
+        "class "+ mockTraitOrClassName +" extends "+ className
     
     lazy val factoryDefinition = "  var factory: com.borachio.AbstractMockFactory = _"
     
@@ -154,7 +157,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
     lazy val className = classSymbol.name.toString
     
-    lazy val mockTraitName = "Mock$"+ className
+    lazy val mockTraitOrClassName = "Mock$"+ className
 
     lazy val methodsToMock = classSymbol.info.nonPrivateMembers filter { s => 
         s.isMethod && !s.isConstructor && !s.isMemberOf(ObjectClass)
@@ -228,7 +231,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "    lazy val "+ mockMethodName(name) +" = "+ cacheLookup(name, params, result)
       
     def cacheLookup(name: Name, params: List[Symbol], result: Type) =
-      "clazz.getMethod(\""+ mockMethodName(name) +"\").invoke("+ mockTraitName +".this).asInstanceOf["+ 
+      "clazz.getMethod(\""+ mockMethodName(name) +"\").invoke("+ mockTraitOrClassName +".this).asInstanceOf["+ 
         mockFunction(params, result) +"]"
 
     def mockMember(method: Symbol): String = 
