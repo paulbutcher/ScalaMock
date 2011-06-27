@@ -29,15 +29,18 @@ trait GenerateMocks extends DefaultProject {
   def generateMocksSources = sources(generateMocksSourceRoots)
   def generateMocksCompilePath = outputPath / "generatemock-classes"
   def generateMocksAnalysisPath = outputPath / "generatemock-analysis"
+
+  def managedMockSource = managedSources / "mock" / "scala"
+  def managedTestSource = managedSources / "test" / "scala"
   
   def generateMockCompileOptions = 
     compileOptions(
-      "-Xplugin:compiler_plugin/target/scala_"+ buildScalaVersion +"/borachio-compiler-plugin_"+ buildScalaVersion +"-"+ projectVersion.value +".jar",
+      "-Xplugin:compiler_plugin/target/scala_"+ buildScalaVersion +"/compiler-plugin_"+ buildScalaVersion +"-"+ projectVersion.value +".jar",
       "-Xplugin-require:borachio",
       // "-Ylog:generatemocks",
       "-Ystop-after:generatemocks",
-      "-P:borachio:generatemocks:examples/src_managed/mock/scala",
-      "-P:borachio:generatetest:examples/src_managed/test/scala"
+      "-P:borachio:generatemocks:"+ managedMockSource,
+      "-P:borachio:generatetest:"+ managedTestSource
     ) ++ super.compileOptions
   
 	class GenerateMocksCompileConfig extends TestCompileConfig {
@@ -57,8 +60,6 @@ trait GenerateMocks extends DefaultProject {
     generateMocksCompileConditional.run
   }
 
-  def managedMockSource = managedSources / "mock" / "scala"
-  def managedTestSource = managedSources / "test" / "scala"
   def mockSourceRoots = managedMockSource +++ managedTestSource
   def mockSources = sources(mockSourceRoots)
   def mockCompilePath = outputPath / "mock-classes"

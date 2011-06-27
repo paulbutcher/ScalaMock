@@ -22,5 +22,5 @@ import sbt._
 
 class Plugins(info: ProjectInfo) extends PluginDefinition(info) {
   
-  val borachio = "com.borachio" % "borachio-sbt-plugin" % "2.0-SNAPSHOT"
+  val borachio = "com.borachio" % "sbt-plugin" % "2.0-SNAPSHOT"
 }
