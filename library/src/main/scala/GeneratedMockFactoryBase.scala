@@ -39,9 +39,7 @@ trait GeneratedMockFactoryBase { self: AbstractMockFactory =>
 
   private[borachio] def mock[T: ClassManifest] = {
     val clazz = classToCreate[T]
-    val mock = clazz.newInstance.asInstanceOf[T]
-    val factorySetter = clazz.getMethod("factory_$eq", classOf[AbstractMockFactory])
-    factorySetter.invoke(mock, self)
-    mock
+    val constructor = clazz.getConstructor(classOf[AbstractMockFactory])
+    constructor.newInstance(self).asInstanceOf[T]
   }
 }

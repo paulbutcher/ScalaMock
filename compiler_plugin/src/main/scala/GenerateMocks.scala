@@ -110,6 +110,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val mock =
       packageStatement +"\n\n"+
         classDeclaration +" {\n"+
+          factoryConstructor +"\n\n"+
           mockMethods +"\n\n"+
           mockMembers +"\n"+
         "}"
@@ -121,6 +122,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
           expectForwarders +"\n"+ (
             if (!isClass) {
               "\n"+
+              factoryConstructor +"\n\n"+
               mockMethods +"\n\n"+
               mockMembers +"\n"
             } else {
@@ -150,8 +152,10 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         "trait "+ mockTraitOrClassName
       else
         "class "+ mockTraitOrClassName +" extends "+ className
+        
+    lazy val factoryConstructor = "  def this(f: com.borachio.AbstractMockFactory) = { this(); factory = f }"
     
-    lazy val factoryDefinition = "  var factory: com.borachio.AbstractMockFactory = _"
+    lazy val factoryDefinition = "  protected var factory: com.borachio.AbstractMockFactory = _"
     
     lazy val packageName = classSymbol.enclosingPackage.fullName.toString
 
