@@ -30,52 +30,52 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory {
   def mockClassPath = new URL("file:compiler_plugin_tests/target/scala_2.9.0/mock-classes/")
   
   def testSimpleClass {
-    val mockSimpleClass = mock[SimpleClass]
+    val m = mock[SimpleClass]
     
-    mockSimpleClass.expects.nullMethod
-    mockSimpleClass.expects.methodWithOneArgument(42) returning "Expected return value"
+    m.expects.nullMethod
+    m.expects.methodWithOneArgument(42) returning "Expected return value"
     
-    mockSimpleClass.nullMethod
-    expect("Expected return value") { mockSimpleClass.methodWithOneArgument(42) }
+    m.nullMethod
+    expect("Expected return value") { m.methodWithOneArgument(42) }
   }
   
   def testFinalClass {
-    val mockFinalClass = mock[FinalClass]
+    val m = mock[FinalClass]
     
-    mockFinalClass.expects.nullMethod
-    mockFinalClass.expects.methodWithOneArgument(42) returning "Expected return value"
+    m.expects.nullMethod
+    m.expects.methodWithOneArgument(42) returning "Expected return value"
     
-    mockFinalClass.nullMethod
-    expect("Expected return value") { mockFinalClass.methodWithOneArgument(42) }
+    m.nullMethod
+    expect("Expected return value") { m.methodWithOneArgument(42) }
   }
   
   def testClassWithFinalMethod {
-    val mockClassWithFinalMethod = mock[ClassWithFinalMethod]
+    val m = mock[ClassWithFinalMethod]
     
-    mockClassWithFinalMethod.expects.nullMethod
-    mockClassWithFinalMethod.expects.methodWithOneArgument(42) returning "Expected return value"
+    m.expects.nullMethod
+    m.expects.methodWithOneArgument(42) returning "Expected return value"
     
-    mockClassWithFinalMethod.nullMethod
-    expect("Expected return value") { mockClassWithFinalMethod.methodWithOneArgument(42) }
+    m.nullMethod
+    expect("Expected return value") { m.methodWithOneArgument(42) }
   }
   
   def testSimpleTrait {
-    val mockSimpleTrait = mock[SimpleTrait]
+    val m = mock[SimpleTrait]
     
-    mockSimpleTrait.expects.nullMethod
-    mockSimpleTrait.expects.methodWithOneArgument(42) returning "Expected return value"
+    m.expects.nullMethod
+    m.expects.methodWithOneArgument(42) returning "Expected return value"
     
-    mockSimpleTrait.nullMethod
-    expect("Expected return value") { mockSimpleTrait.methodWithOneArgument(42) }
+    m.nullMethod
+    expect("Expected return value") { m.methodWithOneArgument(42) }
   }
 
   def testClassWithNonTrivialConstructor {
-    val mockClassWithNonTrivialConstructor = mock[ClassWithNonTrivialConstructor]
+    val m = mock[ClassWithNonTrivialConstructor]
     
-    mockClassWithNonTrivialConstructor.expects.nullMethod
-    mockClassWithNonTrivialConstructor.expects.methodWithOneArgument(42) returning "Expected return value"
+    m.expects.nullMethod
+    m.expects.methodWithOneArgument(42) returning "Expected return value"
     
-    mockClassWithNonTrivialConstructor.nullMethod
-    expect("Expected return value") { mockClassWithNonTrivialConstructor.methodWithOneArgument(42) }
+    m.nullMethod
+    expect("Expected return value") { m.methodWithOneArgument(42) }
   }
 }
