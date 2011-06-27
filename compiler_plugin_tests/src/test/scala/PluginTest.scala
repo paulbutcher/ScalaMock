@@ -78,4 +78,16 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory {
     m.nullMethod
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
+  
+  def testClassWithOverloadedMethods {
+    val m = mock[ClassWithOverloadedMethods]
+    
+    m.expects.foo(42) returning "overload 1"
+    // m.expects.foo(1.23) returning "overload 2"
+    m.expects.foo(42, 1.23) returning "overload 3"
+    
+    expect("overload 1") { m.foo(42) }
+    // expect("overload 2") { m.foo(1.23) }
+    expect("overload 3") { m.foo(42, 1.23) }
+  }
 }

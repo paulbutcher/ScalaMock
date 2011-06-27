@@ -161,6 +161,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         s.isMethod && !s.isMemberOf(ObjectClass)
       }
       
+    lazy val mockMethodNames = (methodsToMock.zipWithIndex map { case (m, i) => (m -> ("mock$"+ i)) }).toMap
+      
     def qualify(name: String) = packageName +"."+ name
     
     def mockMethod(method: Symbol): String =
@@ -194,11 +196,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
     def mockBodyNormal(method: Symbol, params: Option[List[Symbol]]) = mockMethodName(method) + forwardParams(params)
 
-    def mockMethodName(method: Symbol) = 
-      if (method.isConstructor)
-        "mock$$constructor"
-      else
-        "mock$"+ method.name
+    def mockMethodName(method: Symbol) = mockMethodNames(method)
 
     def forwardParams(params: Option[List[Symbol]]) = params match {
         case Some(ps) => (ps map (_.name)).mkString("(", ", ", ")")

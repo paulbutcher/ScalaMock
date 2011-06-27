@@ -27,5 +27,6 @@ import com.borachio.annotation.mock
   classOf[FinalClass], 
   classOf[ClassWithFinalMethod], 
   classOf[SimpleTrait],
-  classOf[ClassWithNonTrivialConstructor])
+  classOf[ClassWithNonTrivialConstructor],
+  classOf[ClassWithOverloadedMethods])
 class Dummy
