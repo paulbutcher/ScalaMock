@@ -34,13 +34,13 @@ class OrderTestTypeSafe extends WordSpec with MockFactory with GeneratedMockFact
   "An order" when {
     "in stock" should {
       "remove inventory" in {
-        val mockWarehouse = mock[ConcreteWarehouse]
+        val mockWarehouse = mock[Warehouse]
         inSequence {
           mockWarehouse.expects.hasInventory("Talisker", 50) returning true once;
           mockWarehouse.expects.remove("Talisker", 50) once
         }
         
-        val order = new ConcreteOrder("Talisker", 50)
+        val order = new Order("Talisker", 50)
         order.fill(mockWarehouse)
         
         assert(order.isFilled)
@@ -49,10 +49,10 @@ class OrderTestTypeSafe extends WordSpec with MockFactory with GeneratedMockFact
     
     "out of stock" should {
       "remove nothing" in {
-        val mockWarehouse = mock[ConcreteWarehouse]
+        val mockWarehouse = mock[Warehouse]
         mockWarehouse.expects.hasInventory(*, *) returning false once
         
-        val order = new ConcreteOrder("Talisker", 50)
+        val order = new Order("Talisker", 50)
         order.fill(mockWarehouse)
         
         assert(!order.isFilled)

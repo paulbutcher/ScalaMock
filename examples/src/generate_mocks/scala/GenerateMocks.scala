@@ -22,5 +22,5 @@ package com.borachio.examples
 
 import com.borachio.annotation.mock
 
-@mock(classOf[ConcreteWarehouse])
+@mock(classOf[Warehouse])
 class Dummy
