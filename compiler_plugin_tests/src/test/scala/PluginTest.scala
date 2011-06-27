@@ -68,4 +68,14 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory {
     mockSimpleTrait.nullMethod
     expect("Expected return value") { mockSimpleTrait.methodWithOneArgument(42) }
   }
+
+  def testClassWithNonTrivialConstructor {
+    val mockClassWithNonTrivialConstructor = mock[ClassWithNonTrivialConstructor]
+    
+    mockClassWithNonTrivialConstructor.expects.nullMethod
+    mockClassWithNonTrivialConstructor.expects.methodWithOneArgument(42) returning "Expected return value"
+    
+    mockClassWithNonTrivialConstructor.nullMethod
+    expect("Expected return value") { mockClassWithNonTrivialConstructor.methodWithOneArgument(42) }
+  }
 }
