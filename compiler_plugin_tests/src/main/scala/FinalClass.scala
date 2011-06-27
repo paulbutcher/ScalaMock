@@ -20,7 +20,9 @@
 
 package com.borachio.plugin.test
 
-import com.borachio.annotation.mock
-
-@mock(classOf[SimpleClass], classOf[FinalClass])
-class Dummy
+final class FinalClass {
+  def nullMethod {}
+  def methodWithZeroArguments() = "methodWithZeroArguments"
+  def methodWithOneArgument(x: Int) = "methodWithOneArgument: "+ x
+  def methodWithTwoArguments(x: Int, y: Int) = "methodWithTwoArguments: "+ (x, y)
+}

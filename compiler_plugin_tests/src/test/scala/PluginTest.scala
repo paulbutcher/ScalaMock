@@ -25,9 +25,7 @@ import com.borachio.generated.GeneratedMockFactory
 import com.borachio.scalatest.MockFactory
 import java.net.URL
 
-// This is a reworked version of the example from Martin Fowler's article
-// Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
-class SimpleClassTest extends Suite with MockFactory with GeneratedMockFactory {
+class PluginTest extends Suite with MockFactory with GeneratedMockFactory {
   
   def mockClassPath = new URL("file:compiler_plugin_tests/target/scala_2.9.0/mock-classes/")
   
@@ -39,5 +37,15 @@ class SimpleClassTest extends Suite with MockFactory with GeneratedMockFactory {
     
     mockSimpleClass.nullMethod
     expect("Expected return value") { mockSimpleClass.methodWithOneArgument(42) }
+  }
+  
+  def testFinalClass {
+    val mockFinalClass = mock[FinalClass]
+    
+    mockFinalClass.expects.nullMethod
+    mockFinalClass.expects.methodWithOneArgument(42) returning "Expected return value"
+    
+    mockFinalClass.nullMethod
+    expect("Expected return value") { mockFinalClass.methodWithOneArgument(42) }
   }
 }
