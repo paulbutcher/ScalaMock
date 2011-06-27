@@ -110,7 +110,6 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val mock =
       packageStatement +"\n\n"+
         classDeclaration +" {\n"+
-          factoryConstructor +"\n\n"+
           mockMethods +"\n\n"+
           mockMembers +"\n"+
         "}"
@@ -118,11 +117,9 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val test =
       packageStatement +"\n\n"+
         mockTraitOrClassDeclaration +" {\n"+
-          factoryDefinition +"\n\n"+
           expectForwarders +"\n"+ (
             if (!isClass) {
               "\n"+
-              factoryConstructor +"\n\n"+
               mockMethods +"\n\n"+
               mockMembers +"\n"
             } else {
@@ -135,7 +132,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
     lazy val packageStatement = "package "+ packageName
 
-    lazy val classDeclaration = "class "+ className +" extends "+ mockTraitOrClassName
+    lazy val classDeclaration = 
+      "class "+ className +"(factory: com.borachio.AbstractMockFactory) extends "+ mockTraitOrClassName
 
     lazy val mockMethods = (methodsToMock map mockMethod _).mkString("\n")
 
@@ -151,12 +149,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       if (isClass)
         "trait "+ mockTraitOrClassName
       else
-        "class "+ mockTraitOrClassName +" extends "+ className
+        "class "+ mockTraitOrClassName +"(factory: com.borachio.AbstractMockFactory) extends "+ className
         
-    lazy val factoryConstructor = "  def this(f: com.borachio.AbstractMockFactory) = { this(); factory = f }"
-    
-    lazy val factoryDefinition = "  protected var factory: com.borachio.AbstractMockFactory = _"
-    
     lazy val packageName = classSymbol.enclosingPackage.fullName.toString
 
     lazy val className = classSymbol.name.toString
@@ -164,7 +158,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val mockTraitOrClassName = "Mock$"+ className
 
     lazy val methodsToMock = classSymbol.info.nonPrivateMembers filter { s => 
-        s.isMethod && !s.isConstructor && !s.isMemberOf(ObjectClass)
+        s.isMethod && !s.isMemberOf(ObjectClass)
       }
       
     def qualify(name: String) = packageName +"."+ name
@@ -178,8 +172,13 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       }
 
     def mockMethod(method: Symbol, params: Option[List[Symbol]]) =
-      mockDeclaration(method, params) +" = "+ mockBody(method.name, params)
-
+      mockDeclaration(method, params) +" = "+ (
+          if (method.isConstructor)
+            mockBodyConstructor(method, params)
+          else
+            mockBodyNormal(method, params)
+        )
+        
     def mockDeclaration(method: Symbol, params: Option[List[Symbol]]) = 
       "  def "+ method.name.decode + mockParams(params)
         
@@ -190,9 +189,16 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       
     def parameterDeclaration(parameter: Symbol) = parameter.name +": "+ parameter.tpe
     
-    def mockBody(name: Name, params: Option[List[Symbol]]) = mockMethodName(name) + forwardParams(params)
+    def mockBodyConstructor(method: Symbol, params: Option[List[Symbol]]) =
+      "{ this(null); "+ mockBodyNormal(method, params) +" }"
+    
+    def mockBodyNormal(method: Symbol, params: Option[List[Symbol]]) = mockMethodName(method) + forwardParams(params)
 
-    def mockMethodName(name: Name) = "mock$"+ name
+    def mockMethodName(method: Symbol) = 
+      if (method.isConstructor)
+        "mock$$constructor"
+      else
+        "mock$"+ method.name
 
     def forwardParams(params: Option[List[Symbol]]) = params match {
         case Some(ps) => (ps map (_.name)).mkString("(", ", ", ")")
@@ -208,11 +214,22 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       }
 
     def expectForwarder(method: Symbol, params: Option[List[Symbol]], result: Type) =
-      forwarderDeclaration(method, params) +": "+ expectationType(result) +" = "+ 
-        mockMethodName(method.name) +".expects"+ forwardParams(params)
+      if (method.isConstructor)
+        expectForwarderConstructor(method, params, result)
+      else
+        expectForwarderNormal(method, params, result)
         
-    def forwarderDeclaration(method: Symbol, params: Option[List[Symbol]]) =
-      "    def "+ method.name.decode + forwarderParams(params)
+    def expectForwarderConstructor(method: Symbol, params: Option[List[Symbol]], result: Type) =
+      forwarderDeclarationConstructor(method, params) +" = "+ forwarderBody(method, params)
+      
+    def expectForwarderNormal(method: Symbol, params: Option[List[Symbol]], result: Type) =
+      forwarderDeclarationNormal(method, params, result) +" = "+ forwarderBody(method, params)
+      
+    def forwarderDeclarationConstructor(method: Symbol, params: Option[List[Symbol]]) =
+      "    def newInstance"+ forwarderParams(params)
+        
+    def forwarderDeclarationNormal(method: Symbol, params: Option[List[Symbol]], result: Type) =
+      "    def "+ method.name.decode + forwarderParams(params) +": "+ expectationType(result)
         
     def forwarderParams(params: Option[List[Symbol]]) = params match {
         case Some(ps) => (ps map forwarderParam _).mkString("(", ", ", ")")
@@ -222,32 +239,35 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     def forwarderParam(parameter: Symbol) = parameter.name +": "+ "com.borachio.MockParameter["+ parameter.tpe +"]"
     
     def expectationType(result: Type) = "com.borachio.TypeSafeExpectation["+ result +"]"
+        
+    def forwarderBody(method: Symbol, params: Option[List[Symbol]]) =
+      mockMethodName(method) +".expects"+ forwardParams(params)
     
     def cachedMockMethod(method: Symbol): String =
       method.info match {
-        case MethodType(params, result) => cachedMockMethod(method.name, params, result)
-        case NullaryMethodType(result) => cachedMockMethod(method.name, Nil, result)
+        case MethodType(params, result) => cachedMockMethod(method, params, result)
+        case NullaryMethodType(result) => cachedMockMethod(method, Nil, result)
         case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
         case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
       }
     
-    def cachedMockMethod(name: Name, params: List[Symbol], result: Type) =
-      "    lazy val "+ mockMethodName(name) +" = "+ cacheLookup(name, params, result)
+    def cachedMockMethod(method: Symbol, params: List[Symbol], result: Type) =
+      "    lazy val "+ mockMethodName(method) +" = "+ cacheLookup(method, params, result)
       
-    def cacheLookup(name: Name, params: List[Symbol], result: Type) =
-      "clazz.getMethod(\""+ mockMethodName(name) +"\").invoke("+ mockTraitOrClassName +".this).asInstanceOf["+ 
+    def cacheLookup(method: Symbol, params: List[Symbol], result: Type) =
+      "clazz.getMethod(\""+ mockMethodName(method) +"\").invoke("+ mockTraitOrClassName +".this).asInstanceOf["+ 
         mockFunction(params, result) +"]"
 
     def mockMember(method: Symbol): String = 
       method.info match {
-        case MethodType(params, result) => mockMember(method.name, params, result)
-        case NullaryMethodType(result) => mockMember(method.name, Nil, result)
+        case MethodType(params, result) => mockMember(method, params, result)
+        case NullaryMethodType(result) => mockMember(method, Nil, result)
         case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
         case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
       }
 
-    def mockMember(name: Name, params: List[Symbol], result: Type) = "  protected lazy val "+ 
-      mockMethodName(name) +" = new "+ mockFunction(params, result) +"(factory, "+ Symbol(name.toString) +")"
+    def mockMember(method: Symbol, params: List[Symbol], result: Type) = "  protected lazy val "+ 
+      mockMethodName(method) +" = new "+ mockFunction(params, result) +"(factory, Symbol(\""+ method.name +"\"))"
 
     def mockFunction(params: List[Symbol], result: Type) =
       "com.borachio.MockFunction"+ params.length +"["+ (paramTypes(params) :+ result).mkString(", ") +"]"
