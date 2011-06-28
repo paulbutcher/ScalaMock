@@ -20,8 +20,13 @@
 
 package com.borachio.plugin.test
 
-class ClassWithOverloadedMethods {
-  def foo(x: Int) = "foo: "+ x
-  def foo(x: Double) = "foo: "+ x
-  def foo(x: Int, y: Double) = "foo: "+ (x, y)
+import org.scalatest.Suite
+
+class ClassWithOverloadedMethodsTest extends Suite {
+  
+  def test {
+    val x = new ClassWithOverloadedMethods
+    expect("foo: "+ 42) { x.foo(42) }
+    expect("foo: "+ 1.23) { x.foo(1.23) }
+  }
 }

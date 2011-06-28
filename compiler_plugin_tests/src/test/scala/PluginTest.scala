@@ -82,12 +82,13 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory {
   def testClassWithOverloadedMethods {
     val m = mock[ClassWithOverloadedMethods]
     
-    m.expects.foo(42) returning "overload 1"
-    // m.expects.foo(1.23) returning "overload 2"
+    //! Eugh - how do I avoid the necessity for this?
+    m.expects.foo(new com.borachio.MockParameterInt(42)) returning "overload 1"
+    m.expects.foo(1.23) returning "overload 2"
     m.expects.foo(42, 1.23) returning "overload 3"
     
     expect("overload 1") { m.foo(42) }
-    // expect("overload 2") { m.foo(1.23) }
+    expect("overload 2") { m.foo(1.23) }
     expect("overload 3") { m.foo(42, 1.23) }
   }
 }

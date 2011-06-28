@@ -35,6 +35,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   val phaseName = "generatemocks"
   
   val mocks = new ListBuffer[(String, String)]
+  
+  val parameterTypes = new ListBuffer[String]
 
   lazy val MockAnnotation = definitions.getClass("com.borachio.annotation.mock")
   lazy val mockOutputDirectory = plugin.mockOutputDirectory.get
@@ -46,7 +48,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         if (plugin.testOutputDirectory.isDefined) {
           createOutputDirectories
           new ForeachTreeTraverser(findMockAnnotations).traverse(unit.body)
-          generateMockFactory
+          generateExtra
         } else {
           globalError("Both -P:borachio:generatemocks and -P:borachio:generatetest must be given")
         }
@@ -66,21 +68,50 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     }
   }
   
+  def generateExtra() {
+    generateMockFactory()
+    generateMockParameterTypes()
+  }
+  
   def generateMockFactory() {
     val writer = new FileWriter(new File(testOutputDirectory, "GeneratedMockFactory.scala"))
     writer.write(mockFactory)
     writer.close
   }
   
-  def mockFactory = {
+  def mockFactory =
     "package com.borachio.generated\n\n"+
     "trait GeneratedMockFactory extends com.borachio.GeneratedMockFactoryBase { self: com.borachio.AbstractMockFactory =>\n"+
-      (mocks map { case (target, mock) => mockFactoryEntry(target, mock) }).mkString("\n") +"\n"+
+      (mocks map { case (target, mock) => mockFactoryEntry(target, mock) }).mkString("\n") +"\n\n"+
+      (parameterTypes map (parameterConverter _)).mkString("\n") +"\n"+
     "}"
-  }
   
   def mockFactoryEntry(target: String, mock: String) =
     "  implicit def toMock(m: "+ target +") = m.asInstanceOf["+ mock +"]"
+    
+  def parameterConverter(typeName: String) = {
+    val parameterTypeName = mockParameterName(typeName)
+    "  protected implicit def to"+ typeName +"(v: "+ typeName +") = new "+ parameterTypeName +"(v)\n"+
+      "  protected implicit def to"+ typeName +"(v: com.borachio.MatchAny) = new "+ parameterTypeName +"(v)\n"
+  }
+    
+  def mockParameterName(typeName: String) = "com.borachio.MockParameter"+ typeName
+    
+  def generateMockParameterTypes() {
+    val writer = new FileWriter(new File(testOutputDirectory, "GeneratedParameterTypes.scala"))
+    writer.write(mockParameterTypes)
+    writer.close
+  }
+    
+  def mockParameterTypes = 
+    "package com.borachio\n\n"+
+    (parameterTypes map (generatedMockParameterType _)).mkString("\n\n")
+  
+  def generatedMockParameterType(typeName: String) =
+    "class MockParameter"+ typeName +"(value: AnyRef) extends com.borachio.MockParameter["+ typeName +"](value) {\n"+
+      "  def this(v: "+ typeName +") = this(v.asInstanceOf[AnyRef])\n"+
+      "  def this(v: MatchAny) = this(v.asInstanceOf[AnyRef])\n"+
+    "}"
   
   def createOutputDirectories {
     new File(mockOutputDirectory).mkdirs
@@ -234,7 +265,14 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         case None => ""
       }
       
-    def forwarderParam(parameter: Symbol) = parameter.name +": "+ "com.borachio.MockParameter["+ parameter.tpe +"]"
+    def forwarderParam(parameter: Symbol) = parameter.name +": "+ mockParameterType(parameter)
+    
+    def mockParameterType(parameter: Symbol) = {
+      val typeName = parameter.tpe.toString
+      if (!(parameterTypes contains typeName))
+        parameterTypes += typeName
+      mockParameterName(typeName)
+    }
     
     def expectationType(result: Type) = "com.borachio.TypeSafeExpectation["+ result +"]"
         
