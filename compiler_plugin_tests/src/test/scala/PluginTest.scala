@@ -91,4 +91,14 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory {
     expect("overload 2") { m.foo(1.23) }
     expect("overload 3") { m.foo(42, 1.23) }
   }
+
+  def testClassWithPrivateConstructor {
+    val m = mock[ClassWithPrivateConstructor]
+    
+    m.expects.nullMethod
+    m.expects.methodWithOneArgument(42) returning "Expected return value"
+    
+    m.nullMethod
+    expect("Expected return value") { m.methodWithOneArgument(42) }
+  }
 }
