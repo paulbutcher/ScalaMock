@@ -292,7 +292,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       
     def cacheLookup(method: Symbol, params: List[Symbol], result: Type) =
       "clazz.getMethod(\""+ mockMethodName(method) +"\").invoke("+ mockTraitOrClassName +".this).asInstanceOf["+ 
-        mockFunction(params, result) +"]"
+        mockFunction(method, params, result) +"]"
 
     def mockMember(method: Symbol): String = 
       method.info match {
@@ -303,10 +303,16 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       }
 
     def mockMember(method: Symbol, params: List[Symbol], result: Type) = "  protected lazy val "+ 
-      mockMethodName(method) +" = new "+ mockFunction(params, result) +"(factory, Symbol(\""+ method.name +"\"))"
+      mockMethodName(method) +" = new "+ mockFunction(method, params, result) +"(factory, Symbol(\""+ method.name +"\"))"
 
-    def mockFunction(params: List[Symbol], result: Type) =
-      "com.borachio.MockFunction"+ params.length +"["+ (paramTypes(params) :+ result).mkString(", ") +"]"
+    def mockFunction(method: Symbol, params: List[Symbol], result: Type) =
+      mockFunctionType(method) + params.length +"["+ (paramTypes(params) :+ result).mkString(", ") +"]"
+      
+    def mockFunctionType(method: Symbol) =
+      if (method.isConstructor)
+        "com.borachio.MockConstructor"
+      else
+        "com.borachio.MockFunction"
 
     def paramTypes(params: List[Symbol]) = params map (_.tpe)
   }

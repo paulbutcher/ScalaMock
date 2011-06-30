@@ -20,18 +20,16 @@
 
 package com.borachio
 
-abstract class MockFunction(factory: AbstractMockFactory, name: Symbol) {
+abstract class MockFunction(protected val factory: AbstractMockFactory, name: Symbol) {
   
   override def toString = name.toString
 
-  protected val expectations = factory.expectations
-
-  protected def handle(arguments: Array[Any]) = expectations.handle(this, arguments)
+  protected def handle(arguments: Array[Any]) = factory.expectations.handle(this, arguments)
 }
 
 abstract class TypeSafeMockFunction[R](factory: AbstractMockFactory, name: Symbol) extends MockFunction(factory, name) {
 
-  private[borachio] def toExpectation() = {
+  protected def toExpectation() = {
     val expectation = new TypeSafeExpectation[R](this)
     factory.add(expectation)
     expectation

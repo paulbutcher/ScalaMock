@@ -20,6 +20,8 @@
 
 package com.borachio
 
+import scala.collection.mutable.Map
+
 trait AbstractMockFactory {
   
   protected val classLoader: Option[ClassLoader] = None
@@ -27,6 +29,7 @@ trait AbstractMockFactory {
   protected def resetExpectations() {
     expectations.reset(verbose, callLogging)
     expectationContext = expectations
+    mockConstructors.clear
   }
 
   protected def verifyExpectations() {
@@ -44,6 +47,16 @@ trait AbstractMockFactory {
   
   private[borachio] def add(expectation: Expectation) {
     expectationContext.add(expectation)
+  }
+  
+  private[borachio] def add(mockConstructorMapping: (Class[_], MockConstructor)) {
+    mockConstructors += mockConstructorMapping
+    println("mockConstructors: "+ mockConstructors)
+  }
+  
+  private[borachio] def findMockConstructor(clazz: Class[_]) = {
+    println("mockConstructors: "+ mockConstructors)
+    mockConstructors(clazz)
   }
   
   protected def mockFunction[R] = new MockFunction0[R](this, Symbol("unnamed MockFunction0"))
@@ -74,5 +87,7 @@ trait AbstractMockFactory {
   private[borachio] val verbose = false
   private[borachio] val callLogging = false
   private[borachio] val expectations = new UnorderedExpectations
+
   private var expectationContext: Expectations = _
+  private val mockConstructors = Map[Class[_], MockConstructor]()
 }
