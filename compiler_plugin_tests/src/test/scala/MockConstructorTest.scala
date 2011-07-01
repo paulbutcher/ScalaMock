@@ -23,7 +23,7 @@ package com.borachio.plugin.test
 import org.scalatest.Suite
 import com.borachio.generated.GeneratedMockFactory
 import com.borachio.scalatest.MockFactory
-import com.borachio.{CallLogging, VerboseErrors}
+import com.borachio.{CallLogging, ExpectationException, VerboseErrors}
 import java.net.URL
 
 class MockConstructorTest extends Suite with MockFactory with GeneratedMockFactory with VerboseErrors with CallLogging {
@@ -33,7 +33,7 @@ class MockConstructorTest extends Suite with MockFactory with GeneratedMockFacto
   def testExpectNewInstanceSimple {
     val m = mock[SimpleClass]
     
-    m.expects.newInstance
+    m.expects.newInstance.once
   
     new SimpleClass
   }
@@ -41,7 +41,7 @@ class MockConstructorTest extends Suite with MockFactory with GeneratedMockFacto
   def testExpectNewInstanceWithArgs {
     val m = mock[ClassWithNonTrivialConstructor]
     
-    m.expects.newInstance(42, 1.23)
+    m.expects.newInstance(42, 1.23).once
     m.expects.methodWithZeroArguments() returning "some different return value"
     
     expect("some different return value") { UsesClassWithNonTrivialConstructor.doSomething() }
@@ -53,6 +53,15 @@ class MockConstructorTest extends Suite with MockFactory with GeneratedMockFacto
     m.expects.newInstance(42, 1.23) throws new RuntimeException("oops")
 
     intercept[RuntimeException] { UsesClassWithNonTrivialConstructor.doSomething() }
+  }
+  
+  def testMultipleIdenticalInstances {
+    val m = mock[ClassWithNonTrivialConstructor]
+    
+    m.expects.newInstance(42, 1.23).twice
+    
+    new ClassWithNonTrivialConstructor(42, 1.23)
+    new ClassWithNonTrivialConstructor(42, 1.23)
   }
   
   // def testMultipleInstances {
