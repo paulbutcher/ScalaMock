@@ -20,7 +20,10 @@
 
 package com.borachio
 
-trait MockConstructor
+trait MockConstructor {
+  
+  var mockObject: Any = _
+}
 
 class MockConstructor0[R: ClassManifest](factory: AbstractMockFactory, name: Symbol) 
   extends MockFunction0[R](factory, name) with MockConstructor {
@@ -32,7 +35,8 @@ class MockConstructor0[R: ClassManifest](factory: AbstractMockFactory, name: Sym
   
   override def apply() = {
     val mock = factory.findMockConstructor(classManifest[R].erasure).asInstanceOf[MockConstructor0[R]]
-    mock.handle(Array()).asInstanceOf[R]
+    mock.handle(Array())
+    mock.mockObject.asInstanceOf[R]
   }
 }
 
@@ -46,7 +50,8 @@ class MockConstructor1[T1, R: ClassManifest](factory: AbstractMockFactory, name:
   
   override def apply(v1: T1) = {
     val mock = factory.findMockConstructor(classManifest[R].erasure).asInstanceOf[MockConstructor1[T1, R]]
-    mock.handle(Array(v1)).asInstanceOf[R]
+    mock.handle(Array(v1))
+    mock.mockObject.asInstanceOf[R]
   }
 }
 
@@ -60,6 +65,7 @@ class MockConstructor2[T1, T2, R: ClassManifest](factory: AbstractMockFactory, n
   
   override def apply(v1: T1, v2: T2) = {
     val mock = factory.findMockConstructor(classManifest[R].erasure).asInstanceOf[MockConstructor2[T1, T2, R]]
-    mock.handle(Array(v1, v2)).asInstanceOf[R]
+    mock.handle(Array(v1, v2))
+    mock.mockObject.asInstanceOf[R]
   }
 }

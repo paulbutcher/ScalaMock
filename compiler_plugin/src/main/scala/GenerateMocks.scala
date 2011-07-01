@@ -142,6 +142,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       packageStatement +"\n\n"+
         classDeclaration +" {\n\n"+
           factoryReference +"\n\n"+
+          mockObject +"\n\n"+
           mockMethods +"\n\n"+
           mockMembers +"\n"+
         "}"
@@ -174,6 +175,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "    val method = classLoader.getClass.getMethod(\"getFactory\")\n"+
       "    method.invoke(classLoader).asInstanceOf[com.borachio.AbstractMockFactory]\n"+
       "  }"
+      
+    lazy val mockObject = "  var mockObject: "+ className +" = _"
 
     lazy val mockMethods = (methodsToMock map mockMethod _).mkString("\n")
 
@@ -207,19 +210,23 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
     def mockMethod(method: Symbol): String =
       method.info match {
-        case MethodType(params, result) => mockMethod(method, Some(params))
-        case NullaryMethodType(result) => mockMethod(method, None)
+        case MethodType(params, result) => mockMethod(method, Some(params), result)
+        case NullaryMethodType(result) => mockMethod(method, None, result)
         case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
         case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
       }
+      
+    def mockMethod(method: Symbol, params: Option[List[Symbol]], result: Type) =
+      if (method.isConstructor)
+        mockMethodConstructor(method, params)
+      else
+        mockMethodNormal(method, params, result)
+        
+    def mockMethodConstructor(method: Symbol, params: Option[List[Symbol]]) =
+      mockDeclaration(method, params) +" = "+ mockBodyConstructor(method, params)
 
-    def mockMethod(method: Symbol, params: Option[List[Symbol]]) =
-      mockDeclaration(method, params) +" = "+ (
-          if (method.isConstructor)
-            mockBodyConstructor(method, params)
-          else
-            mockBodyNormal(method, params)
-        )
+    def mockMethodNormal(method: Symbol, params: Option[List[Symbol]], result: Type) =
+      mockDeclaration(method, params) +": "+ result +" = "+ mockBodyNormal(method, params)
         
     def mockDeclaration(method: Symbol, params: Option[List[Symbol]]) = 
       "  def "+ method.name.decode + mockParams(params)
@@ -231,16 +238,30 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       
     def parameterDeclaration(parameter: Symbol) = parameter.name +": "+ parameter.tpe
     
-    def mockBodyConstructor(method: Symbol, params: Option[List[Symbol]]) =
-      "{ this(new DummyImplicit); "+ mockBodyNormal(method, params) +" }"
+    def mockBodyConstructor(method: Symbol, params: Option[List[Symbol]]) = "{\n"+
+      "    this(new DummyImplicit)\n"+ 
+      "    mockObject = "+ mockBodySimple(method, params) +"\n"+
+      "  }"
+      
+    def mockBodyNormal(method: Symbol, params: Option[List[Symbol]]) = 
+      if (isClass)
+        "if (mockObject != null) mockObject."+ method.name + 
+          forwardParamsWithNull(params) +" else "+ mockBodySimple(method, params)
+      else
+        mockBodySimple(method, params)
+        
+    def mockBodySimple(method: Symbol, params: Option[List[Symbol]]) = mockMethodName(method) + forwardParams(params)
     
-    def mockBodyNormal(method: Symbol, params: Option[List[Symbol]]) = mockMethodName(method) + forwardParams(params)
-
     def mockMethodName(method: Symbol) = mockMethodNames(method)
 
     def forwardParams(params: Option[List[Symbol]]) = params match {
         case Some(ps) => (ps map (_.name)).mkString("(", ", ", ")")
         case None => "()"
+      }
+      
+    def forwardParamsWithNull(params: Option[List[Symbol]]) = params match {
+        case Some(ps) => (ps map (_.name)).mkString("(", ", ", ")")
+        case None => ""
       }
 
     def expectForwarder(method: Symbol): String =
@@ -258,7 +279,10 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         expectForwarderNormal(method, params, result)
         
     def expectForwarderConstructor(method: Symbol, params: Option[List[Symbol]], result: Type) =
-      forwarderDeclarationConstructor(method, params) +" = "+ forwarderBody(method, params)
+      forwarderDeclarationConstructor(method, params) +" = {\n"+
+        "      "+ mockMethodName(method) +".mockObject = "+ mockTraitOrClassName +".this\n"+
+        "      "+ forwarderBody(method, params) +"\n"+
+        "    }"
       
     def expectForwarderNormal(method: Symbol, params: Option[List[Symbol]], result: Type) =
       forwarderDeclarationNormal(method, params, result) +" = "+ forwarderBody(method, params)
