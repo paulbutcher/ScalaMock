@@ -106,7 +106,7 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory {
     val m = mock[SimpleClass]
     
     m.expects.newInstance
-
+  
     new SimpleClass
   }
 }

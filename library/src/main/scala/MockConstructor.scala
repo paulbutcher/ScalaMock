@@ -26,15 +26,12 @@ class MockConstructor0[R: ClassManifest](factory: AbstractMockFactory, name: Sym
   extends MockFunction0[R](factory, name) with MockConstructor {
   
   override def toExpectation() = { 
-    println("MockConstructor0 - toExpectation: "+ classManifest[R].erasure +", "+ this.hashCode)
     factory.add(classManifest[R].erasure -> this)
     super.toExpectation
   }
   
   override def apply() = {
-    println("MockConstructor0 - apply: "+ classManifest[R].erasure +", "+ this.hashCode +", "+ factory)
     val mock = factory.findMockConstructor(classManifest[R].erasure).asInstanceOf[MockConstructor0[R]]
-    println("MockConstructor0 - apply2: "+ mock.hashCode)
     mock.handle(Array()).asInstanceOf[R]
   }
 }

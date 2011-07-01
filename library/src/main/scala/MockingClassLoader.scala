@@ -25,11 +25,14 @@ import java.net.{URL, URLClassLoader}
 
 class MockingClassLoader(mockClassPath: URL) extends ClassLoader {
   
+  var factory: Any = _
+  
   private val defaultClassLoader = getClass.getClassLoader.asInstanceOf[URLClassLoader]
   
   private class ClassLoaderInternal(urls: Array[URL]) extends URLClassLoader(urls) {
     override def loadClass(name: String): Class[_] = MockingClassLoader.this.loadClass(name)
     def loadClassInternal(name: String) = super.loadClass(name)
+    def getFactory = factory
   }
   private val mockClassLoader = new ClassLoaderInternal(Array(mockClassPath))
   private val normalClassLoader = new ClassLoaderInternal(defaultClassLoader.getURLs)

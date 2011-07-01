@@ -24,7 +24,7 @@ import scala.collection.mutable.Map
 
 trait AbstractMockFactory {
   
-  protected val classLoader: Option[ClassLoader] = None
+  protected var classLoader: Option[MockingClassLoader] = None
   
   protected def resetExpectations() {
     expectations.reset(verbose, callLogging)
@@ -51,13 +51,9 @@ trait AbstractMockFactory {
   
   private[borachio] def add(mockConstructorMapping: (Class[_], MockConstructor)) {
     mockConstructors += mockConstructorMapping
-    println("mockConstructors: "+ mockConstructors)
   }
   
-  private[borachio] def findMockConstructor(clazz: Class[_]) = {
-    println("mockConstructors: "+ mockConstructors)
-    mockConstructors(clazz)
-  }
+  private[borachio] def findMockConstructor(clazz: Class[_]) = mockConstructors(clazz)
   
   protected def mockFunction[R] = new MockFunction0[R](this, Symbol("unnamed MockFunction0"))
   protected def mockFunction[T1, R] = new MockFunction1[T1, R](this, Symbol("unnamed MockFunction1"))

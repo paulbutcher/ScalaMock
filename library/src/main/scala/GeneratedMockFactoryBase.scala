@@ -26,7 +26,7 @@ trait GeneratedMockFactoryBase { self: AbstractMockFactory =>
   
   def mockClassPath: URL
   
-  override val classLoader: Option[ClassLoader] = Some(new MockingClassLoader(mockClassPath))
+  classLoader = Some(new MockingClassLoader(mockClassPath))
   
   private[borachio] def classToCreate[T: ClassManifest] = {
     val erasure = classManifest[T].erasure
@@ -38,8 +38,7 @@ trait GeneratedMockFactoryBase { self: AbstractMockFactory =>
   }
 
   private[borachio] def mock[T: ClassManifest] = {
-    val clazz = classToCreate[T]
-    val constructor = clazz.getConstructor(classOf[AbstractMockFactory])
-    constructor.newInstance(self).asInstanceOf[T]
+    val constructor = classToCreate[T].getConstructor(classOf[DummyImplicit])
+    constructor.newInstance(new DummyImplicit).asInstanceOf[T]
   }
 }
