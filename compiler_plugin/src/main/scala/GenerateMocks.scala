@@ -279,10 +279,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         expectForwarderNormal(method, params, result)
         
     def expectForwarderConstructor(method: Symbol, params: Option[List[Symbol]], result: Type) =
-      forwarderDeclarationConstructor(method, params) +" = {\n"+
-        "      "+ mockMethodName(method) +".mockObject = "+ mockTraitOrClassName +".this\n"+
-        "      "+ forwarderBody(method, params) +"\n"+
-        "    }"
+      forwarderDeclarationConstructor(method, params) +" = "+ forwarderBody(method, params) +
+        ".returning("+ mockTraitOrClassName +".this.asInstanceOf["+ className +"])"
       
     def expectForwarderNormal(method: Symbol, params: Option[List[Symbol]], result: Type) =
       forwarderDeclarationNormal(method, params, result) +" = "+ forwarderBody(method, params)

@@ -83,7 +83,7 @@ abstract class Expectation(target: MockFunction) extends Handler {
   }
   
   private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Option[Any] = {
-    if (mock == target && !exhausted) {
+    if (mock.canHandle(target) && !exhausted) {
       if (!expectedArguments.isDefined || (expectedArguments.get sameElements arguments)) {
         actualCalls += 1
         exception match {

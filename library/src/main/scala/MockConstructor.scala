@@ -20,52 +20,22 @@
 
 package com.borachio
 
-trait MockConstructor {
-  
-  var mockObject: Any = _
-}
+trait MockConstructor
 
-class MockConstructor0[R: ClassManifest](factory: AbstractMockFactory, name: Symbol) 
+class MockConstructor0[R](factory: AbstractMockFactory, name: Symbol) 
   extends MockFunction0[R](factory, name) with MockConstructor {
-  
-  override def toExpectation() = { 
-    factory.add(classManifest[R].erasure -> this)
-    super.toExpectation
-  }
-  
-  override def apply() = {
-    val mock = factory.findMockConstructor(classManifest[R].erasure).asInstanceOf[MockConstructor0[R]]
-    mock.handle(Array())
-    mock.mockObject.asInstanceOf[R]
-  }
+    
+  override def canHandle(that: MockFunction) = that.isInstanceOf[MockConstructor0[R]]
 }
 
-class MockConstructor1[T1, R: ClassManifest](factory: AbstractMockFactory, name: Symbol) 
+class MockConstructor1[T1, R](factory: AbstractMockFactory, name: Symbol) 
   extends MockFunction1[T1, R](factory, name) with MockConstructor {
-  
-  override def toExpectation() = { 
-    factory.add(classManifest[R].erasure -> this)
-    super.toExpectation
-  }
-  
-  override def apply(v1: T1) = {
-    val mock = factory.findMockConstructor(classManifest[R].erasure).asInstanceOf[MockConstructor1[T1, R]]
-    mock.handle(Array(v1))
-    mock.mockObject.asInstanceOf[R]
-  }
+
+  override def canHandle(that: MockFunction) = that.isInstanceOf[MockConstructor1[T1, R]]
 }
 
-class MockConstructor2[T1, T2, R: ClassManifest](factory: AbstractMockFactory, name: Symbol) 
+class MockConstructor2[T1, T2, R](factory: AbstractMockFactory, name: Symbol) 
   extends MockFunction2[T1, T2, R](factory, name) with MockConstructor {
   
-  override def toExpectation() = { 
-    factory.add(classManifest[R].erasure -> this)
-    super.toExpectation
-  }
-  
-  override def apply(v1: T1, v2: T2) = {
-    val mock = factory.findMockConstructor(classManifest[R].erasure).asInstanceOf[MockConstructor2[T1, T2, R]]
-    mock.handle(Array(v1, v2))
-    mock.mockObject.asInstanceOf[R]
-  }
+  override def canHandle(that: MockFunction) = that.isInstanceOf[MockConstructor2[T1, T2, R]]
 }

@@ -29,7 +29,6 @@ trait AbstractMockFactory {
   protected def resetExpectations() {
     expectations.reset(verbose, callLogging)
     expectationContext = expectations
-    mockConstructors.clear
   }
 
   protected def verifyExpectations() {
@@ -48,12 +47,6 @@ trait AbstractMockFactory {
   private[borachio] def add(expectation: Expectation) {
     expectationContext.add(expectation)
   }
-  
-  private[borachio] def add(mockConstructorMapping: (Class[_], MockConstructor)) {
-    mockConstructors += mockConstructorMapping
-  }
-  
-  private[borachio] def findMockConstructor(clazz: Class[_]) = mockConstructors(clazz)
   
   protected def mockFunction[R] = new MockFunction0[R](this, Symbol("unnamed MockFunction0"))
   protected def mockFunction[T1, R] = new MockFunction1[T1, R](this, Symbol("unnamed MockFunction1"))
@@ -85,5 +78,4 @@ trait AbstractMockFactory {
   private[borachio] val expectations = new UnorderedExpectations
 
   private var expectationContext: Expectations = _
-  private val mockConstructors = Map[Class[_], MockConstructor]()
 }

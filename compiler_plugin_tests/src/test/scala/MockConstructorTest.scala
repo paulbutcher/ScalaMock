@@ -47,13 +47,13 @@ class MockConstructorTest extends Suite with MockFactory with GeneratedMockFacto
     expect("some different return value") { UsesClassWithNonTrivialConstructor.doSomething() }
   }
   
-  def testThrowingConstructor {
-    val m = mock[ClassWithNonTrivialConstructor]
-
-    m.expects.newInstance(42, 1.23) throws new RuntimeException("oops")
-
-    intercept[RuntimeException] { UsesClassWithNonTrivialConstructor.doSomething() }
-  }
+  // def testThrowingConstructor {
+  //   val m = mock[ClassWithNonTrivialConstructor]
+  // 
+  //   m.expects.newInstance(42, 1.23) throws new RuntimeException("oops")
+  // 
+  //   intercept[RuntimeException] { UsesClassWithNonTrivialConstructor.doSomething() }
+  // }
   
   def testMultipleIdenticalInstances {
     val m = mock[ClassWithNonTrivialConstructor]
@@ -64,19 +64,19 @@ class MockConstructorTest extends Suite with MockFactory with GeneratedMockFacto
     new ClassWithNonTrivialConstructor(42, 1.23)
   }
   
-  // def testMultipleInstances {
-  //   val m1 = mock[ClassWithNonTrivialConstructor]
-  //   val m2 = mock[ClassWithNonTrivialConstructor]
-  //   
-  //   m1.expects.newInstance(1, 2.0)
-  //   m1.expects.methodWithZeroArguments() returning "m1"
-  //   m2.expects.newInstance(3, 4.0)
-  //   m2.expects.methodWithTwoArguments(10, 20) returning "m2"
-  //   
-  //   val x2 = new ClassWithNonTrivialConstructor(3, 4.0)
-  //   val x1 = new ClassWithNonTrivialConstructor(1, 2.0)
-  //   
-  //   expect("m1") { x1.methodWithZeroArguments() }
-  //   expect("m2") { x2.methodWithTwoArguments(10, 20) }
-  // }
+  def testMultipleInstances {
+    val m1 = mock[ClassWithNonTrivialConstructor]
+    val m2 = mock[ClassWithNonTrivialConstructor]
+    
+    m1.expects.newInstance(1, 2.0)
+    m1.expects.methodWithZeroArguments() returning "m1"
+    m2.expects.newInstance(3, 4.0)
+    m2.expects.methodWithTwoArguments(10, 20) returning "m2"
+    
+    val x2 = new ClassWithNonTrivialConstructor(3, 4.0)
+    val x1 = new ClassWithNonTrivialConstructor(1, 2.0)
+    
+    expect("m1") { x1.methodWithZeroArguments() }
+    expect("m2") { x2.methodWithTwoArguments(10, 20) }
+  }
 }

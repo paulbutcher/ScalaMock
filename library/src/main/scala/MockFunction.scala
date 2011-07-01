@@ -25,6 +25,8 @@ abstract class MockFunction(protected val factory: AbstractMockFactory, name: Sy
   override def toString = name.toString
 
   protected def handle(arguments: Array[Any]) = factory.expectations.handle(this, arguments)
+  
+  private[borachio] def canHandle(that: MockFunction) = this == that
 }
 
 abstract class TypeSafeMockFunction[R](factory: AbstractMockFactory, name: Symbol) extends MockFunction(factory, name) {
