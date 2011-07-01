@@ -20,16 +20,16 @@
 
 package com.borachio.plugin.test
 
-class ClassWithNonTrivialConstructor(arg1: Int) {
+class ClassWithNonTrivialConstructor(arg1: Int, arg2: Double) {
   def nullMethod {}
-  def methodWithZeroArguments() = "methodWithZeroArguments: "+ arg1
+  def methodWithZeroArguments() = "methodWithZeroArguments: "+ (arg1, arg2)
   final def methodWithOneArgument(x: Int) = "methodWithOneArgument: "+ x
   def methodWithTwoArguments(x: Int, y: Int) = "methodWithTwoArguments: "+ (x, y)
 }
 
 object UsesClassWithNonTrivialConstructor {
   def doSomething() = {
-    val x = new ClassWithNonTrivialConstructor(42)
+    val x = new ClassWithNonTrivialConstructor(42, 1.23)
     x.methodWithZeroArguments()
   }
 }

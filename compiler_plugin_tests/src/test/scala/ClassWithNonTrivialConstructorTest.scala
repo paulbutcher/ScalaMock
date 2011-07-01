@@ -25,6 +25,6 @@ import org.scalatest.Suite
 class ClassWithNonTrivialConstructorTest extends Suite {
   
   def test {
-    expect("methodWithZeroArguments: 42") { UsesClassWithNonTrivialConstructor.doSomething() }
+    expect("methodWithZeroArguments: (42,1.23)") { UsesClassWithNonTrivialConstructor.doSomething() }
   }
 }

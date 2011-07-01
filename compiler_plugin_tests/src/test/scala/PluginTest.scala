@@ -102,11 +102,19 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory {
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
   
-  def testExpectNewInstance {
+  def testExpectNewInstanceSimple {
     val m = mock[SimpleClass]
     
     m.expects.newInstance
   
     new SimpleClass
+  }
+  
+  def testExpectNewInstanceWithArgs {
+    val m = mock[ClassWithNonTrivialConstructor]
+    
+    m.expects.newInstance(42, 1.23)
+    
+    new ClassWithNonTrivialConstructor(42, 1.23)
   }
 }
