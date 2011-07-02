@@ -38,7 +38,7 @@ trait GeneratedMockFactoryBase { self: AbstractMockFactory =>
   }
 
   private[borachio] def mock[T: ClassManifest] = {
-    val constructor = classToCreate[T].getConstructor(classOf[DummyImplicit])
-    constructor.newInstance(new DummyImplicit).asInstanceOf[T]
+    val constructor = classToCreate[T].getConstructor(classOf[MockConstructorDummy])
+    constructor.newInstance(new MockConstructorDummy).asInstanceOf[T]
   }
 }

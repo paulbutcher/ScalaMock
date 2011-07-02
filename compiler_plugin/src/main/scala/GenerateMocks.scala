@@ -142,7 +142,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       packageStatement +"\n\n"+
         classDeclaration +" {\n\n"+
           factoryReference +"\n\n"+
-          mockObject +"\n\n"+
+          forwardTo +"\n\n"+
           mockMethods +"\n\n"+
           mockMembers +"\n"+
         "}"
@@ -167,7 +167,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val packageStatement = "package "+ packageName
 
     lazy val classDeclaration = 
-      "class "+ className +"(dummy: DummyImplicit) extends "+ mockTraitOrClassName
+      "class "+ className +"(dummy: com.borachio.MockConstructorDummy) extends "+ mockTraitOrClassName
       
     lazy val factoryReference = 
       "  val factory = {\n"+
@@ -176,7 +176,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "    method.invoke(classLoader).asInstanceOf[com.borachio.AbstractMockFactory]\n"+
       "  }"
       
-    lazy val mockObject = "  var mockObject: "+ className +" = _"
+    lazy val forwardTo = "  var forwardTo: Option["+ className +"] = None"
 
     lazy val mockMethods = (methodsToMock map mockMethod _).mkString("\n")
 
@@ -192,7 +192,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       if (isClass)
         "trait "+ mockTraitOrClassName
       else
-        "class "+ mockTraitOrClassName +"(dummy: DummyImplicit) extends "+ className
+        "class "+ mockTraitOrClassName +"(dummy: com.borachio.MockConstructorDummy) extends "+ className
         
     lazy val packageName = classSymbol.enclosingPackage.fullName.toString
 
@@ -239,13 +239,13 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     def parameterDeclaration(parameter: Symbol) = parameter.name +": "+ parameter.tpe
     
     def mockBodyConstructor(method: Symbol, params: Option[List[Symbol]]) = "{\n"+
-      "    this(new DummyImplicit)\n"+ 
-      "    mockObject = "+ mockBodySimple(method, params) +"\n"+
+      "    this(new com.borachio.MockConstructorDummy)\n"+ 
+      "    forwardTo = Some("+ mockBodySimple(method, params) +")\n"+
       "  }"
       
     def mockBodyNormal(method: Symbol, params: Option[List[Symbol]]) = 
       if (isClass)
-        "if (mockObject != null) mockObject."+ method.name + 
+        "if (forwardTo.isDefined) forwardTo.get."+ method.name + 
           forwardParamsWithNull(params) +" else "+ mockBodySimple(method, params)
       else
         mockBodySimple(method, params)

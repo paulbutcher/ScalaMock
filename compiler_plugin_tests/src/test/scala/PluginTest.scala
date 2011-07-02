@@ -102,4 +102,8 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     m.nullMethod
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
+  
+  // def testWithoutMocks {
+  //   expect("methodWithZeroArguments: (42,1.23)") { UsesClassWithNonTrivialConstructor.doSomething() }
+  // }
 }

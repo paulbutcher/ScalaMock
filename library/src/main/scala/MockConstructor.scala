@@ -20,6 +20,8 @@
 
 package com.borachio
 
+class MockConstructorDummy
+
 trait MockConstructor[R] extends TypeSafeMockFunction[R] {
 
   override protected def makeExpectation() = new ConstructorExpectation[R](this)
