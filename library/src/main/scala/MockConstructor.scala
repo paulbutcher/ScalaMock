@@ -42,3 +42,51 @@ class MockConstructor2[T1, T2, R](factory: AbstractMockFactory, name: Symbol)
   
   override def canHandle(that: MockFunction) = that.isInstanceOf[MockConstructor2[T1, T2, R]]
 }
+
+class MockConstructor3[T1, T2, T3, R](factory: AbstractMockFactory, name: Symbol) 
+  extends MockFunction3[T1, T2, T3, R](factory, name) with MockConstructor[R] {
+  
+  override def canHandle(that: MockFunction) = that.isInstanceOf[MockConstructor3[T1, T2, T3, R]]
+}
+
+class MockConstructor4[T1, T2, T3, T4, R](factory: AbstractMockFactory, name: Symbol) 
+  extends MockFunction4[T1, T2, T3, T4, R](factory, name) with MockConstructor[R] {
+  
+  override def canHandle(that: MockFunction) = that.isInstanceOf[MockConstructor4[T1, T2, T3, T4, R]]
+}
+
+class MockConstructor5[T1, T2, T3, T4, T5, R](factory: AbstractMockFactory, name: Symbol) 
+  extends MockFunction5[T1, T2, T3, T4, T5, R](factory, name) with MockConstructor[R] {
+  
+  override def canHandle(that: MockFunction) = that.isInstanceOf[MockConstructor5[T1, T2, T3, T4, T5, R]]
+}
+
+class MockConstructor6[T1, T2, T3, T4, T5, T6, R](factory: AbstractMockFactory, name: Symbol) 
+  extends MockFunction6[T1, T2, T3, T4, T5, T6, R](factory, name) with MockConstructor[R] {
+  
+  override def canHandle(that: MockFunction) = that.isInstanceOf[MockConstructor6[T1, T2, T3, T4, T5, T6, R]]
+}
+
+class MockConstructor7[T1, T2, T3, T4, T5, T6, T7, R](factory: AbstractMockFactory, name: Symbol) 
+  extends MockFunction7[T1, T2, T3, T4, T5, T6, T7, R](factory, name) with MockConstructor[R] {
+  
+  override def canHandle(that: MockFunction) = that.isInstanceOf[MockConstructor7[T1, T2, T3, T4, T5, T6, T7, R]]
+}
+
+class MockConstructor8[T1, T2, T3, T4, T5, T6, T7, T8, R](factory: AbstractMockFactory, name: Symbol) 
+  extends MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R](factory, name) with MockConstructor[R] {
+  
+  override def canHandle(that: MockFunction) = that.isInstanceOf[MockConstructor8[T1, T2, T3, T4, T5, T6, T7, T8, R]]
+}
+
+class MockConstructor9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](factory: AbstractMockFactory, name: Symbol) 
+  extends MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](factory, name) with MockConstructor[R] {
+  
+  override def canHandle(that: MockFunction) = that.isInstanceOf[MockConstructor9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]]
+}
+
+class MockConstructor10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](factory: AbstractMockFactory, name: Symbol) 
+  extends MockFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](factory, name) with MockConstructor[R] {
+  
+  override def canHandle(that: MockFunction) = that.isInstanceOf[MockConstructor10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]]
+}
