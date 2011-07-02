@@ -67,16 +67,21 @@ class MockConstructorTest extends Suite with MockFactory with GeneratedMockFacto
   def testMultipleInstances {
     val m1 = mock[ClassWithNonTrivialConstructor]
     val m2 = mock[ClassWithNonTrivialConstructor]
+    val m3 = mock[SimpleClass]
     
     m1.expects.newInstance(1, 2.0)
     m1.expects.methodWithZeroArguments() returning "m1"
     m2.expects.newInstance(3, 4.0)
     m2.expects.methodWithTwoArguments(10, 20) returning "m2"
+    m3.expects.newInstance
+    m3.expects.nullMethod
     
     val x2 = new ClassWithNonTrivialConstructor(3, 4.0)
+    val x3 = new SimpleClass
     val x1 = new ClassWithNonTrivialConstructor(1, 2.0)
     
     expect("m1") { x1.methodWithZeroArguments() }
+    m3.nullMethod
     expect("m2") { x2.methodWithTwoArguments(10, 20) }
   }
 }
