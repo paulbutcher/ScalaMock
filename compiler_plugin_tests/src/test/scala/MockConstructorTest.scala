@@ -47,13 +47,13 @@ class MockConstructorTest extends Suite with MockFactory with GeneratedMockFacto
     expect("some different return value") { UsesClassWithNonTrivialConstructor.doSomething() }
   }
   
-  // def testThrowingConstructor {
-  //   val m = mock[ClassWithNonTrivialConstructor]
-  // 
-  //   m.expects.newInstance(42, 1.23) throws new RuntimeException("oops")
-  // 
-  //   intercept[RuntimeException] { UsesClassWithNonTrivialConstructor.doSomething() }
-  // }
+  def testThrowingConstructor {
+    val m = mock[ClassWithNonTrivialConstructor]
+  
+    m.expects.newInstance(42, 1.23) throws new RuntimeException("oops")
+  
+    intercept[RuntimeException] { UsesClassWithNonTrivialConstructor.doSomething() }
+  }
   
   def testMultipleIdenticalInstances {
     val m = mock[ClassWithNonTrivialConstructor]

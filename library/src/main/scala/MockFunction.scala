@@ -30,9 +30,11 @@ abstract class MockFunction(protected val factory: AbstractMockFactory, name: Sy
 }
 
 abstract class TypeSafeMockFunction[R](factory: AbstractMockFactory, name: Symbol) extends MockFunction(factory, name) {
+  
+  protected def makeExpectation() = new TypeSafeExpectation[R](this)
 
   protected def toExpectation() = {
-    val expectation = new TypeSafeExpectation[R](this)
+    val expectation = makeExpectation
     factory.add(expectation)
     expectation
   }

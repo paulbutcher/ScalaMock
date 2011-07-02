@@ -36,11 +36,15 @@ abstract class Expectation(target: MockFunction) extends Handler {
     returnValue = Some(value)
   }
   
-  def throws(e: Throwable) = {
+  private[borachio] def setException(e: Throwable) = {
     require(!exception.isDefined, "exception can only be set once")
-    require(!returnValue.isDefined, "either return value or exception can be set, not both")
     exception = Some(e)
     this
+  }
+  
+  def throws(e: Throwable) = {
+    require(!returnValue.isDefined, "either return value or exception can be set, not both")
+    setException(e)
   }
   
   def throwing(e: Throwable) = throws(e)
@@ -145,4 +149,9 @@ class TypeSafeExpectation[R](target: MockFunction) extends Expectation(target) {
     this
   }
   def returning(value: R) = returns(value)
+}
+
+class ConstructorExpectation[R](target: MockFunction) extends TypeSafeExpectation[R](target) {
+
+  override def throws(e: Throwable) = setException(e)
 }

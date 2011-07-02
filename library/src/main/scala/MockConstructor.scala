@@ -20,22 +20,25 @@
 
 package com.borachio
 
-trait MockConstructor
+trait MockConstructor[R] extends TypeSafeMockFunction[R] {
+
+  override protected def makeExpectation() = new ConstructorExpectation[R](this)
+}
 
 class MockConstructor0[R](factory: AbstractMockFactory, name: Symbol) 
-  extends MockFunction0[R](factory, name) with MockConstructor {
+  extends MockFunction0[R](factory, name) with MockConstructor[R] {
     
   override def canHandle(that: MockFunction) = that.isInstanceOf[MockConstructor0[R]]
 }
 
 class MockConstructor1[T1, R](factory: AbstractMockFactory, name: Symbol) 
-  extends MockFunction1[T1, R](factory, name) with MockConstructor {
+  extends MockFunction1[T1, R](factory, name) with MockConstructor[R] {
 
   override def canHandle(that: MockFunction) = that.isInstanceOf[MockConstructor1[T1, R]]
 }
 
 class MockConstructor2[T1, T2, R](factory: AbstractMockFactory, name: Symbol) 
-  extends MockFunction2[T1, T2, R](factory, name) with MockConstructor {
+  extends MockFunction2[T1, T2, R](factory, name) with MockConstructor[R] {
   
   override def canHandle(that: MockFunction) = that.isInstanceOf[MockConstructor2[T1, T2, R]]
 }
