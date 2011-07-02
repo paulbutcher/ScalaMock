@@ -34,7 +34,10 @@ private[borachio] class UnorderedExpectations extends Expectations {
         return r.get
       }
     }
-    handleUnexpectedCall(description)
+    if (mock.failIfUnexpected)
+      handleUnexpectedCall(description)
+    else
+      null
   }
   
   private[borachio] def verify() {

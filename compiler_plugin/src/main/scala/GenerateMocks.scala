@@ -239,8 +239,9 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     def parameterDeclaration(parameter: Symbol) = parameter.name +": "+ parameter.tpe
     
     def mockBodyConstructor(method: Symbol, params: Option[List[Symbol]]) = "{\n"+
-      "    this(new com.borachio.MockConstructorDummy)\n"+ 
-      "    forwardTo = Some("+ mockBodySimple(method, params) +")\n"+
+      "    this(new com.borachio.MockConstructorDummy)\n"+
+      "    val mock = "+ mockBodySimple(method, params) +"\n"+
+      "    if (mock != null) forwardTo = Some(mock)\n"+
       "  }"
       
     def mockBodyNormal(method: Symbol, params: Option[List[Symbol]]) = 

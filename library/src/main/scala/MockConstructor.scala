@@ -25,6 +25,8 @@ class MockConstructorDummy
 trait MockConstructor[R] extends TypeSafeMockFunction[R] {
 
   override protected def makeExpectation() = new ConstructorExpectation[R](this)
+
+  override private[borachio] val failIfUnexpected = false
 }
 
 class MockConstructor0[R](factory: AbstractMockFactory, name: Symbol) 
