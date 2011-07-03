@@ -111,7 +111,7 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     expect("foo added") { m + "foo" }
   }
   
-  // def testWithoutMocks {
-  //   expect("methodWithZeroArguments: (42,1.23)") { UsesClassWithNonTrivialConstructor.doSomething() }
-  // }
+  def testWithoutMocks {
+    expect("methodWithZeroArguments: (42,1.23)") { UsesClassWithNonTrivialConstructor.doSomething() }
+  }
 }

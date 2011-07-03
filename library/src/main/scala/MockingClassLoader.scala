@@ -33,7 +33,7 @@ class MockingClassLoader(mockClassPath: URL) extends ClassLoader {
     override def loadClass(name: String): Class[_] = MockingClassLoader.this.loadClass(name)
     def loadClassInternal(name: String) = super.loadClass(name)
     def getFactory = factory
-    def loadClassNormal(name: String) = MockingClassLoader.this.loadClassNormal(name)
+    def loadClassNormal(name: String) = Class.forName(name, true, MockingClassLoader.this.defaultClassLoader)
   }
   private val mockClassLoader = new ClassLoaderInternal(Array(mockClassPath))
   private val normalClassLoader = new ClassLoaderInternal(defaultClassLoader.getURLs)
