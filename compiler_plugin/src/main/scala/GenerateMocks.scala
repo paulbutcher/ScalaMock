@@ -354,7 +354,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       }
 
     def mockMember(method: Symbol, params: List[Symbol], result: Type) = "  protected lazy val "+ 
-      mockMethodName(method) +" = new "+ mockFunction(method, params, result) +"(factory, Symbol(\""+ method.name +"\"))"
+      mockMethodName(method) +" = new "+ mockFunction(method, params, result) +"(factory, Symbol(\""+ method.name.decode +"\"))"
 
     def mockFunction(method: Symbol, params: List[Symbol], result: Type) =
       mockFunctionType(method) + params.length +"["+ (paramTypes(params) :+ result).mkString(", ") +"]"

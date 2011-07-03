@@ -25,4 +25,6 @@ class SimpleClass {
   def methodWithZeroArguments() = "methodWithZeroArguments"
   def methodWithOneArgument(x: Int) = "methodWithOneArgument: "+ x
   def methodWithTwoArguments(x: Int, y: Int) = "methodWithTwoArguments: "+ (x, y)
+  
+  def +(s: String) = toString + s
 }
