@@ -133,10 +133,10 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       testWriter.write(test)
       testWriter.close
       
-      mocks += (qualify(className) -> qualify(mockTraitOrClassName))
+      mocks += (qualifiedClassName -> qualify(mockTraitOrClassName))
     }
 
-    lazy val mockFilename = qualify(className) +".scala"  
+    lazy val mockFilename = qualifiedClassName +".scala"  
 
     lazy val mock =
       packageStatement +"\n\n"+
@@ -205,6 +205,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       }
       
     lazy val mockMethodNames = (methodsToMock.zipWithIndex map { case (m, i) => (m -> ("mock$"+ i)) }).toMap
+    
+    lazy val qualifiedClassName = qualify(className)
       
     def qualify(name: String) = packageName +"."+ name
     
@@ -241,7 +243,15 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     def mockBodyConstructor(method: Symbol, params: Option[List[Symbol]]) = "{\n"+
       "    this(new com.borachio.MockConstructorDummy)\n"+
       "    val mock = "+ mockBodySimple(method, params) +"\n"+
-      "    if (mock != null) forwardTo = Some(mock)\n"+
+      "    if (mock != null) {\n"+
+      "      forwardTo = Some(mock)\n"+
+      "    } else {\n"+
+      "      val classLoader = getClass.getClassLoader\n"+
+      "      val method = classLoader.getClass.getMethod(\"loadClassNormal\", classOf[String])\n"+
+      "      val clazz = method.invoke(classLoader, \""+ qualifiedClassName +"\").asInstanceOf[Class[_]]\n"+
+      "      val constructor = clazz.getConstructor("+ constructorParamTypes(params) +")\n"+
+      "      forwardTo = Some(constructor.newInstance"+ forwardConstructorParams(params) +".asInstanceOf["+ qualifiedClassName +"])\n"+
+      "    }\n"+
       "  }"
       
     def mockBodyNormal(method: Symbol, params: Option[List[Symbol]]) = 
@@ -262,6 +272,16 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       
     def forwardParamsWithNull(params: Option[List[Symbol]]) = params match {
         case Some(ps) => (ps map (_.name)).mkString("(", ", ", ")")
+        case None => ""
+      }
+      
+    def forwardConstructorParams(params: Option[List[Symbol]]) = params match {
+        case Some(ps) => (ps map (_.name +".asInstanceOf[AnyRef]")).mkString("(", ", ", ")")
+        case None => "()"
+      }
+      
+    def constructorParamTypes(params: Option[List[Symbol]]) = params match {
+        case Some(ps) => (ps map (p => "classOf["+ p.tpe +"]")).mkString(", ")
         case None => ""
       }
 

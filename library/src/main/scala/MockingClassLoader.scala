@@ -33,29 +33,28 @@ class MockingClassLoader(mockClassPath: URL) extends ClassLoader {
     override def loadClass(name: String): Class[_] = MockingClassLoader.this.loadClass(name)
     def loadClassInternal(name: String) = super.loadClass(name)
     def getFactory = factory
+    def loadClassNormal(name: String) = MockingClassLoader.this.loadClassNormal(name)
   }
   private val mockClassLoader = new ClassLoaderInternal(Array(mockClassPath))
   private val normalClassLoader = new ClassLoaderInternal(defaultClassLoader.getURLs)
   
-  override def loadClass(name: String): Class[_] = {
+  override def loadClass(name: String): Class[_] =
     if (useDefault(name)) {
       defaultClassLoader.loadClass(name)
     } else {
       try {
         mockClassLoader.loadClassInternal(name)
       } catch {
-        case _: ClassNotFoundException => {
-          try {
-            normalClassLoader.loadClassInternal(name)
-          } catch {
-            case _: ClassNotFoundException => {
-              defaultClassLoader.loadClass(name)
-            }
-          }
-        }
+        case _: ClassNotFoundException => loadClassNormal(name)
       }
     }
-  }
+  
+  def loadClassNormal(name: String) =
+    try {
+      normalClassLoader.loadClassInternal(name)
+    } catch {
+      case _: ClassNotFoundException => defaultClassLoader.loadClass(name)
+    }
   
   private def useDefault(name: String) =
     name.startsWith("scala.") || name.startsWith("java.") || name.startsWith("org.scalatest.")
