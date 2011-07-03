@@ -68,6 +68,7 @@ class MockConstructorTest extends Suite with MockFactory with GeneratedMockFacto
     val m1 = mock[ClassWithNonTrivialConstructor]
     val m2 = mock[ClassWithNonTrivialConstructor]
     val m3 = mock[SimpleClass]
+    val m4 = mock[FinalClass]
     
     m1.expects.newInstance(1, 2.0)
     m1.expects.methodWithZeroArguments() returning "m1"
@@ -75,11 +76,15 @@ class MockConstructorTest extends Suite with MockFactory with GeneratedMockFacto
     m2.expects.methodWithTwoArguments(10, 20) returning "m2"
     m3.expects.newInstance
     m3.expects.nullMethod
+    m4.expects.newInstance
+    m4.expects.methodWithOneArgument(42) returning "m4"
     
     val x2 = new ClassWithNonTrivialConstructor(3, 4.0)
     val x3 = new SimpleClass
     val x1 = new ClassWithNonTrivialConstructor(1, 2.0)
+    val x4 = new FinalClass
     
+    expect("m4") { x4.methodWithOneArgument(42) }
     expect("m1") { x1.methodWithZeroArguments() }
     m3.nullMethod
     expect("m2") { x2.methodWithTwoArguments(10, 20) }
