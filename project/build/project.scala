@@ -37,6 +37,8 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
 
     val scalatest = "org.scalatest" %% "scalatest" % "1.4.1" % "optional"
     val junit = "junit" % "junit" % "3.8.2" % "optional"
+
+    override def compileOptions = super.compileOptions ++ Seq(Unchecked)
   }
 
   lazy val sbt_plugin = project("sbt_plugin", "sbt Plugin", new SbtPluginProject(_))
