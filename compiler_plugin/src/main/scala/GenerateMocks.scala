@@ -141,10 +141,10 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val mock =
       packageStatement +"\n\n"+
         classDeclaration +" {\n\n"+
-          factoryReference +"\n\n"+
-          forwardTo +"\n\n"+
           mockMethods +"\n\n"+
-          mockMembers +"\n"+
+          factoryReference +"\n\n"+
+          mockMembers +"\n\n"+
+          forwardTo +"\n"+
         "}"
         
     lazy val test =
@@ -153,8 +153,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
           expectForwarders +"\n"+ (
             if (!isClass) {
               "\n"+
-              factoryReference +"\n\n"+
               mockMethods +"\n\n"+
+              factoryReference +"\n\n"+
               mockMembers +"\n"
             } else {
               ""
@@ -176,7 +176,9 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "    method.invoke(classLoader).asInstanceOf[com.borachio.AbstractMockFactory]\n"+
       "  }"
       
-    lazy val forwardTo = "  var forwardTo: Option["+ className +"] = None"
+    lazy val forwardTo = "  var forwardTo: AnyRef = _\n\n"+ forwarders
+    
+    lazy val forwarders = (methodsToMock map forwardMethod _).mkString("\n")
 
     lazy val mockMethods = (methodsToMock map mockMethod _).mkString("\n")
 
@@ -204,7 +206,9 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         s.isMethod && !s.isMemberOf(ObjectClass)
       }
       
-    lazy val mockMethodNames = (methodsToMock.zipWithIndex map { case (m, i) => (m -> ("mock$"+ i)) }).toMap
+    lazy val mockMethodNames = methodNames("mock")
+    
+    lazy val forwarderNames = methodNames("forwarder")
     
     lazy val qualifiedClassName = qualify(className)
       
@@ -244,20 +248,20 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "    this(new com.borachio.MockConstructorDummy)\n"+
       "    val mock = "+ mockBodySimple(method, params) +"\n"+
       "    if (mock != null) {\n"+
-      "      forwardTo = Some(mock)\n"+
+      "      forwardTo = mock\n"+
       "    } else {\n"+
       "      val classLoader = getClass.getClassLoader\n"+
       "      val method = classLoader.getClass.getMethod(\"loadClassNormal\", classOf[String])\n"+
       "      val clazz = method.invoke(classLoader, \""+ qualifiedClassName +"\").asInstanceOf[Class[_]]\n"+
       "      val constructor = clazz.getConstructor("+ constructorParamTypes(params) +")\n"+
-      "      forwardTo = Some(constructor.newInstance"+ forwardConstructorParams(params) +".asInstanceOf["+ qualifiedClassName +"])\n"+
+      "      forwardTo = constructor.newInstance"+ forwardConstructorParams(params) +".asInstanceOf[AnyRef]\n"+
       "    }\n"+
       "  }"
       
     def mockBodyNormal(method: Symbol, params: Option[List[Symbol]]) = 
       if (isClass)
-        "if (forwardTo.isDefined) forwardTo.get."+ method.name + 
-          forwardParamsWithNull(params) +" else "+ mockBodySimple(method, params)
+        "if (forwardTo != null) "+ forwarderNames(method) + forwardParams(params) +
+        " else "+ mockBodySimple(method, params)
       else
         mockBodySimple(method, params)
         
@@ -268,11 +272,6 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     def forwardParams(params: Option[List[Symbol]]) = params match {
         case Some(ps) => (ps map (_.name)).mkString("(", ", ", ")")
         case None => "()"
-      }
-      
-    def forwardParamsWithNull(params: Option[List[Symbol]]) = params match {
-        case Some(ps) => (ps map (_.name)).mkString("(", ", ", ")")
-        case None => ""
       }
       
     def forwardConstructorParams(params: Option[List[Symbol]]) = params match {
@@ -367,5 +366,29 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         "com.borachio.MockFunction"
 
     def paramTypes(params: List[Symbol]) = params map (_.tpe)
+    
+    def methodNames(prefix: String) = (methodsToMock.zipWithIndex map { case (m, i) => (m -> (prefix +"$"+ i)) }).toMap
+    
+    def forwardMethod(method: Symbol): String =
+      method.info match {
+        case MethodType(params, result) => forwardMethod(method, params, result)
+        case NullaryMethodType(result) => forwardMethod(method, Nil, result)
+        case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
+        case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
+      }
+      
+    def forwardMethod(method: Symbol, params: List[Symbol], result: Type) =
+      "  lazy val "+ forwarderNames(method) +" = {\n"+
+      "    val method = forwardTo.getClass.getMethod("+ forwarderGetMethodParams(method, params) +")\n"+
+      "    ("+ mockParams(Some(params)) +" => method.invoke(forwardTo"+ forwardForwarderParams(params) +").asInstanceOf["+ result +"])\n"+
+      "  }"
+      
+    def forwarderGetMethodParams(method: Symbol, params: List[Symbol]) = 
+      (("\""+ method.name.decode +"\"") +: (paramTypes(params) map (p => "classOf["+ p +"]"))).mkString(", ")
+      
+    def forwardForwarderParams(params: List[Symbol]) = params match {
+        case Nil => ""
+        case _ => ", "+ (params map (_.name +".asInstanceOf[AnyRef]")).mkString(", ")
+      }
   }
 }
