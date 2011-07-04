@@ -35,6 +35,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   val phaseName = "generatemocks"
   
   val mocks = new ListBuffer[(String, String)]
+  val mockObjects = new ListBuffer[(String, String)]
   
   val parameterTypes = new ListBuffer[String]
 
@@ -100,11 +101,16 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     "package com.borachio.generated\n\n"+
     "trait GeneratedMockFactory extends com.borachio.GeneratedMockFactoryBase { self: com.borachio.AbstractMockFactory =>\n"+
       (mocks map { case (target, mock) => mockFactoryEntry(target, mock) }).mkString("\n") +"\n\n"+
+      "  lazy val mockObject = Map(\n"+
+      (mockObjects map { case (target, mock) => mockObjectEntry(target, mock) }).mkString(",\n") +"\n"+
+      "  )\n\n"+
       (parameterTypes map (parameterConverter _)).mkString("\n") +"\n"+
     "}"
   
   def mockFactoryEntry(target: String, mock: String) =
     "  implicit def toMock(m: "+ target +") = m.asInstanceOf["+ mock +"]"
+    
+  def mockObjectEntry(target: String, mock: String) = "    ("+ target +" -> "+ target +".asInstanceOf["+ mock +"])"
     
   def parameterConverter(typeName: String) = {
     val parameterTypeName = mockParameterName(typeName)
@@ -150,8 +156,11 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       testWriter.write(test)
       testWriter.close
       
-      if (!isSingleton)
-        mocks += (qualifiedClassName -> qualify(mockTraitOrClassName))
+      val mapping = (qualifiedClassName -> qualify(mockTraitOrClassName))
+      if (isSingleton)
+        mockObjects += mapping
+      else
+        mocks += mapping
     }
 
     lazy val mockFilename = qualifiedClassName +".scala"  

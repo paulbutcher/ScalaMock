@@ -116,10 +116,15 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
   }
   
   def testSimpleObject {
-    val m = SimpleObject.asInstanceOf[Mock$SimpleObject]
+    val m = mockObject(SimpleObject)
     
     m.expects.sayHello returning "goodbye"
     
     expect("goodbye") { SimpleObject.sayHello }
   }
+
+  //! TODO
+  // def testUnmockedSimpleObject {
+  //   expect("hello") { SimpleObject.sayHello }
+  // }
 }
