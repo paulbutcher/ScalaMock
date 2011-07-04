@@ -27,4 +27,13 @@ class SimpleClass {
   def methodWithTwoArguments(x: Int, y: Int) = "methodWithTwoArguments: "+ (x, y)
   
   def +(s: String) = toString + s
+  
+  def callSimpleClass2(x: Int) = {
+    val y = new SimpleClass2
+    y.doSomething(x)
+  }
+}
+
+class SimpleClass2 {
+  def doSomething(x: Int) = "doSomething: "+ x
 }

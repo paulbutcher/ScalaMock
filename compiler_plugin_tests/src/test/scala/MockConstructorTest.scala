@@ -89,4 +89,14 @@ class MockConstructorTest extends Suite with MockFactory with GeneratedMockFacto
     m3.nullMethod
     expect("m2") { x2.methodWithTwoArguments(10, 20) }
   }
+
+  def testNestedMocks {
+    val m = mock[SimpleClass2]
+    
+    m.expects.newInstance
+    m.expects.doSomething(42) returning "did something"
+    
+    val x = new SimpleClass
+    expect("did something") { x.callSimpleClass2(42) }
+  }
 }
