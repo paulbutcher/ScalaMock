@@ -30,12 +30,26 @@ class MockingClassLoader(mockClassPath: URL) extends ClassLoader {
   private val defaultClassLoader = getClass.getClassLoader.asInstanceOf[URLClassLoader]
   
   private class ClassLoaderInternal(urls: Array[URL]) extends URLClassLoader(urls) {
+
     override def loadClass(name: String): Class[_] = MockingClassLoader.this.loadClass(name)
+
     def loadClassInternal(name: String) = super.loadClass(name)
+
     def getFactory = factory
-    def loadClassNormal(name: String) = Class.forName(name, true, MockingClassLoader.this.defaultClassLoader)
+
+    // We need to create a new instance of the "normal" class loader to avoid
+    // java.lang.LinkageError: loader attempted  duplicate class definition
+    // caused by the fact that the pre-existing normal class loader has already
+    // been recorded as an initiating class loader for this class. See:
+    // http://docs.jboss.org/jbossas/docs/Server_Configuration_Guide/4/html/Class_Loading_and_Types_in_Java-LinkageErrors___Making_Sure_You_Are_Who_You_Say_You_Are.html
+    def loadClassNormal(name: String) = {
+      val cl = new ClassLoaderInternal(defaultClassLoader.getURLs)
+      cl.loadClassInternal(name)
+    }
   }
+
   private val mockClassLoader = new ClassLoaderInternal(Array(mockClassPath))
+
   private val normalClassLoader = new ClassLoaderInternal(defaultClassLoader.getURLs)
   
   override def loadClass(name: String): Class[_] =
