@@ -60,9 +60,9 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     tree match {
       case ClassDef(_, _, _, _) if tree.hasSymbol =>
         for {
-          AnnotationInfo(tp, args, _) <- tree.symbol.annotations if tp.typeSymbol == MockAnnotation
-          Literal(const) <- args
-        } new MockClass(const.typeValue.typeSymbol).generate
+          AnnotationInfo(atp, _, _) <- tree.symbol.annotations if atp.typeSymbol == MockAnnotation
+          typeArg <- atp.typeArgs
+        } new MockClass(typeArg.typeSymbol).generate
           
       case _ =>
     }

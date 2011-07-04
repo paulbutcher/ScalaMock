@@ -22,15 +22,14 @@ package com.borachio.plugin.test
 
 import com.borachio.annotation.mock
 
-@mock(
-  classOf[SimpleClass], 
-  classOf[SimpleClass2],
-  classOf[SimpleClass3],
-  classOf[SimpleClass4],
-  classOf[FinalClass], 
-  classOf[ClassWithFinalMethod], 
-  classOf[SimpleTrait],
-  classOf[ClassWithNonTrivialConstructor],
-  classOf[ClassWithOverloadedMethods],
-  classOf[ClassWithPrivateConstructor])
+@mock[SimpleClass] 
+@mock[SimpleClass2]
+@mock[SimpleClass3]
+@mock[SimpleClass4]
+@mock[FinalClass]
+@mock[ClassWithFinalMethod]
+@mock[SimpleTrait]
+@mock[ClassWithNonTrivialConstructor]
+@mock[ClassWithOverloadedMethods]
+@mock[ClassWithPrivateConstructor]
 class Dummy
