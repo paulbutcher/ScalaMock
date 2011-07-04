@@ -114,4 +114,12 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
   def testWithoutMocks {
     expect("methodWithZeroArguments: (42,1.23)") { UsesClassWithNonTrivialConstructor.doSomething() }
   }
+  
+  def testSimpleObject {
+    val m = SimpleObject.asInstanceOf[Mock$SimpleObject]
+    
+    m.expects.sayHello returning "goodbye"
+    
+    expect("goodbye") { SimpleObject.sayHello }
+  }
 }

@@ -20,7 +20,7 @@
 
 package com.borachio.plugin.test
 
-import com.borachio.annotation.mock
+import com.borachio.annotation.{mock, mockObject}
 
 @mock[SimpleClass] 
 @mock[SimpleClass2]
@@ -32,4 +32,5 @@ import com.borachio.annotation.mock
 @mock[ClassWithNonTrivialConstructor]
 @mock[ClassWithOverloadedMethods]
 @mock[ClassWithPrivateConstructor]
+@mockObject(SimpleObject)
 class Dummy

@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.annotation
+package com.borachio.plugin.test
 
-class mock[T] extends scala.annotation.StaticAnnotation
-
-class mockObject(o: Any) extends scala.annotation.StaticAnnotation
+object SimpleObject {
+  def sayHello = "hello"
+}

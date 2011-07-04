@@ -39,6 +39,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   val parameterTypes = new ListBuffer[String]
 
   lazy val MockAnnotation = definitions.getClass("com.borachio.annotation.mock")
+  lazy val MockObjectAnnotation = definitions.getClass("com.borachio.annotation.mockObject")
   lazy val mockOutputDirectory = plugin.mockOutputDirectory.get
   lazy val testOutputDirectory = plugin.testOutputDirectory.get
   
@@ -59,13 +60,29 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   def findMockAnnotations(tree: Tree) {
     tree match {
       case ClassDef(_, _, _, _) if tree.hasSymbol =>
-        for {
-          AnnotationInfo(atp, _, _) <- tree.symbol.annotations if atp.typeSymbol == MockAnnotation
-          typeArg <- atp.typeArgs
-        } new MockClass(typeArg.typeSymbol).generate
-          
+        for (AnnotationInfo(atp, args, _) <- tree.symbol.annotations)
+          atp.typeSymbol match {
+            case MockAnnotation => mockClass(atp)
+            case MockObjectAnnotation => mockObject(args)
+            case _ =>
+          }
+                  
       case _ =>
     }
+  }
+  
+  def mockClass(atp: Type) {
+    assert(atp.typeArgs.length == 1)
+    new MockClass(atp.typeArgs.head.typeSymbol).generate
+  }
+  
+  def mockObject(args: List[Tree]) {
+    assert(args.length == 1)
+    val tpe = args.head.tpe.typeSymbol
+    if (tpe.isModuleClass)
+      new MockClass(tpe).generate
+    else
+      globalError("@mockObject parameter must be a singleton object")
   }
   
   def generateExtra() {
@@ -133,14 +150,15 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       testWriter.write(test)
       testWriter.close
       
-      mocks += (qualifiedClassName -> qualify(mockTraitOrClassName))
+      if (!isSingleton)
+        mocks += (qualifiedClassName -> qualify(mockTraitOrClassName))
     }
 
     lazy val mockFilename = qualifiedClassName +".scala"  
 
     lazy val mock =
       packageStatement +"\n\n"+
-        classDeclaration +" {\n\n"+
+        classOrObjectDeclaration +" {\n\n"+
           mockMethods +"\n\n"+
           factoryReference +"\n\n"+
           mockMembers +"\n\n"+
@@ -163,11 +181,18 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         "}\n"
         
     lazy val isClass = !classSymbol.isTrait
+    
+    lazy val isSingleton = classSymbol.isModuleClass
 
     lazy val packageStatement = "package "+ packageName
 
-    lazy val classDeclaration = 
-      "class "+ className +"(dummy: com.borachio.MockConstructorDummy) extends "+ mockTraitOrClassName
+    lazy val classOrObjectDeclaration = classOrObject +" extends "+ mockTraitOrClassName
+        
+    lazy val classOrObject =
+      if (isSingleton)
+        "object "+ className
+      else
+        "class "+ className +"(dummy: com.borachio.MockConstructorDummy)"
       
     lazy val factoryReference = 
       "  val factory = {\n"+
@@ -203,7 +228,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val mockTraitOrClassName = "Mock$"+ className
 
     lazy val methodsToMock = classSymbol.info.nonPrivateMembers filter { s => 
-        s.isMethod && !s.isMemberOf(ObjectClass)
+        s.isMethod && !s.isMemberOf(ObjectClass) && !(isSingleton && s.isConstructor)
       }
       
     lazy val mockMethodNames = methodNames("mock")
