@@ -25,6 +25,8 @@ import com.borachio.annotation.mock
 @mock(
   classOf[SimpleClass], 
   classOf[SimpleClass2],
+  classOf[SimpleClass3],
+  classOf[SimpleClass4],
   classOf[FinalClass], 
   classOf[ClassWithFinalMethod], 
   classOf[SimpleTrait],

@@ -27,13 +27,19 @@ class SimpleClass {
   def methodWithTwoArguments(x: Int, y: Int) = "methodWithTwoArguments: "+ (x, y)
   
   def +(s: String) = toString + s
-  
-  def callSimpleClass2(x: Int) = {
-    val y = new SimpleClass2
-    y.doSomething(x)
-  }
+  def callSimpleClass2(x: Int) = (new SimpleClass2).doSomething(x)
+  def nestDeeply(x: Int) = (new SimpleClass2).nestDeeply(x)
 }
 
 class SimpleClass2 {
+  def doSomething(x: Int) = "doSomething: "+ x
+  def nestDeeply(x: Int) = (new SimpleClass3).nestDeeply(x)
+}
+
+class SimpleClass3 {
+  def nestDeeply(x: Int) = (new SimpleClass4).doSomething(x)
+}
+
+class SimpleClass4 {
   def doSomething(x: Int) = "doSomething: "+ x
 }

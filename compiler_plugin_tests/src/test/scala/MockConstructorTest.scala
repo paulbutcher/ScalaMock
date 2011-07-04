@@ -99,4 +99,14 @@ class MockConstructorTest extends Suite with MockFactory with GeneratedMockFacto
     val x = new SimpleClass
     expect("did something") { x.callSimpleClass2(42) }
   }
+  
+  def testDeeplyNestedMocks {
+    val m = mock[SimpleClass4]
+    
+    m.expects.newInstance
+    m.expects.doSomething(42) returning "deep, man"
+    
+    val x = new SimpleClass
+    expect("deep, man") { x.nestDeeply(42) }
+  }
 }
