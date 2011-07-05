@@ -35,7 +35,7 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
   
   class BorachioProject(info: ProjectInfo) extends DefaultProject(info) {
 
-    val scalatest = "org.scalatest" %% "scalatest" % "1.4.1" % "optional"
+    val scalatest = "org.scalatest" %% "scalatest" % "1.6.1" % "optional"
     val junit = "junit" % "junit" % "3.8.2" % "optional"
 
     override def compileOptions = super.compileOptions ++ Seq(Unchecked) ++ 
