@@ -22,7 +22,7 @@ import sbt._
 
 trait GenerateMocks extends DefaultProject {
   
-  def compilerPlugin = "target/scala_"+ buildScalaVersion +"/compiler-plugin_"+ buildScalaVersion +"-2.0-SNAPSHOT.jar"
+  def compilerPlugin = "lib_managed/scala_"+ buildScalaVersion +"/compile/compiler-plugin_"+ buildScalaVersion +"-2.0-SNAPSHOT.jar"
 
   def managedSources = "src_managed"
   override def cleanAction = super.cleanAction dependsOn cleanTask(managedSources)
