@@ -37,7 +37,7 @@ trait GeneratedMockFactoryBase { self: AbstractMockFactory =>
       clazz
   }
 
-  private[borachio] def mock[T: ClassManifest] = {
+  protected def mock[T: ClassManifest] = {
     val constructor = classToCreate[T].getConstructor(classOf[MockConstructorDummy])
     constructor.newInstance(new MockConstructorDummy).asInstanceOf[T]
   }
