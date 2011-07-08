@@ -21,25 +21,16 @@
 package com.borachio.scalatest
 
 import com.borachio.AbstractMockFactory
-import org.scalatest.{BeforeAndAfterEach, Distributor, Filter, Reporter, Stopper, Suite, Tracker}
+import org.scalatest.{AbstractSuite, Distributor, Filter, Reporter, Stopper, Suite, Tracker}
 
 /** Trait that can be mixed into a [[http://www.scalatest.org/ ScalaTest]] suite to provide
   * mocking support.
   *
   * See [[com.borachio]] for overview documentation.
   */
-trait MockFactory extends AbstractMockFactory with BeforeAndAfterEach { this: Suite =>
+trait MockFactory extends AbstractSuite with AbstractMockFactory { this: Suite =>
   
-  override def beforeEach() {
-    resetExpectations
-  }
-  
-  override def afterEach() {
-    if (autoVerify)
-      verifyExpectations
-  }
-  
-  protected abstract override def runTests(testName: Option[String], reporter: Reporter, stopper: Stopper, filter: Filter,
+  abstract protected override def runTests(testName: Option[String], reporter: Reporter, stopper: Stopper, filter: Filter,
     configMap: Map[String, Any], distributor: Option[Distributor], tracker: Tracker) {
       
     classLoader match {
@@ -62,5 +53,40 @@ trait MockFactory extends AbstractMockFactory with BeforeAndAfterEach { this: Su
     super.runTests(testName, reporter, stopper, filter, configMap, distributor, tracker)
   }
   
+  // Copied from BeforeAndAfterEach:
+  // On advice from Bill Venners, we shouldn't use BeforeAndAfterEach here to 
+  // ensure that it's properly stackable
+  abstract protected override def runTest(testName: String, reporter: Reporter, stopper: Stopper, 
+    configMap: Map[String, Any], tracker: Tracker) {
+
+    var thrownException: Option[Throwable] = None
+
+    resetExpectations
+    try {
+      super.runTest(testName, reporter, stopper, configMap, tracker)
+    }
+    catch {
+      case e: Exception => thrownException = Some(e)
+    }
+    finally {
+      try {
+        if (autoVerify)
+          verifyExpectations
+
+        thrownException match {
+          case Some(e) => throw e
+          case None =>
+        }
+      }
+      catch {
+        case laterException: Exception =>
+          thrownException match { // If both run and afterAll throw an exception, report the test exception
+            case Some(earlierException) => throw earlierException
+            case None => throw laterException
+          }
+      }
+    }
+  }
+
   protected var autoVerify = true
 }
