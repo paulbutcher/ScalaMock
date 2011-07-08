@@ -37,7 +37,7 @@ trait MockFactory extends AbstractSuite with AbstractMockFactory { this: Suite =
       case Some(cl) => {
         val clazz = Class.forName(getClass.getName, true, cl)
         val withMocks = clazz.newInstance
-        cl.factory = withMocks
+        cl.factory.set(withMocks)
         val runInternal = clazz.getMethod("runInternal", classOf[Option[String]], classOf[Reporter], classOf[Stopper],
           classOf[Filter], classOf[Map[String, Any]], classOf[Option[Distributor]], classOf[Tracker])
         runInternal.invoke(withMocks, testName, reporter, stopper, filter, configMap, distributor, tracker)

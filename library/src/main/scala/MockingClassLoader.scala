@@ -25,7 +25,7 @@ import java.net.{URL, URLClassLoader}
 
 class MockingClassLoader(mockClassPath: URL) extends ClassLoader {
   
-  var factory: Any = _
+  var factory = new ThreadLocal[Any]
   
   private val defaultClassLoader = getClass.getClassLoader.asInstanceOf[URLClassLoader]
   
@@ -35,7 +35,7 @@ class MockingClassLoader(mockClassPath: URL) extends ClassLoader {
 
     def loadClassInternal(name: String) = super.loadClass(name)
 
-    def getFactory = factory
+    def getFactory = factory.get
 
     // We need to create a new instance of the "normal" class loader to avoid
     // java.lang.LinkageError: loader attempted  duplicate class definition
