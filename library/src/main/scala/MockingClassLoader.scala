@@ -20,16 +20,19 @@
 
 package com.borachio
 
-import java.io.{DataInputStream, File}
-import java.net.{URL, URLClassLoader}
-
-class MockingClassLoader(mockClassPath: URL) extends ClassLoader {
+abstract class MockingClassLoader extends ClassLoader {
+  
+  type UnderlyingClassLoader <: ClassLoader
+  
+  protected val defaultClassLoader: UnderlyingClassLoader = getDefaultClassLoader()
+  
+  protected def getDefaultClassLoader(): UnderlyingClassLoader
+  protected def createMockClassLoader(): ClassLoaderInternal
+  protected def createNormalClassLoader(): ClassLoaderInternal
   
   var factory = new ThreadLocal[Any]
   
-  private val defaultClassLoader = getClass.getClassLoader.asInstanceOf[URLClassLoader]
-  
-  private class ClassLoaderInternal(urls: Array[URL]) extends URLClassLoader(urls) {
+  protected trait ClassLoaderInternal extends ClassLoader {
 
     override def loadClass(name: String): Class[_] = MockingClassLoader.this.loadClass(name)
 
@@ -42,15 +45,11 @@ class MockingClassLoader(mockClassPath: URL) extends ClassLoader {
     // caused by the fact that the pre-existing normal class loader has already
     // been recorded as an initiating class loader for this class. See:
     // http://docs.jboss.org/jbossas/docs/Server_Configuration_Guide/4/html/Class_Loading_and_Types_in_Java-LinkageErrors___Making_Sure_You_Are_Who_You_Say_You_Are.html
-    def loadClassNormal(name: String) = {
-      val cl = new ClassLoaderInternal(defaultClassLoader.getURLs)
-      cl.loadClassInternal(name)
-    }
+    def loadClassNormal(name: String) = createNormalClassLoader.loadClassInternal(name)
   }
 
-  private val mockClassLoader = new ClassLoaderInternal(Array(mockClassPath))
-
-  private val normalClassLoader = new ClassLoaderInternal(defaultClassLoader.getURLs)
+  private val mockClassLoader = createMockClassLoader
+  private val normalClassLoader = createNormalClassLoader
   
   override def loadClass(name: String): Class[_] =
     if (useDefault(name)) {

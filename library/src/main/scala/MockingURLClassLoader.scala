@@ -20,25 +20,15 @@
 
 package com.borachio
 
-import java.net.URL
+import java.net.{URL, URLClassLoader}
 
-trait GeneratedMockFactoryBase { self: AbstractMockFactory =>
+class MockingURLClassLoader(mockClassPath: URL) extends MockingClassLoader {
   
-  def mockClassPath: URL
+  override type UnderlyingClassLoader = URLClassLoader
   
-  classLoader = Some(new MockingURLClassLoader(mockClassPath))
+  protected def getDefaultClassLoader() = getClass.getClassLoader.asInstanceOf[URLClassLoader]
+  protected def createMockClassLoader() = new MockingURLClassLoaderInternal(Array(mockClassPath))
+  protected def createNormalClassLoader() = new MockingURLClassLoaderInternal(defaultClassLoader.getURLs)
   
-  private[borachio] def classToCreate[T: ClassManifest] = {
-    val erasure = classManifest[T].erasure
-    val clazz = Class.forName(erasure.getName)
-    if (clazz.isInterface)
-      Class.forName(erasure.getPackage.getName +".Mock$"+ erasure.getSimpleName)
-    else
-      clazz
-  }
-
-  protected def mock[T: ClassManifest] = {
-    val constructor = classToCreate[T].getConstructor(classOf[MockConstructorDummy])
-    constructor.newInstance(new MockConstructorDummy).asInstanceOf[T]
-  }
+  protected class MockingURLClassLoaderInternal(urls: Array[URL]) extends URLClassLoader(urls) with ClassLoaderInternal
 }
