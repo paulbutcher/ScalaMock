@@ -24,9 +24,9 @@ import java.net.URL
 
 trait GeneratedMockFactoryBase { self: AbstractMockFactory =>
   
-  def mockClassPath: URL
+  def getClassLoader(): MockingClassLoader
   
-  mockingClassLoader = Some(new MockingURLClassLoader(mockClassPath))
+  mockingClassLoader = Some(getClassLoader)
   
   private[borachio] def classToCreate[T: ClassManifest] = {
     val erasure = classManifest[T].erasure
