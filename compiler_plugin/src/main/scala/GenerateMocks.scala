@@ -25,7 +25,7 @@ import nsc._
 import nsc.plugins.PluginComponent
 
 import java.io.{File, FileWriter}
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.{ListBuffer, Map}
 
 class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginComponent {
   import global._
@@ -37,7 +37,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   val mocks = new ListBuffer[(String, String)]
   val mockObjects = new ListBuffer[(String, String)]
   
-  val parameterTypes = new ListBuffer[String]
+  val parameterTypes = Map[Type, Int]()
 
   lazy val MockAnnotation = definitions.getClass("com.borachio.annotation.mock")
   lazy val MockObjectAnnotation = definitions.getClass("com.borachio.annotation.mockObject")
@@ -104,7 +104,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "  lazy val mockObject = Map(\n"+
       (mockObjects map { case (target, mock) => mockObjectEntry(target, mock) }).mkString(",\n") +"\n"+
       "  )\n\n"+
-      (parameterTypes map (parameterConverter _)).mkString("\n") +"\n"+
+      (parameterTypes.keys map (parameterConverter _)).mkString("\n") +"\n"+
     "}"
   
   def mockFactoryEntry(target: String, mock: String) =
@@ -112,13 +112,13 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
   def mockObjectEntry(target: String, mock: String) = "    ("+ target +" -> "+ target +".asInstanceOf["+ mock +"])"
     
-  def parameterConverter(typeName: String) = {
-    val parameterTypeName = mockParameterName(typeName)
-    "  protected implicit def to"+ typeName +"(v: "+ typeName +") = new "+ parameterTypeName +"(v)\n"+
-      "  protected implicit def to"+ typeName +"(v: com.borachio.MatchAny) = new "+ parameterTypeName +"(v)\n"
+  def parameterConverter(tpe: Type) = {
+    val parameterName = mockParameterName(tpe)
+    "  protected implicit def to"+ parameterName +"(v: "+ tpe +") = new com.borachio."+ parameterName +"(v)\n"+
+      "  protected implicit def to"+ parameterName +"(v: com.borachio.MatchAny) = new com.borachio."+ parameterName +"(v)\n"
   }
     
-  def mockParameterName(typeName: String) = "com.borachio.MockParameter"+ typeName
+  def mockParameterName(tpe: Type) = "MockParameter$"+ parameterTypes(tpe)
     
   def generateMockParameterTypes() {
     val writer = new FileWriter(new File(testOutputDirectory, "GeneratedParameterTypes.scala"))
@@ -128,11 +128,11 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
   def mockParameterTypes = 
     "package com.borachio\n\n"+
-    (parameterTypes map (generatedMockParameterType _)).mkString("\n\n")
+    (parameterTypes.keys map (generatedMockParameterType _)).mkString("\n\n")
   
-  def generatedMockParameterType(typeName: String) =
-    "class MockParameter"+ typeName +"(value: AnyRef) extends com.borachio.MockParameter["+ typeName +"](value) {\n"+
-      "  def this(v: "+ typeName +") = this(v.asInstanceOf[AnyRef])\n"+
+  def generatedMockParameterType(tpe: Type) =
+    "class "+ mockParameterName(tpe) +"(value: AnyRef) extends com.borachio.MockParameter["+ tpe +"](value) {\n"+
+      "  def this(v: "+ tpe +") = this(v.asInstanceOf[AnyRef])\n"+
       "  def this(v: MatchAny) = this(v.asInstanceOf[AnyRef])\n"+
     "}"
   
@@ -350,13 +350,13 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         case None => ""
       }
       
-    def forwarderParam(parameter: Symbol) = parameter.name +": "+ mockParameterType(parameter)
+    def forwarderParam(parameter: Symbol) = parameter.name +": com.borachio."+ mockParameterType(parameter)
     
     def mockParameterType(parameter: Symbol) = {
-      val typeName = parameter.tpe.toString
-      if (!(parameterTypes contains typeName))
-        parameterTypes += typeName
-      mockParameterName(typeName)
+      val tpe = parameter.tpe
+      if (!(parameterTypes contains tpe))
+        parameterTypes += (tpe -> parameterTypes.size)
+      mockParameterName(tpe)
     }
     
     def expectationType(result: Type) = "com.borachio.TypeSafeExpectation["+ result +"]"

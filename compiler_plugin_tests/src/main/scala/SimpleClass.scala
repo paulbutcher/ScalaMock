@@ -29,6 +29,8 @@ class SimpleClass {
   def +(s: String) = toString + s
   def callSimpleClass2(x: Int) = (new SimpleClass2).doSomething(x)
   def nestDeeply(x: Int) = (new SimpleClass2).nestDeeply(x)
+  
+  def methodWithNonPrimitiveArgument(x: SimpleClass4) = x.toString
 }
 
 class SimpleClass2 {

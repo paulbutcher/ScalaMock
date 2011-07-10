@@ -84,7 +84,7 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     val m = mock[ClassWithOverloadedMethods]
     
     //! Eugh - how do I avoid the necessity for this?
-    m.expects.foo(new com.borachio.MockParameterInt(42)) returning "overload 1"
+    m.expects.foo(new com.borachio.MockParameter$1(42)) returning "overload 1"
     m.expects.foo(1.23) returning "overload 2"
     m.expects.foo(42, 1.23) returning "overload 3"
     
@@ -121,6 +121,15 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     m.expects.sayHello returning "hola"
     
     expect("hola") { SimpleObject.sayHello }
+  }
+  
+  def testNonPrimitiveParameterType {
+    val m = mock[SimpleClass]
+    val x = new SimpleClass4
+    
+    m.expects.methodWithNonPrimitiveArgument(x)
+    
+    m.methodWithNonPrimitiveArgument(x)
   }
 
   //! TODO
