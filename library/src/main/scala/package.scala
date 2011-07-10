@@ -30,7 +30,7 @@ package com
  * class MyTest extends Suite with MockFactory
  * }}}
  *
- * To use Borachio with JUnit3, mix the [[com.borachio.junit3.MockFactory]] trait into a
+ * To use Borachio with JUnit3 on Android, mix the [[com.borachio.android.MockFactory]] trait into a
  * TestCase:
  *
  * {{{
