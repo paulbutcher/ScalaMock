@@ -24,7 +24,7 @@ import scala.collection.mutable.Map
 
 trait AbstractMockFactory {
   
-  protected var classLoader: Option[MockingClassLoader] = None
+  protected var mockingClassLoader: Option[MockingClassLoader] = None
   
   protected def resetExpectations() {
     expectations.reset(verbose, callLogging)

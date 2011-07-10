@@ -33,7 +33,7 @@ trait MockFactory extends AbstractSuite with AbstractMockFactory { this: Suite =
   abstract protected override def runTests(testName: Option[String], reporter: Reporter, stopper: Stopper, filter: Filter,
     configMap: Map[String, Any], distributor: Option[Distributor], tracker: Tracker) {
       
-    classLoader match {
+    mockingClassLoader match {
       case Some(cl) => {
         val clazz = Class.forName(getClass.getName, true, cl)
         val withMocks = clazz.newInstance
