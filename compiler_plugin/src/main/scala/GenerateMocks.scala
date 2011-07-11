@@ -147,23 +147,21 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       log("Creating mock for: "+ classSymbol)
 
       if (isClass) {
-        val mockWriter = new FileWriter(new File(mockOutputDirectory, mockFilename))
+        val mockWriter = new FileWriter(new File(mockOutputDirectory, qualifiedClassName +".scala"))
         mockWriter.write(mock)
         mockWriter.close
       }
       
-      val testWriter = new FileWriter(new File(testOutputDirectory, mockFilename))
+      val testWriter = new FileWriter(new File(testOutputDirectory, qualifiedMockTraitOrClassName +".scala"))
       testWriter.write(test)
       testWriter.close
       
-      val mapping = (qualifiedClassName -> qualify(mockTraitOrClassName))
+      val mapping = (qualifiedClassName -> qualifiedMockTraitOrClassName)
       if (isSingleton)
         mockObjects += mapping
       else
         mocks += mapping
     }
-
-    lazy val mockFilename = qualifiedClassName +".scala"  
 
     lazy val mock =
       packageStatement +"\n\n"+
@@ -245,6 +243,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val forwarderNames = methodNames("forwarder")
     
     lazy val qualifiedClassName = qualify(className)
+    
+    lazy val qualifiedMockTraitOrClassName = qualify(mockTraitOrClassName)
       
     def qualify(name: String) = packageName +"."+ name
     
