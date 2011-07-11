@@ -40,11 +40,9 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
 
     override def compilerPlugin = "compiler_plugin/target/scala_"+ buildScalaVersion +"/compiler-plugin_"+ buildScalaVersion +"-2.0-SNAPSHOT.jar"
 
-    override def compileOptions = super.compileOptions ++ Seq(Unchecked) ++ 
-      compileOptions(
-        "-Ylog:generatemocks",
-        "-Xfatal-warnings"
-      )
+    override def compileOptions = super.compileOptions ++ Seq(Unchecked) ++ compileOptions("-Xfatal-warnings")
+
+    override def generateMockCompileOptions = super.generateMockCompileOptions ++ compileOptions("-Ylog:generatemocks")
   }
 
   lazy val sbt_plugin = project("sbt_plugin", "sbt Plugin", new SbtPluginProject(_))
