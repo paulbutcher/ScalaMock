@@ -74,7 +74,11 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   
   def mockClass(atp: Type) {
     assert(atp.typeArgs.length == 1)
-    new MockClass(atp.typeArgs.head.typeSymbol).generate
+    val symbol = atp.typeArgs.head.typeSymbol
+    if (symbol.isTrait)
+      new MockTrait(symbol).generate
+    else
+      new MockClass(symbol).generate
   }
   
   def mockObject(args: List[Tree]) {
@@ -146,18 +150,23 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     def generate() {
       log("Creating mock for: "+ mockSymbol)
 
-      if (isClass) {
-        val mockWriter = new FileWriter(new File(mockOutputDirectory, qualifiedClassName +".scala"))
-        mockWriter.write(mock)
-        mockWriter.close
-      }
-      
-      val testWriter = new FileWriter(new File(testOutputDirectory, qualifiedMockTraitOrClassName +".scala"))
-      testWriter.write(test)
-      testWriter.close
+      generateMock()
+      generateTest()
       
       val mapping = (qualifiedClassName -> qualifiedMockTraitOrClassName)
       recordMapping(mapping)
+    }
+    
+    def generateMock() {
+      val mockWriter = new FileWriter(new File(mockOutputDirectory, qualifiedClassName +".scala"))
+      mockWriter.write(mock)
+      mockWriter.close
+    }
+    
+    def generateTest() {
+      val testWriter = new FileWriter(new File(testOutputDirectory, qualifiedMockTraitOrClassName +".scala"))
+      testWriter.write(test)
+      testWriter.close
     }
     
     def recordMapping(mapping: (String, String)) {
@@ -167,31 +176,24 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val mock =
       packageStatement +"\n\n"+
         classOrObjectDeclaration +" {\n\n"+
-          mockMethods +"\n\n"+
-          factoryReference +"\n\n"+
-          mockMembers +"\n\n"+
+          mockClassEntries +"\n\n"+
           forwardTo +"\n"+
         "}"
         
     lazy val test =
       packageStatement +"\n\n"+
         mockTraitOrClassDeclaration +" {\n\n"+
-          expectForwarders +"\n"+ (
-            if (!isClass) {
-              "\n"+
-              mockMethods +"\n\n"+
-              factoryReference +"\n\n"+
-              mockMembers +"\n"
-            } else {
-              ""
-            }
-          ) +
+          expectForwarders +"\n\n"+
+          mockTraitEntries +"\n"+
         "}\n"
         
-    lazy val isClass = !mockSymbol.isTrait
-    
-    lazy val isSingleton = mockSymbol.isModuleClass
-
+    lazy val mockClassEntries = 
+      mockMethods +"\n\n"+
+      factoryReference +"\n\n"+
+      mockMembers
+      
+    lazy val mockTraitEntries = ""
+        
     lazy val packageStatement = "package "+ packageName
 
     lazy val classOrObjectDeclaration = classOrObject +" extends "+ mockTraitOrClassName
@@ -219,11 +221,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
     lazy val mockMembers = (methodsToMock map mockMember _).mkString("\n")
     
-    lazy val mockTraitOrClassDeclaration = 
-      if (isClass)
-        "trait "+ mockTraitOrClassName
-      else
-        "class "+ mockTraitOrClassName +"(dummy: com.borachio.MockConstructorDummy) extends "+ className
+    lazy val mockTraitOrClassDeclaration = "trait "+ mockTraitOrClassName
         
     lazy val packageName = mockSymbol.enclosingPackage.fullName.toString
 
@@ -292,11 +290,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "  }"
       
     def mockBodyNormal(method: Symbol, params: Option[List[Symbol]]) = 
-      if (isClass)
-        "if (forwardTo != null) "+ forwarderNames(method) + forwardParams(params) +
-        " else "+ mockBodySimple(method, params)
-      else
-        mockBodySimple(method, params)
+      "if (forwardTo != null) "+ forwarderNames(method) + forwardParams(params) +
+      " else "+ mockBodySimple(method, params)
         
     def mockBodySimple(method: Symbol, params: Option[List[Symbol]]) = mockMethodName(method) + forwardParams(params)
     
@@ -426,6 +421,18 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   }
   
   class MockClass(mockSymbol: Symbol) extends Mock(mockSymbol) {
+  }
+  
+  class MockTrait(mockSymbol: Symbol) extends Mock(mockSymbol) {
+    
+    override def generateMock() { /* NOOP */ }
+    
+    override lazy val mockTraitEntries = mockClassEntries
+
+    override lazy val mockTraitOrClassDeclaration = 
+      "class "+ mockTraitOrClassName +"(dummy: com.borachio.MockConstructorDummy) extends "+ className
+
+    override def mockBodyNormal(method: Symbol, params: Option[List[Symbol]]) = mockBodySimple(method, params)
   }
   
   class MockObject(mockSymbol: Symbol) extends Mock(mockSymbol) {
