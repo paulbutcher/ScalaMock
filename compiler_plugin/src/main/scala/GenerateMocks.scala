@@ -227,7 +227,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
     lazy val className = mockSymbol.name.toString
     
-    lazy val mockTraitOrClassName = "Mock$"+ className
+    lazy val mockTraitOrClassName = getMockTraitOrClassName
 
     lazy val methodsToMock = getMethodsToMock
       
@@ -242,6 +242,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     def getMethodsToMock = mockSymbol.info.nonPrivateMembers filter { s => 
         s.isMethod && !s.isMemberOf(ObjectClass)
       }
+      
+    def getMockTraitOrClassName = "Mock$"+ className
       
     def qualify(name: String) = packageName +"."+ name
     
@@ -420,8 +422,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       }
   }
   
-  class MockClass(mockSymbol: Symbol) extends Mock(mockSymbol) {
-  }
+  class MockClass(mockSymbol: Symbol) extends Mock(mockSymbol)
   
   class MockTrait(mockSymbol: Symbol) extends Mock(mockSymbol) {
     
@@ -436,6 +437,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   }
   
   class MockObject(mockSymbol: Symbol) extends Mock(mockSymbol) {
+
+    override def getMockTraitOrClassName = super.getMockTraitOrClassName +"$"
 
     override def recordMapping(mapping: (String, String)) {
       mockObjects += mapping
