@@ -20,18 +20,12 @@
 
 package com.borachio.plugin.test
 
-import com.borachio.annotation.{mock, mockObject, mockWithCompanion}
+class ClassWithCompanionObject {
+  def normalMethod1 = "normal method 1"
+  def normalMethod2(x: Int) = "x: "+ x
+}
 
-@mock[SimpleClass] 
-@mock[SimpleClass2]
-@mock[SimpleClass3]
-@mock[SimpleClass4]
-@mock[FinalClass]
-@mock[ClassWithFinalMethod]
-@mock[SimpleTrait]
-@mock[ClassWithNonTrivialConstructor]
-@mock[ClassWithOverloadedMethods]
-@mock[ClassWithPrivateConstructor]
-@mockObject(SimpleObject)
-@mockWithCompanion[ClassWithCompanionObject]
-class Dummy
+object ClassWithCompanionObject {
+  def companionObjectMethod1 = "companion object method 1"
+  def companionObjectMethod2(x: Int) = "x: "+ x
+}

@@ -22,4 +22,6 @@ package com.borachio.annotation
 
 class mock[T] extends scala.annotation.StaticAnnotation
 
+class mockWithCompanion[T] extends scala.annotation.StaticAnnotation
+
 class mockObject(o: Any) extends scala.annotation.StaticAnnotation

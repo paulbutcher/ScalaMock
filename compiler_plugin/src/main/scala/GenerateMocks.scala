@@ -40,6 +40,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   val parameterTypes = Map[Type, Int]()
 
   lazy val MockAnnotation = definitions.getClass("com.borachio.annotation.mock")
+  lazy val MockWithCompanionAnnotation = definitions.getClass("com.borachio.annotation.mockWithCompanion")
   lazy val MockObjectAnnotation = definitions.getClass("com.borachio.annotation.mockObject")
   lazy val mockOutputDirectory = plugin.mockOutputDirectory.get
   lazy val testOutputDirectory = plugin.testOutputDirectory.get
@@ -64,6 +65,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         for (AnnotationInfo(atp, args, _) <- tree.symbol.annotations)
           atp.typeSymbol match {
             case MockAnnotation => mockClass(atp)
+            case MockWithCompanionAnnotation => mockWithCompanion(atp)
             case MockObjectAnnotation => mockObject(args)
             case _ =>
           }
@@ -81,13 +83,23 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       new MockClass(symbol).generate
   }
   
+  def mockWithCompanion(atp: Type) {
+    assert(atp.typeArgs.length == 1)
+    val symbol = atp.typeArgs.head.typeSymbol
+    val companion = symbol.companionModule
+    if (companion == NoSymbol)
+      globalError("@mockWithCompanion["+ symbol +"] - no companion found")
+    else
+      new MockWithCompanion(symbol, companion).generate
+  }
+  
   def mockObject(args: List[Tree]) {
     assert(args.length == 1)
     val tpe = args.head.tpe.typeSymbol
     if (tpe.isModuleClass)
       new MockObject(tpe).generate
     else
-      globalError("@mockObject parameter must be a singleton object")
+      globalError("@mockObject("+ tpe +") parameter must be a singleton object")
   }
   
   def generateExtra() {
@@ -105,16 +117,14 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     "package com.borachio.generated\n\n"+
     "trait GeneratedMockFactory extends com.borachio.GeneratedMockFactoryBase { self: com.borachio.AbstractMockFactory =>\n"+
       (mocks map { case (target, mock) => mockFactoryEntry(target, mock) }).mkString("\n") +"\n\n"+
-      "  lazy val mockObject = Map(\n"+
-      (mockObjects map { case (target, mock) => mockObjectEntry(target, mock) }).mkString(",\n") +"\n"+
-      "  )\n\n"+
+      (mockObjects map { case (target, mock) => mockObjectEntry(target, mock) }).mkString("\n") +"\n\n"+
       (parameterTypes.keys map (parameterConverter _)).mkString("\n") +"\n"+
     "}"
   
   def mockFactoryEntry(target: String, mock: String) =
     "  implicit def toMock(m: "+ target +") = m.asInstanceOf["+ mock +"]"
     
-  def mockObjectEntry(target: String, mock: String) = "    ("+ target +" -> "+ target +".asInstanceOf["+ mock +"])"
+  def mockObjectEntry(target: String, mock: String) = "  def mockObject(x: "+ target +".type) = x.asInstanceOf["+ mock +"]"
     
   def parameterConverter(tpe: Type) = {
     val parameterName = mockParameterName(tpe)
@@ -152,41 +162,46 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
       generateMock()
       generateTest()
-      
-      val mapping = (qualifiedClassName -> qualifiedMockTraitOrClassName)
-      recordMapping(mapping)
     }
     
     def generateMock() {
-      val mockWriter = new FileWriter(new File(mockOutputDirectory, qualifiedClassName +".scala"))
-      mockWriter.write(mock)
-      mockWriter.close
+      generateFile(mockFile, getMock)
     }
     
     def generateTest() {
-      val testWriter = new FileWriter(new File(testOutputDirectory, qualifiedMockTraitOrClassName +".scala"))
-      testWriter.write(test)
-      testWriter.close
+      generateFile(testFile, getTest)
     }
     
+    def generateFile(file: File, body: String) {
+      val writer = new FileWriter(file)
+      writer.write(packageStatement +"\n\n"+ body)
+      writer.close
+    }
+    
+    lazy val mockFile = new File(mockOutputDirectory, qualifiedClassName +".scala")
+    
+    lazy val testFile = new File(testOutputDirectory, qualifiedMockTraitOrClassName +".scala")
+    
+    def getMock =
+      classOrObjectDeclaration +" {\n\n"+
+        mockClassEntries +"\n\n"+
+        forwardTo +"\n"+
+      "}"
+
     def recordMapping(mapping: (String, String)) {
       mocks += mapping
     }
+      
+    def getTest = {
+      val mapping = (qualifiedClassName -> qualifiedMockTraitOrClassName)
+      recordMapping(mapping)
 
-    lazy val mock =
-      packageStatement +"\n\n"+
-        classOrObjectDeclaration +" {\n\n"+
-          mockClassEntries +"\n\n"+
-          forwardTo +"\n"+
-        "}"
-        
-    lazy val test =
-      packageStatement +"\n\n"+
-        mockTraitOrClassDeclaration +" {\n\n"+
-          expectForwarders +"\n\n"+
-          mockTraitEntries +"\n"+
-        "}\n"
-        
+      mockTraitOrClassDeclaration +" {\n\n"+
+        expectForwarders +"\n\n"+
+        mockTraitEntries +"\n"+
+      "}\n"
+    }
+
     lazy val mockClassEntries = 
       mockMethods +"\n\n"+
       factoryReference +"\n\n"+
@@ -438,7 +453,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   
   class MockObject(mockSymbol: Symbol) extends Mock(mockSymbol) {
 
-    override def getMockTraitOrClassName = super.getMockTraitOrClassName +"$"
+    override def getMockTraitOrClassName = "Mock$$"+ className
 
     override def recordMapping(mapping: (String, String)) {
       mockObjects += mapping
@@ -447,5 +462,18 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     override lazy val classOrObject = "object "+ className
     
     override def getMethodsToMock = super.getMethodsToMock filter (!_.isConstructor)
+  }
+  
+  class MockWithCompanion(mockSymbol: Symbol, companionSymbol: Symbol) extends Mock(mockSymbol) {
+    
+    val companionMock = new MockObject(companionSymbol)
+
+    override def generateMock() {
+      generateFile(mockFile, getMock +"\n\n"+ companionMock.getMock)
+    }
+    
+    override def generateTest() {
+      generateFile(testFile, getTest +"\n\n"+ companionMock.getTest)
+    }
   }
 }
