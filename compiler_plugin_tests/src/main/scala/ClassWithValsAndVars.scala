@@ -20,19 +20,7 @@
 
 package com.borachio.plugin.test
 
-import com.borachio.annotation.{mock, mockObject, mockWithCompanion}
-
-@mock[SimpleClass] 
-@mock[SimpleClass2]
-@mock[SimpleClass3]
-@mock[SimpleClass4]
-@mock[FinalClass]
-@mock[ClassWithFinalMethod]
-@mock[SimpleTrait]
-@mock[ClassWithNonTrivialConstructor]
-@mock[ClassWithOverloadedMethods]
-@mock[ClassWithPrivateConstructor]
-@mock[ClassWithValsAndVars]
-@mockObject(SimpleObject)
-@mockWithCompanion[ClassWithCompanionObject]
-class Dummy
+class ClassWithValsAndVars {
+  val aVal = 42
+  var aVar = "I'm a var"
+}
