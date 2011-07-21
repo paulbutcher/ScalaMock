@@ -467,13 +467,9 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   class MockWithCompanion(mockSymbol: Symbol, companionSymbol: Symbol) extends Mock(mockSymbol) {
     
     val companionMock = new MockObject(companionSymbol)
-
-    override def generateMock() {
-      generateFile(mockFile, getMock +"\n\n"+ companionMock.getMock)
-    }
     
-    override def generateTest() {
-      generateFile(testFile, getTest +"\n\n"+ companionMock.getTest)
-    }
+    override def getMock = super.getMock +"\n\n"+ companionMock.getMock
+    
+    override def getTest = super.getTest +"\n\n"+ companionMock.getTest
   }
 }
