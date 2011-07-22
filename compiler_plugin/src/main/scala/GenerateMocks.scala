@@ -95,11 +95,11 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   
   def mockObject(args: List[Tree]) {
     assert(args.length == 1)
-    val tpe = args.head.tpe.typeSymbol
-    if (tpe.isModuleClass)
-      new MockObject(tpe).generate
+    val symbol = args.head.symbol
+    if (symbol.isModule)
+      new MockObject(symbol).generate
     else
-      globalError("@mockObject("+ tpe +") parameter must be a singleton object")
+      globalError("@mockObject("+ symbol +") parameter must be a singleton object")
   }
   
   def generateExtra() {
@@ -457,7 +457,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   }
   
   class MockObject(mockSymbol: Symbol) extends Mock(mockSymbol) {
-    assert(mockSymbol.isModuleClass || mockSymbol.isModule)
+    assert(mockSymbol.isModule)
 
     override def getMockTraitOrClassName = "Mock$$"+ className
 
