@@ -254,6 +254,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
     lazy val qualifiedMockTraitOrClassName = qualify(mockTraitOrClassName)
     
+    lazy val embeddedTypes = mockSymbol.info.nonPrivateMembers filter ( _.isClass )
+    
     def getMethodsToMock = mockSymbol.info.nonPrivateMembers filter { s => 
         s.isMethod && !s.isMemberOf(ObjectClass)
       }
@@ -437,9 +439,12 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       }
   }
   
-  class MockClass(mockSymbol: Symbol) extends Mock(mockSymbol)
+  class MockClass(mockSymbol: Symbol) extends Mock(mockSymbol) {
+    assert(mockSymbol.isClass && !mockSymbol.isTrait)
+  }
   
   class MockTrait(mockSymbol: Symbol) extends Mock(mockSymbol) {
+    assert(mockSymbol.isTrait)
     
     override def generateMock() { /* NOOP */ }
     
@@ -452,6 +457,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   }
   
   class MockObject(mockSymbol: Symbol) extends Mock(mockSymbol) {
+    assert(mockSymbol.isModuleClass || mockSymbol.isModule)
 
     override def getMockTraitOrClassName = "Mock$$"+ className
 
