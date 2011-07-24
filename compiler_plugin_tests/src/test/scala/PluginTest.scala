@@ -85,6 +85,7 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
 
+  //! TODO
   ignore("unmocked abstract class") {
     val x = new AbstractClass {
       def methodWithOneArgument(x: Int) = "implemented: "+ x
@@ -154,6 +155,7 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
   
+  //! TODO
   ignore("unmocked class with private constructor") {
     val x = ClassWithPrivateConstructor.create
     expect("methodWithOneArgument: 42") { x.methodWithOneArgument(42) }
@@ -184,6 +186,7 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     expect("hola") { SimpleObject.sayHello }
   }
 
+  //! TODO
   ignore("unmocked simple object") {
     expect("hello") { SimpleObject.sayHello }
   }
