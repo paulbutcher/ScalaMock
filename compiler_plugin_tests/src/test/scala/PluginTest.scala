@@ -74,6 +74,14 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     m.nullMethod
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
+
+  //! TODO
+  // def testUnmockedAbstractClass {
+  //   val x = new AbstractClass {
+  //     def methodWithOneArgument(x: Int) = "implemented: "+ x
+  //   }
+  //   expect("implemented: 42") { x.methodWithOneArgument(42) }
+  // }
   
   def testSimpleTrait {
     val m = mock[SimpleTrait]
