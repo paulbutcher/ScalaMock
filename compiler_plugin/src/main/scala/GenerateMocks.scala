@@ -64,7 +64,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       case ClassDef(_, _, _, _) if tree.hasSymbol =>
         for (AnnotationInfo(atp, args, _) <- tree.symbol.annotations)
           atp.typeSymbol match {
-            case MockAnnotation => mockClass(atp)
+            case MockAnnotation => mockType(atp)
             case MockWithCompanionAnnotation => mockWithCompanion(atp)
             case MockObjectAnnotation => mockObject(args)
             case _ =>
@@ -74,14 +74,17 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     }
   }
   
-  def mockClass(atp: Type) {
+  def mockType(atp: Type) {
     assert(atp.typeArgs.length == 1)
     val symbol = atp.typeArgs.head.typeSymbol
-    if (symbol.isTrait)
-      new MockTrait(symbol).generate
-    else
-      new MockClass(symbol).generate
+    mockClassOrTrait(symbol).generate
   }
+  
+  def mockClassOrTrait(symbol: Symbol) =
+    if (symbol.isTrait)
+      new MockTrait(symbol)
+    else
+      new MockClass(symbol)
   
   def mockWithCompanion(atp: Type) {
     assert(atp.typeArgs.length == 1)
@@ -472,10 +475,11 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   
   class MockWithCompanion(mockSymbol: Symbol, companionSymbol: Symbol) extends Mock(mockSymbol) {
     
+    val mockType = mockClassOrTrait(mockSymbol)
     val companionMock = new MockObject(companionSymbol)
     
-    override def getMock = super.getMock +"\n\n"+ companionMock.getMock
+    override def getMock = mockType.getMock +"\n\n"+ companionMock.getMock
     
-    override def getTest = super.getTest +"\n\n"+ companionMock.getTest
+    override def getTest = mockType.getTest +"\n\n"+ companionMock.getTest
   }
 }
