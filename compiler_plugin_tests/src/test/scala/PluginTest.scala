@@ -20,17 +20,17 @@
 
 package com.borachio.plugin.test
 
-import org.scalatest.Suite
+import org.scalatest.FunSuite
 import com.borachio.generated.GeneratedMockFactory
 import com.borachio.scalatest.MockFactory
 import com.borachio.{CallLogging, MockingURLClassLoader, VerboseErrors}
 import java.net.URL
 
-class PluginTest extends Suite with MockFactory with GeneratedMockFactory with VerboseErrors with CallLogging {
+class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory with VerboseErrors with CallLogging {
   
   def getClassLoader() = new MockingURLClassLoader(new URL("file:compiler_plugin_tests/target/scala_2.9.0/mock-classes/"))
   
-  def testSimpleClass {
+  test("simple class") {
     val m = mock[SimpleClass]
     
     m.expects.nullMethod
@@ -40,12 +40,12 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
   
-  def testUnmockedSimpleClass {
+  test("unmocked simple class") {
     val x = new SimpleClass
     expect("methodWithOneArgument: 42") { x.methodWithOneArgument(42) }
   }
-  
-  def testFinalClass {
+
+  test("final class") {
     val m = mock[FinalClass]
     
     m.expects.nullMethod
@@ -55,7 +55,7 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
   
-  def testClassWithFinalMethod {
+  test("class with final method") {
     val m = mock[ClassWithFinalMethod]
     
     m.expects.nullMethod
@@ -65,7 +65,7 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
   
-  def testAbstractClass {
+  test("abstract class") {
     val m = mock[AbstractClass]
     
     m.expects.nullMethod
@@ -75,15 +75,14 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
 
-  //! TODO
-  // def testUnmockedAbstractClass {
-  //   val x = new AbstractClass {
-  //     def methodWithOneArgument(x: Int) = "implemented: "+ x
-  //   }
-  //   expect("implemented: 42") { x.methodWithOneArgument(42) }
-  // }
+  ignore("unmocked abstract class") {
+    val x = new AbstractClass {
+      def methodWithOneArgument(x: Int) = "implemented: "+ x
+    }
+    expect("implemented: 42") { x.methodWithOneArgument(42) }
+  }
   
-  def testSimpleTrait {
+  test("simple trait") {
     val m = mock[SimpleTrait]
     
     m.expects.nullMethod
@@ -93,7 +92,7 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
 
-  def testClassWithNonTrivialConstructor {
+  test("class with non-trivial constructor") {
     val m = mock[ClassWithNonTrivialConstructor]
     
     m.expects.nullMethod
@@ -103,7 +102,7 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
   
-  def testClassWithOverloadedMethods {
+  test("class with overloaded methods") {
     val m = mock[ClassWithOverloadedMethods]
     
     //! Eugh - how do I avoid the necessity for this?
@@ -116,7 +115,7 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     expect("overload 3") { m.foo(42, 1.23) }
   }
 
-  def testClassWithPrivateConstructor {
+  test("class with private constructor") {
     val m = mock[ClassWithPrivateConstructor]
     
     m.expects.nullMethod
@@ -126,7 +125,7 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
   
-  def testOperator {
+  test("operator") {
     val m = mock[SimpleClass]
     
     m.expects.+("foo") returning "foo added"
@@ -134,19 +133,19 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     expect("foo added") { m + "foo" }
   }
   
-  def testWithoutMocks {
+  test("indirect unmocked class") {
     expect("methodWithZeroArguments: (42,1.23)") { UsesClassWithNonTrivialConstructor.doSomething() }
   }
-  
-  def testSimpleObject {
+
+  test("simple object") {
     val m = mockObject(SimpleObject)
     
     m.expects.sayHello returning "hola"
     
     expect("hola") { SimpleObject.sayHello }
   }
-  
-  def testNonPrimitiveParameterType {
+
+  test("non-primitive parameter type") {
     val m = mock[SimpleClass]
     val x = new SimpleClass4
     
@@ -155,12 +154,11 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     m.methodWithNonPrimitiveArgument(x)
   }
 
-  //! TODO
-  // def testUnmockedSimpleObject {
-  //   expect("hello") { SimpleObject.sayHello }
-  // }
+  ignore("unmocked simple object") {
+    expect("hello") { SimpleObject.sayHello }
+  }
 
-  def testClassWithCompanionObject {
+  test("class with companion object") {
     val m1 = mock[ClassWithCompanionObject]
     val m2 = mockObject(ClassWithCompanionObject)
     
@@ -171,7 +169,7 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     expect("a space oddessy") { ClassWithCompanionObject.companionObjectMethod2(2001) }
   }
 
-  def testTraitWithCompanionObject {
+  test("trait with companion object") {
     val m1 = mock[TraitWithCompanionObject]
     val m2 = mockObject(TraitWithCompanionObject)
     
@@ -182,7 +180,7 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     expect("a space oddessy") { TraitWithCompanionObject.companionObjectMethod2(2001) }
   }
   
-  def testVal {
+  test("val") {
     val m = mock[ClassWithValsAndVars]
     
     m.expects.aVal returning 2001
@@ -190,7 +188,7 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     expect(2001) { m.aVal }
   }
   
-  def testVar {
+  test("var") {
     val m = mock[ClassWithValsAndVars]
     
     m.expects.aVar = "a new value"
