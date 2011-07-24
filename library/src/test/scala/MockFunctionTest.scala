@@ -44,7 +44,6 @@ class MockFunctionTest extends WordSpec with MockFactory {
     
     "return what it's told to" in {
       val m = mockFunction[String]
-      // m returns "foo"  //! TODO
       m expects () returns "foo"
       expect("foo") { m() }
       verifyExpectations
@@ -52,7 +51,6 @@ class MockFunctionTest extends WordSpec with MockFactory {
     
     "throw what it's told to" in {
       val m = mockFunction[String]
-      // m throws new TestException //! TODO
       m expects () throws new TestException
       intercept[TestException] { m() }
       verifyExpectations
