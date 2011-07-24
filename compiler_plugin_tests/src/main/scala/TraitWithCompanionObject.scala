@@ -21,8 +21,8 @@
 package com.borachio.plugin.test
 
 trait TraitWithCompanionObject {
-  def normalMethod1 = "normal method 1"
-  def normalMethod2(x: Int) = "x: "+ x
+  def normalMethod1: String
+  def normalMethod2(x: Int): String
 }
 
 object TraitWithCompanionObject {

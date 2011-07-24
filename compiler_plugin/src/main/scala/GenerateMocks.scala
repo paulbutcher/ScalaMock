@@ -186,7 +186,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val testFile = new File(testOutputDirectory, qualifiedMockTraitOrClassName +".scala")
     
     def getMock =
-      classOrObjectDeclaration +" {\n\n"+
+      mockedTypeDeclaration +" {\n\n"+
         mockClassEntries +"\n\n"+
         forwardTo +"\n"+
       "}"
@@ -214,7 +214,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         
     lazy val packageStatement = "package "+ packageName
 
-    lazy val classOrObjectDeclaration = classOrObject +" extends "+ mockTraitOrClassName
+    lazy val mockedTypeDeclaration = classOrObject +" extends "+ mockTraitOrClassName
         
     lazy val classOrObject: String = "class "+ className +"(dummy: com.borachio.MockConstructorDummy)"
       
@@ -282,12 +282,15 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         mockMethodNormal(method, params, result)
         
     def mockMethodConstructor(method: Symbol, params: Option[List[Symbol]]) =
-      mockDeclaration(method, params) +" = "+ mockBodyConstructor(method, params)
+      methodDeclaration(method, params) +" = "+ mockBodyConstructor(method, params)
 
     def mockMethodNormal(method: Symbol, params: Option[List[Symbol]], result: Type) =
-      mockDeclaration(method, params) +": "+ result +" = "+ mockBodyNormal(method, params)
+      methodDeclarationWithReturnType(method, params, result) +" = "+ mockBodyNormal(method, params)
+      
+    def methodDeclarationWithReturnType(method: Symbol, params: Option[List[Symbol]], result: Type) =
+      methodDeclaration(method, params) +": "+ result
         
-    def mockDeclaration(method: Symbol, params: Option[List[Symbol]]) = 
+    def methodDeclaration(method: Symbol, params: Option[List[Symbol]]) = 
       "  def "+ method.name.decode + mockParams(params)
         
     def mockParams(params: Option[List[Symbol]]) = params match {
@@ -451,12 +454,27 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
     override def generateMock() { /* NOOP */ }
     
+    override def getMock =
+      "trait "+ className +" {\n\n"+
+        (methodsToMock map methodDeclaration _).mkString("\n") +"\n"+
+      "}"
+    
     override lazy val mockTraitEntries = mockClassEntries
 
     override lazy val mockTraitOrClassDeclaration = 
       "class "+ mockTraitOrClassName +"(dummy: com.borachio.MockConstructorDummy) extends "+ className
 
     override def mockBodyNormal(method: Symbol, params: Option[List[Symbol]]) = mockBodySimple(method, params)
+
+    override def getMethodsToMock = super.getMethodsToMock filter (!_.isConstructor)
+
+    def methodDeclaration(method: Symbol): String =
+      method.info match {
+        case MethodType(params, result) => methodDeclarationWithReturnType(method, Some(params), result)
+        case NullaryMethodType(result) => methodDeclarationWithReturnType(method, None, result)
+        case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
+        case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
+      }
   }
   
   class MockObject(mockSymbol: Symbol) extends Mock(mockSymbol) {

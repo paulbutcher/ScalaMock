@@ -157,6 +157,17 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     expect("normal method called") { m1.normalMethod2(42) }
     expect("a space oddessy") { ClassWithCompanionObject.companionObjectMethod2(2001) }
   }
+
+  def testTraitWithCompanionObject {
+    val m1 = mock[TraitWithCompanionObject]
+    val m2 = mockObject(TraitWithCompanionObject)
+    
+    m1.expects.normalMethod2(42) returning "normal method called"
+    m2.expects.companionObjectMethod2(2001) returning "a space oddessy"
+    
+    expect("normal method called") { m1.normalMethod2(42) }
+    expect("a space oddessy") { TraitWithCompanionObject.companionObjectMethod2(2001) }
+  }
   
   def testVal {
     val m = mock[ClassWithValsAndVars]

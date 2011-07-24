@@ -37,5 +37,5 @@ import com.borachio.annotation.{mock, mockObject, mockWithCompanion}
 // @mock[ClassWithNestedTypes]
 @mockObject(SimpleObject)
 @mockWithCompanion[ClassWithCompanionObject]
-// @mockWithCompanion[TraitWithCompanionObject]
+@mockWithCompanion[TraitWithCompanionObject]
 class Dummy
