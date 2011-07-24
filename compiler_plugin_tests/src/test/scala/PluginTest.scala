@@ -55,6 +55,11 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
   
+  test("unmocked final class") {
+    val x = new FinalClass
+    expect("methodWithOneArgument: 42") { x.methodWithOneArgument(42) }
+  }
+  
   test("class with final method") {
     val m = mock[ClassWithFinalMethod]
     
@@ -63,6 +68,11 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     
     m.nullMethod
     expect("Expected return value") { m.methodWithOneArgument(42) }
+  }
+  
+  test("unmocked class with final method") {
+    val x = new ClassWithFinalMethod
+    expect("methodWithOneArgument: 42") { x.methodWithOneArgument(42) }
   }
   
   test("abstract class") {
@@ -91,6 +101,16 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     m.nullMethod
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
+  
+  test("unmocked simple trait") {
+    val x = new SimpleTrait {
+      def nullMethod = "implemented nullMethod"
+      def methodWithZeroArguments() = "implemented methodWithZeroArguments"
+      def methodWithOneArgument(x: Int) = "implemented: "+ x
+      def methodWithTwoArguments(x: Int, y: Int) = "implemented: "+ (x, y)
+    }
+    expect("implemented: 42") { x.methodWithOneArgument(42) }
+  }
 
   test("class with non-trivial constructor") {
     val m = mock[ClassWithNonTrivialConstructor]
@@ -100,6 +120,15 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     
     m.nullMethod
     expect("Expected return value") { m.methodWithOneArgument(42) }
+  }
+  
+  test("unmocked class with non-trivial constructor") {
+    val x = new ClassWithNonTrivialConstructor(42, 1.23)
+    expect("methodWithOneArgument: 42") { x.methodWithOneArgument(42) }
+  }
+  
+  test("unmocked class with non-trivial constructor indirectly") {
+    expect("methodWithZeroArguments: (42,1.23)") { UsesClassWithNonTrivialConstructor.doSomething() }
   }
   
   test("class with overloaded methods") {
@@ -125,24 +154,17 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
   
+  ignore("unmocked class with private constructor") {
+    val x = ClassWithPrivateConstructor.create
+    expect("methodWithOneArgument: 42") { x.methodWithOneArgument(42) }
+  }
+  
   test("operator") {
     val m = mock[SimpleClass]
     
     m.expects.+("foo") returning "foo added"
     
     expect("foo added") { m + "foo" }
-  }
-  
-  test("indirect unmocked class") {
-    expect("methodWithZeroArguments: (42,1.23)") { UsesClassWithNonTrivialConstructor.doSomething() }
-  }
-
-  test("simple object") {
-    val m = mockObject(SimpleObject)
-    
-    m.expects.sayHello returning "hola"
-    
-    expect("hola") { SimpleObject.sayHello }
   }
 
   test("non-primitive parameter type") {
@@ -152,6 +174,14 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     m.expects.methodWithNonPrimitiveArgument(x)
     
     m.methodWithNonPrimitiveArgument(x)
+  }
+
+  test("simple object") {
+    val m = mockObject(SimpleObject)
+    
+    m.expects.sayHello returning "hola"
+    
+    expect("hola") { SimpleObject.sayHello }
   }
 
   ignore("unmocked simple object") {

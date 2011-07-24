@@ -26,3 +26,7 @@ class ClassWithPrivateConstructor private () {
   def methodWithOneArgument(x: Int) = "methodWithOneArgument: "+ x
   def methodWithTwoArguments(x: Int, y: Int) = "methodWithTwoArguments: "+ (x, y)
 }
+
+object ClassWithPrivateConstructor {
+  def create() = new ClassWithPrivateConstructor
+}
