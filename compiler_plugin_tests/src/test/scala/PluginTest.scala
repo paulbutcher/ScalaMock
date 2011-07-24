@@ -40,6 +40,11 @@ class PluginTest extends Suite with MockFactory with GeneratedMockFactory with V
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
   
+  def testUnmockedSimpleClass {
+    val x = new SimpleClass
+    expect("methodWithOneArgument: 42") { x.methodWithOneArgument(42) }
+  }
+  
   def testFinalClass {
     val m = mock[FinalClass]
     
