@@ -20,21 +20,20 @@
 
 package com.borachio.plugin.test
 
-import com.borachio.annotation.{mock, mockObject, mockWithCompanion}
-
-@mock[SimpleClass] 
-@mock[SimpleClass2]
-@mock[SimpleClass3]
-@mock[SimpleClass4]
-@mock[FinalClass]
-@mock[ClassWithFinalMethod]
-@mock[SimpleTrait]
-@mock[ClassWithNonTrivialConstructor]
-@mock[ClassWithOverloadedMethods]
-@mock[ClassWithPrivateConstructor]
-@mock[ClassWithValsAndVars]
-// @mock[ClassWithNestedTypes]
-@mockObject(SimpleObject)
-@mockWithCompanion[ClassWithCompanionObject]
-// @mockWithCompanion[TraitWithCompanionObject]
-class Dummy
+class ClassWithNestedTypes {
+  
+  def nonNestedMethod = new NestedClass
+  
+  class NestedClass {
+    
+    def nestedClassMethod = new DoublyNestedClass
+    
+    class DoublyNestedClass {
+      def doublyNestedMethod = "doubly nested method"
+    }
+  }
+  
+  trait NestedTrait {
+    def nestedTraitMethod = "nested trait method"
+  }
+}
