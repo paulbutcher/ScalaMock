@@ -32,7 +32,9 @@ trait AbstractMockFactory extends ProxyMockFactory {
   }
   
   protected def inSequence(what: => Unit) {
+    require(expectationContext != null, "Have you remembered to use withExpectations?")
     require(expectationContext == expectations, "inSequence cannot be nested")
+
     val orderedExpectations = new OrderedExpectations
     expectations.add(orderedExpectations)
     expectationContext = orderedExpectations
@@ -41,6 +43,8 @@ trait AbstractMockFactory extends ProxyMockFactory {
   }
 
   protected implicit def MockFunctionToExpectation(m: MockFunction) = {
+    require(expectationContext != null, "Have you remembered to use withExpectations?")
+
     val expectation = new Expectation(m)
     expectationContext.add(expectation)
     expectation
