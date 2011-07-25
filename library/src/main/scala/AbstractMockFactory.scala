@@ -36,7 +36,9 @@ trait AbstractMockFactory {
   }
   
   protected def inSequence(what: => Unit) {
+    require(expectationContext != null, "Have you remembered to use withExpectations?")
     require(expectationContext == expectations, "inSequence cannot be nested")
+
     val orderedExpectations = new OrderedExpectations
     expectations.add(orderedExpectations)
     expectationContext = orderedExpectations
@@ -45,6 +47,8 @@ trait AbstractMockFactory {
   }
   
   private[borachio] def add(expectation: Expectation) {
+    require(expectationContext != null, "Have you remembered to use withExpectations?")
+    
     expectationContext.add(expectation)
   }
   
