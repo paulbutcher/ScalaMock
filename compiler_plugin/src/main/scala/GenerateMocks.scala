@@ -80,7 +80,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     mockClassOrTrait(symbol).generate
   }
   
-  def mockClassOrTrait(symbol: Symbol) =
+  def mockClassOrTrait(symbol: Symbol): Mock =
     if (symbol.isTrait)
       new MockTrait(symbol)
     else
@@ -185,23 +185,25 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
     lazy val testFile = new File(testOutputDirectory, qualifiedMockTraitOrClassName +".scala")
     
-    def getMock =
+    def getMock: String =
       mockedTypeDeclaration +" {\n\n"+
         mockClassEntries +"\n\n"+
-        forwardTo +"\n"+
+        forwardTo +"\n\n"+
+        (nestedMocks map ( _.getMock )).mkString("\n") +"\n\n"+
       "}"
 
     def recordMapping(mapping: (String, String)) {
       mocks += mapping
     }
       
-    def getTest = {
+    def getTest: String = {
       val mapping = (qualifiedClassName -> qualifiedMockTraitOrClassName)
       recordMapping(mapping)
 
       mockTraitOrClassDeclaration +" {\n\n"+
         expectForwarders +"\n\n"+
-        mockTraitEntries +"\n"+
+        mockTraitEntries +"\n\n"+
+        (nestedMocks map ( _.getTest )).mkString("\n") +"\n\n"+
       "}\n"
     }
 
@@ -257,7 +259,9 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
     lazy val qualifiedMockTraitOrClassName = qualify(mockTraitOrClassName)
     
-    lazy val embeddedTypes = mockSymbol.info.nonPrivateMembers filter ( _.isClass )
+    lazy val nestedMocks = nestedTypes map mockClassOrTrait _
+    
+    lazy val nestedTypes = mockSymbol.info.nonPrivateMembers filter ( _.isClass )
     
     def getMethodsToMock = mockSymbol.info.nonPrivateMembers filter { s => 
         s.isMethod && !s.isMemberOf(ObjectClass)
