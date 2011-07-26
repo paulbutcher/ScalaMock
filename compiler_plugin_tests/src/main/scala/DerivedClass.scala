@@ -20,23 +20,16 @@
 
 package com.borachio.plugin.test
 
-import com.borachio.annotation.{mock, mockObject, mockWithCompanion}
+class BaseClass {
+  def baseMethod(x: Int) = "base method: "+ x
+}
 
-@mock[SimpleClass] 
-@mock[SimpleClass2]
-@mock[SimpleClass3]
-@mock[SimpleClass4]
-@mock[FinalClass]
-@mock[ClassWithFinalMethod]
-@mock[AbstractClass]
-@mock[SimpleTrait]
-@mock[ClassWithNonTrivialConstructor]
-@mock[ClassWithOverloadedMethods]
-@mock[ClassWithPrivateConstructor]
-@mock[ClassWithValsAndVars]
-@mock[DerivedClass]
-// @mock[ClassWithNestedTypes]
-@mockObject(SimpleObject)
-@mockWithCompanion[ClassWithCompanionObject]
-@mockWithCompanion[TraitWithCompanionObject]
-class Dummy
+trait Mixin {
+  def abstractMixinMethod(x: Int): String
+  def concreteMixinMethod(x: Int) = "concrete mixin method: "+ x
+}
+
+class DerivedClass extends BaseClass with Mixin {
+  def derivedClassMethod(x: Int) = "derived method: "+ x
+  def abstractMixinMethod(x: Int) = "abstract mixin method: "+ x
+}
