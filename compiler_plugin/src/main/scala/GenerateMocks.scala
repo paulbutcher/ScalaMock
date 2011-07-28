@@ -302,16 +302,12 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     def methodDeclaration(method: Symbol, params: Option[List[Symbol]]) = 
       "  "+ overrideIfNecessary(method) +"def "+ method.name.decode + mockParams(params)
       
-    def overrideIfNecessary(method: Symbol) = {
-      val needsOverride = !method.isConstructor && parents.exists { p => 
+    def overrideIfNecessary(method: Symbol) = if (needsOverride(method)) "override " else ""
+    
+    def needsOverride(method: Symbol) = !method.isConstructor && parents.exists { p => 
         val superMethod = p.typeSymbol.info.member(method.name)
         superMethod != NoSymbol && !superMethod.isDeferred
       }
-      if (needsOverride) 
-        "override "
-      else
-        ""
-    }
         
     def mockParams(params: Option[List[Symbol]]) = params match {
         case Some(ps) => (ps map parameterDeclaration _).mkString("(", ", ", ")")
