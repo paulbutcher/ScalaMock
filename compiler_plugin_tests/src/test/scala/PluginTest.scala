@@ -213,6 +213,22 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     expect("a space oddessy") { TraitWithCompanionObject.companionObjectMethod2(2001) }
   }
   
+  test("derived class") {
+    val m = mock[DerivedClass]
+    
+    m.expects.grandparentMethod(1) returning "mocked grandparentMethod"
+    m.expects.parentMethod(2) returning "mocked parentMethod"
+    m.expects.abstractMixinMethod(3) returning "mocked abstractMixinMethod"
+    m.expects.concreteMixinMethod(4) returning "mocked concreteMixinMethod"
+    m.expects.derivedClassMethod(5) returning "mocked derivedClassMethod"
+
+    expect("mocked grandparentMethod") { m.grandparentMethod(1) }
+    expect("mocked parentMethod") { m.parentMethod(2) }
+    expect("mocked abstractMixinMethod") { m.abstractMixinMethod(3) }
+    expect("mocked concreteMixinMethod") { m.concreteMixinMethod(4) }
+    expect("mocked derivedClassMethod") { m.derivedClassMethod(5) }
+  }
+  
   test("val") {
     val m = mock[ClassWithValsAndVars]
     

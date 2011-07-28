@@ -20,8 +20,12 @@
 
 package com.borachio.plugin.test
 
-class BaseClass {
-  def baseMethod(x: Int) = "base method: "+ x
+class GrandparentClass {
+  def grandparentMethod(x: Int) = "grandparent method: "+ x
+}
+
+class ParentClass extends GrandparentClass {
+  def parentMethod(x: Int) = "parent method: "+ x
 }
 
 trait Mixin {
@@ -29,7 +33,7 @@ trait Mixin {
   def concreteMixinMethod(x: Int) = "concrete mixin method: "+ x
 }
 
-class DerivedClass extends BaseClass with Mixin {
+class DerivedClass extends ParentClass with Mixin {
   def derivedClassMethod(x: Int) = "derived method: "+ x
   def abstractMixinMethod(x: Int) = "abstract mixin method: "+ x
 }

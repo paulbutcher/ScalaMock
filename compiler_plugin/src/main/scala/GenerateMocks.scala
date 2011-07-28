@@ -216,7 +216,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         
     lazy val packageStatement = "package "+ packageName
 
-    lazy val mockedTypeDeclaration = classOrObject +" extends "+ mockTraitOrClassName
+    lazy val mockedTypeDeclaration =
+      classOrObject +" extends "+ (parents :+ mockTraitOrClassName).mkString(" with ")
         
     lazy val classOrObject: String = "class "+ className +"(dummy: com.borachio.MockConstructorDummy)"
       
@@ -263,8 +264,12 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
     lazy val nestedTypes = mockSymbol.info.nonPrivateMembers filter ( _.isClass )
     
+    lazy val parents = mockSymbol.info.parents filter { s => 
+        s.typeSymbol != ObjectClass && s.typeSymbol != ScalaObjectClass
+      }
+    
     def getMethodsToMock = mockSymbol.info.nonPrivateMembers filter { s => 
-        s.isMethod && !s.isMemberOf(ObjectClass)
+        s.isMethod && !s.isMemberOf(ObjectClass) && !s.isMixinConstructor
       }
       
     def getMockTraitOrClassName = "Mock$"+ className
@@ -295,7 +300,18 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       methodDeclaration(method, params) +": "+ result
         
     def methodDeclaration(method: Symbol, params: Option[List[Symbol]]) = 
-      "  def "+ method.name.decode + mockParams(params)
+      "  "+ overrideIfNecessary(method) +"def "+ method.name.decode + mockParams(params)
+      
+    def overrideIfNecessary(method: Symbol) = {
+      val needsOverride = !method.isConstructor && parents.exists { p => 
+        val superMethod = p.typeSymbol.info.member(method.name)
+        superMethod != NoSymbol && !superMethod.isDeferred
+      }
+      if (needsOverride) 
+        "override "
+      else
+        ""
+    }
         
     def mockParams(params: Option[List[Symbol]]) = params match {
         case Some(ps) => (ps map parameterDeclaration _).mkString("(", ", ", ")")
