@@ -1,3 +1,8 @@
+Version 1.2:
+
+- Add support for Scala 2.9.0-1
+- Give a slightly nicer error if withExpectations isn't used
+
 Version 1.1:
 
 - Add the CallLogging trait
