@@ -26,6 +26,7 @@ import nsc.plugins.PluginComponent
 
 import java.io.{File, FileWriter}
 import scala.collection.mutable.{ListBuffer, Map}
+import scala.util.matching.Regex
 
 class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginComponent {
   import global._
@@ -189,12 +190,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       mockedTypeDeclaration +" {\n\n"+
         mockClassEntries +"\n\n"+
         forwardTo +"\n\n"+
-        (nestedMocks map ( _.getMock )).mkString("\n") +"\n\n"+
+        indent((nestedMocks map ( _.getMock )).mkString("\n")) +"\n\n"+
       "}"
-
-    def recordMapping(mapping: (String, String)) {
-      mocks += mapping
-    }
       
     def getTest: String = {
       val mapping = (qualifiedClassName -> qualifiedMockTraitOrClassName)
@@ -203,8 +200,14 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       mockTraitOrClassDeclaration +" {\n\n"+
         expectForwarders +"\n\n"+
         mockTraitEntries +"\n\n"+
-        (nestedMocks map ( _.getTest )).mkString("\n") +"\n\n"+
+        indent((nestedMocks map ( _.getTest )).mkString("\n")) +"\n\n"+
       "}\n"
+    }
+    
+    def indent(s: String) = "  " + new Regex("\n").replaceAllIn(s, "\n  ")
+
+    def recordMapping(mapping: (String, String)) {
+      mocks += mapping
     }
 
     lazy val mockClassEntries = 
