@@ -33,7 +33,7 @@ class ClassWithNestedTypes {
     }
   }
   
-  trait NestedTrait {
-    def nestedTraitMethod = "nested trait method"
-  }
+  // trait NestedTrait {
+  //   def nestedTraitMethod = "nested trait method"
+  // }
 }
