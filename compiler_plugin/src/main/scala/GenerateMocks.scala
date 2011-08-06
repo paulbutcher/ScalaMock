@@ -81,11 +81,11 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     mockClassOrTrait(symbol).generate
   }
   
-  def mockClassOrTrait(symbol: Symbol): Mock =
+  def mockClassOrTrait(symbol: Symbol, enclosing: Context = TopLevel): Mock =
     if (symbol.isTrait)
-      new MockTrait(symbol)
+      new MockTrait(symbol, enclosing)
     else
-      new MockClass(symbol)
+      new MockClass(symbol, enclosing)
   
   def mockWithCompanion(atp: Type) {
     assert(atp.typeArgs.length == 1)
@@ -158,8 +158,18 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     new File(mockOutputDirectory).mkdirs
     new File(testOutputDirectory).mkdirs
   }
+  
+  trait Context {
+    val topLevel: Boolean
+  }
+  
+  object TopLevel extends Context {
+    val topLevel = true
+  }
 
-  abstract class Mock(mockSymbol: Symbol) {
+  abstract class Mock(mockSymbol: Symbol, enclosing: Context) extends Context {
+    
+    val topLevel = false
     
     def generate() {
       log("Creating mock for: "+ mockSymbol)
@@ -194,8 +204,10 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "}"
       
     def getTest: String = {
-      val mapping = (qualifiedClassName -> qualifiedMockTraitOrClassName)
-      recordMapping(mapping)
+      if (enclosing.topLevel) {
+        val mapping = (qualifiedClassName -> qualifiedMockTraitOrClassName)
+        recordMapping(mapping)
+      }
 
       mockTraitOrClassDeclaration +" {\n\n"+
         expectForwarders +"\n\n"+
@@ -263,7 +275,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
     lazy val qualifiedMockTraitOrClassName = qualify(mockTraitOrClassName)
     
-    lazy val nestedMocks = nestedTypes map mockClassOrTrait _
+    lazy val nestedMocks = nestedTypes map { s => mockClassOrTrait(s, this) }
     
     lazy val nestedTypes = mockSymbol.info.nonPrivateMembers filter ( _.isClass )
     
@@ -464,11 +476,11 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       }
   }
   
-  class MockClass(mockSymbol: Symbol) extends Mock(mockSymbol) {
+  class MockClass(mockSymbol: Symbol, enclosing: Context) extends Mock(mockSymbol, enclosing) {
     assert(mockSymbol.isClass && !mockSymbol.isTrait)
   }
   
-  class MockTrait(mockSymbol: Symbol) extends Mock(mockSymbol) {
+  class MockTrait(mockSymbol: Symbol, enclosing: Context) extends Mock(mockSymbol, enclosing) {
     assert(mockSymbol.isTrait)
     
     override def generateMock() { /* NOOP */ }
@@ -496,7 +508,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       }
   }
   
-  class MockObject(mockSymbol: Symbol) extends Mock(mockSymbol) {
+  class MockObject(mockSymbol: Symbol) extends Mock(mockSymbol, TopLevel) {
     assert(mockSymbol.isModule)
 
     override def getMockTraitOrClassName = "Mock$$"+ className
@@ -510,7 +522,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     override def getMethodsToMock = super.getMethodsToMock filter (!_.isConstructor)
   }
   
-  class MockWithCompanion(mockSymbol: Symbol, companionSymbol: Symbol) extends Mock(mockSymbol) {
+  class MockWithCompanion(mockSymbol: Symbol, companionSymbol: Symbol) extends Mock(mockSymbol, TopLevel) {
     
     val mockType = mockClassOrTrait(mockSymbol)
     val companionMock = new MockObject(companionSymbol)
