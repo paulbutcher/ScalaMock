@@ -479,10 +479,10 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       
     def fixedErasure(t: Type): Type = {
       val e = erasure.erasure(t)
-      if (e.typeSymbol == BoxedUnitClass)
-        UnitClass.tpe
-      else
-        e
+      e.typeSymbol match {
+        case BoxedUnitClass => UnitClass.tpe
+        case _ => e
+      }
     }
   }
   
