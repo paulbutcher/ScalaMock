@@ -246,4 +246,8 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     m.aVar = "a new value"
     expect("another value") { m.aVar }
   }
+  
+  test("class with nested types") {
+    val m = mock[ClassWithNestedTypes]
+  }
 }

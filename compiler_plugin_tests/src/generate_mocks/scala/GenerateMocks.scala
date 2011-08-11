@@ -35,7 +35,7 @@ import com.borachio.annotation.{mock, mockObject, mockWithCompanion}
 @mock[ClassWithPrivateConstructor]
 @mock[ClassWithValsAndVars]
 @mock[DerivedClass]
-// @mock[ClassWithNestedTypes]
+@mock[ClassWithNestedTypes]
 @mockObject(SimpleObject)
 @mockWithCompanion[ClassWithCompanionObject]
 @mockWithCompanion[TraitWithCompanionObject]
