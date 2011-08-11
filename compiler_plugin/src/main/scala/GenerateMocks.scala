@@ -211,6 +211,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
       mockTraitOrClassDeclaration +" {\n\n"+
         expectForwarders +"\n\n"+
+        (if (hasNestedTypes) nestedMockCreator +"\n\n" else "") +
         mockTraitEntries +"\n\n"+
         indent((nestedMocks map ( _.getTest )).mkString("\n")) +"\n\n"+
       "}\n"
@@ -249,10 +250,19 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
     lazy val mockMethods = (methodsToMock map mockMethod _).mkString("\n")
 
-    lazy val expectForwarders = "  val expects = new {\n"+
-        "    lazy val clazz = "+ mockTraitOrClassName +".this.getClass\n\n"+
-        (methodsToMock map expectForwarder _).mkString("\n") +"\n\n"+
-        (methodsToMock map cachedMockMethod _).mkString("\n") + "\n"+
+    lazy val expectForwarders =
+      "  val expects = new {\n"+
+      "    lazy val clazz = "+ mockTraitOrClassName +".this.getClass\n\n"+
+           (methodsToMock map expectForwarder _).mkString("\n") +"\n\n"+
+          (methodsToMock map cachedMockMethod _).mkString("\n") + "\n"+
+      "  }"
+      
+    lazy val nestedMockCreator = 
+      "  def mock[T: ClassManifest] = {\n"+
+      "    val erasure = classManifest[T].erasure\n"+
+      "    val clazz = Class.forName(erasure.getName)\n"+
+      "    val constructor = clazz.getConstructor(classOf["+ fixedErasure(mockSymbol.tpe) +"], classOf[com.borachio.MockConstructorDummy])\n"+
+      "    constructor.newInstance(this, new com.borachio.MockConstructorDummy).asInstanceOf[T]\n"+
       "  }"
 
     lazy val mockMembers = (methodsToMock map mockMember _).mkString("\n")
@@ -278,6 +288,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val nestedMocks = nestedTypes map { s => mockClassOrTrait(s, this) }
     
     lazy val nestedTypes = mockSymbol.info.nonPrivateMembers filter ( _.isClass )
+    
+    lazy val hasNestedTypes = nestedTypes.nonEmpty
     
     lazy val parents = mockSymbol.info.parents filter { s => 
         s.typeSymbol != ObjectClass && s.typeSymbol != ScalaObjectClass
