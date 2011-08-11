@@ -161,15 +161,23 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   
   trait Context {
     val topLevel: Boolean
+    val fullMockTraitOrClassName: String
   }
   
   object TopLevel extends Context {
     val topLevel = true
+    val fullMockTraitOrClassName = null
   }
 
   abstract class Mock(mockSymbol: Symbol, enclosing: Context) extends Context {
     
     val topLevel = false
+    
+    val fullMockTraitOrClassName =
+      if (enclosing.topLevel)
+        qualify(mockTraitOrClassName)
+      else
+        enclosing.fullMockTraitOrClassName +"#"+ mockTraitOrClassName
     
     def generate() {
       log("Creating mock for: "+ mockSymbol)
@@ -194,7 +202,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
     lazy val mockFile = new File(mockOutputDirectory, qualifiedClassName +".scala")
     
-    lazy val testFile = new File(testOutputDirectory, qualifiedMockTraitOrClassName +".scala")
+    lazy val testFile = new File(testOutputDirectory, fullMockTraitOrClassName +".scala")
     
     def getMock: String =
       mockedTypeDeclaration +" {\n\n"+
@@ -204,10 +212,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "}"
       
     def getTest: String = {
-      if (enclosing.topLevel) {
-        val mapping = (qualifiedClassName -> qualifiedMockTraitOrClassName)
-        recordMapping(mapping)
-      }
+      val mapping = (fullClassName -> fullMockTraitOrClassName)
+      recordMapping(mapping)
 
       mockTraitOrClassDeclaration +" {\n\n"+
         expectForwarders +"\n\n"+
@@ -254,14 +260,14 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "  val expects = new {\n"+
       "    lazy val clazz = "+ mockTraitOrClassName +".this.getClass\n\n"+
            (methodsToMock map expectForwarder _).mkString("\n") +"\n\n"+
-          (methodsToMock map cachedMockMethod _).mkString("\n") + "\n"+
+           (methodsToMock map cachedMockMethod _).mkString("\n") + "\n"+
       "  }"
       
     lazy val nestedMockCreator = 
       "  def mock[T: ClassManifest] = {\n"+
       "    val erasure = classManifest[T].erasure\n"+
       "    val clazz = Class.forName(erasure.getName)\n"+
-      "    val constructor = clazz.getConstructor(classOf["+ fixedErasure(mockSymbol.tpe) +"], classOf[com.borachio.MockConstructorDummy])\n"+
+      "    val constructor = clazz.getConstructor(classOf["+ fullClassName +"], classOf[com.borachio.MockConstructorDummy])\n"+
       "    constructor.newInstance(this, new com.borachio.MockConstructorDummy).asInstanceOf[T]\n"+
       "  }"
 
@@ -273,8 +279,10 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
     lazy val className = mockSymbol.name.toString
     
+    lazy val fullClassName = fixedErasure(mockSymbol.tpe).toString
+    
     lazy val mockTraitOrClassName = getMockTraitOrClassName
-
+    
     lazy val methodsToMock = getMethodsToMock
       
     lazy val mockMethodNames = methodNames("mock")
@@ -282,8 +290,6 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val forwarderNames = methodNames("forwarder")
     
     lazy val qualifiedClassName = qualify(className)
-    
-    lazy val qualifiedMockTraitOrClassName = qualify(mockTraitOrClassName)
     
     lazy val nestedMocks = nestedTypes map { s => mockClassOrTrait(s, this) }
     
@@ -396,7 +402,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         
     def expectForwarderConstructor(method: Symbol, params: Option[List[Symbol]], result: Type) =
       forwarderDeclarationConstructor(method, params) +" = "+ forwarderBody(method, params) +
-        ".returning("+ mockTraitOrClassName +".this.asInstanceOf["+ fixedErasure(mockSymbol.tpe) +"])"
+        ".returning("+ mockTraitOrClassName +".this.asInstanceOf["+ fullClassName +"])"
       
     def expectForwarderNormal(method: Symbol, params: Option[List[Symbol]], result: Type) =
       forwarderDeclarationNormal(method, params, result) +" = "+ forwarderBody(method, params)
@@ -532,6 +538,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   
   class MockObject(mockSymbol: Symbol) extends Mock(mockSymbol, TopLevel) {
     assert(mockSymbol.isModule)
+
+    override lazy val fullClassName = qualifiedClassName
 
     override def getMockTraitOrClassName = "Mock$$"+ className
 
