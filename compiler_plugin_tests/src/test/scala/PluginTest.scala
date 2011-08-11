@@ -257,4 +257,11 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     
     expect("I'm deeply nested") { m2.nestedClassMethod.doublyNestedMethod }
   }
+  
+  //! TODO
+  ignore("unmocked class with nested types") {
+    val x = new ClassWithNestedTypes
+    
+    expect("doubly nested method") { x.nonNestedMethod.nestedClassMethod.doublyNestedMethod }
+  }
 }
