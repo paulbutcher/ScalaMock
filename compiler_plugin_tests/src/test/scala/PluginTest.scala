@@ -252,10 +252,11 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     val m2 = m1.mock[ClassWithNestedTypes#NestedClass]
     val m3 = m2.mock[ClassWithNestedTypes#NestedClass#DoublyNestedClass]
     
+    m1.expects.nonNestedMethod returning m2
     m2.expects.nestedClassMethod returning m3
     m3.expects.doublyNestedMethod returning "I'm deeply nested"
     
-    expect("I'm deeply nested") { m2.nestedClassMethod.doublyNestedMethod }
+    expect("I'm deeply nested") { m1.nonNestedMethod.nestedClassMethod.doublyNestedMethod }
   }
   
   //! TODO
