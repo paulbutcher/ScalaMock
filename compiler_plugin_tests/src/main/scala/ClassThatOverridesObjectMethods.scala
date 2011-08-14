@@ -20,24 +20,12 @@
 
 package com.borachio.plugin.test
 
-import com.borachio.annotation.{mock, mockObject, mockWithCompanion}
-
-@mock[SimpleClass] 
-@mock[SimpleClass2]
-@mock[SimpleClass3]
-@mock[SimpleClass4]
-@mock[FinalClass]
-@mock[ClassWithFinalMethod]
-@mock[AbstractClass]
-@mock[SimpleTrait]
-@mock[ClassWithNonTrivialConstructor]
-@mock[ClassWithOverloadedMethods]
-@mock[ClassWithPrivateConstructor]
-@mock[ClassWithValsAndVars]
-@mock[DerivedClass]
-@mock[ClassWithNestedTypes]
-@mock[ClassThatOverridesObjectMethods]
-@mockObject(SimpleObject)
-@mockWithCompanion[ClassWithCompanionObject]
-@mockWithCompanion[TraitWithCompanionObject]
-class Dummy
+final class ClassThatOverridesObjectMethods {
+  def nullMethod {}
+  def methodWithZeroArguments() = "methodWithZeroArguments"
+  def methodWithOneArgument(x: Int) = "methodWithOneArgument: "+ x
+  def methodWithTwoArguments(x: Int, y: Int) = "methodWithTwoArguments: "+ (x, y)
+  
+  override def toString() = "I'm overridden"
+  override def finalize() { super.finalize() }
+}

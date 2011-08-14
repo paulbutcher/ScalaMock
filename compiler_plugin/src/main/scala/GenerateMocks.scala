@@ -302,8 +302,10 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       }
     
     def getMethodsToMock = mockSymbol.info.nonPrivateMembers filter { s => 
-        s.isMethod && !s.isMemberOf(ObjectClass) && !s.isMixinConstructor
+        s.isMethod && !isMemberOfObject(s) && !s.isMixinConstructor
       }
+      
+    def isMemberOfObject(s: Symbol) = !s.isConstructor && (ObjectClass.info.member(s.name) != NoSymbol)
       
     def getMockTraitOrClassName = "Mock$"+ className
       
