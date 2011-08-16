@@ -20,25 +20,5 @@
 
 package com.borachio.plugin.test
 
-import com.borachio.annotation.{mock, mockObject, mockWithCompanion}
-
-@mock[SimpleClass] 
-@mock[SimpleClass2]
-@mock[SimpleClass3]
-@mock[SimpleClass4]
-@mock[FinalClass]
-@mock[ClassWithFinalMethod]
-@mock[AbstractClass]
-@mock[SimpleTrait]
-@mock[ClassWithNonTrivialConstructor]
-@mock[ClassWithOverloadedMethods]
-@mock[ClassWithPrivateConstructor]
-@mock[ClassWithValsAndVars]
-@mock[DerivedClass]
-@mock[ClassWithNestedTypes]
-@mock[ClassThatOverridesObjectMethods]
-// @mock[CaseClass]
-@mockObject(SimpleObject)
-@mockWithCompanion[ClassWithCompanionObject]
-@mockWithCompanion[TraitWithCompanionObject]
-class Dummy
+case class CaseClass(x: Int, y: String) {
+}
