@@ -38,8 +38,6 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   val mocks = new ListBuffer[(String, String)]
   val mockObjects = new ListBuffer[(String, String)]
   
-  val parameterTypes = Map[Type, Int]()
-
   lazy val MockAnnotation = definitions.getClass("com.borachio.annotation.mock")
   lazy val MockWithCompanionAnnotation = definitions.getClass("com.borachio.annotation.mockWithCompanion")
   lazy val MockObjectAnnotation = definitions.getClass("com.borachio.annotation.mockObject")
@@ -52,7 +50,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         if (plugin.testOutputDirectory.isDefined) {
           createOutputDirectories
           new ForeachTreeTraverser(findMockAnnotations).traverse(unit.body)
-          generateExtra
+          generateMockFactory
         } else {
           globalError("Both -P:borachio:generatemocks and -P:borachio:generatetest must be given")
         }
@@ -106,11 +104,6 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       globalError("@mockObject("+ symbol +") parameter must be a singleton object")
   }
   
-  def generateExtra() {
-    generateMockFactory()
-    generateMockParameterTypes()
-  }
-  
   def generateMockFactory() {
     val writer = new FileWriter(new File(testOutputDirectory, "GeneratedMockFactory.scala"))
     writer.write(mockFactory)
@@ -122,7 +115,6 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     "trait GeneratedMockFactory extends com.borachio.GeneratedMockFactoryBase { self: com.borachio.AbstractMockFactory =>\n"+
       (mocks map { case (target, mock) => mockFactoryEntry(target, mock) }).mkString("\n") +"\n\n"+
       (mockObjects map { case (target, mock) => mockObjectEntry(target, mock) }).mkString("\n") +"\n\n"+
-      (parameterTypes.keys map (parameterConverter _)).mkString("\n") +"\n"+
     "}"
   
   def mockFactoryEntry(target: String, mock: String) =
@@ -130,30 +122,6 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
   def mockObjectEntry(target: String, mock: String) = "  def mockObject(x: "+ target +".type) = x.asInstanceOf["+ mock +"]"
     
-  def parameterConverter(tpe: Type) = {
-    val parameterName = mockParameterName(tpe)
-    "  protected implicit def to"+ parameterName +"(v: "+ tpe +") = new com.borachio."+ parameterName +"(v)\n"+
-      "  protected implicit def to"+ parameterName +"(v: com.borachio.MatchAny) = new com.borachio."+ parameterName +"(v)\n"
-  }
-    
-  def mockParameterName(tpe: Type) = "MockParameter$"+ parameterTypes(tpe)
-    
-  def generateMockParameterTypes() {
-    val writer = new FileWriter(new File(testOutputDirectory, "GeneratedParameterTypes.scala"))
-    writer.write(mockParameterTypes)
-    writer.close
-  }
-    
-  def mockParameterTypes = 
-    "package com.borachio\n\n"+
-    (parameterTypes.keys map (generatedMockParameterType _)).mkString("\n\n")
-  
-  def generatedMockParameterType(tpe: Type) =
-    "class "+ mockParameterName(tpe) +"(value: AnyRef) extends com.borachio.MockParameter["+ tpe +"](value) {\n"+
-      "  def this(v: "+ tpe +") = this(v.asInstanceOf[AnyRef])\n"+
-      "  def this(v: MatchAny) = this(v.asInstanceOf[AnyRef])\n"+
-    "}"
-  
   def createOutputDirectories {
     new File(mockOutputDirectory).mkdirs
     new File(testOutputDirectory).mkdirs
@@ -413,20 +381,25 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "    def newInstance"+ forwarderParams(params)
         
     def forwarderDeclarationNormal(method: Symbol, params: Option[List[Symbol]], result: Type) =
-      "    def "+ method.name.decode + forwarderParams(params) +": "+ expectationType(result)
+      "    def "+ method.name.decode + forwarderParams(params) + overloadDisambiguation(method) +": "+ expectationType(result)
         
     def forwarderParams(params: Option[List[Symbol]]) = params match {
         case Some(ps) => (ps map forwarderParam _).mkString("(", ", ", ")")
         case None => ""
       }
       
-    def forwarderParam(parameter: Symbol) = parameter.name +": com.borachio."+ mockParameterType(parameter)
+    def forwarderParam(parameter: Symbol) = parameter.name +": com.borachio.MockParameter["+ parameter.tpe +"]"
     
-    def mockParameterType(parameter: Symbol) = {
-      val tpe = parameter.tpe
-      if (!(parameterTypes contains tpe))
-        parameterTypes += (tpe -> parameterTypes.size)
-      mockParameterName(tpe)
+    // Add DummyImplicit sentinel parameters to overloaded methods to avoid problems with
+    // ambiguity in the face of type erasure. See:
+    // http://groups.google.com/group/scala-user/browse_thread/thread/95acee0572cfa407/95d41ac32d36f743#95d41ac32d36f743
+    def overloadDisambiguation(method: Symbol) = {
+      val index = method.owner.info.member(method.name).alternatives.indexOf(method)
+      assert(index >= 0)
+      if (index > 0)
+        ((1 to index) map { i => "sentinel"+ i +": DummyImplicit" }).mkString("(implicit ", ", ", ")")
+      else
+        ""
     }
     
     def expectationType(result: Type) = "com.borachio.TypeSafeExpectation["+ fixedErasure(result) +"]"

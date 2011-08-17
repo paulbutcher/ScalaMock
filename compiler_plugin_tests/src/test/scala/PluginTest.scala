@@ -134,9 +134,9 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
   
   test("class with overloaded methods") {
     val m = mock[ClassWithOverloadedMethods]
-    
-    //! Eugh - how do I avoid the necessity for this?
-    m.expects.foo(new com.borachio.MockParameter$1(42)) returning "overload 1"
+
+    // Using toMockParameter is necessary to avoid "ambiguous reference to overloaded definition"
+    m.expects.foo(toMockParameter[Int](42)) returning "overload 1"
     m.expects.foo(1.23) returning "overload 2"
     m.expects.foo(42, 1.23) returning "overload 3"
     
