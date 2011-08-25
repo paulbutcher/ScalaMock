@@ -434,15 +434,13 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       mockMethodName(method) +" = new "+ mockFunction(method, params, result) +"(factory, Symbol(\""+ method.name.decode +"\"))"
 
     def mockFunction(method: Symbol, params: List[Symbol], result: Type) =
-      mockFunctionType(method) + params.length +"["+ types(paramTypes(params) :+ result).mkString(", ") +"]"
+      mockFunctionType(method) + params.length +"["+ fixedTypes(paramTypes(params) :+ result).mkString(", ") +"]"
       
     def mockFunctionType(method: Symbol) =
       if (method.isConstructor)
         "com.borachio.MockConstructor"
       else
         "com.borachio.MockFunction"
-        
-    def types(ts: List[Type]) = ts map fixedType _
 
     def paramTypes(params: List[Symbol]) = params map (_.tpe)
     
@@ -469,6 +467,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         case Nil => ""
         case _ => ", "+ (params map (_.name +".asInstanceOf[AnyRef]")).mkString(", ")
       }
+
+    def fixedTypes(ts: List[Type]) = ts map fixedType _
       
     def fixedType(t: Type) = 
       if (t.typeSymbol.isNestedClass)
