@@ -470,13 +470,11 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         case _ => ", "+ (params map (_.name +".asInstanceOf[AnyRef]")).mkString(", ")
       }
       
-    def fixedErasure(t: Type): Type = {
-      val e = erasure.erasure(t)
-      e.typeSymbol match {
-        case BoxedUnitClass => UnitClass.tpe
-        case _ => e
-      }
-    }
+    def fixedErasure(t: Type): Type = 
+      if (t.typeSymbol.isNestedClass)
+        erasure.erasure(t)
+      else
+        t
   }
   
   class MockClass(mockSymbol: Symbol, enclosing: Context) extends Mock(mockSymbol, enclosing) {
