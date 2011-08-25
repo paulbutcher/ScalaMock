@@ -247,7 +247,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
     lazy val className = mockSymbol.name.toString
     
-    lazy val fullClassName = fixedErasure(mockSymbol.tpe).toString
+    lazy val fullClassName = fixedType(mockSymbol.tpe).toString
     
     lazy val mockTraitOrClassName = getMockTraitOrClassName
     
@@ -300,7 +300,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       methodDeclarationWithReturnType(method, params, result) +" = "+ mockBodyNormal(method, params)
       
     def methodDeclarationWithReturnType(method: Symbol, params: Option[List[Symbol]], result: Type) =
-      methodDeclaration(method, params) +": "+ fixedErasure(result)
+      methodDeclaration(method, params) +": "+ fixedType(result)
         
     def methodDeclaration(method: Symbol, params: Option[List[Symbol]]) = 
       "  "+ overrideIfNecessary(method) +"def "+ method.name.decode + mockParams(params)
@@ -402,7 +402,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         ""
     }
     
-    def expectationType(result: Type) = "com.borachio.TypeSafeExpectation["+ fixedErasure(result) +"]"
+    def expectationType(result: Type) = "com.borachio.TypeSafeExpectation["+ fixedType(result) +"]"
         
     def forwarderBody(method: Symbol, params: Option[List[Symbol]]) =
       mockMethodName(method) +".expects"+ forwardParams(params)
@@ -434,7 +434,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       mockMethodName(method) +" = new "+ mockFunction(method, params, result) +"(factory, Symbol(\""+ method.name.decode +"\"))"
 
     def mockFunction(method: Symbol, params: List[Symbol], result: Type) =
-      mockFunctionType(method) + params.length +"["+ erasures(paramTypes(params) :+ result).mkString(", ") +"]"
+      mockFunctionType(method) + params.length +"["+ types(paramTypes(params) :+ result).mkString(", ") +"]"
       
     def mockFunctionType(method: Symbol) =
       if (method.isConstructor)
@@ -442,7 +442,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       else
         "com.borachio.MockFunction"
         
-    def erasures(ts: List[Type]) = ts map fixedErasure _
+    def types(ts: List[Type]) = ts map fixedType _
 
     def paramTypes(params: List[Symbol]) = params map (_.tpe)
     
@@ -459,7 +459,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     def forwardMethod(method: Symbol, params: List[Symbol], result: Type) =
       "  lazy val "+ forwarderNames(method) +" = {\n"+
       "    val method = forwardTo.getClass.getMethod("+ forwarderGetMethodParams(method, params) +")\n"+
-      "    ("+ mockParams(Some(params)) +" => method.invoke(forwardTo"+ forwardForwarderParams(params) +").asInstanceOf["+ fixedErasure(result) +"])\n"+
+      "    ("+ mockParams(Some(params)) +" => method.invoke(forwardTo"+ forwardForwarderParams(params) +").asInstanceOf["+ fixedType(result) +"])\n"+
       "  }"
       
     def forwarderGetMethodParams(method: Symbol, params: List[Symbol]) = 
@@ -470,7 +470,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         case _ => ", "+ (params map (_.name +".asInstanceOf[AnyRef]")).mkString(", ")
       }
       
-    def fixedErasure(t: Type): Type = 
+    def fixedType(t: Type) = 
       if (t.typeSymbol.isNestedClass)
         erasure.erasure(t)
       else
