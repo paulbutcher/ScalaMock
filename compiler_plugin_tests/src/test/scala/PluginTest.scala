@@ -185,7 +185,7 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     m.expects.methodReturningFunction(10) returning f
     f.expects(9) returning 90
     
-    expect(90) { m.methodReturningFunction(10)() }
+    expect(90) { m.methodReturningFunction(10)(9) }
   }
 
   test("simple object") {
