@@ -177,6 +177,16 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     
     m.methodWithNonPrimitiveArgument(x)
   }
+  
+  test("method returning a function") {
+    val m = mock[SimpleClass]
+    val f = mockFunction[Int, Int]
+    
+    m.expects.methodReturningFunction(10) returning f
+    f.expects(9) returning 90
+    
+    expect(90) { m.methodReturningFunction(10)() }
+  }
 
   test("simple object") {
     val m = mockObject(SimpleObject)

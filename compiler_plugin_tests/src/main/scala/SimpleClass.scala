@@ -31,6 +31,8 @@ class SimpleClass {
   def nestDeeply(x: Int) = (new SimpleClass2).nestDeeply(x)
   
   def methodWithNonPrimitiveArgument(x: SimpleClass4) = x.toString
+  
+  def methodReturningFunction(x: Int) = (y: Int) => x * y
 }
 
 class SimpleClass2 {
