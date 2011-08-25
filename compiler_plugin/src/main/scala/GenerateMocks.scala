@@ -279,19 +279,13 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       
     def qualify(name: String) = packageName +"."+ name
     
-    def mockMethod(method: Symbol): String =
-      method.info match {
-        case MethodType(params, result) => mockMethod(method, Some(params), result)
-        case NullaryMethodType(result) => mockMethod(method, None, result)
-        case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
-        case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
-      }
-      
-    def mockMethod(method: Symbol, params: Option[List[Symbol]], result: Type) =
-      if (method.isConstructor)
-        mockMethodConstructor(method, params)
-      else
-        mockMethodNormal(method, params, result)
+    def mockMethod(method: Symbol) = handleMethodOpt(method) {
+      (method, params, result) =>
+        if (method.isConstructor)
+          mockMethodConstructor(method, params)
+        else
+          mockMethodNormal(method, params, result)
+    }
         
     def mockMethodConstructor(method: Symbol, params: Option[List[Symbol]]) =
       methodDeclaration(method, params) +" = "+ mockBodyConstructor(method, params)
@@ -356,19 +350,13 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         case None => ""
       }
 
-    def expectForwarder(method: Symbol): String =
-      method.info match {
-        case MethodType(params, result) => expectForwarder(method, Some(params), result)
-        case NullaryMethodType(result) => expectForwarder(method, None, result)
-        case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
-        case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
-      }
-
-    def expectForwarder(method: Symbol, params: Option[List[Symbol]], result: Type) =
-      if (method.isConstructor)
-        expectForwarderConstructor(method, params, result)
-      else
-        expectForwarderNormal(method, params, result)
+    def expectForwarder(method: Symbol) = handleMethodOpt(method) {
+      (method, params, result) =>
+        if (method.isConstructor)
+          expectForwarderConstructor(method, params, result)
+        else
+          expectForwarderNormal(method, params, result)
+    }
         
     def expectForwarderConstructor(method: Symbol, params: Option[List[Symbol]], result: Type) =
       forwarderDeclarationConstructor(method, params) +" = "+ forwarderBody(method, params) +
@@ -407,31 +395,20 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     def forwarderBody(method: Symbol, params: Option[List[Symbol]]) =
       mockMethodName(method) +".expects"+ forwardParams(params)
     
-    def cachedMockMethod(method: Symbol): String =
-      method.info match {
-        case MethodType(params, result) => cachedMockMethod(method, params, result)
-        case NullaryMethodType(result) => cachedMockMethod(method, Nil, result)
-        case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
-        case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
-      }
-    
-    def cachedMockMethod(method: Symbol, params: List[Symbol], result: Type) =
-      "    lazy val "+ mockMethodName(method) +" = "+ cacheLookup(method, params, result)
+    def cachedMockMethod(method: Symbol): String = handleMethod(method) {
+      (method, params, result) =>
+        "    lazy val "+ mockMethodName(method) +" = "+ cacheLookup(method, params, result)
+    }
       
     def cacheLookup(method: Symbol, params: List[Symbol], result: Type) =
       "clazz.getMethod(\""+ mockMethodName(method) +"\").invoke("+ mockTraitOrClassName +".this).asInstanceOf["+ 
         mockFunction(method, params, result) +"]"
 
-    def mockMember(method: Symbol): String = 
-      method.info match {
-        case MethodType(params, result) => mockMember(method, params, result)
-        case NullaryMethodType(result) => mockMember(method, Nil, result)
-        case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
-        case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
-      }
-
-    def mockMember(method: Symbol, params: List[Symbol], result: Type) = "  protected lazy val "+ 
-      mockMethodName(method) +" = new "+ mockFunction(method, params, result) +"(factory, Symbol(\""+ method.name.decode +"\"))"
+    def mockMember(method: Symbol): String = handleMethod(method) {
+      (method, params, result) =>
+        "  protected lazy val "+ mockMethodName(method) +" = new "+ mockFunction(method, params, result) +
+        "(factory, Symbol(\""+ method.name.decode +"\"))"
+    }
 
     def mockFunction(method: Symbol, params: List[Symbol], result: Type) =
       mockFunctionType(method) + params.length +"["+ fixedTypes(paramTypes(params) :+ result).mkString(", ") +"]"
@@ -446,19 +423,13 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
     def methodNames(prefix: String) = (methodsToMock.zipWithIndex map { case (m, i) => (m -> (prefix +"$"+ i)) }).toMap
     
-    def forwardMethod(method: Symbol): String =
-      method.info match {
-        case MethodType(params, result) => forwardMethod(method, params, result)
-        case NullaryMethodType(result) => forwardMethod(method, Nil, result)
-        case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
-        case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
-      }
-      
-    def forwardMethod(method: Symbol, params: List[Symbol], result: Type) =
-      "  lazy val "+ forwarderNames(method) +" = {\n"+
-      "    val method = forwardTo.getClass.getMethod("+ forwarderGetMethodParams(method, params) +")\n"+
-      "    ("+ mockParams(Some(params)) +" => method.invoke(forwardTo"+ forwardForwarderParams(params) +").asInstanceOf["+ fixedType(result) +"])\n"+
-      "  }"
+    def forwardMethod(method: Symbol): String = handleMethod(method) {
+      (method, params, result) =>
+        "  lazy val "+ forwarderNames(method) +" = {\n"+
+        "    val method = forwardTo.getClass.getMethod("+ forwarderGetMethodParams(method, params) +")\n"+
+        "    ("+ mockParams(Some(params)) +" => method.invoke(forwardTo"+ forwardForwarderParams(params) +").asInstanceOf["+ fixedType(result) +"])\n"+
+        "  }"
+    }
       
     def forwarderGetMethodParams(method: Symbol, params: List[Symbol]) = 
       (("\""+ method.name.decode +"\"") +: (paramTypes(params) map (p => "classOf["+ p +"]"))).mkString(", ")
@@ -475,6 +446,22 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         erasure.erasure(t)
       else
         t
+        
+    def handleMethodOpt(method: Symbol)(handler: (Symbol, Option[List[Symbol]], Type) => String) =
+      method.info match {
+        case MethodType(params, result) => handler(method, Some(params), result)
+        case NullaryMethodType(result) => handler(method, None, result)
+        case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
+        case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
+      }
+    
+    def handleMethod(method: Symbol)(handler: (Symbol, List[Symbol], Type) => String) = handleMethodOpt(method) { 
+      (method, params, result) =>
+        params match {
+          case Some(p) => handler(method, p, result)
+          case None => handler(method, Nil, result)
+        }
+    }
   }
   
   class MockClass(mockSymbol: Symbol, enclosing: Context) extends Mock(mockSymbol, enclosing) {
@@ -500,13 +487,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
     override def getMethodsToMock = super.getMethodsToMock filter (!_.isConstructor)
 
-    def methodDeclaration(method: Symbol): String =
-      method.info match {
-        case MethodType(params, result) => methodDeclarationWithReturnType(method, Some(params), result)
-        case NullaryMethodType(result) => methodDeclarationWithReturnType(method, None, result)
-        case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
-        case _ => sys.error("Borachio plugin: Don't know how to handle "+ method)
-      }
+    def methodDeclaration(method: Symbol) = handleMethodOpt(method){ methodDeclarationWithReturnType _ }
   }
   
   class MockObject(mockSymbol: Symbol) extends Mock(mockSymbol, TopLevel) {
