@@ -90,14 +90,14 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     if (companion == NoSymbol)
       globalError("@mockWithCompanion["+ symbol +"] - no companion found")
     else
-      new MockWithCompanion(symbol, companion).generate
+      new MockWithCompanion(symbol, companion.moduleClass).generate
   }
   
   def mockObject(args: List[Tree]) {
     assert(args.length == 1)
     val symbol = args.head.symbol
     if (symbol.isModule)
-      new MockObject(symbol).generate
+      new MockObject(symbol.moduleClass).generate
     else
       globalError("@mockObject("+ symbol +") parameter must be a singleton object")
   }
@@ -446,7 +446,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         t
         
     def handleMethodOpt(method: Symbol)(handler: (Symbol, Option[List[Symbol]], Type) => String) =
-      method.info match {
+      method.info.asSeenFrom(mockSymbol.thisType, method.owner) match {
         case MethodType(params, result) => handler(method, Some(params), result)
         case NullaryMethodType(result) => handler(method, None, result)
         case PolyType(params, result) => "  //"+ method +" // Borachio doesn't (yet) handle type-parameterised methods"
@@ -489,7 +489,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   }
   
   class MockObject(mockSymbol: Symbol) extends Mock(mockSymbol, TopLevel) {
-    assert(mockSymbol.isModule)
+    assert(mockSymbol.isModuleClass)
 
     override lazy val fullClassName = qualifiedClassName
 

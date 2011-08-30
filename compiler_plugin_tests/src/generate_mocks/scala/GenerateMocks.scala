@@ -37,8 +37,8 @@ import com.borachio.annotation.{mock, mockObject, mockWithCompanion}
 @mock[DerivedClass]
 @mock[ClassWithNestedTypes]
 @mock[ClassThatOverridesObjectMethods]
-@mock[CaseClass]
 @mockObject(SimpleObject)
 @mockWithCompanion[ClassWithCompanionObject]
 @mockWithCompanion[TraitWithCompanionObject]
+@mockWithCompanion[CaseClass]
 class Dummy
