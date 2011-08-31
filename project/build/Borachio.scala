@@ -16,7 +16,7 @@ class Borachio(info: ProjectInfo) extends DefaultProject(info) {
     } 
   
   override def managedStyle = ManagedStyle.Maven
-  val publishTo = "Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/releases/"
+  val publishTo = "Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/snapshots/"
   Credentials(Path.userHome / ".ivy2" / ".credentials", log)
   
   def specs2Framework = new TestFramework("org.specs2.runner.SpecsFramework")
