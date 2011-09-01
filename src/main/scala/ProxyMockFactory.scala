@@ -24,8 +24,10 @@ import scala.collection.mutable.{ListBuffer, Map}
 
 trait ProxyMockFactory { self: AbstractMockFactory =>
   
+  protected var proxyClassLoaderStrategy = threadContextClassLoaderStrategy
+  
   protected def mock[T: ClassManifest] = {
-    val proxy = Proxy.create(classOf[Mock], classManifest[T].erasure) {
+    val proxy = Proxy.create(proxyClassLoaderStrategy, classOf[Mock], classManifest[T].erasure) {
       (proxy: AnyRef, name: Symbol, args: Array[AnyRef]) =>
         try {
           name match {
