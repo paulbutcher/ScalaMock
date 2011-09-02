@@ -1,3 +1,9 @@
+Version 1.3:
+
+- Switch to using thread context class loader when creating proxies by default
+- Add ability to override proxy class loader strategy
+- Add support for Scala 2.9.1
+
 Version 1.2:
 
 - Add support for Scala 2.9.0-1
