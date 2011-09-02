@@ -279,12 +279,8 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
   test("case class") {
     val m = mock[CaseClass]
     
-    // m.expects.x returning 42
-    // m.expects.copy(42, "hello")
+    m.expects.x returning 42
     
-    val c = m.copy(y = "hello")
-    c match {
-      case CaseClass(x, y) => assert(x == 42 && y == "hello")
-    }
+    expect(42) { m.x }
   }
 }
