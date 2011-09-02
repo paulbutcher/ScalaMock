@@ -23,7 +23,7 @@ package com.borachio.plugin.test
 import org.scalatest.FunSuite
 import com.borachio.generated.GeneratedMockFactory
 import com.borachio.scalatest.MockFactory
-import com.borachio.{CallLogging, MockingURLClassLoader, VerboseErrors}
+import com.borachio.{CallLogging, MockingURLClassLoader, VerboseErrors, MockFunction0}
 import java.net.URL
 
 class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory with VerboseErrors with CallLogging {
@@ -276,8 +276,15 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     expect("doubly nested method") { x.nonNestedMethod.nestedClassMethod.doublyNestedMethod }
   }
   
-  //! TODO
-  ignore("case class") {
+  test("case class") {
     val m = mock[CaseClass]
+    
+    // m.expects.x returning 42
+    // m.expects.copy(42, "hello")
+    
+    val c = m.copy(y = "hello")
+    c match {
+      case CaseClass(x, y) => assert(x == 42 && y == "hello")
+    }
   }
 }

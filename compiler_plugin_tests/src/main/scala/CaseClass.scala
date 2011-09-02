@@ -20,5 +20,4 @@
 
 package com.borachio.plugin.test
 
-case class CaseClass(x: Int, y: String) {
-}
+case class CaseClass(x: Int, y: String)

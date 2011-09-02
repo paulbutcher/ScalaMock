@@ -249,5 +249,10 @@ class MockFunctionTest extends WordSpec with MockFactory {
       }
       intercept[ExpectationException] { verifyExpectations }
     }
+    
+    "Have the name we gave it" in {
+      val m = new MockFunction0[Unit](this, Symbol("a helpful name"))
+      expect("a helpful name") { m.toString }
+    }
   }
 }
