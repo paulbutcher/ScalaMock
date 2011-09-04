@@ -46,12 +46,14 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   
   def newPhase(prev: Phase) = new StdPhase(prev) {
     def apply(unit: CompilationUnit) {
-      if (plugin.mockOutputDirectory.isDefined && plugin.testOutputDirectory.isDefined) {
-        createOutputDirectories
-        new ForeachTreeTraverser(findMockAnnotations).traverse(unit.body)
-        generateMockFactory
-      } else {
-        globalError("Both -P:borachio:generatemocks and -P:borachio:generatetest must be given")
+      if (plugin.mockOutputDirectory.isDefined || plugin.testOutputDirectory.isDefined) {
+        if (plugin.mockOutputDirectory.isDefined && plugin.testOutputDirectory.isDefined) {
+          createOutputDirectories
+          new ForeachTreeTraverser(findMockAnnotations).traverse(unit.body)
+          generateMockFactory
+        } else {
+          globalError("Both -P:borachio:generatemocks and -P:borachio:generatetest must be given")
+        }
       }
     }
   }
