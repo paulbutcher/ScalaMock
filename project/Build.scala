@@ -24,16 +24,30 @@ import Keys._
 object BorachioBuild extends Build {
   
   override lazy val settings = super.settings ++ Seq(
+      organization := "com.borachio",
+      version := "2.0-SNAPSHOT",
       scalaVersion := "2.9.1",
+      scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings"),
       libraryDependencies ++= Seq(
         "org.scalatest" %% "scalatest" % "1.6.1" % "optional",
         "junit" % "junit" % "3.8.2" % "optional"
       )
     )
+    
+  lazy val borachio = Project(
+      "Borachio",
+      file(".")
+    ) aggregate(library, compiler_plugin, compiler_plugin_tests)
   
-  lazy val library = Project("Library", file("library"))
+  lazy val library = Project(
+      "Library", 
+      file("library")
+    )
 
-  lazy val compiler_plugin = Project("Compiler Plugin", file("compiler_plugin")) settings(
-      libraryDependencies ++= Seq("org.scala-lang" % "scala-compiler" % "2.9.1")
+  lazy val compiler_plugin = Project(
+      "CompilerPlugin", 
+      file("compiler_plugin")
+    ) settings(
+      libraryDependencies += "org.scala-lang" % "scala-compiler" % "2.9.1"
     ) dependsOn(library)
 }
