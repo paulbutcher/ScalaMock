@@ -32,4 +32,8 @@ object BorachioBuild extends Build {
     )
   
   lazy val library = Project("Library", file("library"))
+
+  lazy val compiler_plugin = Project("Compiler Plugin", file("compiler_plugin")) settings(
+      libraryDependencies ++= Seq("org.scala-lang" % "scala-compiler" % "2.9.1")
+    ) dependsOn(library)
 }
