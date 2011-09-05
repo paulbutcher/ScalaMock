@@ -51,8 +51,17 @@ object BorachioBuild extends Build {
       libraryDependencies += "org.scala-lang" % "scala-compiler" % "2.9.1"
     ) dependsOn(library)
     
+  lazy val generateMocks = TaskKey[Unit]("generate-mocks", "Generates sources for classes with the @mock annotation")
+  def generateMocksTask = (sources, target, scalacOptions, classpathOptions, scalaInstance, fullClasspath, streams) map {
+    (srcs, out, opts, cpOpts, si, cp, s) =>
+      val comp = new compiler.RawCompiler(si, cpOpts, s.log)
+      comp(srcs, cp.files, out, opts)
+  }
+    
   lazy val compiler_plugin_tests = Project(
       "CompilerPluginTests", 
       file("compiler_plugin_tests")
+    ) settings(
+      generateMocks <<= generateMocksTask
     ) dependsOn(compiler_plugin)
 }
