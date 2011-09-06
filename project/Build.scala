@@ -52,10 +52,12 @@ object BorachioBuild extends Build {
     ) dependsOn(library)
     
   lazy val generateMocks = TaskKey[Unit]("generate-mocks", "Generates sources for classes with the @mock annotation")
-  def generateMocksTask = (sources, target, scalacOptions, classpathOptions, scalaInstance, fullClasspath, streams) map {
+  def generateMocksTask = (sources in Compile, target, scalacOptions, classpathOptions, scalaInstance, fullClasspath in Compile, streams) map {
     (srcs, out, opts, cpOpts, si, cp, s) =>
+      s.log.info("Generating mocks...")
       val comp = new compiler.RawCompiler(si, cpOpts, s.log)
       comp(srcs, cp.files, out, opts)
+      s.log.info("Done generating mocks...")
   }
     
   lazy val compiler_plugin_tests = Project(
