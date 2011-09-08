@@ -8,3 +8,4 @@ target/
 *.ipr
 *.iws
 .idea/
+.history
