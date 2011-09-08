@@ -52,6 +52,10 @@ object BorachioBuild extends Build {
     ) dependsOn(library)
     
   lazy val GenerateMocks = config("generate-mocks")
+  lazy val Mock = config("mock")
+  
+  lazy val generatedMockDirectory = SettingKey[File]("generated-mock-directory", "Where generated mock source code will be placed")
+  lazy val generatedTestDirectory = SettingKey[File]("generated-test-directory", "Where generated test source code will be placed")
   
   lazy val generateMocks = TaskKey[Unit]("generate-mocks", "Generates sources for classes with the @mock annotation")
   def generateMocksTask = (sources in GenerateMocks, classDirectory in GenerateMocks, scalacOptions, 
@@ -64,23 +68,25 @@ object BorachioBuild extends Build {
         "-Ystop-after:generatemocks",
         "-P:borachio:generatemocks:"+ gm,
         "-P:borachio:generatetest:"+ gt)
-      s.log.info(opts.toString)
   		IO.delete(out)
   		IO.createDirectory(out)
       val comp = new compiler.RawCompiler(si, cpOpts, s.log)
       comp(srcs, cp.files, out, opts)
   }
   
-  lazy val generatedMockDirectory = SettingKey[File]("generated-mock-directory", "Where generated mock source code will be placed")
-  lazy val generatedTestDirectory = SettingKey[File]("generated-test-directory", "Where generated test source code will be placed")
+  def collectSource(directory: SettingKey[File]) =
+    (directory, sourceFilter, defaultExcludes) map { (d, f, e) => d.descendentsExcept(f, e).get }
   
-  lazy val generateMocksSettings = inConfig(GenerateMocks)(Defaults.configSettings) ++ Seq(
-    generatedMockDirectory <<= sourceManaged(_ / "mock" / "scala"),
-    generatedTestDirectory <<= sourceManaged(_ / "test" / "scala"),
-    sources in Test <++= (generatedTestDirectory, sourceFilter, defaultExcludes) map { (d, f, e) => 
-      d.descendentsExcept(f, e).get
-    },
-    generateMocks <<= generateMocksTask)
+  lazy val generateMocksSettings = 
+    inConfig(GenerateMocks)(Defaults.configSettings) ++ 
+    inConfig(Mock)(Defaults.configSettings) ++
+    Seq(
+      generatedMockDirectory <<= sourceManaged(_ / "mock" / "scala"),
+      generatedTestDirectory <<= sourceManaged(_ / "test" / "scala"),
+      sources in Test <++= collectSource(generatedTestDirectory),
+      sources in Mock <++= collectSource(generatedMockDirectory),
+      sources in Mock <++= collectSource(generatedTestDirectory),
+      generateMocks <<= generateMocksTask)
     
   lazy val compiler_plugin_tests = Project(
       "CompilerPluginTests", 
