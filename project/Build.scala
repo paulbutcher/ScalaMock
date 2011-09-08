@@ -68,8 +68,8 @@ object BorachioBuild extends Build {
         "-Ystop-after:generatemocks",
         "-P:borachio:generatemocks:"+ gm,
         "-P:borachio:generatetest:"+ gt)
-  		IO.delete(out)
-  		IO.createDirectory(out)
+      IO.delete(out)
+      IO.createDirectory(out)
       val comp = new compiler.RawCompiler(si, cpOpts, s.log)
       comp(srcs, cp.files, out, opts)
   }
