@@ -54,24 +54,30 @@ object BorachioBuild extends Build {
   lazy val GenerateMocks = config("generate-mocks")
   
   lazy val generateMocks = TaskKey[Unit]("generate-mocks", "Generates sources for classes with the @mock annotation")
-  def generateMocksTask = (sources in GenerateMocks, classDirectory in GenerateMocks, scalacOptions, classpathOptions, scalaInstance, fullClasspath in Compile, streams) map {
-    (srcs, out, initialOpts, cpOpts, si, cp, s) =>
+  def generateMocksTask = (sources in GenerateMocks, classDirectory in GenerateMocks, scalacOptions, 
+      classpathOptions, scalaInstance, fullClasspath in Compile, streams, generatedMockDirectory, generatedTestDirectory) map {
+    (srcs, out, initialOpts, cpOpts, si, cp, s, gm, gt) =>
       val opts = initialOpts ++ Seq(
         "-Xplugin:compiler_plugin/target/scala-2.9.1.final/compilerplugin_2.9.1-2.0-SNAPSHOT.jar",
         "-Xplugin-require:borachio",
         // "-Ylog:generatemocks",
         "-Ystop-after:generatemocks",
-        "-P:borachio:generatemocks:compiler_plugin_tests/src_managed/mock/scala",
-        "-P:borachio:generatetest:compiler_plugin_tests/src_managed/test/scala")
+        "-P:borachio:generatemocks:"+ gm,
+        "-P:borachio:generatetest:"+ gt)
+      s.log.info(opts.toString)
   		IO.delete(out)
   		IO.createDirectory(out)
       val comp = new compiler.RawCompiler(si, cpOpts, s.log)
       comp(srcs, cp.files, out, opts)
   }
   
+  lazy val generatedMockDirectory = SettingKey[File]("generated-mock-directory", "Where generated mock source code will be placed")
+  lazy val generatedTestDirectory = SettingKey[File]("generated-test-directory", "Where generated test source code will be placed")
+  
   lazy val generateMocksSettings = inConfig(GenerateMocks)(Defaults.configSettings) ++ Seq(
-      generateMocks <<= generateMocksTask
-    )
+    generatedMockDirectory <<= sourceManaged(_ / "mock" / "scala"),
+    generatedTestDirectory <<= sourceManaged(_ / "test" / "scala"),
+    generateMocks <<= generateMocksTask)
     
   lazy val compiler_plugin_tests = Project(
       "CompilerPluginTests", 
