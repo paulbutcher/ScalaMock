@@ -56,7 +56,7 @@ object BorachioBuild extends Build {
   lazy val generateMocks = TaskKey[Unit]("generate-mocks", "Generates sources for classes with the @mock annotation")
   def generateMocksTask = (sources in GenerateMocks, classDirectory in GenerateMocks, scalacOptions in GenerateMocks, classpathOptions, scalaInstance, fullClasspath in Compile, streams) map {
     (srcs, out, opts, cpOpts, si, cp, s) =>
-      s.log.info("Generating mocks..."+ out)
+      s.log.info("Generating mocks...")
   		IO.delete(out)
   		IO.createDirectory(out)
       val comp = new compiler.RawCompiler(si, cpOpts, s.log)
@@ -64,7 +64,16 @@ object BorachioBuild extends Build {
       s.log.info("Done generating mocks...")
   }
   
-  lazy val generateMocksSettings = inConfig(GenerateMocks)(Defaults.configSettings) ++ 
+  lazy val generateMocksSettings = inConfig(GenerateMocks)(Defaults.configSettings) ++
+    inConfig(GenerateMocks)(Seq(
+      scalacOptions ++= Seq(
+        "-Xplugin:compiler_plugin/target/scala-2.9.1.final/compilerplugin_2.9.1-2.0-SNAPSHOT.jar",
+        "-Xplugin-require:borachio",
+        "-Ylog:generatemocks",
+        "-Ystop-after:generatemocks",
+        "-P:borachio:generatemocks:compiler_plugin_tests/src_managed/mock/scala",
+        "-P:borachio:generatetest:compiler_plugin_tests/src_managed/test/scala"
+    ))) ++
     Seq(
       generateMocks <<= generateMocksTask
     )
@@ -74,20 +83,5 @@ object BorachioBuild extends Build {
       file("compiler_plugin_tests")
     ) settings(
       generateMocksSettings: _*
-
-    //   sources in GenerateMocks <<= (sourceDirectory, sourceFilter, defaultExcludes in unmanagedSources) map { 
-    //     (d, f, e) => 
-    //       val generateMocksDirectory = d / "generate_mocks" / "scala"
-    //       Defaults.collectFiles(generateMocksDirectory, f, e)
-    //   },
-    //   fullClasspath in GenerateMocks <<= fullClasspath in Compile map { (cp) => cp },
-    //   scalacOptions in GenerateMocks <<= scalacOptions map { opts => opts ++ Seq(
-    //     "-Xplugin:compiler_plugin/target/scala-2.9.1.final/compilerplugin_2.9.1-2.0-SNAPSHOT.jar",
-    //     "-Xplugin-require:borachio",
-    //     "-Ylog:generatemocks",
-    //     "-Ystop-after:generatemocks",
-    //     "-P:borachio:generatemocks:compiler_plugin_tests/src_managed/mock/scala",
-    //     "-P:borachio:generatetest:compiler_plugin_tests/src_managed/test/scala"
-    //   )},
     ) dependsOn(compiler_plugin)
 }
