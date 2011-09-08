@@ -77,6 +77,9 @@ object BorachioBuild extends Build {
   lazy val generateMocksSettings = inConfig(GenerateMocks)(Defaults.configSettings) ++ Seq(
     generatedMockDirectory <<= sourceManaged(_ / "mock" / "scala"),
     generatedTestDirectory <<= sourceManaged(_ / "test" / "scala"),
+    sources in Test <++= (generatedTestDirectory, sourceFilter, defaultExcludes) map { (d, f, e) => 
+      d.descendentsExcept(f, e).get
+    },
     generateMocks <<= generateMocksTask)
     
   lazy val compiler_plugin_tests = Project(
