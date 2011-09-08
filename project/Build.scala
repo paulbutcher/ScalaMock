@@ -54,25 +54,22 @@ object BorachioBuild extends Build {
   lazy val GenerateMocks = config("generate-mocks")
   
   lazy val generateMocks = TaskKey[Unit]("generate-mocks", "Generates sources for classes with the @mock annotation")
-  def generateMocksTask = (sources in GenerateMocks, classDirectory in GenerateMocks, scalacOptions in GenerateMocks, classpathOptions, scalaInstance, fullClasspath in Compile, streams) map {
-    (srcs, out, opts, cpOpts, si, cp, s) =>
+  def generateMocksTask = (sources in GenerateMocks, classDirectory in GenerateMocks, scalacOptions, classpathOptions, scalaInstance, fullClasspath in Compile, streams) map {
+    (srcs, out, initialOpts, cpOpts, si, cp, s) =>
+      val opts = initialOpts ++ Seq(
+        "-Xplugin:compiler_plugin/target/scala-2.9.1.final/compilerplugin_2.9.1-2.0-SNAPSHOT.jar",
+        "-Xplugin-require:borachio",
+        // "-Ylog:generatemocks",
+        "-Ystop-after:generatemocks",
+        "-P:borachio:generatemocks:compiler_plugin_tests/src_managed/mock/scala",
+        "-P:borachio:generatetest:compiler_plugin_tests/src_managed/test/scala")
   		IO.delete(out)
   		IO.createDirectory(out)
       val comp = new compiler.RawCompiler(si, cpOpts, s.log)
       comp(srcs, cp.files, out, opts)
   }
   
-  lazy val generateMocksSettings = inConfig(GenerateMocks)(Defaults.configSettings) ++
-    inConfig(GenerateMocks)(Seq(
-      scalacOptions ++= Seq(
-        "-Xplugin:compiler_plugin/target/scala-2.9.1.final/compilerplugin_2.9.1-2.0-SNAPSHOT.jar",
-        "-Xplugin-require:borachio",
-        // "-Ylog:generatemocks",
-        "-Ystop-after:generatemocks",
-        "-P:borachio:generatemocks:compiler_plugin_tests/src_managed/mock/scala",
-        "-P:borachio:generatetest:compiler_plugin_tests/src_managed/test/scala"
-    ))) ++
-    Seq(
+  lazy val generateMocksSettings = inConfig(GenerateMocks)(Defaults.configSettings) ++ Seq(
       generateMocks <<= generateMocksTask
     )
     
