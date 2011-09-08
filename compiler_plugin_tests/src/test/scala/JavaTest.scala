@@ -20,26 +20,23 @@
 
 package com.borachio.plugin.test
 
-import com.borachio.annotation.{mock, mockObject, mockWithCompanion}
+import org.scalatest.FunSuite
+import com.borachio.generated.GeneratedMockFactory
+import com.borachio.scalatest.MockFactory
+import com.borachio.{CallLogging, MockingURLClassLoader, VerboseErrors}
+import java.net.URL
 
-@mock[SimpleClass] 
-@mock[SimpleClass2]
-@mock[SimpleClass3]
-@mock[SimpleClass4]
-@mock[FinalClass]
-@mock[ClassWithFinalMethod]
-@mock[AbstractClass]
-@mock[SimpleTrait]
-@mock[ClassWithNonTrivialConstructor]
-@mock[ClassWithOverloadedMethods]
-@mock[ClassWithPrivateConstructor]
-@mock[ClassWithValsAndVars]
-@mock[DerivedClass]
-@mock[ClassWithNestedTypes]
-@mock[ClassThatOverridesObjectMethods]
-@mock[SimpleJavaClass]
-@mockObject(SimpleObject)
-@mockWithCompanion[ClassWithCompanionObject]
-@mockWithCompanion[TraitWithCompanionObject]
-@mockWithCompanion[CaseClass]
-class Dummy
+class JavaTest extends FunSuite with MockFactory with GeneratedMockFactory with VerboseErrors with CallLogging {
+  
+  def getClassLoader() = new MockingURLClassLoader(new URL("file:compiler_plugin_tests/target/scala_2.9.0/mock-classes/"))
+  
+  test("simple class") {
+    val m = mock[SimpleJavaClass]
+    
+    m.expects.methodWithZeroArguments
+    m.expects.methodWithOneArgument(42) returning "Expected return value"
+    
+    m.methodWithZeroArguments
+    expect("Expected return value") { m.methodWithOneArgument(42) }
+  }
+}
