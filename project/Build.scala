@@ -54,17 +54,20 @@ object BorachioBuild extends Build {
   lazy val GenerateMocks = config("generate-mocks")
   
   lazy val generateMocks = TaskKey[Unit]("generate-mocks", "Generates sources for classes with the @mock annotation")
-  def generateMocksTask = (sources in GenerateMocks, target, scalacOptions in GenerateMocks, classpathOptions, scalaInstance, fullClasspath in Compile, streams) map {
+  def generateMocksTask = (sources in GenerateMocks, classDirectory in GenerateMocks, scalacOptions in GenerateMocks, classpathOptions, scalaInstance, fullClasspath in Compile, streams) map {
     (srcs, out, opts, cpOpts, si, cp, s) =>
-      s.log.info("Generating mocks..."+ srcs)
+      s.log.info("Generating mocks..."+ out)
+  		IO.delete(out)
+  		IO.createDirectory(out)
       val comp = new compiler.RawCompiler(si, cpOpts, s.log)
       comp(srcs, cp.files, out, opts)
       s.log.info("Done generating mocks...")
   }
   
-  lazy val generateMocksSettings = inConfig(GenerateMocks)(Defaults.sourceConfigPaths) ++ Seq(
-    generateMocks <<= generateMocksTask
-  )
+  lazy val generateMocksSettings = inConfig(GenerateMocks)(Defaults.configSettings) ++ 
+    Seq(
+      generateMocks <<= generateMocksTask
+    )
     
   lazy val compiler_plugin_tests = Project(
       "CompilerPluginTests", 
