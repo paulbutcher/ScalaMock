@@ -150,6 +150,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
       generateMock()
       generateTest()
+      generateJavaFeatures()
     }
     
     def generateMock() {
@@ -158,6 +159,11 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
     def generateTest() {
       generateFile(testFile, getTest)
+    }
+    
+    def generateJavaFeatures() {
+      if (hasJavaStatics)
+        generateFile(javaFeaturesFile, getJavaFeatures)
     }
     
     def generateFile(file: File, body: String) {
@@ -169,6 +175,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val mockFile = new File(mockOutputDirectory, qualifiedClassName +".scala")
     
     lazy val testFile = new File(testOutputDirectory, fullMockTraitOrClassName +".scala")
+    
+    lazy val javaFeaturesFile = new File(mockOutputDirectory, javaFeaturesClassName +".java")
     
     def getMock: String =
       mockedTypeDeclaration +" {\n\n"+
@@ -189,6 +197,11 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "}\n"
     }
     
+    def getJavaFeatures: String =
+      javaFeaturesClassDeclaration +" {\n\n"+
+        javaValueForwarders +"\n"+
+      "}\n"
+    
     def indent(s: String) = "  " + new Regex("\n").replaceAllIn(s, "\n  ")
 
     def recordMapping(mapping: (String, String)) {
@@ -202,7 +215,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       
     lazy val mockTraitEntries = ""
         
-    lazy val packageStatement = "package "+ packageName
+    lazy val packageStatement = "package "+ packageName +";"
 
     lazy val mockedTypeDeclaration =
       classOrObject +" extends "+ (parents :+ mockTraitOrClassName).mkString(" with ")
@@ -257,6 +270,10 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
     lazy val qualifiedClassName = qualify(className)
     
+    lazy val javaFeaturesClassName = className +"$JavaFeatures"
+    
+    lazy val qualifiedJavaFeaturesClassName = qualify(javaFeaturesClassName)
+    
     lazy val nestedMocks = nestedTypes map { s => mockClassOrTrait(s, this) }
     
     lazy val nestedTypes = mockSymbol.info.nonPrivateMembers filter ( _.isClass )
@@ -266,7 +283,22 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val parents = mockSymbol.info.parents filter { s => 
         s.typeSymbol != ObjectClass && s.typeSymbol != ScalaObjectClass
       }
+      
+    lazy val hasJavaStatics = !javaStatics.isEmpty
     
+    lazy val javaStatics = mockSymbol.companionModule match {
+        case NoSymbol => Nil
+        case companion => companion.info.nonPrivateMembers filter { s => 
+            s.isJavaDefined && !isMemberOfObject(s)
+          }
+      }
+      
+    lazy val javaValues = javaStatics filter (!_.isMethod)
+    
+    lazy val javaFeaturesClassDeclaration = "public abstract class "+ javaFeaturesClassName
+    
+    lazy val javaValueForwarders = (javaValues map javaValueForwarder _).mkString("\n")
+  
     def getMethodsToMock = mockSymbol.info.nonPrivateMembers filter { s => 
         s.isMethod && !isMemberOfObject(s) && !s.isMixinConstructor
       }
@@ -459,6 +491,21 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
           case Some(p) => handler(method, p, result)
           case None => handler(method, Nil, result)
         }
+    }
+    
+    def javaValueForwarder(value: Symbol) = 
+      "  public static "+ javaType(value.info) +" "+ value.name +";"
+
+    def javaType(t: Type) = t.typeSymbol match {
+      case BooleanClass => "boolean"
+      case ByteClass => "byte"
+      case CharClass => "char"
+      case DoubleClass => "double"
+      case FloatClass => "float"
+      case IntClass => "int"
+      case LongClass => "long"
+      case ShortClass => "short"
+      case _ => t.toString
     }
   }
   

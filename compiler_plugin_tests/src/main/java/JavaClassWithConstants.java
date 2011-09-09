@@ -18,29 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.plugin.test
+package com.borachio.plugin.test;
 
-import com.borachio.annotation.{mock, mockObject, mockWithCompanion}
+public class JavaClassWithConstants {
+    
+    public static final int INT_CONSTANT = 1;
+    public static final Integer INTEGER_CONSTANT = 2;
+    public static final ClassWithNonTrivialConstructor CLASS_CONSTANT = new ClassWithNonTrivialConstructor(42, 1.23);
 
-@mock[SimpleClass] 
-@mock[SimpleClass2]
-@mock[SimpleClass3]
-@mock[SimpleClass4]
-@mock[FinalClass]
-@mock[ClassWithFinalMethod]
-@mock[AbstractClass]
-@mock[SimpleTrait]
-@mock[ClassWithNonTrivialConstructor]
-@mock[ClassWithOverloadedMethods]
-@mock[ClassWithPrivateConstructor]
-@mock[ClassWithValsAndVars]
-@mock[DerivedClass]
-@mock[ClassWithNestedTypes]
-@mock[ClassThatOverridesObjectMethods]
-@mock[SimpleJavaClass]
-@mock[JavaClassWithConstants]
-@mockObject(SimpleObject)
-@mockWithCompanion[ClassWithCompanionObject]
-@mockWithCompanion[TraitWithCompanionObject]
-@mockWithCompanion[CaseClass]
-class Dummy
+    public String methodWithOneArgument(int x) {
+        return "methodWithOneArgument: "+ x;
+    }
+}
