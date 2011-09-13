@@ -49,4 +49,15 @@ class JavaTest extends FunSuite with MockFactory with GeneratedMockFactory with 
     //! TODO - the following should also work
     // expect(new CaseClass(42, "foo")) { JavaClassWithConstants.CLASS_CONSTANT }
   }
+  
+  test("static variables") {
+    expect(1.0F) { JavaClassWithStaticVars.floatVariable }
+    expect(2.0) { JavaClassWithStaticVars.doubleVariable }
+
+    JavaClassWithStaticVars.floatVariable = 1.23F
+    JavaClassWithStaticVars.doubleVariable = 4.56
+
+    expect(1.23F) { JavaClassWithStaticVars.floatVariable }
+    expect(4.56) { JavaClassWithStaticVars.doubleVariable }
+  }
 }
