@@ -352,9 +352,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "    if (mock != null) {\n"+
       "      forwardTo = mock\n"+
       "    } else {\n"+
-      "      val classLoader = getClass.getClassLoader\n"+
-      "      val method = classLoader.getClass.getMethod(\"loadClassNormal\", classOf[String])\n"+
-      "      val clazz = method.invoke(classLoader, \""+ qualifiedClassName +"\").asInstanceOf[Class[_]]\n"+
+      "      val clazz = com.borachio.ReflectionUtilities.getUnmockedClass(getClass, \""+ qualifiedClassName +"\")\n"+
       "      val constructor = clazz.getConstructor("+ constructorParamTypes(params) +")\n"+
       "      forwardTo = constructor.newInstance"+ forwardConstructorParams(params) +".asInstanceOf[AnyRef]\n"+
       "    }\n"+
