@@ -34,7 +34,7 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
   lazy val compiler_plugin_tests = project("compiler_plugin_tests", "Compiler Plugin Tests", new BorachioProject(_), library, compiler_plugin)
   
   class BorachioProject(info: ProjectInfo) extends DefaultProject(info) with GenerateMocks {
-
+    
     val scalatest = "org.scalatest" %% "scalatest" % "1.6.1" % "optional"
     val junit = "junit" % "junit" % "3.8.2" % "optional"
 
@@ -45,6 +45,10 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
     override def generateMockCompileOptions = super.generateMockCompileOptions ++ compileOptions("-Ylog:generatemocks")
     
     // override def generateMocksTask = task { None }
+    
+    override def compileMocksCompileConfiguration = new CompileMocksCompileConfig {
+      override def classpath = testClasspath +++ mockCompilePath
+    }
   }
 
   lazy val sbt_plugin = project("sbt_plugin", "sbt Plugin", new SbtPluginProject(_))

@@ -39,4 +39,14 @@ class JavaTest extends FunSuite with MockFactory with GeneratedMockFactory with 
     m.methodWithZeroArguments
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
+  
+  test("constants") {
+    expect(1) { JavaClassWithConstants.INT_CONSTANT }
+    expect(2) { JavaClassWithConstants.INTEGER_CONSTANT }
+    expect(42) { JavaClassWithConstants.CLASS_CONSTANT.x }
+    expect("foo") { JavaClassWithConstants.CLASS_CONSTANT.y }
+
+    //! TODO - the following should also work
+    // expect(new CaseClass(42, "foo")) { JavaClassWithConstants.CLASS_CONSTANT }
+  }
 }
