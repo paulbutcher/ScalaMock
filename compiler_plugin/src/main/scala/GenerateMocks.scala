@@ -41,13 +41,12 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   lazy val MockAnnotation = definitions.getClass("com.borachio.annotation.mock")
   lazy val MockWithCompanionAnnotation = definitions.getClass("com.borachio.annotation.mockWithCompanion")
   lazy val MockObjectAnnotation = definitions.getClass("com.borachio.annotation.mockObject")
-  lazy val mockOutputDirectory = plugin.mockOutputDirectory.get
-  lazy val testOutputDirectory = plugin.testOutputDirectory.get
+  lazy val mockRoot = plugin.mockOutputDirectory.get
+  lazy val testRoot = plugin.testOutputDirectory.get
   
   def newPhase(prev: Phase) = new StdPhase(prev) {
     def apply(unit: CompilationUnit) {
       if (plugin.mockOutputDirectory.isDefined && plugin.testOutputDirectory.isDefined) {
-        createOutputDirectories
         new ForeachTreeTraverser(findMockAnnotations).traverse(unit.body)
         generateMockFactory
       } else {
@@ -103,7 +102,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   }
   
   def generateMockFactory() {
-    val writer = new FileWriter(new File(testOutputDirectory, "GeneratedMockFactory.scala"))
+    val writer = new FileWriter(new File(testRoot, "GeneratedMockFactory.scala"))
     writer.write(mockFactory)
     writer.close
   }
@@ -119,11 +118,6 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     "  implicit def toMock(m: "+ target +") = m.asInstanceOf["+ mock +"]"
     
   def mockObjectEntry(target: String, mock: String) = "  def mockObject(x: "+ target +".type) = x.asInstanceOf["+ mock +"]"
-    
-  def createOutputDirectories {
-    new File(mockOutputDirectory).mkdirs
-    new File(testOutputDirectory).mkdirs
-  }
   
   trait Context {
     val topLevel: Boolean
@@ -172,15 +166,15 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       writer.close
     }
     
-    lazy val mockFile = new File(mockOutputDirectoryFull, className +".scala")
+    lazy val mockFile = new File(mockOutputDirectory, className +".scala")
     
-    lazy val testFile = new File(testOutputDirectoryFull, mockTraitOrClassName +".scala")
+    lazy val testFile = new File(testOutputDirectory, mockTraitOrClassName +".scala")
     
-    lazy val javaFeaturesFile = new File(mockOutputDirectoryFull, javaFeaturesClassName +".java")
+    lazy val javaFeaturesFile = new File(mockOutputDirectory, javaFeaturesClassName +".java")
     
-    lazy val mockOutputDirectoryFull = getOutputDirectory(mockOutputDirectory)
+    lazy val mockOutputDirectory = getOutputDirectory(mockRoot)
     
-    lazy val testOutputDirectoryFull = getOutputDirectory(testOutputDirectory)
+    lazy val testOutputDirectory = getOutputDirectory(testRoot)
     
     def getOutputDirectory(root: String) = {
       val d = packageDirectory(new File(root))
