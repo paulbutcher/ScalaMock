@@ -172,11 +172,25 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       writer.close
     }
     
-    lazy val mockFile = new File(mockOutputDirectory, qualifiedClassName +".scala")
+    lazy val mockFile = new File(mockOutputDirectoryFull, className +".scala")
     
-    lazy val testFile = new File(testOutputDirectory, fullMockTraitOrClassName +".scala")
+    lazy val testFile = new File(testOutputDirectoryFull, mockTraitOrClassName +".scala")
     
-    lazy val javaFeaturesFile = new File(mockOutputDirectory, javaFeaturesClassName +".java")
+    lazy val javaFeaturesFile = new File(mockOutputDirectoryFull, javaFeaturesClassName +".java")
+    
+    lazy val mockOutputDirectoryFull = getOutputDirectory(mockOutputDirectory)
+    
+    lazy val testOutputDirectoryFull = getOutputDirectory(testOutputDirectory)
+    
+    def getOutputDirectory(root: String) = {
+      val d = packageDirectory(new File(root))
+      d.mkdirs
+      d
+    }
+    
+    def packageDirectory(root: File) = packageElements.foldLeft(root) { (f, e) => new File(f, e) }
+    
+    lazy val packageElements = packageName split '.'
     
     def getMock: String =
       mockedTypeDeclaration +" {\n\n"+
