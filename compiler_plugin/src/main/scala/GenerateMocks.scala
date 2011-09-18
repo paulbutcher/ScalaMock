@@ -86,7 +86,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     assert(atp.typeArgs.length == 1)
     val symbol = atp.typeArgs.head.typeSymbol
     val companion = symbol.companionModule
-    if (companion == NoSymbol)
+    if (companion == NoSymbol || companion.isJavaDefined)
       globalError("@mockWithCompanion["+ symbol +"] - no companion found")
     else
       new MockWithCompanion(symbol, companion.moduleClass).generate

@@ -40,6 +40,7 @@ import com.borachio.annotation.{mock, mockObject, mockWithCompanion}
 @mock[SimpleJavaClass]
 @mock[JavaClassWithConstants]
 @mock[JavaClassWithStaticVars]
+@mock[JavaClassWithStaticMethods]
 @mockObject(SimpleObject)
 @mockWithCompanion[ClassWithCompanionObject]
 @mockWithCompanion[TraitWithCompanionObject]
