@@ -20,6 +20,7 @@
 
 import sbt._
 import Keys._
+import sbt.inc.Analysis
 
 object BorachioBuild extends Build {
   
@@ -37,7 +38,13 @@ object BorachioBuild extends Build {
   lazy val borachio = Project(
       "Borachio",
       file(".")
-    ) aggregate(library, compiler_plugin, compiler_plugin_tests)
+    ) settings (
+      compile in Mock := Analysis.Empty
+    ) aggregate(
+      library, compiler_plugin, compiler_plugin_tests
+    ) configs(
+      Mock
+    )
   
   lazy val library = Project(
       "Library", 
@@ -49,7 +56,9 @@ object BorachioBuild extends Build {
       file("compiler_plugin")
     ) settings(
       libraryDependencies += "org.scala-lang" % "scala-compiler" % "2.9.1"
-    ) dependsOn(library)
+    ) dependsOn(
+      library
+    )
     
   lazy val GenerateMocks = config("generate-mocks")
   lazy val Mock = config("mock")
@@ -64,7 +73,7 @@ object BorachioBuild extends Build {
       val opts = initialOpts ++ Seq(
         "-Xplugin:compiler_plugin/target/scala-2.9.1.final/compilerplugin_2.9.1-2.0-SNAPSHOT.jar",
         "-Xplugin-require:borachio",
-        // "-Ylog:generatemocks",
+        "-Ylog:generatemocks",
         "-Ystop-after:generatemocks",
         "-P:borachio:generatemocks:"+ gm,
         "-P:borachio:generatetest:"+ gt)
@@ -93,5 +102,10 @@ object BorachioBuild extends Build {
       file("compiler_plugin_tests")
     ) settings(
       generateMocksSettings: _*
-    ) dependsOn(compiler_plugin)
+    ) dependsOn(
+      library % "mock;test",
+      compiler_plugin
+    ) configs(
+      Mock
+    )
 }
