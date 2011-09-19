@@ -42,5 +42,13 @@ object Borachio extends Build {
     }
   )
   
-  lazy val core = Project("Borachio core", file("core"))
+  lazy val core = Project("Borachio core", file("core"), 
+    aggregate = Seq(scalatest, specs2, junit3, core_tests))
+
+  lazy val scalatest: Project = Project("Borachio ScalaTest support", file("frameworks/scalatest")) dependsOn(core)
+  lazy val specs2: Project = Project("Borachio Specs2 support", file("frameworks/specs2")) dependsOn(core)
+  lazy val junit3: Project = Project("Borachio Junit3 support", file("frameworks/junit3")) dependsOn(core)
+  
+  lazy val core_tests: Project = Project("Tests", file("core_tests"), 
+    dependencies = Seq(scalatest % "test", specs2 % "test"))
 }
