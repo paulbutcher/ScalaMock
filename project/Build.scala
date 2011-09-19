@@ -42,5 +42,5 @@ object Borachio extends Build {
     }
   )
   
-  lazy val core = Project("Borachio core", file("."))
+  lazy val core = Project("Borachio core", file("core"))
 }
