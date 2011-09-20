@@ -27,7 +27,17 @@ object Borachio extends Build {
     organization := "com.borachio",
     version := "1.3-SNAPSHOT",
     crossScalaVersions := Seq("2.8.1", "2.9.1"),
-    scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings")
+
+    scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings"),
+
+    publishTo <<= version { v =>
+      val nexus = "http://nexus.scala-tools.org/content/repositories/"
+      if (v.trim.endsWith("SNAPSHOT"))
+        Some("snapshots" at nexus + "snapshots/") 
+      else
+        Some("releases" at nexus + "releases/")
+    },
+    credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
   )
   
   lazy val core = Project("Borachio core", file("core"), 
@@ -46,7 +56,7 @@ object Borachio extends Build {
   ) dependsOn(core)
   
   lazy val core_tests: Project = Project("Tests", file("core_tests"), 
-    dependencies = Seq(scalatest % "test", specs2 % "test"))
+    dependencies = Seq(scalatest % "test", specs2 % "test")) settings(publishArtifact := false)
     
   val scalatestVersions = Map("2.8.1" -> "1.5.1", "2.9.1" -> "1.6.1")
   val specs2Versions = Map("2.8.1" -> "1.2", "2.9.1" -> "1.5")
