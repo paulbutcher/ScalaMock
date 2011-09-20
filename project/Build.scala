@@ -56,7 +56,7 @@ object Borachio extends Build {
   ) dependsOn(core)
   
   lazy val core_tests: Project = Project("Tests", file("core_tests"), 
-    dependencies = Seq(scalatest % "test", specs2 % "test")) settings(publishArtifact := false)
+    dependencies = Seq(scalatest % "test", specs2 % "test")) settings(publish := ())
     
   val scalatestVersions = Map("2.8.1" -> "1.5.1", "2.9.1" -> "1.6.1")
   val specs2Versions = Map("2.8.1" -> "1.2", "2.9.1" -> "1.5")
