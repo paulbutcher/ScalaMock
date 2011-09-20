@@ -41,7 +41,7 @@ object Borachio extends Build {
   )
   
   lazy val core = Project("Borachio core", file("core"), 
-    aggregate = Seq(scalatest, specs2, junit3, core_tests))
+    aggregate = Seq(scalatest, specs2, junit3, core_tests)) dependsOn(dummy)
 
   lazy val scalatest: Project = Project("Borachio ScalaTest support", file("frameworks/scalatest")) settings(
     libraryDependencies <+= scalaVersion("org.scalatest" %% "scalatest" % scalatestVersion(_))
@@ -57,6 +57,9 @@ object Borachio extends Build {
   
   lazy val core_tests: Project = Project("Tests", file("core_tests"), 
     dependencies = Seq(scalatest % "test", specs2 % "test")) settings(publish := ())
+  
+  // Dummy project to workaround https://github.com/harrah/xsbt/issues/85
+  lazy val dummy = Project("Dummy", file("dummy"))
     
   val scalatestVersions = Map("2.8.1" -> "1.5.1", "2.9.1" -> "1.6.1")
   val specs2Versions = Map("2.8.1" -> "1.2", "2.9.1" -> "1.5")
