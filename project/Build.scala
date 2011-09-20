@@ -27,28 +27,33 @@ object Borachio extends Build {
     organization := "com.borachio",
     version := "1.3-SNAPSHOT",
     crossScalaVersions := Seq("2.8.1", "2.9.1"),
-    scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings"),
-
-    libraryDependencies <<= (scalaVersion, libraryDependencies) { (sv, deps) =>
-      val (scalatestVersion, specsVersion) = sv match {
-        case "2.8.1" => ("1.5.1", "1.2")
-        case "2.9.1" => ("1.6.1", "1.5")
-        case _ => error("Unsupported Scala version:"+ sv)
-      }
-      deps ++ Seq(
-        "org.scalatest" %% "scalatest" % scalatestVersion % "optional",
-        "org.specs2" %% "specs2" % specsVersion % "optional",
-        "junit" % "junit" % "3.8.2" % "optional")
-    }
+    scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings")
   )
   
   lazy val core = Project("Borachio core", file("core"), 
     aggregate = Seq(scalatest, specs2, junit3, core_tests))
 
-  lazy val scalatest: Project = Project("Borachio ScalaTest support", file("frameworks/scalatest")) dependsOn(core)
-  lazy val specs2: Project = Project("Borachio Specs2 support", file("frameworks/specs2")) dependsOn(core)
-  lazy val junit3: Project = Project("Borachio Junit3 support", file("frameworks/junit3")) dependsOn(core)
+  lazy val scalatest: Project = Project("Borachio ScalaTest support", file("frameworks/scalatest")) settings(
+    libraryDependencies <+= scalaVersion("org.scalatest" %% "scalatest" % scalatestVersion(_))
+  ) dependsOn(core)
+
+  lazy val specs2: Project = Project("Borachio Specs2 support", file("frameworks/specs2")) settings(
+    libraryDependencies <+= scalaVersion("org.specs2" %% "specs2" % specs2Version(_))
+  ) dependsOn(core)
+
+  lazy val junit3: Project = Project("Borachio Junit3 support", file("frameworks/junit3")) settings(
+    libraryDependencies += "junit" % "junit" % "3.8.2"
+  ) dependsOn(core)
   
   lazy val core_tests: Project = Project("Tests", file("core_tests"), 
     dependencies = Seq(scalatest % "test", specs2 % "test"))
+    
+  val scalatestVersions = Map("2.8.1" -> "1.5.1", "2.9.1" -> "1.6.1")
+  val specs2Versions = Map("2.8.1" -> "1.2", "2.9.1" -> "1.5")
+    
+  def scalatestVersion(scalaVersion: String) = getLibraryVersion(scalatestVersions, scalaVersion)
+  def specs2Version(scalaVersion: String) = getLibraryVersion(specs2Versions, scalaVersion)
+  
+  def getLibraryVersion(versionMap: Map[String, String], scalaVersion: String) =
+    versionMap.getOrElse(scalaVersion, error("Unsupported Scala version: "+ scalaVersion))
 }
