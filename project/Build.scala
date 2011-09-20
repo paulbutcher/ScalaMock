@@ -59,7 +59,7 @@ object Borachio extends Build {
     dependencies = Seq(scalatest % "test", specs2 % "test")) settings(publish := ())
   
   // Dummy project to workaround https://github.com/harrah/xsbt/issues/85
-  lazy val dummy = Project("Dummy", file("dummy"))
+  lazy val dummy = Project("Dummy", file("dummy")) settings(publish := ())
     
   val scalatestVersions = Map("2.8.1" -> "1.5.1", "2.9.1" -> "1.6.1")
   val specs2Versions = Map("2.8.1" -> "1.2", "2.9.1" -> "1.5")
