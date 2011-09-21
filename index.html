@@ -72,7 +72,7 @@
     </p>
 
     <p>
-      <a href="https://github.com/paulbutcher/borachio/tree/master/src/test/scala/examples">More examples</a>
+      <a href="https://github.com/paulbutcher/borachio/tree/master/core_tests/src/test/scala/examples">More examples</a>
     </p>
     
     <p>
@@ -93,7 +93,8 @@
       To use Borachio in <a href="http://code.google.com/p/simple-build-tool/">sbt</a> add the following to your project file:
     </p>
     
-    <pre>val borachio = "com.borachio" %% "borachio" % "latest.integration"</pre>
+    <pre>libraryDependencies ++= Seq("com.borachio" %% "borachio-core" % "latest.integration",
+  "com.borachio" %% "borachio-scalatest-support" % "latest.integration")</pre>
     
     <p>
       <a href="http://maven.apache.org/">Maven</a> users, or if you just want to download the JAR, <a href="http://scala-tools.org/repo-releases/com/borachio/">look here</a>.
