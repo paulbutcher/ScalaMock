@@ -26,7 +26,7 @@ object Borachio extends Build {
   override lazy val settings = super.settings ++ Seq(
     organization := "com.borachio",
     version := "1.3-SNAPSHOT",
-    crossScalaVersions := Seq("2.8.1", "2.9.1"),
+    crossScalaVersions := Seq("2.8.1", "2.9.0", "2.9.0-1", "2.9.1"),
 
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings"),
 
@@ -61,12 +61,12 @@ object Borachio extends Build {
   // Dummy project to workaround https://github.com/harrah/xsbt/issues/193
   lazy val dummy = Project("Dummy", file("dummy")) settings(publish := ())
     
-  val scalatestVersions = Map("2.8.1" -> "1.5.1", "2.9.1" -> "1.6.1")
-  val specs2Versions = Map("2.8.1" -> "1.2", "2.9.1" -> "1.5")
+  val scalatestVersions = Map("2.8" -> "1.5.1", "2.9" -> "1.6.1")
+  val specs2Versions = Map("2.8" -> "1.2", "2.9" -> "1.5")
     
   def scalatestVersion(scalaVersion: String) = getLibraryVersion(scalatestVersions, scalaVersion)
   def specs2Version(scalaVersion: String) = getLibraryVersion(specs2Versions, scalaVersion)
   
   def getLibraryVersion(versionMap: Map[String, String], scalaVersion: String) =
-    versionMap.getOrElse(scalaVersion, error("Unsupported Scala version: "+ scalaVersion))
+    versionMap.getOrElse(scalaVersion take 3, error("Unsupported Scala version: "+ scalaVersion))
 }
