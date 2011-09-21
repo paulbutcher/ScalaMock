@@ -32,7 +32,7 @@ Native Scala mocking.
 
 [Full worked example](http://www.paulbutcher.com/2011/02/mocking-in-scala-with-borachio-step-by-step/).
 
-For more examples, see `src/test/scala/examples`.
+For more examples, see `core_tests/src/test/scala/examples`.
 
 [Using Borachio on Android](http://www.paulbutcher.com/2011/03/mock-objects-on-android-with-borachio-part-1/).
 
@@ -40,15 +40,17 @@ For more examples, see `src/test/scala/examples`.
 
 ## Installation
 
-To use Borachio in [sbt](http://code.google.com/p/simple-build-tool/) add the following to your project file:
+To use Borachio in [sbt 0.10](https://github.com/harrah/xsbt/wiki) add the following to your project file:
 
-    val borachio = "com.borachio" %% "borachio" % "latest.integration"
+    libraryDependencies ++= Seq("com.borachio" %% "borachio-core" % "latest.integration",
+        "com.borachio" %% "borachio-scalatest-support" % "latest.integration")
     
-[Maven](http://maven.apache.org/) users, or if you just want to download the JAR, [look here](http://scala-tools.org/repo-releases/com/borachio/).
+[Maven](http://maven.apache.org/) users, or if you just want to download the JARs, [look here](http://scala-tools.org/repo-releases/com/borachio/).
 
 ## Building
 
-    sbt update
+Install [sbt 0.10.1](https://github.com/harrah/xsbt/wiki) and then:
+
     sbt test
 
 ## Design Principles
