@@ -41,7 +41,9 @@ object Borachio extends Build {
   )
   
   lazy val core = Project("Borachio core", file("core"), 
-    aggregate = Seq(scalatest, specs2, junit3, core_tests)) dependsOn(dummy)
+    aggregate = Seq(scalatest, specs2, junit3, core_tests)) settings(
+    // Workaround https://github.com/harrah/xsbt/issues/193
+    unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist")))
 
   lazy val scalatest: Project = Project("Borachio ScalaTest support", file("frameworks/scalatest")) settings(
     libraryDependencies <+= scalaVersion("org.scalatest" %% "scalatest" % scalatestVersion(_))
@@ -58,9 +60,6 @@ object Borachio extends Build {
   lazy val core_tests: Project = Project("Tests", file("core_tests"), 
     dependencies = Seq(scalatest % "test", specs2 % "test")) settings(publish := ())
   
-  // Dummy project to workaround https://github.com/harrah/xsbt/issues/193
-  lazy val dummy = Project("Dummy", file("dummy")) settings(publish := ())
-    
   val scalatestVersions = Map("2.8" -> "1.5.1", "2.9" -> "1.6.1")
   val specs2Versions = Map("2.8" -> "1.2", "2.9" -> "1.5")
     
