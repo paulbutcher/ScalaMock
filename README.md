@@ -42,8 +42,7 @@ For more examples, see `core_tests/src/test/scala/examples`.
 
 To use Borachio in [sbt 0.10](https://github.com/harrah/xsbt/wiki) add the following to your project file:
 
-    libraryDependencies ++= Seq("com.borachio" %% "borachio-core" % "latest.integration",
-        "com.borachio" %% "borachio-scalatest-support" % "latest.integration")
+    libraryDependencies += "com.borachio" %% "borachio-scalatest-support" % "latest.integration"
     
 [Maven](http://maven.apache.org/) users, or if you just want to download the JARs, [look here](http://scala-tools.org/repo-releases/com/borachio/).
 
