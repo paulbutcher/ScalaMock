@@ -88,4 +88,16 @@ class ProxyMockTest extends Suite with MockFactory {
     m.moveInSequence((1.0, 1.0))
     m.moveInSequence((2.0, 2.0), (-1.0, -2.0), (10.0, 0.0))
   }
+  
+  def testStubs {
+    val m = mock[Turtle]
+    
+    m stubs 'setPosition
+    m stubs 'getPosition returning (3.0, 4.0)
+    m stubs 'forward
+
+    m.setPosition(1.0, 2.0)
+    expect((3.0, 4.0)) { m.getPosition }
+    m.setPosition(5.0, 6.0)
+  }
 }

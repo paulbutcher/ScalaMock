@@ -31,7 +31,8 @@ trait ProxyMockFactory { self: AbstractMockFactory =>
       (proxy: AnyRef, name: Symbol, args: Array[AnyRef]) =>
         try {
           name match {
-            case 'expects => self.MockFunctionToExpectation(getOrCreate(proxy, args(0).asInstanceOf[Symbol]))
+            case 'expects => addExpectation(proxy, args(0).asInstanceOf[Symbol])
+            case 'stubs => addExpectation(proxy, args(0).asInstanceOf[Symbol]).anyNumberOfTimes
             case _ => methodsFor(proxy)(name)(args).asInstanceOf[AnyRef]
           }
         } catch {
@@ -49,6 +50,9 @@ trait ProxyMockFactory { self: AbstractMockFactory =>
   }
   
   private def methodsFor(proxy: AnyRef) = (proxies find { _._1 eq proxy }).get._2
+  
+  private def addExpectation(proxy: AnyRef, method: Symbol) =
+    self.MockFunctionToExpectation(getOrCreate(proxy, method))
   
   private def getOrCreate(proxy: AnyRef, name: Symbol) = {
     val methods = methodsFor(proxy)
