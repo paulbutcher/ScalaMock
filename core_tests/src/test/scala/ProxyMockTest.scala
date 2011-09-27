@@ -35,6 +35,7 @@ class ProxyMockTest extends Suite with MockFactory {
     def getAngle: Double
     def getPosition(): (Double, Double)
     def setPosition(x: Double, y: Double): (Double, Double)
+    def moveInSequence(positions: (Double, Double)*)
   }
   
   def testUnexpectedCall {
@@ -76,5 +77,15 @@ class ProxyMockTest extends Suite with MockFactory {
     expect((2.0, 1.0)) { m2.getPosition }
 
     verifyExpectations
+  }
+  
+  def testRepeatedParameters {
+    val m = mock[Turtle]
+    
+    m expects 'moveInSequence withArguments(Seq((1.0, 1.0)))
+    m expects 'moveInSequence withArguments(Seq((2.0, 2.0), (-1.0, -2.0), (10.0, 0.0)))
+    
+    m.moveInSequence((1.0, 1.0))
+    m.moveInSequence((2.0, 2.0), (-1.0, -2.0), (10.0, 0.0))
   }
 }
