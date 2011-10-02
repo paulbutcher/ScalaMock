@@ -35,7 +35,7 @@ trait AbstractMockFactory extends ProxyMockFactory {
       throw new ExpectationException(unexpectedCallsMessage + verboseMessage)
 
     if (!expectationContext.satisfied)
-      throw new ExpectationException("Unsatisfied expectation: "+ expectationContext + verboseMessage)
+      throw new ExpectationException("Unsatisfied expectation: "+ expectationContext.unsatisfiedString + verboseMessage)
   }
   
   protected def inSequence(what: => Unit) {
@@ -93,7 +93,7 @@ trait AbstractMockFactory extends ProxyMockFactory {
     throw new ExpectationException(unexpectedCallsMessage + verboseMessage)
   }
   
-  private def verboseMessage = (if (verbose) "\n\nExpectations:\n"+ toString else "") + callLog
+  private def verboseMessage = (if (verbose) "\n\nExpectations:\n"+ expectationContext else "") + callLog
   
   private def callLog = if (callLogging) "\n\nActual calls:\n"+ actualCallsMessage else ""
   

@@ -85,6 +85,8 @@ class Expectation(target: MockFunction) extends Handler {
     case None => actualCalls > 0
   }
   
+  private[borachio] def unsatisfiedString = toString
+  
   private[borachio] def exhausted = expectedCalls match {
     case Some(r) => r.last == actualCalls
     case None => false

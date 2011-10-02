@@ -30,5 +30,8 @@ private[borachio] abstract class Expectations extends Handler {
   
   private[borachio] def satisfied = handlers.forall { _.satisfied }
   
+  private[borachio] def unsatisfiedString =
+    (handlers collect { case h if !h.satisfied => h.unsatisfiedString }).mkString("\n")
+  
   protected val handlers = new ListBuffer[Handler]
 }
