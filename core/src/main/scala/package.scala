@@ -246,6 +246,25 @@ package com
  * expect((2.0, 1.0)) { m2.getPosition }
  * }}}
  *
+ * To specify that there is no constraint on ordering, use `inAnyOrder` (there is an implicit
+ * `inAnyOrder` at the top level). Calls to `inSequence` and `inAnyOrder` can be arbitrarily
+ * nested. For example:
+ *
+ * {{{
+ * m expects 'a
+ * inSequence {
+ *   m expects 'b
+ *   inAnyOrder {
+ *     m expects 'c
+ *     inSequence {
+ *       m expects 'd
+ *       m expects 'e
+ *     }
+ *     m expects 'f
+ *   }
+ *   m expects 'g
+ * }}}
+ *
  * == Debugging ==
  *
  * If faced with a difficult to debug failing expectation, consider mixing 

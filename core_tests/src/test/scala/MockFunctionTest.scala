@@ -224,6 +224,61 @@ class MockFunctionTest extends WordSpec with MockFactory {
       verifyExpectations
     }
     
+    "handle valid deeply nested expectation contexts" in {
+      val m = mockFunction[String, Unit]
+      
+      m expects ("1")
+      inSequence {
+        m expects ("2.1")
+        inAnyOrder {
+          m expects ("2.2.1")
+          inSequence {
+            m expects ("2.2.2.1")
+            m expects ("2.2.2.2")
+          }
+          m expects ("2.2.3")
+        }
+        m expects ("2.3")
+      }
+      m expects ("3")
+      
+      m("2.1")
+      m("1")
+      m("2.2.3")
+      m("2.2.2.1")
+      m("2.2.2.2")
+      m("2.2.1")
+      m("3")
+      m("2.2.3")
+      m("2.3")
+      
+      verifyExpectations
+    }
+    
+    "handle invalid deeply nested expectation contexts" in {
+      val m = mockFunction[String, Unit]
+      
+      m expects ("1")
+      inSequence {
+        m expects ("2.1")
+        inAnyOrder {
+          m expects ("2.2.1")
+          inSequence {
+            m expects ("2.2.2.1")
+            m expects ("2.2.2.2")
+          }
+          m expects ("2.2.3")
+        }
+        m expects ("2.3")
+      }
+      m expects ("3")
+      
+      m("2.1")
+      m("1")
+      m("2.2.3")
+      intercept[ExpectationException] { m("2.2.2.2") }
+    }
+    
     "match wildcard arguments" in {
       val m = mockFunction[Int, String, Unit]
       m expects (42, "foo")

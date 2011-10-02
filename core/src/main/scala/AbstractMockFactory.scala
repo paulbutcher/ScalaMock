@@ -38,15 +38,12 @@ trait AbstractMockFactory extends ProxyMockFactory {
       throw new ExpectationException("Unsatisfied expectation: "+ expectationContext.unsatisfiedString + verboseMessage)
   }
   
+  protected def inAnyOrder(what: => Unit) {
+    inContext(new UnorderedExpectations)(what)
+  }
+  
   protected def inSequence(what: => Unit) {
-    require(expectationContext != null, "Have you remembered to use withExpectations?")
-
-    val newContext = new OrderedExpectations
-    expectationContext.add(newContext)
-    val prevContext = expectationContext
-    expectationContext = newContext
-    what
-    expectationContext = prevContext
+    inContext(new OrderedExpectations)(what)
   }
 
   protected implicit def MockFunctionToExpectation(m: MockFunction) = {
@@ -100,6 +97,16 @@ trait AbstractMockFactory extends ProxyMockFactory {
   private def unexpectedCallsMessage = unexpectedCalls.mkString("\n")
 
   private def actualCallsMessage = actualCalls.mkString("\n")
+  
+  private def inContext(context: Expectations)(what: => Unit) {
+    require(expectationContext != null, "Have you remembered to use withExpectations?")
+
+    expectationContext.add(context)
+    val prevContext = expectationContext
+    expectationContext = context
+    what
+    expectationContext = prevContext
+  }
   
   private[borachio] val verbose = false
   private[borachio] val callLogging = false
