@@ -61,13 +61,13 @@ private[borachio] class UnorderedExpectations extends Expectations {
     throw new ExpectationException(unexpectedCallsMessage + verboseMessage)
   }
   
-  private[borachio] def verboseMessage = (if (verbose) "\n\nExpectations:\n"+ toString else "") + callLog
+  private def verboseMessage = (if (verbose) "\n\nExpectations:\n"+ toString else "") + callLog
   
-  private[borachio] def callLog = if (callLogging) "\n\nActual calls:\n"+ actualCallsMessage else ""
+  private def callLog = if (callLogging) "\n\nActual calls:\n"+ actualCallsMessage else ""
   
-  private[borachio] def unexpectedCallsMessage = unexpectedCalls.mkString("\n")
+  private def unexpectedCallsMessage = unexpectedCalls.mkString("\n")
 
-  private[borachio] def actualCallsMessage = actualCalls.mkString("\n")
+  private def actualCallsMessage = actualCalls.mkString("\n")
   
   override def toString = handlers.map(_.toString).mkString("\n")
   
