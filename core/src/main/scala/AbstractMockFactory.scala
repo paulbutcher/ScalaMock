@@ -36,6 +36,8 @@ trait AbstractMockFactory extends ProxyMockFactory {
 
     if (!expectationContext.satisfied)
       throw new ExpectationException("Unsatisfied expectation: "+ expectationContext.unsatisfiedString + verboseMessage)
+      
+    expectationContext = null
   }
   
   protected def inAnyOrder(what: => Unit) {
