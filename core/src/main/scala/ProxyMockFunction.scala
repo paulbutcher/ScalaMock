@@ -20,7 +20,7 @@
 
 package com.borachio
 
-private[borachio] class ProxyMockFunction(name: Symbol, expectations: UnorderedExpectations) extends MockFunction(expectations) {
+private[borachio] class ProxyMockFunction(name: Symbol, factory: AbstractMockFactory) extends MockFunction(factory) {
   
   override def toString = name.toString
 
