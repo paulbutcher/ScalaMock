@@ -20,15 +20,23 @@
 
 package com.borachio
 
+import scala.collection.mutable.ListBuffer
+
 trait AbstractMockFactory extends ProxyMockFactory {
   
   protected def resetExpectations() {
-    expectations.reset(verbose, callLogging)
+    unexpectedCalls.clear
+    actualCalls.clear
+    expectations = new UnorderedExpectations
     expectationContext = expectations
   }
 
   protected def verifyExpectations() {
-    expectations.verify
+    if (!unexpectedCalls.isEmpty)
+      throw new ExpectationException(unexpectedCallsMessage + verboseMessage)
+
+    if (!expectations.satisfied)
+      throw new ExpectationException("Unsatisfied expectation: "+ expectations + verboseMessage)
   }
   
   protected def inSequence(what: => Unit) {
@@ -68,9 +76,37 @@ trait AbstractMockFactory extends ProxyMockFactory {
     def unary_~() = new MatchEpsilon(d)
   }
   protected implicit def doubleToEpsilon(d: Double) = new EpsilonMatcher(d)
+  
+  private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Any = {
+    lazy val description = mock.toString +" with arguments: "+ arguments.mkString("(", ", ", ")")
+    val r = expectations.handle(mock, arguments)
+    if (r.isDefined) {
+      if (callLogging)
+        actualCalls += description
+      return r.get
+    }
+    handleUnexpectedCall(description)
+  }
+  
+  private[borachio] def handleUnexpectedCall(description: String) = {
+    actualCalls += description
+    unexpectedCalls += "Unexpected: "+ description
+    throw new ExpectationException(unexpectedCallsMessage + verboseMessage)
+  }
+  
+  private def verboseMessage = (if (verbose) "\n\nExpectations:\n"+ toString else "") + callLog
+  
+  private def callLog = if (callLogging) "\n\nActual calls:\n"+ actualCallsMessage else ""
+  
+  private def unexpectedCallsMessage = unexpectedCalls.mkString("\n")
 
+  private def actualCallsMessage = actualCalls.mkString("\n")
+  
   private[borachio] val verbose = false
   private[borachio] val callLogging = false
-  private[borachio] val expectations = new UnorderedExpectations
+  private[borachio] var expectations = new UnorderedExpectations
   private var expectationContext: Expectations = _
+
+  private val unexpectedCalls = new ListBuffer[String]
+  private val actualCalls = new ListBuffer[String]
 }

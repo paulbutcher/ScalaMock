@@ -22,11 +22,13 @@ package com.borachio
 
 import scala.collection.mutable.ListBuffer
 
-private[borachio] abstract class Expectations {
+private[borachio] abstract class Expectations extends Handler {
   
   private[borachio] def add(handler: Handler) {
     handlers += handler
   }
+  
+  private[borachio] def satisfied = handlers.forall { _.satisfied }
   
   protected val handlers = new ListBuffer[Handler]
 }

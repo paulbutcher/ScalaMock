@@ -22,7 +22,7 @@ package com.borachio
 
 abstract class MockFunction(factory: AbstractMockFactory) {
 
-  protected def handle(arguments: Array[Any]) = factory.expectations.handle(this, arguments)
+  protected def handle(arguments: Array[Any]) = factory.handle(this, arguments)
 }
 
 class MockFunction0[R](factory: AbstractMockFactory) 
