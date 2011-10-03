@@ -26,8 +26,9 @@ package com.borachio
 class Expectation(target: MockFunction) extends Handler {
   
   def expects(arguments: Any*) = {
-    require(!expectedArguments.isDefined, "arguments can only be set once")
-    expectedArguments = Some(arguments.toArray)
+    require(!argumentsMatcher.isDefined, "arguments matcher can only be set once")
+    argumentsMatcher = Some({ args: Product => arguments sameElements args.productIterator.toIterable })
+    argumentsString = "with arguments: "+ arguments.mkString("(", ", ", ")")
     this
   }
   
@@ -94,7 +95,7 @@ class Expectation(target: MockFunction) extends Handler {
   
   private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Option[Any] = {
     if (mock == target && !exhausted) {
-      if (!expectedArguments.isDefined || (expectedArguments.get sameElements arguments)) {
+      if (!argumentsMatcher.isDefined || argumentsMatcher.get(tupled(arguments))) {
         actualCalls += 1
         exception match {
           case Some(e) => throw e
@@ -105,17 +106,26 @@ class Expectation(target: MockFunction) extends Handler {
     None
   }
   
-  private[borachio] def argumentsString = expectedArguments match {
-    case Some(a) => "with arguments: "+ a.mkString("(", ", ", ")")
-    case None => ""
+  private def tupled(arguments: Array[Any]) = arguments match {
+    case Array() => List()
+    case Array(x1) => Tuple1(x1)
+    case Array(x1, x2) => (x1, x2)
+    case Array(x1, x2, x3) => (x1, x2, x3)
+    case Array(x1, x2, x3, x4) => (x1, x2, x3, x4)
+    case Array(x1, x2, x3, x4, x5) => (x1, x2, x3, x4, x5)
+    case Array(x1, x2, x3, x4, x5, x6) => (x1, x2, x3, x4, x5, x6)
+    case Array(x1, x2, x3, x4, x5, x6, x7) => (x1, x2, x3, x4, x5, x6, x7)
+    case Array(x1, x2, x3, x4, x5, x6, x7, x8) => (x1, x2, x3, x4, x5, x6, x7, x8)
+    case Array(x1, x2, x3, x4, x5, x6, x7, x8, x9) => (x1, x2, x3, x4, x5, x6, x7, x8, x9)
+    case Array(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10) => (x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)
   }
   
-  private[borachio] def returnString = returnValue match {
+  private def returnString = returnValue match {
     case Some(r) => "returning: "+ r
     case None => ""
   }
   
-  private[borachio] def expectedCallsString = "expected calls: "+ (
+  private def expectedCallsString = "expected calls: "+ (
     expectedCalls match {
       case Some(c) if c.start == c.last => c.start
       case Some(c) => c.start +" to "+ c.last
@@ -123,12 +133,14 @@ class Expectation(target: MockFunction) extends Handler {
     }
   )
   
-  private[borachio] def actualCallsString = "actual calls: " + actualCalls
+  private def actualCallsString = "actual calls: " + actualCalls
 
-  private var expectedArguments: Option[Array[Any]] = None
+  private var argumentsMatcher: Option[Function1[Product, Boolean]] = None
   private var returnValue: Option[Any] = None
   private var exception: Option[Throwable] = None
   private var expectedCalls: Option[Range] = None
+  
+  private var argumentsString = ""
 
   private var actualCalls = 0
 }
