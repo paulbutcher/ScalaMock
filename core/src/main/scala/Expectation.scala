@@ -35,6 +35,15 @@ class Expectation(target: MockFunction) extends Handler {
   def withArguments(arguments: Any*) = expects(arguments: _*)
   
   def withArgs(arguments: Any*) = expects(arguments: _*)
+  
+  def expectsWhere(matcher: Function1[Product, Boolean]) = {
+    require(!argumentsMatcher.isDefined, "arguments matcher can only be set once")
+    argumentsMatcher = Some(matcher)
+    argumentsString = "where predicate is true"
+    this
+  }
+  
+  def where(matcher: Function1[Product, Boolean]) = expectsWhere(matcher)
 
   def returns(value: Any) = {
     require(!returnValue.isDefined, "return value can only be set once")

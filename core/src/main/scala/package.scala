@@ -150,6 +150,23 @@ package com
  * m(42.1)
  * }}}
  *
+ * ====Predicate matching====
+ *
+ * More complicated argument matching can be implemented by passing a predicate; a function
+ * that takes a [[scala.Product]] and returns a `Boolean`. For mock functions, use `expectsWhere`:
+ *
+ * {{{
+ * m = mockFunction[Double, Double, Unit]
+ * m expectsWhere { case(x: Double, y: Double) => x < y }
+ * }}}
+ *
+ * For proxy mocks, use `where`:
+ *
+ * {{{
+ * m = mock[Turtle]
+ * m expects 'setPosition where { case(x: Double, y: Double) => x < y }
+ * }}}
+ *
  * ===Return value===
  *
  * Mocks can be instructed to return a specific value with `returns` or `returning`:

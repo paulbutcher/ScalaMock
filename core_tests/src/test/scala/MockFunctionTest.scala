@@ -303,7 +303,7 @@ class MockFunctionTest extends WordSpec with MockFactory {
       intercept[ExpectationException] { m(42.1) }
     }
     
-    "Cope with a SUT that swallows exceptions" in {
+    "cope with a SUT that swallows exceptions" in {
       val m = mockFunction[Unit]
       
       try {
@@ -312,6 +312,24 @@ class MockFunctionTest extends WordSpec with MockFactory {
         case _ => // do nothing
       }
       intercept[ExpectationException] { verifyExpectations }
+    }
+    
+    "match a simple predicate" in {
+      val m = mockFunction[Int, Double, String]
+      
+      m expectsWhere { case (x: Int, y: Double) => x < y } returning "predicate matched"
+      
+      expect("predicate matched") { m(10, 12.0) }
+
+      verifyExpectations
+    }
+    
+    "fail if a predicate does not match" in {
+      val m = mockFunction[Int, Double, String]
+      
+      m expectsWhere { case (x: Int, y: Double) => x < y } returning "predicate matched"
+      
+      intercept[ExpectationException] { m(12, 10.0) }
     }
   }
 }

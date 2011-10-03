@@ -87,6 +87,8 @@ class ProxyMockTest extends Suite with MockFactory {
     
     m.moveInSequence((1.0, 1.0))
     m.moveInSequence((2.0, 2.0), (-1.0, -2.0), (10.0, 0.0))
+    
+    verifyExpectations
   }
   
   def testStubs {
@@ -99,5 +101,17 @@ class ProxyMockTest extends Suite with MockFactory {
     m.setPosition(1.0, 2.0)
     expect((3.0, 4.0)) { m.getPosition }
     m.setPosition(5.0, 6.0)
+    
+    verifyExpectations
+  }
+  
+  def testPredicate {
+    val m = mock[Turtle]
+    
+    m expects 'setPosition where { case (x, y) => x == y } anyNumberOfTimes
+    
+    m.setPosition(1.0, 1.0)
+    m.setPosition(3.14159, 3.14159)
+    intercept[ExpectationException] { m.setPosition(1.0, 2.0) }
   }
 }
