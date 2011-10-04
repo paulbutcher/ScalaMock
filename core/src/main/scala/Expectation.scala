@@ -44,21 +44,23 @@ class Expectation(target: MockFunction) extends Handler {
   }
   
   def where(matcher: Function1[Product, Boolean]) = expectsWhere(matcher)
+  
+  def onCall(handler: Function1[Product, Any]) = {
+    require(!onCallHandler.isDefined, "on call behaviour can only be set once")
+    onCallHandler = Some(handler)
+    this
+  }
 
   def returns(value: Any) = {
-    require(!returnValue.isDefined, "return value can only be set once")
-    require(!exception.isDefined, "either return value or exception can be set, not both")
-    returnValue = Some(value)
-    this
+    returnString = "returning: "+ value
+    onCall { _ => value }
   }
   
   def returning(value: Any) = returns(value)
   
   def throws(e: Throwable) = {
-    require(!exception.isDefined, "exception can only be set once")
-    require(!returnValue.isDefined, "either return value or exception can be set, not both")
-    exception = Some(e)
-    this
+    returnString = "throwing: "+ e
+    onCall { _ => throw e }
   }
   
   def throwing(e: Throwable) = throws(e)
@@ -103,16 +105,16 @@ class Expectation(target: MockFunction) extends Handler {
   }
   
   private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Option[Any] = {
-    if (mock == target && !exhausted) {
-      if (!argumentsMatcher.isDefined || argumentsMatcher.get(tupled(arguments))) {
-        actualCalls += 1
-        exception match {
-          case Some(e) => throw e
-          case None => return Some(returnValue.getOrElse(null))
-        }
-      }
+    lazy val args = tupled(arguments)
+    if (mock == target && !exhausted && (!argumentsMatcher.isDefined || argumentsMatcher.get(args))) {
+      actualCalls += 1
+      Some(onCallHandler match {
+        case Some(h) => h(args)
+        case None => null
+      })
+    } else {
+      None
     }
-    None
   }
   
   private def tupled(arguments: Array[Any]) = arguments match {
@@ -129,11 +131,6 @@ class Expectation(target: MockFunction) extends Handler {
     case Array(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10) => (x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)
   }
   
-  private def returnString = returnValue match {
-    case Some(r) => "returning: "+ r
-    case None => ""
-  }
-  
   private def expectedCallsString = "expected calls: "+ (
     expectedCalls match {
       case Some(c) if c.start == c.last => c.start
@@ -145,11 +142,11 @@ class Expectation(target: MockFunction) extends Handler {
   private def actualCallsString = "actual calls: " + actualCalls
 
   private var argumentsMatcher: Option[Function1[Product, Boolean]] = None
-  private var returnValue: Option[Any] = None
-  private var exception: Option[Throwable] = None
+  private var onCallHandler: Option[Function1[Product, Any]] = None
   private var expectedCalls: Option[Range] = None
   
   private var argumentsString = ""
+  private var returnString = ""
 
   private var actualCalls = 0
 }
