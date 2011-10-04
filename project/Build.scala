@@ -25,7 +25,7 @@ object Borachio extends Build {
 
   override lazy val settings = super.settings ++ Seq(
     organization := "com.borachio",
-    version := "1.3",
+    version := "1.4-SNAPSHOT",
     crossScalaVersions := Seq("2.8.1", "2.9.0", "2.9.0-1", "2.9.1"),
 
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings"),
