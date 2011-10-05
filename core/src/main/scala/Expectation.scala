@@ -26,9 +26,8 @@ package com.borachio
 class Expectation(target: MockFunction) extends Handler {
   
   def expects(arguments: Any*) = {
-    require(!argumentsMatcher.isDefined, "arguments matcher can only be set once")
-    argumentsMatcher = Some({ args: Product => arguments sameElements args.productIterator.toIterable })
     argumentsString = "with arguments: "+ arguments.mkString("(", ", ", ")")
+    argumentsMatcher = { args => arguments sameElements args }
     this
   }
   
@@ -36,31 +35,111 @@ class Expectation(target: MockFunction) extends Handler {
   
   def withArgs(arguments: Any*) = expects(arguments: _*)
   
-  def expectsWhere(matcher: Function1[Product, Boolean]) = {
-    require(!argumentsMatcher.isDefined, "arguments matcher can only be set once")
-    argumentsMatcher = Some(matcher)
-    argumentsString = "where predicate is true"
+  def expectsWhere[T1](matcher: T1 => Boolean) = {
+    argumentsMatcher = new FunctionAdapter1(matcher)
+    this
+  }
+  def expectsWhere[T1, T2](matcher: (T1, T2) => Boolean) = {
+    argumentsMatcher = new FunctionAdapter2(matcher)
+    this
+  }
+  def expectsWhere[T1, T2, T3](matcher: (T1, T2, T3) => Boolean) = {
+    argumentsMatcher = new FunctionAdapter3(matcher)
+    this
+  }
+  def expectsWhere[T1, T2, T3, T4](matcher: (T1, T2, T3, T4) => Boolean) = {
+    argumentsMatcher = new FunctionAdapter4(matcher)
+    this
+  }
+  def expectsWhere[T1, T2, T3, T4, T5](matcher: (T1, T2, T3, T4, T5) => Boolean) = {
+    argumentsMatcher = new FunctionAdapter5(matcher)
+    this
+  }
+  def expectsWhere[T1, T2, T3, T4, T5, T6](matcher: (T1, T2, T3, T4, T5, T6) => Boolean) = {
+    argumentsMatcher = new FunctionAdapter6(matcher)
+    this
+  }
+  def expectsWhere[T1, T2, T3, T4, T5, T6, T7](matcher: (T1, T2, T3, T4, T5, T6, T7) => Boolean) = {
+    argumentsMatcher = new FunctionAdapter7(matcher)
+    this
+  }
+  def expectsWhere[T1, T2, T3, T4, T5, T6, T7, T8](matcher: (T1, T2, T3, T4, T5, T6, T7, T8) => Boolean) = {
+    argumentsMatcher = new FunctionAdapter8(matcher)
+    this
+  }
+  def expectsWhere[T1, T2, T3, T4, T5, T6, T7, T8, T9](matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9) => Boolean) = {
+    argumentsMatcher = new FunctionAdapter9(matcher)
+    this
+  }
+  def expectsWhere[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10](matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) => Boolean) = {
+    argumentsMatcher = new FunctionAdapter10(matcher)
     this
   }
   
-  def where(matcher: Function1[Product, Boolean]) = expectsWhere(matcher)
+  def where[T1](matcher: T1 => Boolean) = expectsWhere(matcher)
+  def where[T1, T2](matcher: (T1, T2) => Boolean) = expectsWhere(matcher)
+  def where[T1, T2, T3](matcher: (T1, T2, T3) => Boolean) = expectsWhere(matcher)
+  def where[T1, T2, T3, T4](matcher: (T1, T2, T3, T4) => Boolean) = expectsWhere(matcher)
+  def where[T1, T2, T3, T4, T5](matcher: (T1, T2, T3, T4, T5) => Boolean) = expectsWhere(matcher)
+  def where[T1, T2, T3, T4, T5, T6](matcher: (T1, T2, T3, T4, T5, T6) => Boolean) = expectsWhere(matcher)
+  def where[T1, T2, T3, T4, T5, T6, T7](matcher: (T1, T2, T3, T4, T5, T6, T7) => Boolean) = expectsWhere(matcher)
+  def where[T1, T2, T3, T4, T5, T6, T7, T8](matcher: (T1, T2, T3, T4, T5, T6, T7, T8) => Boolean) = expectsWhere(matcher)
+  def where[T1, T2, T3, T4, T5, T6, T7, T8, T9](matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9) => Boolean) = expectsWhere(matcher)
+  def where[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10](matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) => Boolean) = expectsWhere(matcher)
   
-  def onCall(handler: Function1[Product, Any]) = {
-    require(!onCallHandler.isDefined, "on call behaviour can only be set once")
-    onCallHandler = Some(handler)
+  def onCall[T1, R](f: T1 => R) = {
+    onCallHandler = new FunctionAdapter1(f)
+    this
+  }
+  def onCall[T1, T2, R](f: (T1, T2) => R) = {
+    onCallHandler = new FunctionAdapter2(f)
+    this
+  }
+  def onCall[T1, T2, T3, R](f: (T1, T2, T3) => R) = {
+    onCallHandler = new FunctionAdapter3(f)
+    this
+  }
+  def onCall[T1, T2, T3, T4, R](f: (T1, T2, T3, T4) => R) = {
+    onCallHandler = new FunctionAdapter4(f)
+    this
+  }
+  def onCall[T1, T2, T3, T4, T5, R](f: (T1, T2, T3, T4, T5) => R) = {
+    onCallHandler = new FunctionAdapter5(f)
+    this
+  }
+  def onCall[T1, T2, T3, T4, T5, T6, R](f: (T1, T2, T3, T4, T5, T6) => R) = {
+    onCallHandler = new FunctionAdapter6(f)
+    this
+  }
+  def onCall[T1, T2, T3, T4, T5, T6, T7, R](f: (T1, T2, T3, T4, T5, T6, T7) => R) = {
+    onCallHandler = new FunctionAdapter7(f)
+    this
+  }
+  def onCall[T1, T2, T3, T4, T5, T6, T7, T8, R](f: (T1, T2, T3, T4, T5, T6, T7, T8) => R) = {
+    onCallHandler = new FunctionAdapter8(f)
+    this
+  }
+  def onCall[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9) => R) = {
+    onCallHandler = new FunctionAdapter9(f)
+    this
+  }
+  def onCall[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) => R) = {
+    onCallHandler = new FunctionAdapter10(f)
     this
   }
 
   def returns(value: Any) = {
     returnString = "returning: "+ value
-    onCall { _ => value }
+    onCallHandler = { _ => value }
+    this
   }
   
   def returning(value: Any) = returns(value)
   
   def throws(e: Throwable) = {
     returnString = "throwing: "+ e
-    onCall { _ => throw e }
+    onCallHandler = { _ => throw e }
+    this
   }
   
   def throwing(e: Throwable) = throws(e)
@@ -105,11 +184,10 @@ class Expectation(target: MockFunction) extends Handler {
   }
   
   private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Option[Any] = {
-    lazy val args = tupled(arguments)
-    if (mock == target && !exhausted && (!argumentsMatcher.isDefined || argumentsMatcher.get(args))) {
+    if (mock == target && !exhausted && (!argumentsMatcher.isDefined || argumentsMatcher.get(arguments))) {
       actualCalls += 1
       Some(onCallHandler match {
-        case Some(h) => h(args)
+        case Some(h) => h(arguments)
         case None => null
       })
     } else {
@@ -117,18 +195,14 @@ class Expectation(target: MockFunction) extends Handler {
     }
   }
   
-  private def tupled(arguments: Array[Any]) = arguments match {
-    case Array() => List()
-    case Array(x1) => Tuple1(x1)
-    case Array(x1, x2) => (x1, x2)
-    case Array(x1, x2, x3) => (x1, x2, x3)
-    case Array(x1, x2, x3, x4) => (x1, x2, x3, x4)
-    case Array(x1, x2, x3, x4, x5) => (x1, x2, x3, x4, x5)
-    case Array(x1, x2, x3, x4, x5, x6) => (x1, x2, x3, x4, x5, x6)
-    case Array(x1, x2, x3, x4, x5, x6, x7) => (x1, x2, x3, x4, x5, x6, x7)
-    case Array(x1, x2, x3, x4, x5, x6, x7, x8) => (x1, x2, x3, x4, x5, x6, x7, x8)
-    case Array(x1, x2, x3, x4, x5, x6, x7, x8, x9) => (x1, x2, x3, x4, x5, x6, x7, x8, x9)
-    case Array(x1, x2, x3, x4, x5, x6, x7, x8, x9, x10) => (x1, x2, x3, x4, x5, x6, x7, x8, x9, x10)
+  private def argumentsMatcher_=(matcher: Function1[Array[Any], Boolean]) {
+    require(!argumentsMatcher.isDefined, "arguments matcher can only be set once")
+    argumentsMatcher = Some(matcher)
+  }
+  
+  private def onCallHandler_=(handler: Function1[Array[Any], Any]) {
+    require(!onCallHandler.isDefined, "on call behaviour can only be set once")
+    onCallHandler = Some(handler)
   }
   
   private def expectedCallsString = "expected calls: "+ (
@@ -141,8 +215,8 @@ class Expectation(target: MockFunction) extends Handler {
   
   private def actualCallsString = "actual calls: " + actualCalls
 
-  private var argumentsMatcher: Option[Function1[Product, Boolean]] = None
-  private var onCallHandler: Option[Function1[Product, Any]] = None
+  private var argumentsMatcher: Option[Array[Any] => Boolean] = None
+  private var onCallHandler: Option[Array[Any] => Any] = None
   private var expectedCalls: Option[Range] = None
   
   private var argumentsString = ""

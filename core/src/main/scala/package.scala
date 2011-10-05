@@ -157,14 +157,14 @@ package com
  *
  * {{{
  * m = mockFunction[Double, Double, Unit]
- * m expectsWhere { case(x: Double, y: Double) => x < y }
+ * m expectsWhere { (x: Double, y: Double) => x < y }
  * }}}
  *
  * For proxy mocks, use `where`:
  *
  * {{{
  * m = mock[Turtle]
- * m expects 'setPosition where { case(x: Double, y: Double) => x < y }
+ * m expects 'setPosition where { (x: Double, y: Double) => x < y }
  * }}}
  *
  * ===Return value===
@@ -183,6 +183,13 @@ package com
  * types, but not for methods returning primitive types (`Int`, `Double` etc.), where returning 
  * `null` leads to a `NullPointerException`. So you will need to explicitly specify a return value
  * for such methods. This restriction may be lifted in the future.
+ *
+ * You can return a computed value (or throw a computed exception) with `onCall`, for example:
+ *
+ * {{{
+ * val mockIncrement = mockFunction[Int, Int]
+ * m expects (*) onCall { x: Int => x + 1 }
+ * }}}
  *
  * ===Exceptions===
  *

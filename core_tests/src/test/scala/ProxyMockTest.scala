@@ -108,7 +108,7 @@ class ProxyMockTest extends Suite with MockFactory {
   def testPredicate {
     val m = mock[Turtle]
     
-    m expects 'setPosition where { case (x, y) => x == y } anyNumberOfTimes
+    m expects 'setPosition where { (x: Double, y: Double) => x == y } anyNumberOfTimes
     
     m.setPosition(1.0, 1.0)
     m.setPosition(3.14159, 3.14159)
