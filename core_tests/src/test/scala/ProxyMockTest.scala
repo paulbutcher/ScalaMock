@@ -27,6 +27,17 @@ class ProxyMockTest extends Suite with MockFactory with ProxyMockFactory {
   
   autoVerify = false
   
+  trait Turtle {
+    def penUp()
+    def penDown()
+    def forward(distance: Double): (Double, Double)
+    def turn(angle: Double)
+    def getAngle: Double
+    def getPosition(): (Double, Double)
+    def setPosition(x: Double, y: Double): (Double, Double)
+    def moveInSequence(positions: (Double, Double)*)
+  }
+  
   def testUnexpectedCall {
     val m = mock[Turtle]
     intercept[ExpectationException] { m.penDown }
@@ -66,5 +77,27 @@ class ProxyMockTest extends Suite with MockFactory with ProxyMockFactory {
     expect((2.0, 1.0)) { m2.getPosition }
 
     verifyExpectations
+  }
+  
+  def testRepeatedParameters {
+    val m = mock[Turtle]
+    
+    m expects 'moveInSequence withArguments(Seq((1.0, 1.0)))
+    m expects 'moveInSequence withArguments(Seq((2.0, 2.0), (-1.0, -2.0), (10.0, 0.0)))
+    
+    m.moveInSequence((1.0, 1.0))
+    m.moveInSequence((2.0, 2.0), (-1.0, -2.0), (10.0, 0.0))
+  }
+  
+  def testStubs {
+    val m = mock[Turtle]
+    
+    m stubs 'setPosition
+    m stubs 'getPosition returning (3.0, 4.0)
+    m stubs 'forward
+
+    m.setPosition(1.0, 2.0)
+    expect((3.0, 4.0)) { m.getPosition }
+    m.setPosition(5.0, 6.0)
   }
 }

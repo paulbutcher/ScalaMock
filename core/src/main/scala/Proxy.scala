@@ -24,15 +24,20 @@ import java.lang.reflect.{InvocationHandler, Method, Proxy => JavaProxy}
 
 private[borachio] object Proxy {
   
-  def create(interfaces: Class[_]*)(f: (AnyRef, Symbol, Array[AnyRef]) => AnyRef) = {
+  def create(classLoaderStrategy: ClassLoaderStrategy, interfaces: Class[_]*)(f: (AnyRef, Symbol, Array[AnyRef]) => AnyRef) = {
     
-    val classLoader = interfaces(0).getClassLoader
+    val classLoader = classLoaderStrategy.getClassLoader(interfaces :_*)
 
     val handler = new InvocationHandler {
       def invoke(proxy: AnyRef, method: Method, args: Array[AnyRef]) =
         f(proxy, Symbol(method.getName), args)
     }
 
-    JavaProxy.newProxyInstance(classLoader, interfaces.distinct.toArray, handler)
+    try {
+      JavaProxy.newProxyInstance(classLoader, interfaces.distinct.toArray, handler)
+    } catch {
+      case e: IllegalArgumentException => 
+        throw new IllegalArgumentException("Unable to create proxy - possible classloader issue? Consider setting proxyClassLoaderStrategy", e)
+    }
   }
 }

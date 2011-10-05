@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.android
+package com.borachio.junit3
 
 import com.borachio.AbstractMockFactory
 import junit.framework.TestCase

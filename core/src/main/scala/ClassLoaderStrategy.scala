@@ -20,12 +20,10 @@
 
 package com.borachio
 
-trait Turtle {
-  def penUp()
-  def penDown()
-  def forward(distance: Double)
-  def turn(angle: Double)
-  def getAngle: Double
-  def getPosition(): (Double, Double)
-  def setPosition(x: Double, y: Double): (Double, Double)
+trait ClassLoaderStrategy {
+  def getClassLoader(interfaces: Class[_]*): ClassLoader
+}
+
+object threadContextClassLoaderStrategy extends ClassLoaderStrategy {
+  def getClassLoader(interfaces: Class[_]*) = Thread.currentThread.getContextClassLoader
 }

@@ -24,12 +24,15 @@ import scala.collection.mutable.{ListBuffer, Map}
 
 trait ProxyMockFactory { self: AbstractMockFactory =>
   
+  protected var proxyClassLoaderStrategy = threadContextClassLoaderStrategy
+  
   protected def mock[T: ClassManifest] = {
-    val proxy = Proxy.create(classOf[Mock], classManifest[T].erasure) {
+    val proxy = Proxy.create(proxyClassLoaderStrategy, classOf[Mock], classManifest[T].erasure) {
       (proxy: AnyRef, name: Symbol, args: Array[AnyRef]) =>
         try {
           name match {
-            case 'expects => getOrCreate(proxy, args(0).asInstanceOf[Symbol]).toExpectation
+            case 'expects => addExpectation(proxy, args(0).asInstanceOf[Symbol])
+            case 'stubs => addExpectation(proxy, args(0).asInstanceOf[Symbol]).anyNumberOfTimes
             case _ => methodsFor(proxy)(name)(args).asInstanceOf[AnyRef]
           }
         } catch {
@@ -47,6 +50,9 @@ trait ProxyMockFactory { self: AbstractMockFactory =>
   }
   
   private def methodsFor(proxy: AnyRef) = (proxies find { _._1 eq proxy }).get._2
+  
+  private def addExpectation(proxy: AnyRef, method: Symbol) =
+    getOrCreate(proxy, method).toExpectation
   
   private def getOrCreate(proxy: AnyRef, name: Symbol) = {
     val methods = methodsFor(proxy)

@@ -73,6 +73,20 @@ package com
  * m expects 'getPosition returning (15.0, 10.0)
  * }}}
  *
+ * By default, an expectation accepts any arguments and a single call. The following two statements are equivalent:
+ *
+ * {{{
+ * m expects 'forward withArgs (*) once
+ * m expects 'forward
+ * }}}
+ *
+ * As a convenience, proxy mocks also support the `stubs` method. The following two statements are equivalent:
+ *
+ * {{{
+ * m expects 'forward anyNumberOfTimes
+ * m stubs 'forward
+ * }}}
+ *
  * ==Expectations==
  *
  * Expectations can be set on the arguments a function or method is called with and how many times

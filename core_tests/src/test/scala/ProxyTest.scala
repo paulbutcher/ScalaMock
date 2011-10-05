@@ -35,28 +35,37 @@ class ProxyTest extends WordSpec {
   "A proxy" should {
     
     "implement a single interface" in {
-      val p = Proxy.create(classOf[Trait1]) { unimplemented _ }
+      val p = Proxy.create(threadContextClassLoaderStrategy, classOf[Trait1]) {
+        unimplemented _
+      }
       assert(p.isInstanceOf[Trait1])
     }
     
     "implement multiple interfaces" in {
-      val p = Proxy.create(classOf[Trait1], classOf[Trait2], classOf[Trait3]) { unimplemented _ }
+      val p = Proxy.create(threadContextClassLoaderStrategy, classOf[Trait1], classOf[Trait2], classOf[Trait3]) {
+        unimplemented _
+      }
       assert(p.isInstanceOf[Trait1])
       assert(p.isInstanceOf[Trait2])
       assert(p.isInstanceOf[Trait3])
     }
     
     "fail if given a class" in {
-      intercept[IllegalArgumentException] { val p = Proxy.create(classOf[Class1]) { unimplemented _ } }
+      intercept[IllegalArgumentException] { 
+        val p = Proxy.create(threadContextClassLoaderStrategy, classOf[Class1]) { 
+          unimplemented _
+        }
+      }
     }
     
     "forward calls" in {
-      val p = Proxy.create(classOf[Trait1]) { (proxy: AnyRef, name: Symbol, args: Array[AnyRef]) =>
-        expect(name) { 'method1 }
-        expect(2) { args.length }
-        expect(42) { args(0).asInstanceOf[Int] }
-        expect("foo") { args(1).asInstanceOf[String] }
-        "called"
+      val p = Proxy.create(threadContextClassLoaderStrategy, classOf[Trait1]) { 
+        (proxy: AnyRef, name: Symbol, args: Array[AnyRef]) =>
+          expect(name) { 'method1 }
+          expect(2) { args.length }
+          expect(42) { args(0).asInstanceOf[Int] }
+          expect("foo") { args(1).asInstanceOf[String] }
+          "called"
       }.asInstanceOf[Trait1]
 
       expect("called") { p.method1(42, "foo") }

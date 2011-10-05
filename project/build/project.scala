@@ -28,10 +28,13 @@ class Borachio(info: ProjectInfo) extends ParentProject(info) {
   val publishTo = "Scala Tools Nexus" at "http://nexus.scala-tools.org/content/repositories/snapshots/"
   Credentials(Path.userHome / ".ivy2" / ".credentials", log)
   
-  lazy val library = project("library", "Library", new BorachioProject(_))
-  lazy val compiler_plugin = project("compiler_plugin", "Compiler Plugin", new BorachioProject(_), library)
-  lazy val examples = project("examples", "Examples", new BorachioProject(_), library, compiler_plugin)
-  lazy val compiler_plugin_tests = project("compiler_plugin_tests", "Compiler Plugin Tests", new BorachioProject(_), library, compiler_plugin)
+  lazy val core = project("core", "Core", new BorachioProject(_))
+  lazy val junit_support = project("frameworks" / "junit3", "JUnit Support", new BorachioProject(_), core)
+  lazy val scalatest_support = project("frameworks" / "scalatest", "ScalaTest Support", new BorachioProject(_), core)
+  lazy val core_tests = project("core_tests", "Core Tests", new BorachioProject(_), core, scalatest_support)
+  lazy val compiler_plugin = project("compiler_plugin", "Compiler Plugin", new BorachioProject(_), core)
+  lazy val examples = project("examples", "Examples", new BorachioProject(_), core, compiler_plugin, scalatest_support)
+  lazy val compiler_plugin_tests = project("compiler_plugin_tests", "Compiler Plugin Tests", new BorachioProject(_), core, compiler_plugin, scalatest_support)
   
   class BorachioProject(info: ProjectInfo) extends DefaultProject(info) with GenerateMocks {
     
