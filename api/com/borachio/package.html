@@ -28,10 +28,10 @@
       </span>
       </h4>
       
-          <div class="fullcommenttop" id="comment"><div class="comment cmt"><h3>Borachio: Native Scala mocking</h3><p>To use Borachio with ScalaTest, mix the <a name="com.borachio.scalatest.MockFactory" class="extype" href="scalatest/MockFactory.html">MockFactory</a> trait into a
+          <div class="fullcommenttop" id="comment"><div class="comment cmt"><h3>Borachio: Native Scala mocking</h3><p>To use Borachio with ScalaTest, mix the com.borachio.scalatest.MockFactory trait into a
 Suite:</p><pre>
 class MyTest extends Suite with MockFactory
-</pre><p>To use Borachio with JUnit3, mix the <a name="com.borachio.junit3.MockFactory" class="extype" href="junit3/MockFactory.html">MockFactory</a> trait into a
+</pre><p>To use Borachio with JUnit3, mix the com.borachio.junit3.MockFactory trait into a
 TestCase:</p><pre>
 class MyTest extends TestCase with MockFactory
 </pre><p>Borachio supports two different mocking styles - <i>Functional mocking</i> and <i>Proxy mocking</i>.</p><h4>Functional mocking</h4><p>Functional mocks are created with <code>mockFunction</code>. The following, for example, creates a mock
@@ -48,6 +48,12 @@ val m = mock[Turtle]
 m expects 'setPosition withArgs (10.0, 10.0)
 m expects 'forward withArgs (5.0)
 m expects 'getPosition returning (15.0, 10.0)
+</pre><p>By default, an expectation accepts any arguments and a single call. The following two statements are equivalent:</p><pre>
+m expects 'forward withArgs (*) once
+m expects 'forward
+</pre><p>As a convenience, proxy mocks also support the <code>stubs</code> method. The following two statements are equivalent:</p><pre>
+m expects 'forward anyNumberOfTimes
+m stubs 'forward
 </pre><h4>Expectations</h4><p>Expectations can be set on the arguments a function or method is called with and how many times
 it should be called. In addition, mocks can be instructed to return a particular value or throw
 an exception when that expectation is met.</p><h5>Arguments</h5><p>To specify expected arguments for a functional mock, use <code>expects</code>. To specify expected
@@ -71,6 +77,13 @@ m(41.9999)
 </pre><p>but will not match:</p><pre>
 m(43.0)
 m(42.1)
+</pre><h6>Predicate matching</h6><p>More complicated argument matching can be implemented by passing a predicate; a function
+that takes a scala.Product and returns a <code>Boolean</code>. For mock functions, use <code>expectsWhere</code>:</p><pre>
+m = mockFunction[Double, Double, Unit]
+m expectsWhere { (x: Double, y: Double) =&gt; x &lt; y }
+</pre><p>For proxy mocks, use <code>where</code>:</p><pre>
+m = mock[Turtle]
+m expects 'setPosition where { (x: Double, y: Double) =&gt; x &lt; y }
 </pre><h5>Return value</h5><p>Mocks can be instructed to return a specific value with <code>returns</code> or <code>returning</code>:</p><pre>
 m1 returns 42
 m2 expects (&quot;this&quot;, &quot;that&quot;) returning &quot;the other&quot;
@@ -78,7 +91,10 @@ m2 expects (&quot;this&quot;, &quot;that&quot;) returning &quot;the other&quot;
 return type (which equates to <code>0</code> for <code>Int</code>, <code>0.0</code> for <code>Double</code> etc.).</p><p>If no return value is specified, proxy mocks return <code>null</code>. This works correctly for most return
 types, but not for methods returning primitive types (<code>Int</code>, <code>Double</code> etc.), where returning
 <code>null</code> leads to a <code>NullPointerException</code>. So you will need to explicitly specify a return value
-for such methods. This restriction may be lifted in the future.</p><h5>Exceptions</h5><p>Instead of a return value, a mock can be instructed to throw:</p><pre>
+for such methods. This restriction may be lifted in the future.</p><p>You can return a computed value (or throw a computed exception) with <code>onCall</code>, for example:</p><pre>
+val mockIncrement = mockFunction[Int, Int]
+m expects (*) onCall { x: Int =&gt; x + 1 }
+</pre><h5>Exceptions</h5><p>Instead of a return value, a mock can be instructed to throw:</p><pre>
 m expects (&quot;this&quot;, &quot;that&quot;) throws new RuntimeException(&quot;what's that?&quot;)
 </pre><h5>Call count</h5><p>By default, mocks expect one or more calls (i.e. only fail if the function or method is never
 called). An exact number of calls or a range can be set with <code>repeat</code>:</p><pre>
@@ -126,6 +142,21 @@ m1.forward(10.0)
 m2.forward(1.0)
 m1.penUp
 expect((2.0, 1.0)) { m2.getPosition }
+</pre><p>To specify that there is no constraint on ordering, use <code>inAnyOrder</code> (there is an implicit
+<code>inAnyOrder</code> at the top level). Calls to <code>inSequence</code> and <code>inAnyOrder</code> can be arbitrarily
+nested. For example:</p><pre>
+m expects 'a
+inSequence {
+  m expects 'b
+  inAnyOrder {
+    m expects 'c
+    inSequence {
+      m expects 'd
+      m expects 'e
+    }
+    m expects 'f
+  }
+  m expects 'g
 </pre><h4> Debugging </h4><p>If faced with a difficult to debug failing expectation, consider mixing
 one or both of the <a name="com.borachio.VerboseErrors" class="extype" href="VerboseErrors.html">VerboseErrors</a> or <a name="com.borachio.CallLogging" class="extype" href="CallLogging.html">CallLogging</a> traits
 into your test suite:</p><pre>
@@ -172,6 +203,17 @@ class MyTest extends Suite with MockFactory with VerboseErrors with CallLogging
       </h4>
       <p class="comment cmt">Trait that can be mixed into a <a name="com.borachio.AbstractMockFactory" class="extype" href="AbstractMockFactory.html">AbstractMockFactory</a> to switch on
 call logging.</p>
+    </li><li visbl="pub" name="com.borachio.ClassLoaderStrategy" data-isabs="true">
+      <a id="ClassLoaderStrategy:ClassLoaderStrategy"></a>
+      <h4 class="signature">
+      <span class="kind">trait</span>
+      <span class="symbol"> 
+        <a href="ClassLoaderStrategy.html"><span class="name">ClassLoaderStrategy</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="com.borachio.Expectation" data-isabs="false">
       <a id="Expectation:Expectation"></a>
       <h4 class="signature">
@@ -401,41 +443,21 @@ verbose error messages.</p>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="com.borachio.junit3" data-isabs="false">
-      <a id="junit3:junit3"></a>
+    </li><li visbl="pub" name="com.borachio.threadContextClassLoaderStrategy" data-isabs="false">
+      <a id="threadContextClassLoaderStrategy:threadContextClassLoaderStrategy"></a>
       <h4 class="signature">
-      <span class="kind">package</span>
+      <span class="kind">object</span>
       <span class="symbol"> 
-        <a href="junit3/package.html"><span class="name">junit3</span></a>
+        <a href="threadContextClassLoaderStrategy$.html"><span class="name">threadContextClassLoaderStrategy</span></a>
         
-        
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="com.borachio.scalatest" data-isabs="false">
-      <a id="scalatest:scalatest"></a>
-      <h4 class="signature">
-      <span class="kind">package</span>
-      <span class="symbol"> 
-        <a href="scalatest/package.html"><span class="name">scalatest</span></a>
-        
-        
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="com.borachio.specs2" data-isabs="false">
-      <a id="specs2:specs2"></a>
-      <h4 class="signature">
-      <span class="kind">package</span>
-      <span class="symbol"> 
-        <a href="specs2/package.html"><span class="name">specs2</span></a>
-        
-        
+        <span class="result"> extends ClassLoaderStrategy</span>
       </span>
       </h4>
       
     </li></ol>
             </div>
+
+        
 
         
 
