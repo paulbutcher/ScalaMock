@@ -150,6 +150,23 @@ package com
  * m(42.1)
  * }}}
  *
+ * ====Predicate matching====
+ *
+ * More complicated argument matching can be implemented by passing a predicate; a function
+ * that takes a [[scala.Product]] and returns a `Boolean`. For mock functions, use `expectsWhere`:
+ *
+ * {{{
+ * m = mockFunction[Double, Double, Unit]
+ * m expectsWhere { (x: Double, y: Double) => x < y }
+ * }}}
+ *
+ * For proxy mocks, use `where`:
+ *
+ * {{{
+ * m = mock[Turtle]
+ * m expects 'setPosition where { (x: Double, y: Double) => x < y }
+ * }}}
+ *
  * ===Return value===
  *
  * Mocks can be instructed to return a specific value with `returns` or `returning`:
@@ -166,6 +183,13 @@ package com
  * types, but not for methods returning primitive types (`Int`, `Double` etc.), where returning 
  * `null` leads to a `NullPointerException`. So you will need to explicitly specify a return value
  * for such methods. This restriction may be lifted in the future.
+ *
+ * You can return a computed value (or throw a computed exception) with `onCall`, for example:
+ *
+ * {{{
+ * val mockIncrement = mockFunction[Int, Int]
+ * m expects (*) onCall { x: Int => x + 1 }
+ * }}}
  *
  * ===Exceptions===
  *
@@ -244,6 +268,25 @@ package com
  * m2.forward(1.0)
  * m1.penUp
  * expect((2.0, 1.0)) { m2.getPosition }
+ * }}}
+ *
+ * To specify that there is no constraint on ordering, use `inAnyOrder` (there is an implicit
+ * `inAnyOrder` at the top level). Calls to `inSequence` and `inAnyOrder` can be arbitrarily
+ * nested. For example:
+ *
+ * {{{
+ * m expects 'a
+ * inSequence {
+ *   m expects 'b
+ *   inAnyOrder {
+ *     m expects 'c
+ *     inSequence {
+ *       m expects 'd
+ *       m expects 'e
+ *     }
+ *     m expects 'f
+ *   }
+ *   m expects 'g
  * }}}
  *
  * == Debugging ==

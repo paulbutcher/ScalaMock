@@ -20,7 +20,7 @@
 
 package com.borachio
 
-private[borachio] class OrderedExpectations extends Expectations with Handler {
+private[borachio] class OrderedExpectations extends Expectations {
 
   private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Option[Any] = {
     for (i <- currentIndex until handlers.length) {
@@ -35,8 +35,6 @@ private[borachio] class OrderedExpectations extends Expectations with Handler {
     }
     None
   }
-  
-  private[borachio] def satisfied = handlers.forall { _.satisfied }
   
   override def toString = handlers.mkString("inSequence {\n  ", "\n  ", "\n}")
 

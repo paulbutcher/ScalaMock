@@ -24,4 +24,5 @@ private[borachio] trait Handler {
   
   private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Option[Any]
   private[borachio] def satisfied: Boolean
+  private[borachio] def unsatisfiedString: String
 }

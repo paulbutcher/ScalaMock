@@ -20,63 +20,16 @@
 
 package com.borachio
 
-import scala.collection.mutable.ListBuffer
-
 private[borachio] class UnorderedExpectations extends Expectations {
-
-  private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Any = {
-    lazy val description = mock.toString +" with arguments: "+ arguments.mkString("(", ", ", ")")
-    for (handler <- handlers) {
+  
+  private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Option[Any] = {
+    for(handler <- handlers) {
       val r = handler.handle(mock, arguments)
-      if (r.isDefined) {
-        if (callLogging)
-          actualCalls += description
-        return r.get
-      }
+      if (r.isDefined)
+        return r
     }
-    if (mock.failIfUnexpected)
-      handleUnexpectedCall(description)
-    else
-      null
+    return None
   }
-  
-  private[borachio] def verify() {
-    if (!unexpectedCalls.isEmpty)
-      throw new ExpectationException(unexpectedCallsMessage + verboseMessage)
-
-    handlers.foreach { handler =>
-      if (!handler.satisfied)
-        throw new ExpectationException("Unsatisfied expectation: "+ handler + verboseMessage)
-    }
-  }
-  
-  private[borachio] def reset(verbose: Boolean, callLogging: Boolean) {
-    handlers.clear
-    unexpectedCalls.clear
-    actualCalls.clear
-    this.verbose = verbose
-    this.callLogging = callLogging
-  }
-  
-  private[borachio] def handleUnexpectedCall(description: String) = {
-    actualCalls += description
-    unexpectedCalls += "Unexpected: "+ description
-    throw new ExpectationException(unexpectedCallsMessage + verboseMessage)
-  }
-  
-  private[borachio] def verboseMessage = (if (verbose) "\n\nExpectations:\n"+ toString else "") + callLog
-  
-  private[borachio] def callLog = if (callLogging) "\n\nActual calls:\n"+ actualCallsMessage else ""
-  
-  private[borachio] def unexpectedCallsMessage = unexpectedCalls.mkString("\n")
-
-  private[borachio] def actualCallsMessage = actualCalls.mkString("\n")
   
   override def toString = handlers.map(_.toString).mkString("\n")
-  
-  private var verbose = false
-  private var callLogging = false
-
-  private val unexpectedCalls = new ListBuffer[String]
-  private val actualCalls = new ListBuffer[String]
 }

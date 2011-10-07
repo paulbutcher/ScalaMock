@@ -215,6 +215,61 @@ class MockFunctionTest extends WordSpec with MockFactory {
       verifyExpectations
     }
     
+    "handle valid deeply nested expectation contexts" in {
+      val m = mockFunction[String, Unit]
+      
+      m expects ("1")
+      inSequence {
+        m expects ("2.1")
+        inAnyOrder {
+          m expects ("2.2.1")
+          inSequence {
+            m expects ("2.2.2.1")
+            m expects ("2.2.2.2")
+          }
+          m expects ("2.2.3")
+        }
+        m expects ("2.3")
+      }
+      m expects ("3")
+      
+      m("2.1")
+      m("1")
+      m("2.2.3")
+      m("2.2.2.1")
+      m("2.2.2.2")
+      m("2.2.1")
+      m("3")
+      m("2.2.3")
+      m("2.3")
+      
+      verifyExpectations
+    }
+    
+    "handle invalid deeply nested expectation contexts" in {
+      val m = mockFunction[String, Unit]
+      
+      m expects ("1")
+      inSequence {
+        m expects ("2.1")
+        inAnyOrder {
+          m expects ("2.2.1")
+          inSequence {
+            m expects ("2.2.2.1")
+            m expects ("2.2.2.2")
+          }
+          m expects ("2.2.3")
+        }
+        m expects ("2.3")
+      }
+      m expects ("3")
+      
+      m("2.1")
+      m("1")
+      m("2.2.3")
+      intercept[ExpectationException] { m("2.2.2.2") }
+    }
+    
     "match wildcard arguments" in {
       val m = mockFunction[Int, String, Unit]
       m expects (42, "foo")
@@ -239,7 +294,7 @@ class MockFunctionTest extends WordSpec with MockFactory {
       intercept[ExpectationException] { m(42.1) }
     }
     
-    "Cope with a SUT that swallows exceptions" in {
+    "cope with a SUT that swallows exceptions" in {
       val m = mockFunction[Unit]
       
       try {
@@ -254,5 +309,32 @@ class MockFunctionTest extends WordSpec with MockFactory {
       val m = new MockFunction0[Unit](this, Symbol("a helpful name"))
       expect("a helpful name") { m.toString }
     }
+
+    "match a simple predicate" in {
+      val m = mockFunction[Int, Double, String]
+      
+      m expectsWhere { (x: Int, y: Double) => x < y } returning "predicate matched"
+      
+      expect("predicate matched") { m(10, 12.0) }
+    
+      verifyExpectations
+    }
+    
+    "fail if a predicate does not match" in {
+      val m = mockFunction[Int, Double, String]
+      
+      m expectsWhere { (x: Int, y: Double) => x < y } returning "predicate matched"
+      
+      intercept[ExpectationException] { m(12, 10.0) }
+    }
+    
+    // "allow return values to be computed" in {
+    //   val m = mockFunction[Int, Int]
+    //   
+    //   m expects (*) onCall { x: Int => x + 1 } twice
+    // 
+    //   expect(2) { m(1) }
+    //   expect(10) { m(9) }
+    // }
   }
 }

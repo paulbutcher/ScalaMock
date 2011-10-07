@@ -20,30 +20,34 @@
 
 package com.borachio
 
-import scala.collection.mutable.Map
+import scala.collection.mutable.ListBuffer
 
 trait AbstractMockFactory {
   
   protected var mockingClassLoader: Option[MockingClassLoader] = None
   
   protected def resetExpectations() {
-    expectations.reset(verbose, callLogging)
-    expectationContext = expectations
+    unexpectedCalls.clear
+    actualCalls.clear
+    expectationContext = new UnorderedExpectations
   }
 
   protected def verifyExpectations() {
-    expectations.verify
+    if (!unexpectedCalls.isEmpty)
+      throw new ExpectationException(unexpectedCallsMessage + verboseMessage)
+
+    if (!expectationContext.satisfied)
+      throw new ExpectationException("Unsatisfied expectation: "+ expectationContext.unsatisfiedString + verboseMessage)
+      
+    expectationContext = null
+  }
+  
+  protected def inAnyOrder(what: => Unit) {
+    inContext(new UnorderedExpectations)(what)
   }
   
   protected def inSequence(what: => Unit) {
-    require(expectationContext != null, "Have you remembered to use withExpectations?")
-    require(expectationContext == expectations, "inSequence cannot be nested")
-
-    val orderedExpectations = new OrderedExpectations
-    expectations.add(orderedExpectations)
-    expectationContext = orderedExpectations
-    what
-    expectationContext = expectations
+    inContext(new OrderedExpectations)(what)
   }
   
   private[borachio] def add(expectation: Expectation) {
@@ -77,9 +81,48 @@ trait AbstractMockFactory {
   
   protected implicit def MatchEpsilonToMockParameter[T](m: MatchEpsilon) = new EpsilonMockParameter(m)
 
+  private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Any = {
+    lazy val description = mock.toString +" with arguments: "+ arguments.mkString("(", ", ", ")")
+    val r = expectationContext.handle(mock, arguments)
+    if (r.isDefined) {
+      if (callLogging)
+        actualCalls += description
+      return r.get
+    }
+    if (mock.failIfUnexpected)
+      handleUnexpectedCall(description)
+    else
+      null
+  }
+  
+  private[borachio] def handleUnexpectedCall(description: String) = {
+    actualCalls += description
+    unexpectedCalls += "Unexpected: "+ description
+    throw new ExpectationException(unexpectedCallsMessage + verboseMessage)
+  }
+  
+  private def verboseMessage = (if (verbose) "\n\nExpectations:\n"+ expectationContext else "") + callLog
+  
+  private def callLog = if (callLogging) "\n\nActual calls:\n"+ actualCallsMessage else ""
+  
+  private def unexpectedCallsMessage = unexpectedCalls.mkString("\n")
+
+  private def actualCallsMessage = actualCalls.mkString("\n")
+  
+  private def inContext(context: Expectations)(what: => Unit) {
+    require(expectationContext != null, "Have you remembered to use withExpectations?")
+
+    expectationContext.add(context)
+    val prevContext = expectationContext
+    expectationContext = context
+    what
+    expectationContext = prevContext
+  }
+  
   private[borachio] val verbose = false
   private[borachio] val callLogging = false
-  private[borachio] val expectations = new UnorderedExpectations
-
   private var expectationContext: Expectations = _
+
+  private val unexpectedCalls = new ListBuffer[String]
+  private val actualCalls = new ListBuffer[String]
 }

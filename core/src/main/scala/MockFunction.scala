@@ -22,7 +22,7 @@ package com.borachio
 
 abstract class MockFunction(protected val factory: AbstractMockFactory, name: Symbol) {
 
-  protected def handle(arguments: Array[Any]) = factory.expectations.handle(this, arguments)
+  protected def handle(arguments: Array[Any]) = factory.handle(this, arguments)
   
   private[borachio] def canHandle(that: MockFunction) = this == that
   
@@ -39,9 +39,15 @@ abstract class TypeSafeMockFunction[R](factory: AbstractMockFactory, name: Symbo
     expectation
   }
   
-  protected def withArguments(arguments: Any*) = {
+  protected def setArguments(arguments: Any*) = {
     val expectation = toExpectation
-    expectation.setArguments(arguments: _*)
+    expectation.expects(arguments: _*)
+    expectation
+  }
+  
+  protected def setMatcher(matcher: Function1[Array[Any], Boolean]) = {
+    val expectation = toExpectation
+    expectation.argumentsMatcher = matcher
     expectation
   }
 }
@@ -53,7 +59,7 @@ class MockFunction0[R](factory: AbstractMockFactory, name: Symbol)
 
   def apply() = handle(Array()).asInstanceOf[R]
   
-  def expects() = withArguments()
+  def expects() = setArguments()
 }
 
 class MockFunction1[T1, R](factory: AbstractMockFactory, name: Symbol) 
@@ -63,7 +69,9 @@ class MockFunction1[T1, R](factory: AbstractMockFactory, name: Symbol)
 
   def apply(v1: T1) = handle(Array(v1)).asInstanceOf[R]
   
-  def expects(v1: MockParameter[T1]) = withArguments(v1.value)
+  def expects(v1: MockParameter[T1]) = setArguments(v1.value)
+  
+  def expectsWhere(matcher: T1 => Boolean) = setMatcher(new FunctionAdapter1(matcher))
 }
 
 class MockFunction2[T1, T2, R](factory: AbstractMockFactory, name: Symbol) 
@@ -73,7 +81,9 @@ class MockFunction2[T1, T2, R](factory: AbstractMockFactory, name: Symbol)
 
   def apply(v1: T1, v2: T2) = handle(Array(v1, v2)).asInstanceOf[R]
   
-  def expects(v1: MockParameter[T1], v2: MockParameter[T2]) = withArguments(v1.value, v2.value)
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2]) = setArguments(v1.value, v2.value)
+  
+  def expectsWhere(matcher: (T1, T2) => Boolean) = setMatcher(new FunctionAdapter2(matcher))
 }
 
 class MockFunction3[T1, T2, T3, R](factory: AbstractMockFactory, name: Symbol) 
@@ -83,7 +93,9 @@ class MockFunction3[T1, T2, T3, R](factory: AbstractMockFactory, name: Symbol)
 
   def apply(v1: T1, v2: T2, v3: T3) = handle(Array(v1, v2, v3)).asInstanceOf[R]
   
-  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3]) = withArguments(v1.value, v2.value, v3.value)
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3]) = setArguments(v1.value, v2.value, v3.value)
+  
+  def expectsWhere(matcher: (T1, T2, T3) => Boolean) = setMatcher(new FunctionAdapter3(matcher))
 }
 
 class MockFunction4[T1, T2, T3, T4, R](factory: AbstractMockFactory, name: Symbol) 
@@ -93,7 +105,9 @@ class MockFunction4[T1, T2, T3, T4, R](factory: AbstractMockFactory, name: Symbo
 
   def apply(v1: T1, v2: T2, v3: T3, v4: T4) = handle(Array(v1, v2, v3, v4)).asInstanceOf[R]
   
-  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4]) = withArguments(v1.value, v2.value, v3.value, v4.value)
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4]) = setArguments(v1.value, v2.value, v3.value, v4.value)
+  
+  def expectsWhere(matcher: (T1, T2, T3, T4) => Boolean) = setMatcher(new FunctionAdapter4(matcher))
 }
 
 class MockFunction5[T1, T2, T3, T4, T5, R](factory: AbstractMockFactory, name: Symbol) 
@@ -103,7 +117,9 @@ class MockFunction5[T1, T2, T3, T4, T5, R](factory: AbstractMockFactory, name: S
 
   def apply(v1: T1, v2: T2, v3: T3, v4: T4, v5: T5) = handle(Array(v1, v2, v3, v4, v5)).asInstanceOf[R]
 
-  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5]) = withArguments(v1.value, v2.value, v3.value, v4.value, v5.value)
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5]) = setArguments(v1.value, v2.value, v3.value, v4.value, v5.value)
+  
+  def expectsWhere(matcher: (T1, T2, T3, T4, T5) => Boolean) = setMatcher(new FunctionAdapter5(matcher))
 }
 
 class MockFunction6[T1, T2, T3, T4, T5, T6, R](factory: AbstractMockFactory, name: Symbol) 
@@ -113,7 +129,9 @@ class MockFunction6[T1, T2, T3, T4, T5, T6, R](factory: AbstractMockFactory, nam
 
   def apply(v1: T1, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6) = handle(Array(v1, v2, v3, v4, v5, v6)).asInstanceOf[R]
 
-  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6]) = withArguments(v1.value, v2.value, v3.value, v4.value, v5.value, v6.value)
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6]) = setArguments(v1.value, v2.value, v3.value, v4.value, v5.value, v6.value)
+  
+  def expectsWhere(matcher: (T1, T2, T3, T4, T5, T6) => Boolean) = setMatcher(new FunctionAdapter6(matcher))
 }
 
 class MockFunction7[T1, T2, T3, T4, T5, T6, T7, R](factory: AbstractMockFactory, name: Symbol) 
@@ -123,7 +141,9 @@ class MockFunction7[T1, T2, T3, T4, T5, T6, T7, R](factory: AbstractMockFactory,
 
   def apply(v1: T1, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7) = handle(Array(v1, v2, v3, v4, v5, v6, v7)).asInstanceOf[R]
 
-  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7]) = withArguments(v1.value, v2.value, v3.value, v4.value, v5.value, v6.value, v7.value)
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7]) = setArguments(v1.value, v2.value, v3.value, v4.value, v5.value, v6.value, v7.value)
+  
+  def expectsWhere(matcher: (T1, T2, T3, T4, T5, T6, T7) => Boolean) = setMatcher(new FunctionAdapter7(matcher))
 }
 
 class MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R](factory: AbstractMockFactory, name: Symbol) 
@@ -133,7 +153,9 @@ class MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R](factory: AbstractMockFact
 
   def apply(v1: T1, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8) = handle(Array(v1, v2, v3, v4, v5, v6, v7, v8)).asInstanceOf[R]
 
-  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8]) = withArguments(v1.value, v2.value, v3.value, v4.value, v5.value, v6.value, v7.value, v8.value)
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8]) = setArguments(v1.value, v2.value, v3.value, v4.value, v5.value, v6.value, v7.value, v8.value)
+  
+  def expectsWhere(matcher: (T1, T2, T3, T4, T5, T6, T7, T8) => Boolean) = setMatcher(new FunctionAdapter8(matcher))
 }
 
 class MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](factory: AbstractMockFactory, name: Symbol) 
@@ -143,7 +165,9 @@ class MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](factory: AbstractMock
 
   def apply(v1: T1, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8, v9: T9) = handle(Array(v1, v2, v3, v4, v5, v6, v7, v8, v9)).asInstanceOf[R]
 
-  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9]) = withArguments(v1.value, v2.value, v3.value, v4.value, v5.value, v6.value, v7.value, v8.value, v9.value)
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9]) = setArguments(v1.value, v2.value, v3.value, v4.value, v5.value, v6.value, v7.value, v8.value, v9.value)
+  
+  def expectsWhere(matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9) => Boolean) = setMatcher(new FunctionAdapter9(matcher))
 }
 
 class MockFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](factory: AbstractMockFactory, name: Symbol) 
@@ -153,5 +177,7 @@ class MockFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](factory: Abstra
 
   def apply(v1: T1, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8, v9: T9, v10: T10) = handle(Array(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10)).asInstanceOf[R]
 
-  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10]) = withArguments(v1.value, v2.value, v3.value, v4.value, v5.value, v6.value, v7.value, v8.value, v9.value, v10.value)
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10]) = setArguments(v1.value, v2.value, v3.value, v4.value, v5.value, v6.value, v7.value, v8.value, v9.value, v10.value)
+  
+  def expectsWhere(matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) => Boolean) = setMatcher(new FunctionAdapter10(matcher))
 }
