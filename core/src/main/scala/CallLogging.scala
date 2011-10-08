@@ -21,14 +21,14 @@
 package com.borachio
 
 /**
- * Trait that can be mixed into a [[com.borachio.AbstractMockFactory]] to switch on
+ * Trait that can be mixed into a [[com.borachio.MockFactoryBase]] to switch on
  * call logging.
  *
  * {{{
  * class MyTest extends Suite with MockFactory with CallLogging
  * }}}
  */
-trait CallLogging { self: AbstractMockFactory =>
+trait CallLogging { self: MockFactoryBase =>
 
   override private[borachio] val callLogging = true
 }

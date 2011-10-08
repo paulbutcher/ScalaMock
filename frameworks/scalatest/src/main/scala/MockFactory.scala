@@ -20,7 +20,7 @@
 
 package com.borachio.scalatest
 
-import com.borachio.AbstractMockFactory
+import com.borachio.MockFactoryBase
 import org.scalatest.{AbstractSuite, Distributor, Filter, Reporter, Stopper, Suite, Tracker}
 
 /** Trait that can be mixed into a [[http://www.scalatest.org/ ScalaTest]] suite to provide
@@ -28,7 +28,7 @@ import org.scalatest.{AbstractSuite, Distributor, Filter, Reporter, Stopper, Sui
   *
   * See [[com.borachio]] for overview documentation.
   */
-trait MockFactory extends AbstractSuite with AbstractMockFactory { this: Suite =>
+trait MockFactory extends AbstractSuite with MockFactoryBase { this: Suite =>
   
   abstract protected override def runTests(testName: Option[String], reporter: Reporter, stopper: Stopper, filter: Filter,
     configMap: Map[String, Any], distributor: Option[Distributor], tracker: Tracker) {

@@ -20,7 +20,7 @@
 
 package com.borachio
 
-abstract class MockFunction(protected val factory: AbstractMockFactory, name: Symbol) {
+abstract class MockFunction(protected val factory: MockFactoryBase, name: Symbol) {
 
   protected def handle(arguments: Array[Any]) = factory.handle(this, arguments)
   
@@ -29,7 +29,7 @@ abstract class MockFunction(protected val factory: AbstractMockFactory, name: Sy
   private[borachio] val failIfUnexpected = true
 }
 
-abstract class TypeSafeMockFunction[R](factory: AbstractMockFactory, name: Symbol) extends MockFunction(factory, name) {
+abstract class TypeSafeMockFunction[R](factory: MockFactoryBase, name: Symbol) extends MockFunction(factory, name) {
   
   protected def makeExpectation() = new TypeSafeExpectation[R](this)
 
@@ -52,7 +52,7 @@ abstract class TypeSafeMockFunction[R](factory: AbstractMockFactory, name: Symbo
   }
 }
 
-class MockFunction0[R](factory: AbstractMockFactory, name: Symbol)  
+class MockFunction0[R](factory: MockFactoryBase, name: Symbol)  
   extends TypeSafeMockFunction[R](factory, name) with Function0[R] {
 
   override def toString = name.name.toString
@@ -62,7 +62,7 @@ class MockFunction0[R](factory: AbstractMockFactory, name: Symbol)
   def expects() = setArguments()
 }
 
-class MockFunction1[T1, R](factory: AbstractMockFactory, name: Symbol) 
+class MockFunction1[T1, R](factory: MockFactoryBase, name: Symbol) 
   extends TypeSafeMockFunction[R](factory, name) with Function1[T1, R] {
 
   override def toString = name.name.toString
@@ -74,7 +74,7 @@ class MockFunction1[T1, R](factory: AbstractMockFactory, name: Symbol)
   def expectsWhere(matcher: T1 => Boolean) = setMatcher(new FunctionAdapter1(matcher))
 }
 
-class MockFunction2[T1, T2, R](factory: AbstractMockFactory, name: Symbol) 
+class MockFunction2[T1, T2, R](factory: MockFactoryBase, name: Symbol) 
   extends TypeSafeMockFunction[R](factory, name) with Function2[T1, T2, R] {
   
   override def toString = name.name.toString
@@ -86,7 +86,7 @@ class MockFunction2[T1, T2, R](factory: AbstractMockFactory, name: Symbol)
   def expectsWhere(matcher: (T1, T2) => Boolean) = setMatcher(new FunctionAdapter2(matcher))
 }
 
-class MockFunction3[T1, T2, T3, R](factory: AbstractMockFactory, name: Symbol) 
+class MockFunction3[T1, T2, T3, R](factory: MockFactoryBase, name: Symbol) 
   extends TypeSafeMockFunction[R](factory, name) with Function3[T1, T2, T3, R] {
   
   override def toString = name.name.toString
@@ -98,7 +98,7 @@ class MockFunction3[T1, T2, T3, R](factory: AbstractMockFactory, name: Symbol)
   def expectsWhere(matcher: (T1, T2, T3) => Boolean) = setMatcher(new FunctionAdapter3(matcher))
 }
 
-class MockFunction4[T1, T2, T3, T4, R](factory: AbstractMockFactory, name: Symbol) 
+class MockFunction4[T1, T2, T3, T4, R](factory: MockFactoryBase, name: Symbol) 
   extends TypeSafeMockFunction[R](factory, name) with Function4[T1, T2, T3, T4, R] {
   
   override def toString = name.name.toString
@@ -110,7 +110,7 @@ class MockFunction4[T1, T2, T3, T4, R](factory: AbstractMockFactory, name: Symbo
   def expectsWhere(matcher: (T1, T2, T3, T4) => Boolean) = setMatcher(new FunctionAdapter4(matcher))
 }
 
-class MockFunction5[T1, T2, T3, T4, T5, R](factory: AbstractMockFactory, name: Symbol) 
+class MockFunction5[T1, T2, T3, T4, T5, R](factory: MockFactoryBase, name: Symbol) 
   extends TypeSafeMockFunction[R](factory, name) with Function5[T1, T2, T3, T4, T5, R] {
   
   override def toString = name.name.toString
@@ -122,7 +122,7 @@ class MockFunction5[T1, T2, T3, T4, T5, R](factory: AbstractMockFactory, name: S
   def expectsWhere(matcher: (T1, T2, T3, T4, T5) => Boolean) = setMatcher(new FunctionAdapter5(matcher))
 }
 
-class MockFunction6[T1, T2, T3, T4, T5, T6, R](factory: AbstractMockFactory, name: Symbol) 
+class MockFunction6[T1, T2, T3, T4, T5, T6, R](factory: MockFactoryBase, name: Symbol) 
   extends TypeSafeMockFunction[R](factory, name) with Function6[T1, T2, T3, T4, T5, T6, R] {
   
   override def toString = name.name.toString
@@ -134,7 +134,7 @@ class MockFunction6[T1, T2, T3, T4, T5, T6, R](factory: AbstractMockFactory, nam
   def expectsWhere(matcher: (T1, T2, T3, T4, T5, T6) => Boolean) = setMatcher(new FunctionAdapter6(matcher))
 }
 
-class MockFunction7[T1, T2, T3, T4, T5, T6, T7, R](factory: AbstractMockFactory, name: Symbol) 
+class MockFunction7[T1, T2, T3, T4, T5, T6, T7, R](factory: MockFactoryBase, name: Symbol) 
   extends TypeSafeMockFunction[R](factory, name) with Function7[T1, T2, T3, T4, T5, T6, T7, R] {
   
   override def toString = name.name.toString
@@ -146,7 +146,7 @@ class MockFunction7[T1, T2, T3, T4, T5, T6, T7, R](factory: AbstractMockFactory,
   def expectsWhere(matcher: (T1, T2, T3, T4, T5, T6, T7) => Boolean) = setMatcher(new FunctionAdapter7(matcher))
 }
 
-class MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R](factory: AbstractMockFactory, name: Symbol) 
+class MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R](factory: MockFactoryBase, name: Symbol) 
   extends TypeSafeMockFunction[R](factory, name) with Function8[T1, T2, T3, T4, T5, T6, T7, T8, R] {
   
   override def toString = name.name.toString
@@ -158,7 +158,7 @@ class MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R](factory: AbstractMockFact
   def expectsWhere(matcher: (T1, T2, T3, T4, T5, T6, T7, T8) => Boolean) = setMatcher(new FunctionAdapter8(matcher))
 }
 
-class MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](factory: AbstractMockFactory, name: Symbol) 
+class MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](factory: MockFactoryBase, name: Symbol) 
   extends TypeSafeMockFunction[R](factory, name) with Function9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R] {
   
   override def toString = name.name.toString
@@ -170,7 +170,7 @@ class MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](factory: AbstractMock
   def expectsWhere(matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9) => Boolean) = setMatcher(new FunctionAdapter9(matcher))
 }
 
-class MockFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](factory: AbstractMockFactory, name: Symbol) 
+class MockFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](factory: MockFactoryBase, name: Symbol) 
   extends TypeSafeMockFunction[R](factory, name) with Function10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R] {
   
   override def toString = name.name.toString

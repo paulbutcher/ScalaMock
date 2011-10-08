@@ -20,7 +20,7 @@
 
 package com.borachio.junit3
 
-import com.borachio.AbstractMockFactory
+import com.borachio.MockFactoryBase
 import junit.framework.TestCase
 
 /** Trait that can be mixed into a [[http://www.junit.org/ JUnit3]] suite to provide
@@ -64,7 +64,7 @@ import junit.framework.TestCase
   * }
   * }}}
   */
-trait MockFactory extends AbstractMockFactory { this: TestCase =>
+trait MockFactory extends MockFactoryBase { this: TestCase =>
 
   protected def withExpectations(what: => Unit) {
     resetExpectations

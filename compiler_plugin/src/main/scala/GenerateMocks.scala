@@ -109,7 +109,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   
   def mockFactory =
     "package com.borachio.generated\n\n"+
-    "trait GeneratedMockFactory extends com.borachio.GeneratedMockFactoryBase { self: com.borachio.AbstractMockFactory =>\n"+
+    "trait GeneratedMockFactory extends com.borachio.GeneratedMockFactoryBase { self: com.borachio.MockFactoryBase =>\n"+
       (mocks map { case (target, mock) => mockFactoryEntry(target, mock) }).mkString("\n") +"\n\n"+
       (mockObjects map { case (target, mock) => mockObjectEntry(target, mock) }).mkString("\n") +"\n\n"+
     "}"
@@ -234,7 +234,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "  val factory = {\n"+
       "    val classLoader = getClass.getClassLoader\n"+
       "    val method = classLoader.getClass.getMethod(\"getFactory\")\n"+
-      "    method.invoke(classLoader).asInstanceOf[com.borachio.AbstractMockFactory]\n"+
+      "    method.invoke(classLoader).asInstanceOf[com.borachio.MockFactoryBase]\n"+
       "  }"
       
     lazy val forwardTo = "  var forwardTo: AnyRef = _\n\n"+ forwarders

@@ -22,7 +22,7 @@ package com.borachio
 
 import scala.collection.mutable.ListBuffer
 
-trait AbstractMockFactory {
+trait MockFactoryBase {
   
   protected var mockingClassLoader: Option[MockingClassLoader] = None
   

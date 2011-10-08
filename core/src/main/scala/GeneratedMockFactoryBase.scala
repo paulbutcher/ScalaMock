@@ -22,7 +22,7 @@ package com.borachio
 
 import java.net.URL
 
-trait GeneratedMockFactoryBase { self: AbstractMockFactory =>
+trait GeneratedMockFactoryBase { self: MockFactoryBase =>
   
   def getClassLoader(): MockingClassLoader
   

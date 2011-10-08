@@ -21,14 +21,14 @@
 package com.borachio
 
 /**
- * Trait that can be mixed into a [[com.borachio.AbstractMockFactory]] to switch on
+ * Trait that can be mixed into a [[com.borachio.MockFactoryBase]] to switch on
  * verbose error messages.
  *
  * {{{
  * class MyTest extends Suite with MockFactory with VerboseErrors
  * }}}
  */
-trait VerboseErrors { self: AbstractMockFactory =>
+trait VerboseErrors { self: MockFactoryBase =>
 
   override private[borachio] val verbose = true
 }

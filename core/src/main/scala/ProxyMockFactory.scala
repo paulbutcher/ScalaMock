@@ -22,7 +22,7 @@ package com.borachio
 
 import scala.collection.mutable.{ListBuffer, Map}
 
-trait ProxyMockFactory { self: AbstractMockFactory =>
+trait ProxyMockFactory { self: MockFactoryBase =>
   
   protected var proxyClassLoaderStrategy = threadContextClassLoaderStrategy
   
