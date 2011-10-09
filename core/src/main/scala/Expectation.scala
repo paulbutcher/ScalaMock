@@ -283,3 +283,147 @@ class TypeSafeExpectation2[T1, T2, R](target: MockFunction) extends TypeSafeExpe
     this
   }
 }
+
+class TypeSafeExpectation3[T1, T2, T3, R](target: MockFunction) extends TypeSafeExpectation[R](target) {
+  
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3]) = {
+    setArguments(v1.value, v2.value, v3.value)
+    this
+  }
+  
+  def expectsWhere(f: (T1, T2, T3) => Boolean) = {
+    argumentsMatcher = new FunctionAdapter3(f)
+    this
+  }
+  
+  def onCall(f: (T1, T2, T3) => R) = {
+    onCallHandler = new FunctionAdapter3(f)
+    this
+  }
+}
+
+class TypeSafeExpectation4[T1, T2, T3, T4, R](target: MockFunction) extends TypeSafeExpectation[R](target) {
+  
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4]) = {
+    setArguments(v1.value, v2.value, v3.value, v4.value)
+    this
+  }
+  
+  def expectsWhere(f: (T1, T2, T3, T4) => Boolean) = {
+    argumentsMatcher = new FunctionAdapter4(f)
+    this
+  }
+  
+  def onCall(f: (T1, T2, T3, T4) => R) = {
+    onCallHandler = new FunctionAdapter4(f)
+    this
+  }
+}
+
+class TypeSafeExpectation5[T1, T2, T3, T4, T5, R](target: MockFunction) extends TypeSafeExpectation[R](target) {
+  
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5]) = {
+    setArguments(v1.value, v2.value, v3.value, v4.value, v5.value)
+    this
+  }
+  
+  def expectsWhere(f: (T1, T2, T3, T4, T5) => Boolean) = {
+    argumentsMatcher = new FunctionAdapter5(f)
+    this
+  }
+  
+  def onCall(f: (T1, T2, T3, T4, T5) => R) = {
+    onCallHandler = new FunctionAdapter5(f)
+    this
+  }
+}
+
+class TypeSafeExpectation6[T1, T2, T3, T4, T5, T6, R](target: MockFunction) extends TypeSafeExpectation[R](target) {
+  
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6]) = {
+    setArguments(v1.value, v2.value, v3.value, v4.value, v5.value, v6.value)
+    this
+  }
+  
+  def expectsWhere(f: (T1, T2, T3, T4, T5, T6) => Boolean) = {
+    argumentsMatcher = new FunctionAdapter6(f)
+    this
+  }
+  
+  def onCall(f: (T1, T2, T3, T4, T5, T6) => R) = {
+    onCallHandler = new FunctionAdapter6(f)
+    this
+  }
+}
+
+class TypeSafeExpectation7[T1, T2, T3, T4, T5, T6, T7, R](target: MockFunction) extends TypeSafeExpectation[R](target) {
+  
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7]) = {
+    setArguments(v1.value, v2.value, v3.value, v4.value, v5.value, v6.value, v7.value)
+    this
+  }
+  
+  def expectsWhere(f: (T1, T2, T3, T4, T5, T6, T7) => Boolean) = {
+    argumentsMatcher = new FunctionAdapter7(f)
+    this
+  }
+  
+  def onCall(f: (T1, T2, T3, T4, T5, T6, T7) => R) = {
+    onCallHandler = new FunctionAdapter7(f)
+    this
+  }
+}
+
+class TypeSafeExpectation8[T1, T2, T3, T4, T5, T6, T7, T8, R](target: MockFunction) extends TypeSafeExpectation[R](target) {
+  
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8]) = {
+    setArguments(v1.value, v2.value, v3.value, v4.value, v5.value, v6.value, v7.value, v8.value)
+    this
+  }
+  
+  def expectsWhere(f: (T1, T2, T3, T4, T5, T6, T7, T8) => Boolean) = {
+    argumentsMatcher = new FunctionAdapter8(f)
+    this
+  }
+  
+  def onCall(f: (T1, T2, T3, T4, T5, T6, T7, T8) => R) = {
+    onCallHandler = new FunctionAdapter8(f)
+    this
+  }
+}
+
+class TypeSafeExpectation9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](target: MockFunction) extends TypeSafeExpectation[R](target) {
+  
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9]) = {
+    setArguments(v1.value, v2.value, v3.value, v4.value, v5.value, v6.value, v7.value, v8.value, v9.value)
+    this
+  }
+  
+  def expectsWhere(f: (T1, T2, T3, T4, T5, T6, T7, T8, T9) => Boolean) = {
+    argumentsMatcher = new FunctionAdapter9(f)
+    this
+  }
+  
+  def onCall(f: (T1, T2, T3, T4, T5, T6, T7, T8, T9) => R) = {
+    onCallHandler = new FunctionAdapter9(f)
+    this
+  }
+}
+
+class TypeSafeExpectation10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](target: MockFunction) extends TypeSafeExpectation[R](target) {
+  
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10]) = {
+    setArguments(v1.value, v2.value, v3.value, v4.value, v5.value, v6.value, v7.value, v8.value, v9.value, v10.value)
+    this
+  }
+  
+  def expectsWhere(f: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) => Boolean) = {
+    argumentsMatcher = new FunctionAdapter10(f)
+    this
+  }
+  
+  def onCall(f: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) => R) = {
+    onCallHandler = new FunctionAdapter10(f)
+    this
+  }
+}
