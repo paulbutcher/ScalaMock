@@ -29,16 +29,12 @@ package com.borachio
 
 class MockParameter[T] protected (private[borachio] val value: AnyRef, dummy: Boolean = false) {
   
-  override def toString = value.toString
-  
   def this(v: T) = this(v.asInstanceOf[AnyRef])
   
   def this(v: MatchAny) = this(v.asInstanceOf[AnyRef])
 }
 
 class EpsilonMockParameter(value: AnyRef, dummy: Boolean = false) extends MockParameter[Double](value) {
-  
-  override def toString = value.toString
   
   def this(v: MatchEpsilon) = this(v.asInstanceOf[AnyRef])
 }
