@@ -40,6 +40,15 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     expect("Expected return value") { m.methodWithOneArgument(42) }
   }
   
+  test("computed return value") {
+    val m = mock[SimpleClass]
+    
+    m.expects.methodWithTwoArguments(*, *) onCall { (x, y) => (x + y).toString } anyNumberOfTimes
+    
+    expect("3") { m.methodWithTwoArguments(1, 2) }
+    expect("-1") { m.methodWithTwoArguments(0, -1) }
+  }
+  
   test("unmocked simple class") {
     val x = new SimpleClass
     expect("methodWithOneArgument: 42") { x.methodWithOneArgument(42) }
