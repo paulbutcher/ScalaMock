@@ -22,82 +22,80 @@ package com.borachio
 
 class MockConstructorDummy
 
-trait MockConstructor[R] extends TypeSafeMockFunction[R] {
-
-  override protected def makeExpectation() = new ConstructorExpectation[R](this)
+trait MockConstructor { self: MockFunction =>
 
   override private[borachio] val failIfUnexpected = false
 
-  override def canHandle(that: MockFunction) = that match {
-      case mc: MockConstructor[_] => mockedClass == mc.mockedClass
+  override private[borachio] def canHandle(that: MockFunction) = that match {
+      case mc: MockConstructor => mockedClass == mc.mockedClass
       case _ => false
     }
   
-  val mockedClass: Class[_]
+  protected val mockedClass: Class[_]
 }
 
 class MockConstructor0[R: ClassManifest](factory: MockFactoryBase, name: Symbol) 
-  extends MockFunction0[R](factory, name) with MockConstructor[R] {
+  extends MockFunction0[R](factory, name) with MockConstructor {
     
   val mockedClass = classManifest[R].erasure
 }
 
 class MockConstructor1[T1, R: ClassManifest](factory: MockFactoryBase, name: Symbol) 
-  extends MockFunction1[T1, R](factory, name) with MockConstructor[R] {
+  extends MockFunction1[T1, R](factory, name) with MockConstructor {
     
   val mockedClass = classManifest[R].erasure
 }
 
 class MockConstructor2[T1, T2, R: ClassManifest](factory: MockFactoryBase, name: Symbol) 
-  extends MockFunction2[T1, T2, R](factory, name) with MockConstructor[R] {
+  extends MockFunction2[T1, T2, R](factory, name) with MockConstructor {
     
   val mockedClass = classManifest[R].erasure
 }
 
 class MockConstructor3[T1, T2, T3, R: ClassManifest](factory: MockFactoryBase, name: Symbol) 
-  extends MockFunction3[T1, T2, T3, R](factory, name) with MockConstructor[R] {
+  extends MockFunction3[T1, T2, T3, R](factory, name) with MockConstructor {
     
   val mockedClass = classManifest[R].erasure
 }
 
 class MockConstructor4[T1, T2, T3, T4, R: ClassManifest](factory: MockFactoryBase, name: Symbol) 
-  extends MockFunction4[T1, T2, T3, T4, R](factory, name) with MockConstructor[R] {
+  extends MockFunction4[T1, T2, T3, T4, R](factory, name) with MockConstructor {
     
   val mockedClass = classManifest[R].erasure
 }
 
 class MockConstructor5[T1, T2, T3, T4, T5, R: ClassManifest](factory: MockFactoryBase, name: Symbol) 
-  extends MockFunction5[T1, T2, T3, T4, T5, R](factory, name) with MockConstructor[R] {
+  extends MockFunction5[T1, T2, T3, T4, T5, R](factory, name) with MockConstructor {
     
   val mockedClass = classManifest[R].erasure
 }
 
 class MockConstructor6[T1, T2, T3, T4, T5, T6, R: ClassManifest](factory: MockFactoryBase, name: Symbol) 
-  extends MockFunction6[T1, T2, T3, T4, T5, T6, R](factory, name) with MockConstructor[R] {
+  extends MockFunction6[T1, T2, T3, T4, T5, T6, R](factory, name) with MockConstructor {
     
   val mockedClass = classManifest[R].erasure
 }
 
 class MockConstructor7[T1, T2, T3, T4, T5, T6, T7, R: ClassManifest](factory: MockFactoryBase, name: Symbol) 
-  extends MockFunction7[T1, T2, T3, T4, T5, T6, T7, R](factory, name) with MockConstructor[R] {
+  extends MockFunction7[T1, T2, T3, T4, T5, T6, T7, R](factory, name) with MockConstructor {
     
   val mockedClass = classManifest[R].erasure
 }
 
 class MockConstructor8[T1, T2, T3, T4, T5, T6, T7, T8, R: ClassManifest](factory: MockFactoryBase, name: Symbol) 
-  extends MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R](factory, name) with MockConstructor[R] {
+  extends MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R](factory, name) with MockConstructor {
     
   val mockedClass = classManifest[R].erasure
 }
 
 class MockConstructor9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R: ClassManifest](factory: MockFactoryBase, name: Symbol) 
-  extends MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](factory, name) with MockConstructor[R] {
+  extends MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](factory, name) with MockConstructor {
     
   val mockedClass = classManifest[R].erasure
 }
 
 class MockConstructor10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R: ClassManifest](factory: MockFactoryBase, name: Symbol) 
-  extends MockFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](factory, name) with MockConstructor[R] {
+  extends MockFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](factory, name) with MockConstructor {
     
   val mockedClass = classManifest[R].erasure
 }

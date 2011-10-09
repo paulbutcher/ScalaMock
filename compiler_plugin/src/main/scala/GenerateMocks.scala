@@ -201,6 +201,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         expectForwarders +"\n\n"+
         (if (hasNestedTypes) nestedMockCreator +"\n\n" else "") +
         mockTraitEntries +"\n\n"+
+        factoryReference +"\n\n"+
         indent((nestedMocks map ( _.getTest )).mkString("\n")) +"\n\n"+
       "}\n"
     }
@@ -218,7 +219,6 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
     lazy val mockClassEntries = 
       mockMethods +"\n\n"+
-      factoryReference +"\n\n"+
       mockMembers
       
     lazy val mockTraitEntries = ""
@@ -408,7 +408,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "    def newInstance"+ forwarderParams(params)
         
     def forwarderDeclarationNormal(method: Symbol, params: Option[List[Symbol]], result: Type) =
-      "    def "+ method.name.decode + forwarderParams(params) + overloadDisambiguation(method) +": "+ expectationType(result)
+      "    def "+ method.name.decode + forwarderParams(params) + overloadDisambiguation(method) +": "+ 
+        expectationType(params, result)
         
     def forwarderParams(params: Option[List[Symbol]]) = params match {
         case Some(ps) => (ps map forwarderParam _).mkString("(", ", ", ")")
@@ -429,10 +430,12 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         ""
     }
     
-    def expectationType(result: Type) = "com.borachio.TypeSafeExpectation["+ fixedType(result) +"]"
+    def expectationType(params: Option[List[Symbol]], result: Type) =
+      "com.borachio.TypeSafeExpectation"+ paramCount(params) +"["+ 
+        fixedTypes(paramTypes(params) :+ result).mkString(", ") +"]"
         
     def forwarderBody(method: Symbol, params: Option[List[Symbol]]) =
-      mockMethodName(method) +".expects"+ forwardParams(params)
+      "factory.mockFunction"+ paramCount(params) +"ToExpectation("+ mockMethodName(method) +").expects"+ forwardParams(params)
     
     def cachedMockMethod(method: Symbol): String = handleMethod(method) {
       (method, params, result) =>
@@ -457,8 +460,18 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         "com.borachio.MockConstructor"
       else
         "com.borachio.MockFunction"
-
+        
+    def paramTypes(params: Option[List[Symbol]]): List[Type] = params match {
+      case Some(ps) => paramTypes(ps)
+      case None => Nil
+    }
+        
     def paramTypes(params: List[Symbol]) = params map (_.tpe)
+    
+    def paramCount(params: Option[List[Symbol]]) = params match {
+      case None => 0
+      case Some(ps) => ps.length
+    }
     
     def methodNames(prefix: String) = (methodsToMock.zipWithIndex map { case (m, i) => (m -> (prefix +"$"+ i)) }).toMap
     

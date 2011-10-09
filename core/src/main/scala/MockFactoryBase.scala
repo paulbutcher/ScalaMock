@@ -68,6 +68,22 @@ trait MockFactoryBase {
   protected def mockFunction[T1, T2, T3, T4, T5, T6, T7, T8, T9, R] = new MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](this, Symbol("unnamed MockFunction9"))
   protected def mockFunction[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R] = new MockFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](this, Symbol("unnamed MockFunction10"))
   
+  implicit def mockFunction0ToExpectation[R](m: MockFunction0[R]) = {
+    val e = new TypeSafeExpectation0[R](m)
+    add(e)
+    e
+  }
+  implicit def mockFunction1ToExpectation[T1, R](m: MockFunction1[T1, R]) = {
+    val e = new TypeSafeExpectation1[T1, R](m)
+    add(e)
+    e
+  }
+  implicit def mockFunction2ToExpectation[T1, T2, R](m: MockFunction2[T1, T2, R]) = {
+    val e = new TypeSafeExpectation2[T1, T2, R](m)
+    add(e)
+    e
+  }
+  
   protected def * = new MatchAny
   
   protected class EpsilonMatcher(d: Double) {

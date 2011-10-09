@@ -25,13 +25,11 @@ package com.borachio
  */
 abstract class Expectation(target: MockFunction) extends Handler {
   
-  def expects(arguments: Any*) = {
-    argumentsString = "with arguments: "+ arguments.mkString("(", ", ", ")")
-    argumentsMatcher = { args => arguments sameElements args }
-    this
-  }
-  
   def throws(e: Throwable) = {
+    if (target.isInstanceOf[MockConstructor]) {
+      assert(onCallHandler.isDefined)
+      onCallHandler = None
+    }
     returnString = "throwing: "+ e
     onCallHandler = { _ => throw e }
     this
@@ -65,16 +63,16 @@ abstract class Expectation(target: MockFunction) extends Handler {
   override def toString = 
     Seq(target.toString, argumentsString, returnString, expectedCallsString, actualCallsString).
       filter(_.length > 0).mkString(", ")
+  
+  protected def setArguments(arguments: Any*) {
+    argumentsString = "with arguments: "+ arguments.mkString("(", ", ", ")")
+    argumentsMatcher = { args => arguments sameElements args }
+  }
 
   protected def setReturn(value: Any) = {
     returnString = "returning: "+ value
     onCallHandler = { _ => value }
     this
-  }
-  
-  protected def resetOnCallHandler() {
-    assert(onCallHandler.isDefined)
-    onCallHandler = None
   }
   
   private[borachio] def satisfied = expectedCalls match {
@@ -133,7 +131,10 @@ abstract class Expectation(target: MockFunction) extends Handler {
 
 class TypeUnsafeExpectation(target: MockFunction) extends Expectation(target) {
   
-  def withArguments(arguments: Any*) = expects(arguments: _*).asInstanceOf[TypeUnsafeExpectation]
+  def withArguments(arguments: Any*) = {
+    setArguments(arguments: _*)
+    this
+  }
   def withArgs(arguments: Any*) = withArguments(arguments: _*)
 
   def returns(value: Any) = setReturn(value)
@@ -233,16 +234,42 @@ class TypeUnsafeExpectation(target: MockFunction) extends Expectation(target) {
   }
 }
 
-class TypeSafeExpectation[R](target: MockFunction) extends Expectation(target) {
+abstract class TypeSafeExpectation[R](target: MockFunction) extends Expectation(target) {
 
   def returns(value: R) = setReturn(value)
   def returning(value: R) = returns(value)
 }
 
-class ConstructorExpectation[R](target: MockFunction) extends TypeSafeExpectation[R](target) {
+class TypeSafeExpectation0[R](target: MockFunction) extends TypeSafeExpectation[R](target) {
   
-  override def throws(e: Throwable) = {
-    resetOnCallHandler
-    super.throws(e)
+  def expects() = {
+    setArguments()
+    this
+  }
+}
+
+class TypeSafeExpectation1[T1, R](target: MockFunction) extends TypeSafeExpectation[R](target) {
+  
+  def expects(v1: MockParameter[T1]) = {
+    setArguments(v1.value)
+    this
+  }
+  
+  def expectsWhere(f: T1 => Boolean) = {
+    argumentsMatcher = new FunctionAdapter1(f)
+    this
+  }
+}
+
+class TypeSafeExpectation2[T1, T2, R](target: MockFunction) extends TypeSafeExpectation[R](target) {
+  
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2]) = {
+    setArguments(v1.value, v2.value)
+    this
+  }
+  
+  def expectsWhere(f: (T1, T2) => Boolean) = {
+    argumentsMatcher = new FunctionAdapter2(f)
+    this
   }
 }
