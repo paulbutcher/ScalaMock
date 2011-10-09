@@ -80,16 +80,9 @@ object BorachioBuild extends Build {
   lazy val generatedTestDirectory = SettingKey[File]("generated-test-directory", "Where generated test source code will be placed")
   
   lazy val generateMocks = TaskKey[Unit]("generate-mocks", "Generates sources for classes with the @mock annotation")
-  def generateMocksTask = (sources in GenerateMocks, classDirectory in GenerateMocks, scalacOptions, 
-      classpathOptions, scalaInstance, fullClasspath in Compile, streams, generatedMockDirectory, generatedTestDirectory) map {
-    (srcs, out, initialOpts, cpOpts, si, cp, s, gm, gt) =>
-      val opts = initialOpts ++ Seq(
-        "-Xplugin:compiler_plugin/target/scala-2.9.0.final/borachio-compiler-plugin_2.9.0-2.0-SNAPSHOT.jar",
-        "-Xplugin-require:borachio",
-        "-Ylog:generatemocks",
-        "-Ystop-after:generatemocks",
-        "-P:borachio:generatemocks:"+ gm,
-        "-P:borachio:generatetest:"+ gt)
+  def generateMocksTask = (sources in GenerateMocks, classDirectory in GenerateMocks, scalacOptions in GenerateMocks, 
+      classpathOptions, scalaInstance, fullClasspath in Compile, streams) map {
+    (srcs, out, opts, cpOpts, si, cp, s) =>
       IO.delete(out)
       IO.createDirectory(out)
       val comp = new compiler.RawCompiler(si, cpOpts, s.log)
@@ -106,6 +99,16 @@ object BorachioBuild extends Build {
       publish := (),
       generatedMockDirectory <<= sourceManaged(_ / "mock" / "scala"),
       generatedTestDirectory <<= sourceManaged(_ / "test" / "scala"),
+      scalacOptions in GenerateMocks <++= 
+        (generatedMockDirectory, generatedTestDirectory, packageBin in (compiler_plugin, Compile)) map { (gm, gt, plug) =>
+          Seq(
+            "-Xplugin:"+ plug.absolutePath,
+            "-Xplugin-require:borachio",
+            "-Ylog:generatemocks",
+            "-Ystop-after:generatemocks",
+            "-P:borachio:generatemocks:"+ gm,
+            "-P:borachio:generatetest:"+ gt)
+        },
       sources in Test <++= collectSource(generatedTestDirectory),
       sources in Mock <++= collectSource(generatedMockDirectory),
       sources in Mock <++= collectSource(generatedTestDirectory),
