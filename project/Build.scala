@@ -27,7 +27,7 @@ object BorachioBuild extends Build {
   override lazy val settings = super.settings ++ Seq(
       organization := "com.borachio",
       version := "2.0-SNAPSHOT",
-      scalaVersion := "2.9.1",
+      scalaVersion := "2.9.0",
       scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings"),
       libraryDependencies ++= Seq(
         "org.scalatest" %% "scalatest" % "1.6.1" % "optional",
@@ -41,27 +41,27 @@ object BorachioBuild extends Build {
     ) settings (
       compile in Mock := Analysis.Empty
     ) aggregate(
-      library, compiler_plugin, compiler_plugin_tests
+      core, compiler_plugin, compiler_plugin_tests
     ) configs(
       Mock
     )
   
-  lazy val library = Project(
-      "Library", 
-      file("library")
+  lazy val core = Project(
+      "Core", 
+      file("core")
     )
 
   lazy val compiler_plugin = Project(
       "CompilerPlugin", 
       file("compiler_plugin")
     ) settings(
-      libraryDependencies += "org.scala-lang" % "scala-compiler" % "2.9.1"
+      libraryDependencies += "org.scala-lang" % "scala-compiler" % "2.9.0"
     ) dependsOn(
-      library
+      core
     )
     
   lazy val GenerateMocks = config("generate-mocks")
-  lazy val Mock = config("mock")
+  lazy val Mock = config("mock") extend(Compile)
   
   lazy val generatedMockDirectory = SettingKey[File]("generated-mock-directory", "Where generated mock source code will be placed")
   lazy val generatedTestDirectory = SettingKey[File]("generated-test-directory", "Where generated test source code will be placed")
@@ -71,7 +71,7 @@ object BorachioBuild extends Build {
       classpathOptions, scalaInstance, fullClasspath in Compile, streams, generatedMockDirectory, generatedTestDirectory) map {
     (srcs, out, initialOpts, cpOpts, si, cp, s, gm, gt) =>
       val opts = initialOpts ++ Seq(
-        "-Xplugin:compiler_plugin/target/scala-2.9.1.final/compilerplugin_2.9.1-2.0-SNAPSHOT.jar",
+        "-Xplugin:compiler_plugin/target/scala-2.9.0.final/compilerplugin_2.9.0-2.0-SNAPSHOT.jar",
         "-Xplugin-require:borachio",
         "-Ylog:generatemocks",
         "-Ystop-after:generatemocks",
@@ -103,7 +103,7 @@ object BorachioBuild extends Build {
     ) settings(
       generateMocksSettings: _*
     ) dependsOn(
-      library % "mock;test",
+      core % "mock;test",
       compiler_plugin
     ) configs(
       Mock
