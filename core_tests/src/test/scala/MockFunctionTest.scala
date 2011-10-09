@@ -328,13 +328,13 @@ class MockFunctionTest extends WordSpec with MockFactory {
       intercept[ExpectationException] { m(12, 10.0) }
     }
     
-    // "allow return values to be computed" in {
-    //   val m = mockFunction[Int, Int]
-    //   
-    //   m expects (*) onCall { x: Int => x + 1 } twice
-    // 
-    //   expect(2) { m(1) }
-    //   expect(10) { m(9) }
-    // }
+    "allow return values to be computed" in {
+      val m = mockFunction[Int, Int]
+      
+      m expects (*) onCall { x: Int => x + 1 } twice
+    
+      expect(2) { m(1) }
+      expect(10) { m(9) }
+    }
   }
 }

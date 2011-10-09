@@ -259,6 +259,11 @@ class TypeSafeExpectation1[T1, R](target: MockFunction) extends TypeSafeExpectat
     argumentsMatcher = new FunctionAdapter1(f)
     this
   }
+  
+  def onCall(f: T1 => R) = {
+    onCallHandler = new FunctionAdapter1(f)
+    this
+  }
 }
 
 class TypeSafeExpectation2[T1, T2, R](target: MockFunction) extends TypeSafeExpectation[R](target) {
@@ -270,6 +275,11 @@ class TypeSafeExpectation2[T1, T2, R](target: MockFunction) extends TypeSafeExpe
   
   def expectsWhere(f: (T1, T2) => Boolean) = {
     argumentsMatcher = new FunctionAdapter2(f)
+    this
+  }
+  
+  def onCall(f: (T1, T2) => R) = {
+    onCallHandler = new FunctionAdapter2(f)
     this
   }
 }
