@@ -28,7 +28,7 @@ import java.net.URL
 
 class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory with VerboseErrors with CallLogging {
   
-  def getClassLoader() = new MockingURLClassLoader(new URL("file:compiler_plugin_tests/target/scala_2.9.0/mock-classes/"))
+  def getClassLoader() = new MockingURLClassLoader(new URL("file:compiler_plugin_tests/target/scala-2.9.0.final/mock-classes/"))
   
   test("simple class") {
     val m = mock[SimpleClass]

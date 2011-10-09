@@ -28,7 +28,7 @@ import java.net.URL
 
 class MockConstructorTest extends Suite with MockFactory with GeneratedMockFactory with VerboseErrors with CallLogging {
   
-  def getClassLoader() = new MockingURLClassLoader(new URL("file:compiler_plugin_tests/target/scala_2.9.0/mock-classes/"))
+  def getClassLoader() = new MockingURLClassLoader(new URL("file:compiler_plugin_tests/target/scala-2.9.0.final/mock-classes/"))
   
   def testExpectNewInstanceSimple {
     val m = mock[SimpleClass]

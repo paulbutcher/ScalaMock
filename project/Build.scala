@@ -38,7 +38,7 @@ object BorachioBuild extends Build {
       compile in Mock := Analysis.Empty,
       publish := ()
     ) aggregate(
-      core, scalatest, junit3, compiler_plugin, compiler_plugin_tests
+      core, core_tests, scalatest, junit3, compiler_plugin, compiler_plugin_tests
     ) configs(
       Mock
     )
