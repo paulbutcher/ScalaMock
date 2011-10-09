@@ -23,7 +23,7 @@ package com.borachio.plugin.test
 import org.scalatest.FunSuite
 import com.borachio.generated.GeneratedMockFactory
 import com.borachio.scalatest.MockFactory
-import com.borachio.{CallLogging, MockingURLClassLoader, VerboseErrors, MockFunction0}
+import com.borachio.{CallLogging, ExpectationException, MockingURLClassLoader, VerboseErrors, MockFunction0}
 import java.net.URL
 
 class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory with VerboseErrors with CallLogging {
@@ -38,6 +38,16 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     
     m.nullMethod
     expect("Expected return value") { m.methodWithOneArgument(42) }
+  }
+  
+  test("predicate matching") {
+    val m = mock[SimpleClass]
+    
+    m.expects.methodWithTwoArguments(where { _ < _ }) returning "less than" anyNumberOfTimes;
+    m.expects.methodWithTwoArguments(where { _ > _ }) returning "greater than" anyNumberOfTimes
+    
+    expect("greater than") { m.methodWithTwoArguments(2, 1) }
+    expect("less than") { m.methodWithTwoArguments(1, 2) }
   }
   
   test("computed return value") {

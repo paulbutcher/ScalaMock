@@ -402,7 +402,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         ".returning("+ mockTraitOrClassName +".this.asInstanceOf["+ fullClassName +"])"
       
     def expectForwarderNormal(method: Symbol, params: Option[List[Symbol]], result: Type) =
-      forwarderDeclarationNormal(method, params, result) +" = "+ forwarderBody(method, params)
+      forwarderDeclarationNormal(method, params, result) +" = "+ forwarderBody(method, params) +"\n"+
+      matchingForwarder(method, params)
       
     def forwarderDeclarationConstructor(method: Symbol, params: Option[List[Symbol]]) =
       "    def newInstance"+ forwarderParams(params)
@@ -410,6 +411,19 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     def forwarderDeclarationNormal(method: Symbol, params: Option[List[Symbol]], result: Type) =
       "    def "+ method.name.decode + forwarderParams(params) + overloadDisambiguation(method) +": "+ 
         expectationType(params, result)
+        
+    def matchingForwarder(method: Symbol, params: Option[List[Symbol]]): String = params match {
+      case None => ""
+      case Some(ps) => ps match {
+        case Nil => ""
+        case _ => matchingForwarder(method, ps)
+      }
+    }
+    
+    def matchingForwarder(method: Symbol, params: List[Symbol]) = 
+      "    def "+ method.name.decode + "(matcher: com.borachio.MockMatcher"+ params.length +"["+ 
+        fixedTypes(paramTypes(params)).mkString(", ") +"])"+ overloadDisambiguation(method) +" = "+
+        mockFunctionToExpectation(method, Some(params)) +".expects(matcher)"
         
     def forwarderParams(params: Option[List[Symbol]]) = params match {
         case Some(ps) => (ps map forwarderParam _).mkString("(", ", ", ")")
@@ -435,7 +449,10 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         fixedTypes(paramTypes(params) :+ result).mkString(", ") +"]"
         
     def forwarderBody(method: Symbol, params: Option[List[Symbol]]) =
-      "factory.mockFunction"+ paramCount(params) +"ToExpectation("+ mockMethodName(method) +").expects"+ forwardParams(params)
+      mockFunctionToExpectation(method, params) +".expects"+ forwardParams(params)
+      
+    def mockFunctionToExpectation(method: Symbol, params: Option[List[Symbol]]) =
+      "factory.mockFunction"+ paramCount(params) +"ToExpectation("+ mockMethodName(method) +")"
     
     def cachedMockMethod(method: Symbol): String = handleMethod(method) {
       (method, params, result) =>
