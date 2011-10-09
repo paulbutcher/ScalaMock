@@ -28,33 +28,46 @@ object BorachioBuild extends Build {
       organization := "com.borachio",
       version := "2.0-SNAPSHOT",
       scalaVersion := "2.9.0",
-      scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings"),
-      libraryDependencies ++= Seq(
-        "org.scalatest" %% "scalatest" % "1.6.1" % "optional",
-        "junit" % "junit" % "3.8.2" % "optional"
-      )
+      scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings")
     )
     
   lazy val borachio = Project(
       "Borachio",
       file(".")
     ) settings (
-      compile in Mock := Analysis.Empty
+      compile in Mock := Analysis.Empty,
+      publish := ()
     ) aggregate(
-      core, compiler_plugin, compiler_plugin_tests
+      core, scalatest, junit3, compiler_plugin, compiler_plugin_tests
     ) configs(
       Mock
     )
   
   lazy val core = Project(
-      "Core", 
+      "core", 
       file("core")
+    ) settings(
+      name := "Borachio Core"
     )
+    
+  lazy val scalatest: Project = Project("scalatest", file("frameworks/scalatest")) settings(
+    name := "Borachio ScalaTest Support",
+    libraryDependencies += "org.scalatest" %% "scalatest" % "1.6.1"
+  ) dependsOn(core)
+  
+  lazy val junit3: Project = Project("junit", file("frameworks/junit3")) settings(
+    name := "Borachio JUnit3 Support",
+    libraryDependencies += "junit" % "junit" % "3.8.2"
+  ) dependsOn(core)
+  
+  lazy val core_tests: Project = Project("core_tests", file("core_tests"), 
+    dependencies = Seq(scalatest % "test")) settings(publish := ())
 
   lazy val compiler_plugin = Project(
-      "CompilerPlugin", 
+      "compiler_plugin", 
       file("compiler_plugin")
     ) settings(
+      name := "Borachio Compiler Plugin",
       libraryDependencies += "org.scala-lang" % "scala-compiler" % "2.9.0"
     ) dependsOn(
       core
@@ -71,7 +84,7 @@ object BorachioBuild extends Build {
       classpathOptions, scalaInstance, fullClasspath in Compile, streams, generatedMockDirectory, generatedTestDirectory) map {
     (srcs, out, initialOpts, cpOpts, si, cp, s, gm, gt) =>
       val opts = initialOpts ++ Seq(
-        "-Xplugin:compiler_plugin/target/scala-2.9.0.final/compilerplugin_2.9.0-2.0-SNAPSHOT.jar",
+        "-Xplugin:compiler_plugin/target/scala-2.9.0.final/borachio-compiler-plugin_2.9.0-2.0-SNAPSHOT.jar",
         "-Xplugin-require:borachio",
         "-Ylog:generatemocks",
         "-Ystop-after:generatemocks",
@@ -90,6 +103,7 @@ object BorachioBuild extends Build {
     inConfig(GenerateMocks)(Defaults.configSettings) ++ 
     inConfig(Mock)(Defaults.configSettings) ++
     Seq(
+      publish := (),
       generatedMockDirectory <<= sourceManaged(_ / "mock" / "scala"),
       generatedTestDirectory <<= sourceManaged(_ / "test" / "scala"),
       sources in Test <++= collectSource(generatedTestDirectory),
@@ -98,12 +112,12 @@ object BorachioBuild extends Build {
       generateMocks <<= generateMocksTask)
     
   lazy val compiler_plugin_tests = Project(
-      "CompilerPluginTests", 
+      "compiler_plugin_tests", 
       file("compiler_plugin_tests")
     ) settings(
       generateMocksSettings: _*
     ) dependsOn(
-      core % "mock;test",
+      scalatest % "mock;test",
       compiler_plugin
     ) configs(
       Mock
