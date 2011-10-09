@@ -31,24 +31,13 @@ object BorachioBuild extends Build {
       scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings")
     )
     
-  lazy val borachio = Project(
-      "Borachio",
-      file(".")
-    ) settings (
+  lazy val borachio = Project("Borachio", file(".")) settings(
       compile in Mock := Analysis.Empty,
       publish := ()
-    ) aggregate(
-      core, core_tests, scalatest, junit3, compiler_plugin, compiler_plugin_tests
-    ) configs(
-      Mock
-    )
+    ) aggregate(core, core_tests, scalatest, junit3, compiler_plugin, compiler_plugin_tests
+    ) configs(Mock)
   
-  lazy val core = Project(
-      "core", 
-      file("core")
-    ) settings(
-      name := "Borachio Core"
-    )
+  lazy val core = Project("core", file("core")) settings(name := "Borachio Core")
     
   lazy val scalatest: Project = Project("scalatest", file("frameworks/scalatest")) settings(
     name := "Borachio ScalaTest Support",
@@ -63,15 +52,10 @@ object BorachioBuild extends Build {
   lazy val core_tests: Project = Project("core_tests", file("core_tests"), 
     dependencies = Seq(scalatest % "test")) settings(publish := ())
 
-  lazy val compiler_plugin = Project(
-      "compiler_plugin", 
-      file("compiler_plugin")
-    ) settings(
+  lazy val compiler_plugin = Project("compiler_plugin", file("compiler_plugin")) settings(
       name := "Borachio Compiler Plugin",
       libraryDependencies += "org.scala-lang" % "scala-compiler" % "2.9.0"
-    ) dependsOn(
-      core
-    )
+    ) dependsOn(core)
     
   lazy val GenerateMocks = config("generate-mocks")
   lazy val Mock = config("mock") extend(Compile)
@@ -114,15 +98,6 @@ object BorachioBuild extends Build {
       sources in Mock <++= collectSource(generatedTestDirectory),
       generateMocks <<= generateMocksTask)
     
-  lazy val compiler_plugin_tests = Project(
-      "compiler_plugin_tests", 
-      file("compiler_plugin_tests")
-    ) settings(
-      generateMocksSettings: _*
-    ) dependsOn(
-      scalatest % "mock;test",
-      compiler_plugin
-    ) configs(
-      Mock
-    )
+  lazy val compiler_plugin_tests = Project("compiler_plugin_tests", file("compiler_plugin_tests")) settings(
+      generateMocksSettings: _*) dependsOn(scalatest % "mock;test", compiler_plugin) configs(Mock)
 }
