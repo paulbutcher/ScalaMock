@@ -18,31 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.plugin.test
+package com.borachio
 
-import com.borachio.annotation.{mock, mockObject, mockWithCompanion}
+trait ClassLoaderStrategy {
+  def getClassLoader(interfaces: Class[_]*): ClassLoader
+}
 
-@mock[SimpleClass] 
-@mock[SimpleClass2]
-@mock[SimpleClass3]
-@mock[SimpleClass4]
-@mock[FinalClass]
-@mock[ClassWithFinalMethod]
-@mock[AbstractClass]
-@mock[SimpleTrait]
-@mock[ClassWithNonTrivialConstructor]
-@mock[ClassWithOverloadedMethods]
-@mock[ClassWithPrivateConstructor]
-@mock[ClassWithValsAndVars]
-@mock[DerivedClass]
-@mock[ClassWithNestedTypes]
-@mock[ClassThatOverridesObjectMethods]
-@mock[SimpleJavaClass]
-@mock[JavaClassWithConstants]
-@mock[JavaClassWithStaticVars]
-@mock[JavaClassWithStaticMethods]
-@mockObject(SimpleObject)
-@mockWithCompanion[ClassWithCompanionObject]
-@mockWithCompanion[TraitWithCompanionObject]
-@mockWithCompanion[CaseClass]
-class Dummy
+object threadContextClassLoaderStrategy extends ClassLoaderStrategy {
+  def getClassLoader(interfaces: Class[_]*) = Thread.currentThread.getContextClassLoader
+}

@@ -1,3 +1,16 @@
+Version 1.3:
+
+- Switch to using thread context class loader when creating proxies by default
+- Add ability to override proxy class loader strategy
+- Add support for Scala 2.9.1
+- Switch to using sbt 0.10
+- Split test framework support out into separate libraries
+
+Version 1.2:
+
+- Add support for Scala 2.9.0-1
+- Give a slightly nicer error if withExpectations isn't used
+
 Version 1.1:
 
 - Add the CallLogging trait

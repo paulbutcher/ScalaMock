@@ -18,31 +18,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.plugin.test
+package com.borachio
 
-import com.borachio.annotation.{mock, mockObject, mockWithCompanion}
+import java.lang.reflect.{InvocationHandler, Method, Proxy => JavaProxy}
 
-@mock[SimpleClass] 
-@mock[SimpleClass2]
-@mock[SimpleClass3]
-@mock[SimpleClass4]
-@mock[FinalClass]
-@mock[ClassWithFinalMethod]
-@mock[AbstractClass]
-@mock[SimpleTrait]
-@mock[ClassWithNonTrivialConstructor]
-@mock[ClassWithOverloadedMethods]
-@mock[ClassWithPrivateConstructor]
-@mock[ClassWithValsAndVars]
-@mock[DerivedClass]
-@mock[ClassWithNestedTypes]
-@mock[ClassThatOverridesObjectMethods]
-@mock[SimpleJavaClass]
-@mock[JavaClassWithConstants]
-@mock[JavaClassWithStaticVars]
-@mock[JavaClassWithStaticMethods]
-@mockObject(SimpleObject)
-@mockWithCompanion[ClassWithCompanionObject]
-@mockWithCompanion[TraitWithCompanionObject]
-@mockWithCompanion[CaseClass]
-class Dummy
+private[borachio] object Proxy {
+  
+  def create(classLoaderStrategy: ClassLoaderStrategy, interfaces: Class[_]*)(f: (AnyRef, Symbol, Array[AnyRef]) => AnyRef) = {
+    
+    val classLoader = classLoaderStrategy.getClassLoader(interfaces :_*)
+
+    val handler = new InvocationHandler {
+      def invoke(proxy: AnyRef, method: Method, args: Array[AnyRef]) =
+        f(proxy, Symbol(method.getName), args)
+    }
+
+    try {
+      JavaProxy.newProxyInstance(classLoader, interfaces.distinct.toArray, handler)
+    } catch {
+      case e: IllegalArgumentException => 
+        throw new IllegalArgumentException("Unable to create proxy - possible classloader issue? Consider setting proxyClassLoaderStrategy", e)
+    }
+  }
+}

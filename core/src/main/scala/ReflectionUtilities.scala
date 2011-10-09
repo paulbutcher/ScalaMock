@@ -18,31 +18,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.plugin.test
+package com.borachio
 
-import com.borachio.annotation.{mock, mockObject, mockWithCompanion}
+object ReflectionUtilities {
 
-@mock[SimpleClass] 
-@mock[SimpleClass2]
-@mock[SimpleClass3]
-@mock[SimpleClass4]
-@mock[FinalClass]
-@mock[ClassWithFinalMethod]
-@mock[AbstractClass]
-@mock[SimpleTrait]
-@mock[ClassWithNonTrivialConstructor]
-@mock[ClassWithOverloadedMethods]
-@mock[ClassWithPrivateConstructor]
-@mock[ClassWithValsAndVars]
-@mock[DerivedClass]
-@mock[ClassWithNestedTypes]
-@mock[ClassThatOverridesObjectMethods]
-@mock[SimpleJavaClass]
-@mock[JavaClassWithConstants]
-@mock[JavaClassWithStaticVars]
-@mock[JavaClassWithStaticMethods]
-@mockObject(SimpleObject)
-@mockWithCompanion[ClassWithCompanionObject]
-@mockWithCompanion[TraitWithCompanionObject]
-@mockWithCompanion[CaseClass]
-class Dummy
+  def getUnmockedClass(clazz: Class[_], name: String) = {
+    val classLoader = clazz.getClassLoader
+    val method = classLoader.getClass.getMethod("loadClassNormal", classOf[String])
+    method.invoke(classLoader, name).asInstanceOf[Class[_]]
+  }
+
+  def getBooleanField(clazz: Class[_], name: String) = clazz.getField(name).getBoolean(null)
+  def getByteField(clazz: Class[_], name: String) = clazz.getField(name).getByte(null)
+  def getCharField(clazz: Class[_], name: String) = clazz.getField(name).getChar(null)
+  def getDoubleField(clazz: Class[_], name: String) = clazz.getField(name).getDouble(null)
+  def getFloatField(clazz: Class[_], name: String) = clazz.getField(name).getFloat(null)
+  def getIntField(clazz: Class[_], name: String) = clazz.getField(name).getInt(null)
+  def getLongField(clazz: Class[_], name: String) = clazz.getField(name).getLong(null)
+  def getShortField(clazz: Class[_], name: String) = clazz.getField(name).getShort(null)
+  def getObjectField(clazz: Class[_], name: String) = clazz.getField(name).get(null)
+}

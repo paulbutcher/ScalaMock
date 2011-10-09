@@ -18,31 +18,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.plugin.test
+package com.borachio
 
-import com.borachio.annotation.{mock, mockObject, mockWithCompanion}
+private[borachio] class OrderedExpectations extends Expectations {
 
-@mock[SimpleClass] 
-@mock[SimpleClass2]
-@mock[SimpleClass3]
-@mock[SimpleClass4]
-@mock[FinalClass]
-@mock[ClassWithFinalMethod]
-@mock[AbstractClass]
-@mock[SimpleTrait]
-@mock[ClassWithNonTrivialConstructor]
-@mock[ClassWithOverloadedMethods]
-@mock[ClassWithPrivateConstructor]
-@mock[ClassWithValsAndVars]
-@mock[DerivedClass]
-@mock[ClassWithNestedTypes]
-@mock[ClassThatOverridesObjectMethods]
-@mock[SimpleJavaClass]
-@mock[JavaClassWithConstants]
-@mock[JavaClassWithStaticVars]
-@mock[JavaClassWithStaticMethods]
-@mockObject(SimpleObject)
-@mockWithCompanion[ClassWithCompanionObject]
-@mockWithCompanion[TraitWithCompanionObject]
-@mockWithCompanion[CaseClass]
-class Dummy
+  private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Option[Any] = {
+    for (i <- currentIndex until handlers.length) {
+      val handler = handlers(i)
+      val r = handler.handle(mock, arguments)
+      if (r.isDefined) {
+        currentIndex = i
+        return r
+      }
+      if (!handler.satisfied)
+        return None
+    }
+    None
+  }
+  
+  override def toString = handlers.mkString("inSequence {\n  ", "\n  ", "\n}")
+
+  private var currentIndex = 0
+}

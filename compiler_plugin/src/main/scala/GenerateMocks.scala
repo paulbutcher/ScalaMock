@@ -41,14 +41,13 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   lazy val MockAnnotation = definitions.getClass("com.borachio.annotation.mock")
   lazy val MockWithCompanionAnnotation = definitions.getClass("com.borachio.annotation.mockWithCompanion")
   lazy val MockObjectAnnotation = definitions.getClass("com.borachio.annotation.mockObject")
-  lazy val mockOutputDirectory = plugin.mockOutputDirectory.get
-  lazy val testOutputDirectory = plugin.testOutputDirectory.get
+  lazy val mockRoot = plugin.mockOutputDirectory.get
+  lazy val testRoot = plugin.testOutputDirectory.get
   
   def newPhase(prev: Phase) = new StdPhase(prev) {
     def apply(unit: CompilationUnit) {
       if (plugin.mockOutputDirectory.isDefined || plugin.testOutputDirectory.isDefined) {
         if (plugin.mockOutputDirectory.isDefined && plugin.testOutputDirectory.isDefined) {
-          createOutputDirectories
           new ForeachTreeTraverser(findMockAnnotations).traverse(unit.body)
           generateMockFactory
         } else {
@@ -89,7 +88,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     assert(atp.typeArgs.length == 1)
     val symbol = atp.typeArgs.head.typeSymbol
     val companion = symbol.companionModule
-    if (companion == NoSymbol)
+    if (companion == NoSymbol || companion.isJavaDefined)
       globalError("@mockWithCompanion["+ symbol +"] - no companion found")
     else
       new MockWithCompanion(symbol, companion.moduleClass).generate
@@ -105,14 +104,14 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   }
   
   def generateMockFactory() {
-    val writer = new FileWriter(new File(testOutputDirectory, "GeneratedMockFactory.scala"))
+    val writer = new FileWriter(new File(testRoot, "GeneratedMockFactory.scala"))
     writer.write(mockFactory)
     writer.close
   }
   
   def mockFactory =
     "package com.borachio.generated\n\n"+
-    "trait GeneratedMockFactory extends com.borachio.GeneratedMockFactoryBase { self: com.borachio.AbstractMockFactory =>\n"+
+    "trait GeneratedMockFactory extends com.borachio.GeneratedMockFactoryBase { self: com.borachio.MockFactoryBase =>\n"+
       (mocks map { case (target, mock) => mockFactoryEntry(target, mock) }).mkString("\n") +"\n\n"+
       (mockObjects map { case (target, mock) => mockObjectEntry(target, mock) }).mkString("\n") +"\n\n"+
     "}"
@@ -121,11 +120,6 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     "  implicit def toMock(m: "+ target +") = m.asInstanceOf["+ mock +"]"
     
   def mockObjectEntry(target: String, mock: String) = "  def mockObject(x: "+ target +".type) = x.asInstanceOf["+ mock +"]"
-    
-  def createOutputDirectories {
-    new File(mockOutputDirectory).mkdirs
-    new File(testOutputDirectory).mkdirs
-  }
   
   trait Context {
     val topLevel: Boolean
@@ -152,6 +146,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
       generateMock()
       generateTest()
+      generateJavaFeatures()
     }
     
     def generateMock() {
@@ -162,15 +157,36 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       generateFile(testFile, getTest)
     }
     
+    def generateJavaFeatures() {
+      if (hasJavaFeatures)
+        generateFile(javaFeaturesFile, getJavaFeatures)
+    }
+    
     def generateFile(file: File, body: String) {
       val writer = new FileWriter(file)
       writer.write(packageStatement +"\n\n"+ body)
       writer.close
     }
     
-    lazy val mockFile = new File(mockOutputDirectory, qualifiedClassName +".scala")
+    lazy val mockFile = new File(mockOutputDirectory, className +".scala")
     
-    lazy val testFile = new File(testOutputDirectory, fullMockTraitOrClassName +".scala")
+    lazy val testFile = new File(testOutputDirectory, mockTraitOrClassName +".scala")
+    
+    lazy val javaFeaturesFile = new File(mockOutputDirectory, javaFeaturesClassName +".java")
+    
+    lazy val mockOutputDirectory = getOutputDirectory(mockRoot)
+    
+    lazy val testOutputDirectory = getOutputDirectory(testRoot)
+    
+    def getOutputDirectory(root: String) = {
+      val d = packageDirectory(new File(root))
+      d.mkdirs
+      d
+    }
+    
+    def packageDirectory(root: File) = packageElements.foldLeft(root) { (f, e) => new File(f, e) }
+    
+    lazy val packageElements = packageName split '.'
     
     def getMock: String =
       mockedTypeDeclaration +" {\n\n"+
@@ -187,9 +203,15 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         expectForwarders +"\n\n"+
         (if (hasNestedTypes) nestedMockCreator +"\n\n" else "") +
         mockTraitEntries +"\n\n"+
+        factoryReference +"\n\n"+
         indent((nestedMocks map ( _.getTest )).mkString("\n")) +"\n\n"+
       "}\n"
     }
+    
+    def getJavaFeatures: String =
+      javaFeaturesClassDeclaration +" {\n\n"+
+        javaValueForwarders +"\n"+
+      "}\n"
     
     def indent(s: String) = "  " + new Regex("\n").replaceAllIn(s, "\n  ")
 
@@ -199,15 +221,14 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
     lazy val mockClassEntries = 
       mockMethods +"\n\n"+
-      factoryReference +"\n\n"+
       mockMembers
       
     lazy val mockTraitEntries = ""
         
-    lazy val packageStatement = "package "+ packageName
+    lazy val packageStatement = "package "+ packageName +";"
 
     lazy val mockedTypeDeclaration =
-      classOrObject +" extends "+ (parents :+ mockTraitOrClassName).mkString(" with ")
+      classOrObject +" extends "+ (javaFeaturesParent ++ parents :+ mockTraitOrClassName).mkString(" with ")
         
     lazy val classOrObject: String = "class "+ className +"(dummy: com.borachio.MockConstructorDummy)"
       
@@ -215,7 +236,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "  val factory = {\n"+
       "    val classLoader = getClass.getClassLoader\n"+
       "    val method = classLoader.getClass.getMethod(\"getFactory\")\n"+
-      "    method.invoke(classLoader).asInstanceOf[com.borachio.AbstractMockFactory]\n"+
+      "    method.invoke(classLoader).asInstanceOf[com.borachio.MockFactoryBase]\n"+
       "  }"
       
     lazy val forwardTo = "  var forwardTo: AnyRef = _\n\n"+ forwarders
@@ -259,6 +280,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
     lazy val qualifiedClassName = qualify(className)
     
+    lazy val javaFeaturesClassName = className +"$JavaFeatures"
+    
     lazy val nestedMocks = nestedTypes map { s => mockClassOrTrait(s, this) }
     
     lazy val nestedTypes = mockSymbol.info.nonPrivateMembers filter ( _.isClass )
@@ -268,7 +291,27 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val parents = mockSymbol.info.parents filter { s => 
         s.typeSymbol != ObjectClass && s.typeSymbol != ScalaObjectClass
       }
+      
+    lazy val hasJavaFeatures = !javaStatics.isEmpty
     
+    lazy val javaStatics = mockSymbol.companionModule match {
+        case NoSymbol => Nil
+        case companion => companion.info.nonPrivateMembers filter { s => 
+            s.isJavaDefined && !isMemberOfObject(s)
+          }
+      }
+      
+    lazy val javaValues = javaStatics filter (!_.isMethod)
+    
+    lazy val javaFeaturesClassDeclaration = "public abstract class "+ javaFeaturesClassName
+    
+    lazy val javaValueForwarders = 
+      "  private static Class clazz = com.borachio.ReflectionUtilities.getUnmockedClass("+
+        qualifiedClassName +".class, \""+ qualifiedClassName +"\");\n\n"+
+      (javaValues map javaValueForwarder _).mkString("\n")
+      
+    lazy val javaFeaturesParent = if (hasJavaFeatures) List(javaFeaturesClassName) else List()
+  
     def getMethodsToMock = mockSymbol.info.nonPrivateMembers filter { s => 
         s.isMethod && !isMemberOfObject(s) && !s.isMixinConstructor
       }
@@ -319,9 +362,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "    if (mock != null) {\n"+
       "      forwardTo = mock\n"+
       "    } else {\n"+
-      "      val classLoader = getClass.getClassLoader\n"+
-      "      val method = classLoader.getClass.getMethod(\"loadClassNormal\", classOf[String])\n"+
-      "      val clazz = method.invoke(classLoader, \""+ qualifiedClassName +"\").asInstanceOf[Class[_]]\n"+
+      "      val clazz = com.borachio.ReflectionUtilities.getUnmockedClass(getClass, \""+ qualifiedClassName +"\")\n"+
       "      val constructor = clazz.getConstructor("+ constructorParamTypes(params) +")\n"+
       "      forwardTo = constructor.newInstance"+ forwardConstructorParams(params) +".asInstanceOf[AnyRef]\n"+
       "    }\n"+
@@ -363,13 +404,28 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         ".returning("+ mockTraitOrClassName +".this.asInstanceOf["+ fullClassName +"])"
       
     def expectForwarderNormal(method: Symbol, params: Option[List[Symbol]], result: Type) =
-      forwarderDeclarationNormal(method, params, result) +" = "+ forwarderBody(method, params)
+      forwarderDeclarationNormal(method, params, result) +" = "+ forwarderBody(method, params) +"\n"+
+      matchingForwarder(method, params)
       
     def forwarderDeclarationConstructor(method: Symbol, params: Option[List[Symbol]]) =
       "    def newInstance"+ forwarderParams(params)
         
     def forwarderDeclarationNormal(method: Symbol, params: Option[List[Symbol]], result: Type) =
-      "    def "+ method.name.decode + forwarderParams(params) + overloadDisambiguation(method) +": "+ expectationType(result)
+      "    def "+ method.name.decode + forwarderParams(params) + overloadDisambiguation(method) +": "+ 
+        expectationType(params, result)
+        
+    def matchingForwarder(method: Symbol, params: Option[List[Symbol]]): String = params match {
+      case None => ""
+      case Some(ps) => ps match {
+        case Nil => ""
+        case _ => matchingForwarder(method, ps)
+      }
+    }
+    
+    def matchingForwarder(method: Symbol, params: List[Symbol]) = 
+      "    def "+ method.name.decode + "(matcher: com.borachio.MockMatcher"+ params.length +"["+ 
+        fixedTypes(paramTypes(params)).mkString(", ") +"])"+ overloadDisambiguation(method) +" = "+
+        mockFunctionToExpectation(method, Some(params)) +".expects(matcher)"
         
     def forwarderParams(params: Option[List[Symbol]]) = params match {
         case Some(ps) => (ps map forwarderParam _).mkString("(", ", ", ")")
@@ -390,10 +446,15 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         ""
     }
     
-    def expectationType(result: Type) = "com.borachio.TypeSafeExpectation["+ fixedType(result) +"]"
+    def expectationType(params: Option[List[Symbol]], result: Type) =
+      "com.borachio.TypeSafeExpectation"+ paramCount(params) +"["+ 
+        fixedTypes(paramTypes(params) :+ result).mkString(", ") +"]"
         
     def forwarderBody(method: Symbol, params: Option[List[Symbol]]) =
-      mockMethodName(method) +".expects"+ forwardParams(params)
+      mockFunctionToExpectation(method, params) +".expects"+ forwardParams(params)
+      
+    def mockFunctionToExpectation(method: Symbol, params: Option[List[Symbol]]) =
+      "factory.mockFunction"+ paramCount(params) +"ToExpectation("+ mockMethodName(method) +")"
     
     def cachedMockMethod(method: Symbol): String = handleMethod(method) {
       (method, params, result) =>
@@ -418,8 +479,18 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
         "com.borachio.MockConstructor"
       else
         "com.borachio.MockFunction"
-
+        
+    def paramTypes(params: Option[List[Symbol]]): List[Type] = params match {
+      case Some(ps) => paramTypes(ps)
+      case None => Nil
+    }
+        
     def paramTypes(params: List[Symbol]) = params map (_.tpe)
+    
+    def paramCount(params: Option[List[Symbol]]) = params match {
+      case None => 0
+      case Some(ps) => ps.length
+    }
     
     def methodNames(prefix: String) = (methodsToMock.zipWithIndex map { case (m, i) => (m -> (prefix +"$"+ i)) }).toMap
     
@@ -462,6 +533,37 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
           case None => handler(method, Nil, result)
         }
     }
+    
+    def javaValueForwarder(value: Symbol) =
+      "  public static "+ javaType(value.info) +" "+ value.name +" = "+ fieldGetter(value)
+
+    def javaType(t: Type) = t.typeSymbol match {
+      case BooleanClass => "boolean"
+      case ByteClass => "byte"
+      case CharClass => "char"
+      case DoubleClass => "double"
+      case FloatClass => "float"
+      case IntClass => "int"
+      case LongClass => "long"
+      case ShortClass => "short"
+      case _ => t.toString
+    }
+    
+    def fieldGetter(value: Symbol) = fieldGetterMethod(value.info) +"(clazz, \""+ value.name +"\");"
+    
+    def fieldGetterMethod(t: Type) = t.typeSymbol match {
+      case BooleanClass => fieldGetterName("Boolean")
+      case ByteClass => fieldGetterName("Byte")
+      case CharClass => fieldGetterName("Char")
+      case DoubleClass => fieldGetterName("Double")
+      case FloatClass => fieldGetterName("Float")
+      case IntClass => fieldGetterName("Int")
+      case LongClass => fieldGetterName("Long")
+      case ShortClass => fieldGetterName("Short")
+      case _ => "("+ javaType(t) +")"+ fieldGetterName("Object")
+    }
+    
+    def fieldGetterName(t: String) = "com.borachio.ReflectionUtilities.get"+ t +"Field"
   }
   
   class MockClass(mockSymbol: Symbol, enclosing: Context) extends Mock(mockSymbol, enclosing) {

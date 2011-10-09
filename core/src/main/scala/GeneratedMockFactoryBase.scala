@@ -18,31 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.plugin.test
+package com.borachio
 
-import com.borachio.annotation.{mock, mockObject, mockWithCompanion}
+import java.net.URL
 
-@mock[SimpleClass] 
-@mock[SimpleClass2]
-@mock[SimpleClass3]
-@mock[SimpleClass4]
-@mock[FinalClass]
-@mock[ClassWithFinalMethod]
-@mock[AbstractClass]
-@mock[SimpleTrait]
-@mock[ClassWithNonTrivialConstructor]
-@mock[ClassWithOverloadedMethods]
-@mock[ClassWithPrivateConstructor]
-@mock[ClassWithValsAndVars]
-@mock[DerivedClass]
-@mock[ClassWithNestedTypes]
-@mock[ClassThatOverridesObjectMethods]
-@mock[SimpleJavaClass]
-@mock[JavaClassWithConstants]
-@mock[JavaClassWithStaticVars]
-@mock[JavaClassWithStaticMethods]
-@mockObject(SimpleObject)
-@mockWithCompanion[ClassWithCompanionObject]
-@mockWithCompanion[TraitWithCompanionObject]
-@mockWithCompanion[CaseClass]
-class Dummy
+trait GeneratedMockFactoryBase { self: MockFactoryBase =>
+  
+  def getClassLoader(): MockingClassLoader
+  
+  mockingClassLoader = Some(getClassLoader)
+  
+  private[borachio] def classToCreate[T: ClassManifest] = {
+    val erasure = classManifest[T].erasure
+    val clazz = Class.forName(erasure.getName)
+    if (clazz.isInterface)
+      Class.forName(erasure.getPackage.getName +".Mock$"+ erasure.getSimpleName)
+    else
+      clazz
+  }
+
+  protected def mock[T: ClassManifest] = {
+    val constructor = classToCreate[T].getConstructor(classOf[MockConstructorDummy])
+    constructor.newInstance(new MockConstructorDummy).asInstanceOf[T]
+  }
+}
