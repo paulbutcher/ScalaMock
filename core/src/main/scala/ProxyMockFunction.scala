@@ -24,9 +24,5 @@ private[borachio] class ProxyMockFunction(factory: MockFactoryBase, name: Symbol
   
   def apply(args: Array[AnyRef]) = handle(if (args != null) args.map(_.asInstanceOf[Any]) else Array[Any]())
 
-  private[borachio] def toExpectation() = {
-    val expectation = new TypeUnsafeExpectation(this)
-    factory.add(expectation)
-    expectation
-  }
+  private[borachio] def toExpectation() = factory.add(new TypeUnsafeExpectation(this))
 }
