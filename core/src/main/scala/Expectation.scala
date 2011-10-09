@@ -140,57 +140,46 @@ class TypeUnsafeExpectation(target: MockFunction) extends Expectation(target) {
   def returns(value: Any) = setReturn(value)
   def returning(value: Any) = returns(value)
   
-  def expectsWhere[T1](matcher: T1 => Boolean) = {
+  def where[T1](matcher: T1 => Boolean) = {
     argumentsMatcher = new FunctionAdapter1(matcher)
     this
   }
-  def expectsWhere[T1, T2](matcher: (T1, T2) => Boolean) = {
+  def where[T1, T2](matcher: (T1, T2) => Boolean) = {
     argumentsMatcher = new FunctionAdapter2(matcher)
     this
   }
-  def expectsWhere[T1, T2, T3](matcher: (T1, T2, T3) => Boolean) = {
+  def where[T1, T2, T3](matcher: (T1, T2, T3) => Boolean) = {
     argumentsMatcher = new FunctionAdapter3(matcher)
     this
   }
-  def expectsWhere[T1, T2, T3, T4](matcher: (T1, T2, T3, T4) => Boolean) = {
+  def where[T1, T2, T3, T4](matcher: (T1, T2, T3, T4) => Boolean) = {
     argumentsMatcher = new FunctionAdapter4(matcher)
     this
   }
-  def expectsWhere[T1, T2, T3, T4, T5](matcher: (T1, T2, T3, T4, T5) => Boolean) = {
+  def where[T1, T2, T3, T4, T5](matcher: (T1, T2, T3, T4, T5) => Boolean) = {
     argumentsMatcher = new FunctionAdapter5(matcher)
     this
   }
-  def expectsWhere[T1, T2, T3, T4, T5, T6](matcher: (T1, T2, T3, T4, T5, T6) => Boolean) = {
+  def where[T1, T2, T3, T4, T5, T6](matcher: (T1, T2, T3, T4, T5, T6) => Boolean) = {
     argumentsMatcher = new FunctionAdapter6(matcher)
     this
   }
-  def expectsWhere[T1, T2, T3, T4, T5, T6, T7](matcher: (T1, T2, T3, T4, T5, T6, T7) => Boolean) = {
+  def where[T1, T2, T3, T4, T5, T6, T7](matcher: (T1, T2, T3, T4, T5, T6, T7) => Boolean) = {
     argumentsMatcher = new FunctionAdapter7(matcher)
     this
   }
-  def expectsWhere[T1, T2, T3, T4, T5, T6, T7, T8](matcher: (T1, T2, T3, T4, T5, T6, T7, T8) => Boolean) = {
+  def where[T1, T2, T3, T4, T5, T6, T7, T8](matcher: (T1, T2, T3, T4, T5, T6, T7, T8) => Boolean) = {
     argumentsMatcher = new FunctionAdapter8(matcher)
     this
   }
-  def expectsWhere[T1, T2, T3, T4, T5, T6, T7, T8, T9](matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9) => Boolean) = {
+  def where[T1, T2, T3, T4, T5, T6, T7, T8, T9](matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9) => Boolean) = {
     argumentsMatcher = new FunctionAdapter9(matcher)
     this
   }
-  def expectsWhere[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10](matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) => Boolean) = {
+  def where[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10](matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) => Boolean) = {
     argumentsMatcher = new FunctionAdapter10(matcher)
     this
   }
-  
-  def where[T1](matcher: T1 => Boolean) = expectsWhere(matcher)
-  def where[T1, T2](matcher: (T1, T2) => Boolean) = expectsWhere(matcher)
-  def where[T1, T2, T3](matcher: (T1, T2, T3) => Boolean) = expectsWhere(matcher)
-  def where[T1, T2, T3, T4](matcher: (T1, T2, T3, T4) => Boolean) = expectsWhere(matcher)
-  def where[T1, T2, T3, T4, T5](matcher: (T1, T2, T3, T4, T5) => Boolean) = expectsWhere(matcher)
-  def where[T1, T2, T3, T4, T5, T6](matcher: (T1, T2, T3, T4, T5, T6) => Boolean) = expectsWhere(matcher)
-  def where[T1, T2, T3, T4, T5, T6, T7](matcher: (T1, T2, T3, T4, T5, T6, T7) => Boolean) = expectsWhere(matcher)
-  def where[T1, T2, T3, T4, T5, T6, T7, T8](matcher: (T1, T2, T3, T4, T5, T6, T7, T8) => Boolean) = expectsWhere(matcher)
-  def where[T1, T2, T3, T4, T5, T6, T7, T8, T9](matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9) => Boolean) = expectsWhere(matcher)
-  def where[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10](matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) => Boolean) = expectsWhere(matcher)
   
   def onCall[T1, R](f: T1 => R) = {
     onCallHandler = new FunctionAdapter1(f)
@@ -255,8 +244,8 @@ class TypeSafeExpectation1[T1, R](target: MockFunction) extends TypeSafeExpectat
     this
   }
   
-  def expectsWhere(f: T1 => Boolean) = {
-    argumentsMatcher = new FunctionAdapter1(f)
+  def expects(matcher: MockMatcher1[T1]) = {
+    argumentsMatcher = matcher
     this
   }
   
@@ -273,8 +262,8 @@ class TypeSafeExpectation2[T1, T2, R](target: MockFunction) extends TypeSafeExpe
     this
   }
   
-  def expectsWhere(f: (T1, T2) => Boolean) = {
-    argumentsMatcher = new FunctionAdapter2(f)
+  def expects(matcher: MockMatcher2[T1, T2]) = {
+    argumentsMatcher = matcher
     this
   }
   
@@ -291,8 +280,8 @@ class TypeSafeExpectation3[T1, T2, T3, R](target: MockFunction) extends TypeSafe
     this
   }
   
-  def expectsWhere(f: (T1, T2, T3) => Boolean) = {
-    argumentsMatcher = new FunctionAdapter3(f)
+  def expects(matcher: MockMatcher3[T1, T2, T3]) = {
+    argumentsMatcher = matcher
     this
   }
   
@@ -309,8 +298,8 @@ class TypeSafeExpectation4[T1, T2, T3, T4, R](target: MockFunction) extends Type
     this
   }
   
-  def expectsWhere(f: (T1, T2, T3, T4) => Boolean) = {
-    argumentsMatcher = new FunctionAdapter4(f)
+  def expects(matcher: MockMatcher4[T1, T2, T3, T4]) = {
+    argumentsMatcher = matcher
     this
   }
   
@@ -327,8 +316,8 @@ class TypeSafeExpectation5[T1, T2, T3, T4, T5, R](target: MockFunction) extends 
     this
   }
   
-  def expectsWhere(f: (T1, T2, T3, T4, T5) => Boolean) = {
-    argumentsMatcher = new FunctionAdapter5(f)
+  def expects(matcher: MockMatcher5[T1, T2, T3, T4, T5]) = {
+    argumentsMatcher = matcher
     this
   }
   
@@ -345,8 +334,8 @@ class TypeSafeExpectation6[T1, T2, T3, T4, T5, T6, R](target: MockFunction) exte
     this
   }
   
-  def expectsWhere(f: (T1, T2, T3, T4, T5, T6) => Boolean) = {
-    argumentsMatcher = new FunctionAdapter6(f)
+  def expects(matcher: MockMatcher6[T1, T2, T3, T4, T5, T6]) = {
+    argumentsMatcher = matcher
     this
   }
   
@@ -363,8 +352,8 @@ class TypeSafeExpectation7[T1, T2, T3, T4, T5, T6, T7, R](target: MockFunction) 
     this
   }
   
-  def expectsWhere(f: (T1, T2, T3, T4, T5, T6, T7) => Boolean) = {
-    argumentsMatcher = new FunctionAdapter7(f)
+  def expects(matcher: MockMatcher7[T1, T2, T3, T4, T5, T6, T7]) = {
+    argumentsMatcher = matcher
     this
   }
   
@@ -381,8 +370,8 @@ class TypeSafeExpectation8[T1, T2, T3, T4, T5, T6, T7, T8, R](target: MockFuncti
     this
   }
   
-  def expectsWhere(f: (T1, T2, T3, T4, T5, T6, T7, T8) => Boolean) = {
-    argumentsMatcher = new FunctionAdapter8(f)
+  def expects(matcher: MockMatcher8[T1, T2, T3, T4, T5, T6, T7, T8]) = {
+    argumentsMatcher = matcher
     this
   }
   
@@ -399,8 +388,8 @@ class TypeSafeExpectation9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](target: MockFu
     this
   }
   
-  def expectsWhere(f: (T1, T2, T3, T4, T5, T6, T7, T8, T9) => Boolean) = {
-    argumentsMatcher = new FunctionAdapter9(f)
+  def expects(matcher: MockMatcher9[T1, T2, T3, T4, T5, T6, T7, T8, T9]) = {
+    argumentsMatcher = matcher
     this
   }
   
@@ -417,8 +406,8 @@ class TypeSafeExpectation10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](target: 
     this
   }
   
-  def expectsWhere(f: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) => Boolean) = {
-    argumentsMatcher = new FunctionAdapter10(f)
+  def expects(matcher: MockMatcher10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10]) = {
+    argumentsMatcher = matcher
     this
   }
   

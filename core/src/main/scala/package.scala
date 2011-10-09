@@ -152,15 +152,12 @@ package com
  *
  * ====Predicate matching====
  *
- * More complicated argument matching can be implemented by passing a predicate; a function
- * that takes a [[scala.Product]] and returns a `Boolean`. For mock functions, use `expectsWhere`:
+ * More complicated argument matching can be implemented by using `where` to pass a predicate:
  *
  * {{{
  * m = mockFunction[Double, Double, Unit]
- * m expectsWhere { (x: Double, y: Double) => x < y }
+ * m expects { where _ < _ }
  * }}}
- *
- * For proxy mocks, use `where`:
  *
  * {{{
  * m = mock[Turtle]

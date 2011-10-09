@@ -84,6 +84,17 @@ trait MockFactoryBase {
     e
   }
   
+  protected def where[T1](matcher: T1 => Boolean) = new MockMatcher1(matcher)
+  protected def where[T1, T2](matcher: (T1, T2) => Boolean) = new MockMatcher2(matcher)
+  protected def where[T1, T2, T3](matcher: (T1, T2, T3) => Boolean) = new MockMatcher3(matcher)
+  protected def where[T1, T2, T3, T4](matcher: (T1, T2, T3, T4) => Boolean) = new MockMatcher4(matcher)
+  protected def where[T1, T2, T3, T4, T5](matcher: (T1, T2, T3, T4, T5) => Boolean) = new MockMatcher5(matcher)
+  protected def where[T1, T2, T3, T4, T5, T6](matcher: (T1, T2, T3, T4, T5, T6) => Boolean) = new MockMatcher6(matcher)
+  protected def where[T1, T2, T3, T4, T5, T6, T7](matcher: (T1, T2, T3, T4, T5, T6, T7) => Boolean) = new MockMatcher7(matcher)
+  protected def where[T1, T2, T3, T4, T5, T6, T7, T8](matcher: (T1, T2, T3, T4, T5, T6, T7, T8) => Boolean) = new MockMatcher8(matcher)
+  protected def where[T1, T2, T3, T4, T5, T6, T7, T8, T9](matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9) => Boolean) = new MockMatcher9(matcher)
+  protected def where[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10](matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) => Boolean) = new MockMatcher10(matcher)
+  
   protected def * = new MatchAny
   
   protected class EpsilonMatcher(d: Double) {

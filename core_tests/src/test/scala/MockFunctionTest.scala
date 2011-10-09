@@ -313,7 +313,7 @@ class MockFunctionTest extends WordSpec with MockFactory {
     "match a simple predicate" in {
       val m = mockFunction[Int, Double, String]
       
-      m expectsWhere { _ < _ } returning "predicate matched"
+      m.expects(where { _ < _ }) returning "predicate matched"
       
       expect("predicate matched") { m(10, 12.0) }
     
@@ -323,7 +323,7 @@ class MockFunctionTest extends WordSpec with MockFactory {
     "fail if a predicate does not match" in {
       val m = mockFunction[Int, Double, String]
       
-      m expectsWhere { _ < _ } returning "predicate matched"
+      m.expects(where { _ < _ }) returning "predicate matched"
       
       intercept[ExpectationException] { m(12, 10.0) }
     }
