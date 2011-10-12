@@ -96,7 +96,10 @@ object BorachioBuild extends Build {
       sources in Test <++= collectSource(generatedTestDirectory),
       sources in Mock <++= collectSource(generatedMockDirectory),
       sources in Mock <++= collectSource(generatedTestDirectory),
-      generateMocks <<= generateMocksTask)
+      generateMocks <<= generateMocksTask,
+      testOptions in Test <+= classDirectory in Mock map { dir =>
+        Tests.Argument(TestFrameworks.ScalaTest, "-Dmock.classes=" + dir)
+      })
     
   lazy val compiler_plugin_tests = Project("compiler_plugin_tests", file("compiler_plugin_tests")) settings(
       generateMocksSettings: _*) dependsOn(scalatest % "mock;test", compiler_plugin) configs(Mock)

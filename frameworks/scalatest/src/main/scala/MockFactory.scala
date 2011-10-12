@@ -20,8 +20,9 @@
 
 package com.borachio.scalatest
 
-import com.borachio.MockFactoryBase
+import com.borachio.{MockFactoryBase, MockingURLClassLoader}
 import org.scalatest.{AbstractSuite, Distributor, Filter, Reporter, Stopper, Suite, Tracker}
+import java.net.URL
 
 /** Trait that can be mixed into a [[http://www.scalatest.org/ ScalaTest]] suite to provide
   * mocking support.
@@ -32,18 +33,17 @@ trait MockFactory extends AbstractSuite with MockFactoryBase { this: Suite =>
   
   abstract protected override def runTests(testName: Option[String], reporter: Reporter, stopper: Stopper, filter: Filter,
     configMap: Map[String, Any], distributor: Option[Distributor], tracker: Tracker) {
-      
-    mockingClassLoader match {
-      case Some(cl) => {
-        val clazz = Class.forName(getClass.getName, true, cl)
-        val withMocks = clazz.newInstance
-        cl.factory.set(withMocks)
-        val runInternal = clazz.getMethod("runInternal", classOf[Option[String]], classOf[Reporter], classOf[Stopper],
-          classOf[Filter], classOf[Map[String, Any]], classOf[Option[Distributor]], classOf[Tracker])
-        runInternal.invoke(withMocks, testName, reporter, stopper, filter, configMap, distributor, tracker)
-      }
-        
-      case None => runInternal(testName, reporter, stopper, filter, configMap, distributor, tracker)
+
+    if (configMap contains "mock.classes") {
+      val mockingClassLoader = new MockingURLClassLoader(new URL("file://"+ configMap("mock.classes") +"/"))
+      val clazz = Class.forName(getClass.getName, true, mockingClassLoader)
+      val withMocks = clazz.newInstance
+      mockingClassLoader.factory.set(withMocks)
+      val runInternal = clazz.getMethod("runInternal", classOf[Option[String]], classOf[Reporter], classOf[Stopper],
+        classOf[Filter], classOf[Map[String, Any]], classOf[Option[Distributor]], classOf[Tracker])
+      runInternal.invoke(withMocks, testName, reporter, stopper, filter, configMap, distributor, tracker)
+    } else {
+      runInternal(testName, reporter, stopper, filter, configMap, distributor, tracker)
     }
   }
   

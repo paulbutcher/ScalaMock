@@ -21,16 +21,12 @@
 package com.borachio.examples
 
 import org.scalatest.WordSpec
-import com.borachio.MockingURLClassLoader
 import com.borachio.generated.GeneratedMockFactory
 import com.borachio.scalatest.MockFactory
-import java.net.URL
 
 // This is a reworked version of the example from Martin Fowler's article
 // Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
 class OrderTestTypeSafe extends WordSpec with MockFactory with GeneratedMockFactory {
-  
-  def getClassLoader() = new MockingURLClassLoader(new URL("file:examples/target/scala_2.9.0/mock-classes/"))
   
   "An order" when {
     "in stock" should {

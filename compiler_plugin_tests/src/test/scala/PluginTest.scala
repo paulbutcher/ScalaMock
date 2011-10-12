@@ -23,12 +23,9 @@ package com.borachio.plugin.test
 import org.scalatest.FunSuite
 import com.borachio.generated.GeneratedMockFactory
 import com.borachio.scalatest.MockFactory
-import com.borachio.{CallLogging, ExpectationException, MockingURLClassLoader, VerboseErrors, MockFunction0}
-import java.net.URL
+import com.borachio.{CallLogging, ExpectationException, VerboseErrors, MockFunction0}
 
 class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory with VerboseErrors with CallLogging {
-  
-  def getClassLoader() = new MockingURLClassLoader(new URL("file:compiler_plugin_tests/target/scala-2.9.0.final/mock-classes/"))
   
   test("simple class") {
     val m = mock[SimpleClass]

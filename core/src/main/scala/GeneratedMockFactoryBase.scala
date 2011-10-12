@@ -20,13 +20,7 @@
 
 package com.borachio
 
-import java.net.URL
-
 trait GeneratedMockFactoryBase { self: MockFactoryBase =>
-  
-  def getClassLoader(): MockingClassLoader
-  
-  mockingClassLoader = Some(getClassLoader)
   
   private[borachio] def classToCreate[T: ClassManifest] = {
     val erasure = classManifest[T].erasure

@@ -24,8 +24,6 @@ import scala.collection.mutable.ListBuffer
 
 trait MockFactoryBase {
   
-  protected var mockingClassLoader: Option[MockingClassLoader] = None
-  
   protected def resetExpectations() {
     unexpectedCalls.clear
     actualCalls.clear
