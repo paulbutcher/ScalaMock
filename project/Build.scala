@@ -21,6 +21,7 @@
 import sbt._
 import Keys._
 import sbt.inc.Analysis
+import BorachioPlugin._
 
 object BorachioBuild extends Build {
   
@@ -56,50 +57,6 @@ object BorachioBuild extends Build {
       name := "Borachio Compiler Plugin",
       libraryDependencies += "org.scala-lang" % "scala-compiler" % "2.9.0"
     ) dependsOn(core)
-    
-  lazy val GenerateMocks = config("generate-mocks")
-  lazy val Mock = config("mock") extend(Compile)
-  
-  lazy val generatedMockDirectory = SettingKey[File]("generated-mock-directory", "Where generated mock source code will be placed")
-  lazy val generatedTestDirectory = SettingKey[File]("generated-test-directory", "Where generated test source code will be placed")
-  
-  lazy val generateMocks = TaskKey[Unit]("generate-mocks", "Generates sources for classes with the @mock annotation")
-  def generateMocksTask = (sources in GenerateMocks, classDirectory in GenerateMocks, scalacOptions in GenerateMocks, 
-      classpathOptions, scalaInstance, fullClasspath in Compile, streams) map {
-    (srcs, out, opts, cpOpts, si, cp, s) =>
-      IO.delete(out)
-      IO.createDirectory(out)
-      val comp = new compiler.RawCompiler(si, cpOpts, s.log)
-      comp(srcs, cp.files, out, opts)
-  }
-  
-  def collectSource(directory: SettingKey[File]) =
-    (directory, sourceFilter, defaultExcludes) map { (d, f, e) => d.descendentsExcept(f, e).get }
-  
-  lazy val generateMocksSettings = 
-    inConfig(GenerateMocks)(Defaults.configSettings) ++ 
-    inConfig(Mock)(Defaults.configSettings) ++
-    Seq(
-      publish := (),
-      generatedMockDirectory <<= sourceManaged(_ / "mock" / "scala"),
-      generatedTestDirectory <<= sourceManaged(_ / "test" / "scala"),
-      scalacOptions in GenerateMocks <++= 
-        (generatedMockDirectory, generatedTestDirectory, packageBin in (compiler_plugin, Compile)) map { (gm, gt, plug) =>
-          Seq(
-            "-Xplugin:"+ plug.absolutePath,
-            "-Xplugin-require:borachio",
-            "-Ylog:generatemocks",
-            "-Ystop-after:generatemocks",
-            "-P:borachio:generatemocks:"+ gm,
-            "-P:borachio:generatetest:"+ gt)
-        },
-      sources in Test <++= collectSource(generatedTestDirectory),
-      sources in Mock <++= collectSource(generatedMockDirectory),
-      sources in Mock <++= collectSource(generatedTestDirectory),
-      generateMocks <<= generateMocksTask,
-      testOptions in Test <+= classDirectory in Mock map { dir =>
-        Tests.Argument(TestFrameworks.ScalaTest, "-Dmock.classes=" + dir)
-      })
     
   lazy val compiler_plugin_tests = Project("compiler_plugin_tests", file("compiler_plugin_tests")) settings(
       generateMocksSettings: _*) dependsOn(scalatest % "mock;test", compiler_plugin) configs(Mock)
