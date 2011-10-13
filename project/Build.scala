@@ -26,17 +26,26 @@ import BorachioPlugin._
 object BorachioBuild extends Build {
   
   override lazy val settings = super.settings ++ Seq(
-      organization := "com.borachio",
-      version := "2.0-SNAPSHOT",
-      scalaVersion := "2.9.0",
-      scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings")
-    )
+    organization := "com.borachio",
+    version := "2.0-SNAPSHOT",
+    scalaVersion := "2.9.0",
+    scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings"),
+
+    publishTo <<= version { v =>
+      val nexus = "http://nexus.scala-tools.org/content/repositories/"
+      if (v.trim.endsWith("SNAPSHOT"))
+        Some("snapshots" at nexus + "snapshots/") 
+      else
+        Some("releases" at nexus + "releases/")
+    },
+    credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
+  )
     
   lazy val borachio = Project("Borachio", file(".")) settings(
-      compile in Mock := Analysis.Empty,
-      publish := ()
-    ) aggregate(core, core_tests, scalatest, junit3, compiler_plugin, compiler_plugin_tests
-    ) configs(Mock)
+    compile in Mock := Analysis.Empty,
+    publish := ()
+  ) aggregate(core, core_tests, scalatest, junit3, compiler_plugin, compiler_plugin_tests
+  ) configs(Mock)
   
   lazy val core = Project("core", file("core")) settings(name := "Borachio Core")
     
@@ -54,10 +63,11 @@ object BorachioBuild extends Build {
     dependencies = Seq(scalatest % "test")) settings(publish := ())
 
   lazy val compiler_plugin = Project("compiler_plugin", file("compiler_plugin")) settings(
-      name := "Borachio Compiler Plugin",
-      libraryDependencies += "org.scala-lang" % "scala-compiler" % "2.9.0"
-    ) dependsOn(core)
+    name := "Borachio Compiler Plugin",
+    libraryDependencies += "org.scala-lang" % "scala-compiler" % "2.9.0"
+  ) dependsOn(core)
     
   lazy val compiler_plugin_tests = Project("compiler_plugin_tests", file("compiler_plugin_tests")) settings(
-      generateMocksSettings: _*) dependsOn(scalatest % "mock;test", compiler_plugin) configs(Mock)
+    generateMocksSettings: _*) settings(publish := ()) dependsOn(
+    scalatest % "mock;test", compiler_plugin) configs(Mock)
 }
