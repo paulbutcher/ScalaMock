@@ -68,6 +68,10 @@ object BorachioBuild extends Build {
   ) dependsOn(core)
     
   lazy val compiler_plugin_tests = Project("compiler_plugin_tests", file("compiler_plugin_tests")) settings(
-    generateMocksSettings: _*) settings(publish := ()) dependsOn(
-    scalatest % "mock;test", compiler_plugin) configs(Mock)
+    generateMocksSettings: _*) settings(
+      publish := (),
+      scalacOptions in GenerateMocks <+= packageBin in (compiler_plugin, Compile) map { plug =>
+        "-Xplugin:"+ plug.absolutePath
+      }
+    ) dependsOn(scalatest % "mock;test", compiler_plugin) configs(Mock)
 }
