@@ -233,13 +233,13 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     lazy val classOrObject: String = "class "+ className +"(dummy: com.borachio.MockConstructorDummy)"
       
     lazy val factoryReference = 
-      "  val factory = {\n"+
+      "  protected val factory = {\n"+
       "    val classLoader = getClass.getClassLoader\n"+
       "    val method = classLoader.getClass.getMethod(\"getFactory\")\n"+
       "    method.invoke(classLoader).asInstanceOf[com.borachio.MockFactoryBase]\n"+
       "  }"
       
-    lazy val forwardTo = "  var forwardTo: AnyRef = _\n\n"+ forwarders
+    lazy val forwardTo = "  private var forwardTo: AnyRef = _\n\n"+ forwarders
     
     lazy val forwarders = (methodsToMock map forwardMethod _).mkString("\n")
 
@@ -247,7 +247,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
 
     lazy val expectForwarders =
       "  val expects = new {\n"+
-      "    lazy val clazz = "+ mockTraitOrClassName +".this.getClass\n\n"+
+      "    private lazy val clazz = "+ mockTraitOrClassName +".this.getClass\n\n"+
            (methodsToMock map expectForwarder _).mkString("\n") +"\n\n"+
            (methodsToMock map cachedMockMethod _).mkString("\n") + "\n"+
       "  }"
@@ -458,7 +458,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
     def cachedMockMethod(method: Symbol): String = handleMethod(method) {
       (method, params, result) =>
-        "    lazy val "+ mockMethodName(method) +" = "+ cacheLookup(method, params, result)
+        "    private lazy val "+ mockMethodName(method) +" = "+ cacheLookup(method, params, result)
     }
       
     def cacheLookup(method: Symbol, params: List[Symbol], result: Type) =
@@ -496,7 +496,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     
     def forwardMethod(method: Symbol): String = handleMethod(method) {
       (method, params, result) =>
-        "  lazy val "+ forwarderNames(method) +" = {\n"+
+        "  private lazy val "+ forwarderNames(method) +" = {\n"+
         "    val method = forwardTo.getClass.getMethod("+ forwarderGetMethodParams(method, params) +")\n"+
         "    ("+ mockParams(Some(params)) +" => method.invoke(forwardTo"+ forwardForwarderParams(params) +").asInstanceOf["+ fixedType(result) +"])\n"+
         "  }"
