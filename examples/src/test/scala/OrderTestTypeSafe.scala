@@ -18,11 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.examples
+package org.scalamock.examples
 
 import org.scalatest.WordSpec
-import com.borachio.generated.GeneratedMockFactory
-import com.borachio.scalatest.MockFactory
+import org.scalamock.generated.GeneratedMockFactory
+import org.scalamock.scalatest.MockFactory
 
 // This is a reworked version of the example from Martin Fowler's article
 // Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html

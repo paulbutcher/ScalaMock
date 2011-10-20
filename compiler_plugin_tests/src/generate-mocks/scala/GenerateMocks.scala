@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.plugin.test
+package org.scalamock.plugin.test
 
-import com.borachio.annotation.{mock, mockObject, mockWithCompanion}
+import org.scalamock.annotation.{mock, mockObject, mockWithCompanion}
 
 @mock[SimpleClass] 
 @mock[SimpleClass2]

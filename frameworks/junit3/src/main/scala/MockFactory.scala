@@ -18,17 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.junit3
+package org.scalamock.junit3
 
-import com.borachio.MockFactoryBase
+import org.scalamock.MockFactoryBase
 import junit.framework.TestCase
 
 /** Trait that can be mixed into a [[http://www.junit.org/ JUnit3]] suite to provide
   * mocking support.
   *
-  * See [[com.borachio]] for overview documentation.
+  * See [[org.scalamock]] for overview documentation.
   *
-  * Borachio requires that you call reset expectations before each test and 
+  * ScalaMock requires that you call reset expectations before each test and 
   * verify them afterwards. You can achieve this in two different ways: with
   * the `withExpectations` method (recommended), or by overriding `setUp` and `tearDown`.
   *

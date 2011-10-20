@@ -21,23 +21,23 @@
 package com
 
 /**
- * =Borachio: Native Scala mocking=
+ * =ScalaMock: Native Scala mocking=
  *
- * To use Borachio with ScalaTest, mix the [[com.borachio.scalatest.MockFactory]] trait into a
+ * To use ScalaMock with ScalaTest, mix the [[org.scalamock.scalatest.MockFactory]] trait into a
  * Suite:
  *
  * {{{
  * class MyTest extends Suite with MockFactory
  * }}}
  *
- * To use Borachio with JUnit3 on Android, mix the [[com.borachio.android.MockFactory]] trait into a
+ * To use ScalaMock with JUnit3 on Android, mix the [[org.scalamock.android.MockFactory]] trait into a
  * TestCase:
  *
  * {{{
  * class MyTest extends TestCase with MockFactory
  * }}}
  * 
- * Borachio supports two different mocking styles - ''Functional mocking'' and ''Proxy mocking''.
+ * ScalaMock supports two different mocking styles - ''Functional mocking'' and ''Proxy mocking''.
  *
  * ==Functional mocking==
  *
@@ -107,7 +107,7 @@ package com
  * m expects ("this", "that")
  * }}}
  *
- * Borachio currently supports two types of generalized matching: ''wildcards'' and ''epsilon 
+ * ScalaMock currently supports two types of generalized matching: ''wildcards'' and ''epsilon 
  * matching''.
  *
  * ====Wildcards====
@@ -213,7 +213,7 @@ package com
  * m3 expects (42) repeated 3 times
  * }}}
  *
- * For a full list, see [[com.borachio.Expectation]].
+ * For a full list, see [[org.scalamock.Expectation]].
  *
  * ==Ordering==
  *
@@ -289,11 +289,11 @@ package com
  * == Debugging ==
  *
  * If faced with a difficult to debug failing expectation, consider mixing 
- * one or both of the [[com.borachio.VerboseErrors]] or [[com.borachio.CallLogging]] traits
+ * one or both of the [[org.scalamock.VerboseErrors]] or [[org.scalamock.CallLogging]] traits
  * into your test suite:
  * 
  * {{{
  * class MyTest extends Suite with MockFactory with VerboseErrors with CallLogging
  * }}}
  */
-package object borachio
+package object scalamock

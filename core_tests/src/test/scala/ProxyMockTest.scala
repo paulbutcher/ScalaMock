@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio
+package org.scalamock
 
-import com.borachio.scalatest.MockFactory
+import org.scalamock.scalatest.MockFactory
 import org.scalatest.Suite
 
 class ProxyMockTest extends Suite with MockFactory with ProxyMockFactory {

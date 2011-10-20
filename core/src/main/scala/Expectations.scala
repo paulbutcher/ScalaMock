@@ -18,19 +18,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio
+package org.scalamock
 
 import scala.collection.mutable.ListBuffer
 
-private[borachio] abstract class Expectations extends Handler {
+private[scalamock] abstract class Expectations extends Handler {
   
-  private[borachio] def add(handler: Handler) {
+  private[scalamock] def add(handler: Handler) {
     handlers += handler
   }
   
-  private[borachio] def satisfied = handlers.forall { _.satisfied }
+  private[scalamock] def satisfied = handlers.forall { _.satisfied }
   
-  private[borachio] def unsatisfiedString =
+  private[scalamock] def unsatisfiedString =
     (handlers collect { case h if !h.satisfied => h.unsatisfiedString }).mkString("\n")
   
   protected val handlers = new ListBuffer[Handler]

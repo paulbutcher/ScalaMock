@@ -18,10 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio
+package org.scalamock
 
 /**
- * Trait that can be mixed into a [[com.borachio.MockFactoryBase]] to switch on
+ * Trait that can be mixed into a [[org.scalamock.MockFactoryBase]] to switch on
  * call logging.
  *
  * {{{
@@ -30,5 +30,5 @@ package com.borachio
  */
 trait CallLogging { self: MockFactoryBase =>
 
-  override private[borachio] val callLogging = true
+  override private[scalamock] val callLogging = true
 }

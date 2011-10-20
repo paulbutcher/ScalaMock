@@ -21,12 +21,12 @@
 import sbt._
 import Keys._
 import sbt.inc.Analysis
-import BorachioPlugin._
+import ScalaMockPlugin._
 
-object BorachioBuild extends Build {
+object ScalaMockBuild extends Build {
   
   override lazy val settings = super.settings ++ Seq(
-    organization := "com.borachio",
+    organization := "org.scalamock",
     version := "2.0-SNAPSHOT",
     scalaVersion := "2.9.0",
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings"),
@@ -41,21 +41,21 @@ object BorachioBuild extends Build {
     credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
   )
     
-  lazy val borachio = Project("Borachio", file(".")) settings(
+  lazy val scalamock = Project("ScalaMock", file(".")) settings(
     compile in Mock := Analysis.Empty,
     publish := ()
   ) aggregate(core, core_tests, scalatest, junit3, compiler_plugin, compiler_plugin_tests
   ) configs(Mock)
   
-  lazy val core = Project("core", file("core")) settings(name := "Borachio Core")
+  lazy val core = Project("core", file("core")) settings(name := "ScalaMock Core")
     
   lazy val scalatest: Project = Project("scalatest", file("frameworks/scalatest")) settings(
-    name := "Borachio ScalaTest Support",
+    name := "ScalaMock ScalaTest Support",
     libraryDependencies += "org.scalatest" %% "scalatest" % "1.6.1"
   ) dependsOn(core)
   
   lazy val junit3: Project = Project("junit", file("frameworks/junit3")) settings(
-    name := "Borachio JUnit3 Support",
+    name := "ScalaMock JUnit3 Support",
     libraryDependencies += "junit" % "junit" % "3.8.2"
   ) dependsOn(core)
   
@@ -63,7 +63,7 @@ object BorachioBuild extends Build {
     dependencies = Seq(scalatest % "test")) settings(publish := ())
 
   lazy val compiler_plugin = Project("compiler_plugin", file("compiler_plugin")) settings(
-    name := "Borachio Compiler Plugin",
+    name := "ScalaMock Compiler Plugin",
     libraryDependencies += "org.scala-lang" % "scala-compiler" % "2.9.0"
   ) dependsOn(core)
     

@@ -18,11 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio
+package org.scalamock
 
-private[borachio] class ProxyMockFunction(factory: MockFactoryBase, name: Symbol) extends MockFunction(factory, name) {
+private[scalamock] class ProxyMockFunction(factory: MockFactoryBase, name: Symbol) extends MockFunction(factory, name) {
   
   def apply(args: Array[AnyRef]) = handle(if (args != null) args.map(_.asInstanceOf[Any]) else Array[Any]())
 
-  private[borachio] def toExpectation() = factory.add(new TypeUnsafeExpectation(this))
+  private[scalamock] def toExpectation() = factory.add(new TypeUnsafeExpectation(this))
 }

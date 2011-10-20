@@ -18,12 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.plugin.test
+package org.scalamock.plugin.test
 
 import org.scalatest.Suite
-import com.borachio.generated.GeneratedMockFactory
-import com.borachio.scalatest.MockFactory
-import com.borachio.{CallLogging, ExpectationException, VerboseErrors}
+import org.scalamock.generated.GeneratedMockFactory
+import org.scalamock.scalatest.MockFactory
+import org.scalamock.{CallLogging, ExpectationException, VerboseErrors}
 
 class MockConstructorTest extends Suite with MockFactory with GeneratedMockFactory with VerboseErrors with CallLogging {
   

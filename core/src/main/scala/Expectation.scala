@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio
+package org.scalamock
 
 /**
  * Represents a single expectation
@@ -75,19 +75,19 @@ abstract class Expectation(target: MockFunction) extends Handler {
     this
   }
   
-  private[borachio] def satisfied = expectedCalls match {
+  private[scalamock] def satisfied = expectedCalls match {
     case Some(r) => r contains actualCalls
     case None => actualCalls > 0
   }
   
-  private[borachio] def unsatisfiedString = toString
+  private[scalamock] def unsatisfiedString = toString
   
-  private[borachio] def exhausted = expectedCalls match {
+  private[scalamock] def exhausted = expectedCalls match {
     case Some(r) => r.last == actualCalls
     case None => false
   }
   
-  private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Option[Any] = {
+  private[scalamock] def handle(mock: MockFunction, arguments: Array[Any]): Option[Any] = {
     if (mock.canHandle(target) && !exhausted && (!argumentsMatcher.isDefined || argumentsMatcher.get(arguments))) {
       actualCalls += 1
       Some(onCallHandler match {
@@ -99,12 +99,12 @@ abstract class Expectation(target: MockFunction) extends Handler {
     }
   }
   
-  private[borachio] def argumentsMatcher_=(matcher: Function1[Array[Any], Boolean]) {
+  private[scalamock] def argumentsMatcher_=(matcher: Function1[Array[Any], Boolean]) {
     require(!argumentsMatcher.isDefined, "arguments matcher can only be set once")
     argumentsMatcher = Some(matcher)
   }
   
-  private[borachio] def onCallHandler_=(handler: Function1[Array[Any], Any]) {
+  private[scalamock] def onCallHandler_=(handler: Function1[Array[Any], Any]) {
     require(!onCallHandler.isDefined, "on call behaviour can only be set once")
     onCallHandler = Some(handler)
   }
@@ -119,8 +119,8 @@ abstract class Expectation(target: MockFunction) extends Handler {
   
   private def actualCallsString = "actual calls: " + actualCalls
 
-  private[borachio] var argumentsMatcher: Option[Array[Any] => Boolean] = None
-  private[borachio] var onCallHandler: Option[Array[Any] => Any] = None
+  private[scalamock] var argumentsMatcher: Option[Array[Any] => Boolean] = None
+  private[scalamock] var onCallHandler: Option[Array[Any] => Any] = None
   private var expectedCalls: Option[Range] = None
   
   private var argumentsString = ""

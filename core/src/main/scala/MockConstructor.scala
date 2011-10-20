@@ -18,15 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio
+package org.scalamock
 
 class MockConstructorDummy
 
 trait MockConstructor { self: MockFunction =>
 
-  override private[borachio] val failIfUnexpected = false
+  override private[scalamock] val failIfUnexpected = false
 
-  override private[borachio] def canHandle(that: MockFunction) = that match {
+  override private[scalamock] def canHandle(that: MockFunction) = that match {
       case mc: MockConstructor => mockedClass == mc.mockedClass
       case _ => false
     }

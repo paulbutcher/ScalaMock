@@ -1,4 +1,4 @@
 <plugin>
-  <name>borachio</name>
-  <classname>com.borachio.plugin.BorachioPlugin</classname>
+  <name>scalamock</name>
+  <classname>org.scalamock.plugin.ScalaMockPlugin</classname>
 </plugin>

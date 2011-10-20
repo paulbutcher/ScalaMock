@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio
+package org.scalamock
 
-import com.borachio.scalatest.MockFactory
+import org.scalamock.scalatest.MockFactory
 import org.scalatest.WordSpec
 
 class ErrorMessageTest extends WordSpec with MockFactory with ProxyMockFactory with VerboseErrors with CallLogging {

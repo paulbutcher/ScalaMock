@@ -18,16 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.scalatest
+package org.scalamock.scalatest
 
-import com.borachio.{MockFactoryBase, MockingURLClassLoader}
+import org.scalamock.{MockFactoryBase, MockingURLClassLoader}
 import org.scalatest.{AbstractSuite, Distributor, Filter, Reporter, Stopper, Suite, Tracker}
 import java.net.URL
 
 /** Trait that can be mixed into a [[http://www.scalatest.org/ ScalaTest]] suite to provide
   * mocking support.
   *
-  * See [[com.borachio]] for overview documentation.
+  * See [[org.scalamock]] for overview documentation.
   */
 trait MockFactory extends AbstractSuite with MockFactoryBase { this: Suite =>
   

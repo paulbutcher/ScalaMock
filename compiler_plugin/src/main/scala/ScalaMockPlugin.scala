@@ -18,16 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.plugin
+package org.scalamock.plugin
 
 import scala.tools.nsc
 import nsc.Global
 import nsc.plugins.{Plugin, PluginComponent}
 
-class BorachioPlugin(val global: Global) extends Plugin {
+class ScalaMockPlugin(val global: Global) extends Plugin {
   import global._
 
-  val name = "borachio"
+  val name = "scalamock"
   val description = "support for the @mock annotation"
 
   val components = List[PluginComponent](
@@ -50,6 +50,6 @@ class BorachioPlugin(val global: Global) extends Plugin {
   }
   
   override val optionsHelp: Option[String] = Some(
-    "  -P:borachio:generatemocks:<path>  Generate mock objects in directory <path>\n"+
-    "  -P:borachio:generatetest:<path>   Generate test code in directory <path>")
+    "  -P:scalamock:generatemocks:<path>  Generate mock objects in directory <path>\n"+
+    "  -P:scalamock:generatetest:<path>   Generate test code in directory <path>")
 }

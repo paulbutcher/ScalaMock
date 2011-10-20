@@ -18,11 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio
+package org.scalamock
 
 import java.lang.reflect.{InvocationHandler, Method, Proxy => JavaProxy}
 
-private[borachio] object Proxy {
+private[scalamock] object Proxy {
   
   def create(classLoaderStrategy: ClassLoaderStrategy, interfaces: Class[_]*)(f: (AnyRef, Symbol, Array[AnyRef]) => AnyRef) = {
     

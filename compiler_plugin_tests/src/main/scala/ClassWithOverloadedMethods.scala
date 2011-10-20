@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.plugin.test
+package org.scalamock.plugin.test
 
 class ClassWithOverloadedMethods {
   def foo(x: Int) = "foo: "+ x

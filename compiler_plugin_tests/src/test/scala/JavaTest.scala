@@ -18,12 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.plugin.test
+package org.scalamock.plugin.test
 
 import org.scalatest.FunSuite
-import com.borachio.generated.GeneratedMockFactory
-import com.borachio.scalatest.MockFactory
-import com.borachio.{CallLogging, VerboseErrors}
+import org.scalamock.generated.GeneratedMockFactory
+import org.scalamock.scalatest.MockFactory
+import org.scalamock.{CallLogging, VerboseErrors}
 
 class JavaTest extends FunSuite with MockFactory with GeneratedMockFactory with VerboseErrors with CallLogging {
   

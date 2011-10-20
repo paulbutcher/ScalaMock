@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio
+package org.scalamock
 
 import scala.collection.mutable.ListBuffer
 
@@ -50,7 +50,7 @@ trait MockFactoryBase {
     inContext(new OrderedExpectations)(what)
   }
   
-  private[borachio] def add[T <: Expectation](expectation: T) = {
+  private[scalamock] def add[T <: Expectation](expectation: T) = {
     require(expectationContext != null, "Have you remembered to use withExpectations?")
     
     expectationContext.add(expectation)
@@ -105,7 +105,7 @@ trait MockFactoryBase {
   
   protected implicit def MatchEpsilonToMockParameter[T](m: MatchEpsilon) = new EpsilonMockParameter(m)
 
-  private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Any = {
+  private[scalamock] def handle(mock: MockFunction, arguments: Array[Any]): Any = {
     lazy val description = mock.toString +" with arguments: "+ arguments.mkString("(", ", ", ")")
     val r = expectationContext.handle(mock, arguments)
     if (r.isDefined) {
@@ -119,7 +119,7 @@ trait MockFactoryBase {
       null
   }
   
-  private[borachio] def handleUnexpectedCall(description: String) = {
+  private[scalamock] def handleUnexpectedCall(description: String) = {
     actualCalls += description
     unexpectedCalls += "Unexpected: "+ description
     throw new ExpectationException(unexpectedCallsMessage + verboseMessage)
@@ -143,8 +143,8 @@ trait MockFactoryBase {
     expectationContext = prevContext
   }
   
-  private[borachio] val verbose = false
-  private[borachio] val callLogging = false
+  private[scalamock] val verbose = false
+  private[scalamock] val callLogging = false
   private var expectationContext: Expectations = _
 
   private val unexpectedCalls = new ListBuffer[String]

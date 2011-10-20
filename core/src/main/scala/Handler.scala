@@ -18,11 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio
+package org.scalamock
 
-private[borachio] trait Handler {
+private[scalamock] trait Handler {
   
-  private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Option[Any]
-  private[borachio] def satisfied: Boolean
-  private[borachio] def unsatisfiedString: String
+  private[scalamock] def handle(mock: MockFunction, arguments: Array[Any]): Option[Any]
+  private[scalamock] def satisfied: Boolean
+  private[scalamock] def unsatisfiedString: String
 }

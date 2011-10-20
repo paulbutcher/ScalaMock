@@ -18,10 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.examples
+package org.scalamock.examples
 
 import org.scalatest.Suite
-import com.borachio.scalatest.MockFactory
+import org.scalamock.scalatest.MockFactory
 
 class HigherOrderFunctionsTest extends Suite with MockFactory {
   

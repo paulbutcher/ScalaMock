@@ -18,15 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio
+package org.scalamock
 
 abstract class MockFunction(protected val factory: MockFactoryBase, name: Symbol) {
 
   protected def handle(arguments: Array[Any]) = factory.handle(this, arguments)
   
-  private[borachio] def canHandle(that: MockFunction) = this == that
+  private[scalamock] def canHandle(that: MockFunction) = this == that
   
-  private[borachio] val failIfUnexpected = true
+  private[scalamock] val failIfUnexpected = true
 }
 
 class MockFunction0[R](factory: MockFactoryBase, name: Symbol)

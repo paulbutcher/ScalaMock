@@ -1,6 +1,6 @@
-package com.borachio.specs2
+package org.scalamock.specs2
 
-import com.borachio.MockFactoryBase
+import org.scalamock.MockFactoryBase
 import org.specs2.specification.{BeforeExample, AfterExample}
 
 /**

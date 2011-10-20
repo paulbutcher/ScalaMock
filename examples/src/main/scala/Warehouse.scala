@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.examples
+package org.scalamock.examples
 
 trait Warehouse {
   def hasInventory(product: String, quantity: Int): Boolean

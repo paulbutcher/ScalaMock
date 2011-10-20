@@ -18,11 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio
+package org.scalamock
 
-private[borachio] class UnorderedExpectations extends Expectations {
+private[scalamock] class UnorderedExpectations extends Expectations {
   
-  private[borachio] def handle(mock: MockFunction, arguments: Array[Any]): Option[Any] = {
+  private[scalamock] def handle(mock: MockFunction, arguments: Array[Any]): Option[Any] = {
     for(handler <- handlers) {
       val r = handler.handle(mock, arguments)
       if (r.isDefined)

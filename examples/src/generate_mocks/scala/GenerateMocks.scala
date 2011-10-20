@@ -18,9 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio.examples
+package org.scalamock.examples
 
-import com.borachio.annotation.mock
+import org.scalamock.annotation.mock
 
 @mock[Warehouse]
 class Dummy

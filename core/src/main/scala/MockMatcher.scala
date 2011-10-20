@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio
+package org.scalamock
 
 class MockMatcher1[T1](matcher: T1 => Boolean) extends FunctionAdapter1[T1, Boolean](matcher)
 

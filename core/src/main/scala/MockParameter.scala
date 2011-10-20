@@ -18,16 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.borachio
+package org.scalamock
 
 // The dummy argument (eugh!) is necessary to avoid:
 //
 // [error] double definition:
-// [error] constructor MockParameter:(v: T)com.borachio.MockParameter[T] and
-// [error] constructor MockParameter:(value: AnyRef)com.borachio.MockParameter[T]
-// [error] have same type after erasure: (v: java.lang.Object)com.borachio.MockParameter
+// [error] constructor MockParameter:(v: T)org.scalamock.MockParameter[T] and
+// [error] constructor MockParameter:(value: AnyRef)org.scalamock.MockParameter[T]
+// [error] have same type after erasure: (v: java.lang.Object)org.scalamock.MockParameter
 
-class MockParameter[T] protected (private[borachio] val value: AnyRef, dummy: Boolean = false) {
+class MockParameter[T] protected (private[scalamock] val value: AnyRef, dummy: Boolean = false) {
   
   def this(v: T) = this(v.asInstanceOf[AnyRef])
   
