@@ -248,7 +248,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       
     lazy val forwarding = forwardTo +"\n\n"+ forwarders
     
-    def forwardTo = "  private var forwardTo: AnyRef = _"
+    def forwardTo = "  private var forwardTo$Mocks: AnyRef = _"
     
     lazy val forwarders = (methodsToMock map forwardMethod _).mkString("\n")
 
@@ -369,16 +369,16 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "    this(new com.borachio.MockConstructorDummy)\n"+
       "    val mock = "+ mockBodySimple(method, params) +"\n"+
       "    if (mock != null) {\n"+
-      "      forwardTo = mock\n"+
+      "      forwardTo$Mocks = mock\n"+
       "    } else {\n"+
       "      val clazz = com.borachio.ReflectionUtilities.getUnmockedClass(getClass, \""+ qualifiedClassName +"\")\n"+
       "      val constructor = clazz.getConstructor("+ constructorParamTypes(params) +")\n"+
-      "      forwardTo = constructor.newInstance"+ forwardConstructorParams(params) +".asInstanceOf[AnyRef]\n"+
+      "      forwardTo$Mocks = constructor.newInstance"+ forwardConstructorParams(params) +".asInstanceOf[AnyRef]\n"+
       "    }\n"+
       "  }"
       
     def mockBodyNormal(method: Symbol, params: Option[List[Symbol]]) = 
-      "if (forwardTo != null) "+ forwarderNames(method) + forwardParams(params) +
+      "if (forwardTo$Mocks != null) "+ forwarderNames(method) + forwardParams(params) +
       " else "+ mockBodySimple(method, params)
         
     def mockBodySimple(method: Symbol, params: Option[List[Symbol]]) = mockMethodName(method) + forwardParams(params)
@@ -506,8 +506,8 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     def forwardMethod(method: Symbol): String = handleMethod(method) {
       (method, params, result) =>
         "  private lazy val "+ forwarderNames(method) +" = {\n"+
-        "    val method = forwardTo.getClass.getMethod("+ forwarderGetMethodParams(method, params) +")\n"+
-        "    ("+ mockParams(Some(params)) +" => method.invoke(forwardTo"+ forwardForwarderParams(params) +").asInstanceOf["+ fixedType(result) +"])\n"+
+        "    val method = forwardTo$Mocks.getClass.getMethod("+ forwarderGetMethodParams(method, params) +")\n"+
+        "    ("+ mockParams(Some(params)) +" => method.invoke(forwardTo$Mocks"+ forwardForwarderParams(params) +").asInstanceOf["+ fixedType(result) +"])\n"+
         "  }"
     }
       
@@ -609,13 +609,13 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     override def forwardTo = super.forwardTo +"\n\n"+ resetForwarding
       
     lazy val resetForwarding =
-      "  resetForwarding\n\n"+
-      "  def resetForwarding() {\n"+
+      "  resetForwarding$Mocks\n\n"+
+      "  def resetForwarding$Mocks() {\n"+
       "    val clazz = com.borachio.ReflectionUtilities.getUnmockedClass(getClass, \""+ fullClassName +"$\")\n"+
-      "    forwardTo = clazz.getField(\"MODULE$\").get(null)\n"+
+      "    forwardTo$Mocks = clazz.getField(\"MODULE$\").get(null)\n"+
       "  }\n\n"+
-      "  def enableForwarding() {\n"+
-      "    forwardTo = null\n"+
+      "  def enableForwarding$Mocks() {\n"+
+      "    forwardTo$Mocks = null\n"+
       "  }"
 
     override def getMockTraitOrClassName = "Mock$$"+ className

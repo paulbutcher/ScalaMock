@@ -30,14 +30,14 @@ trait GeneratedMockFactoryBase { self: MockFactoryBase =>
   }
   
   protected def objectToMock[M](x: AnyRef) = {
-    x.getClass.getMethod("enableForwarding").invoke(x)
+    x.getClass.getMethod("enableForwarding$Mocks").invoke(x)
     mockedObjects += x
     x.asInstanceOf[M]
   }
   
   protected override def resetMocks() {
     mockedObjects foreach { m =>
-      m.getClass.getMethod("resetForwarding").invoke(m)
+      m.getClass.getMethod("resetForwarding$Mocks").invoke(m)
     }
     mockedObjects.clear
   }
