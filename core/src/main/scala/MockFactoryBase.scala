@@ -40,6 +40,8 @@ trait MockFactoryBase {
     expectationContext = null
   }
   
+  protected def resetMocks() {}
+  
   protected def inAnyOrder(what: => Unit) {
     inContext(new UnorderedExpectations)(what)
   }

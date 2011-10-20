@@ -213,7 +213,7 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
   }
 
   //! TODO
-  ignore("unmocked simple object") {
+  test("unmocked simple object") {
     expect("hello") { SimpleObject.sayHello }
   }
 

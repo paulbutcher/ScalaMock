@@ -20,9 +20,29 @@
 
 package com.borachio
 
+import scala.collection.mutable.ListBuffer
+
 trait GeneratedMockFactoryBase { self: MockFactoryBase =>
+
+  protected def mock[T: ClassManifest] = {
+    val constructor = classToCreate[T].getConstructor(classOf[MockConstructorDummy])
+    constructor.newInstance(new MockConstructorDummy).asInstanceOf[T]
+  }
   
-  private[borachio] def classToCreate[T: ClassManifest] = {
+  protected def objectToMock[M](x: AnyRef) = {
+    x.getClass.getMethod("enableForwarding").invoke(x)
+    mockedObjects += x
+    x.asInstanceOf[M]
+  }
+  
+  protected override def resetMocks() {
+    mockedObjects foreach { m =>
+      m.getClass.getMethod("resetForwarding").invoke(m)
+    }
+    mockedObjects.clear
+  }
+  
+  private def classToCreate[T: ClassManifest] = {
     val erasure = classManifest[T].erasure
     val clazz = Class.forName(erasure.getName)
     if (clazz.isInterface)
@@ -30,9 +50,6 @@ trait GeneratedMockFactoryBase { self: MockFactoryBase =>
     else
       clazz
   }
-
-  protected def mock[T: ClassManifest] = {
-    val constructor = classToCreate[T].getConstructor(classOf[MockConstructorDummy])
-    constructor.newInstance(new MockConstructorDummy).asInstanceOf[T]
-  }
+  
+  private val mockedObjects = new ListBuffer[AnyRef]
 }

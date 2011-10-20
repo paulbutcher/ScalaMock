@@ -112,15 +112,22 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
   def mockFactory =
     "package com.borachio.generated\n\n"+
     "trait GeneratedMockFactory extends com.borachio.GeneratedMockFactoryBase { self: com.borachio.MockFactoryBase =>\n"+
-      (mocks map { case (target, mock) => mockFactoryEntry(target, mock) }).mkString("\n") +"\n\n"+
-      (mockObjects map { case (target, mock) => mockObjectEntry(target, mock) }).mkString("\n") +"\n\n"+
+      toMockMethods +"\n\n"+
+      mockObjectMethods +"\n"+
     "}"
+    
+  def toMockMethods =
+    (mocks map { case (target, mock) => mockFactoryEntry(target, mock) }).mkString("\n")
+  
+  def mockObjectMethods =
+    (mockObjects map { case (target, mock) => mockObjectEntry(target, mock) }).mkString("\n")
   
   def mockFactoryEntry(target: String, mock: String) =
     "  implicit def toMock(m: "+ target +") = m.asInstanceOf["+ mock +"]"
     
-  def mockObjectEntry(target: String, mock: String) = "  def mockObject(x: "+ target +".type) = x.asInstanceOf["+ mock +"]"
-  
+  def mockObjectEntry(target: String, mock: String) =
+    "  def mockObject(x: "+ target +".type) = objectToMock["+ mock +"](x)"
+    
   trait Context {
     val topLevel: Boolean
     val fullMockTraitOrClassName: String
@@ -191,7 +198,7 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     def getMock: String =
       mockedTypeDeclaration +" {\n\n"+
         mockClassEntries +"\n\n"+
-        forwardTo +"\n\n"+
+        forwarding +"\n\n"+
         indent((nestedMocks map ( _.getMock )).mkString("\n")) +"\n\n"+
       "}"
       
@@ -239,7 +246,9 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
       "    method.invoke(classLoader).asInstanceOf[com.borachio.MockFactoryBase]\n"+
       "  }"
       
-    lazy val forwardTo = "  private var forwardTo: AnyRef = _\n\n"+ forwarders
+    lazy val forwarding = forwardTo +"\n\n"+ forwarders
+    
+    def forwardTo = "  private var forwardTo: AnyRef = _"
     
     lazy val forwarders = (methodsToMock map forwardMethod _).mkString("\n")
 
@@ -596,6 +605,18 @@ class GenerateMocks(plugin: BorachioPlugin, val global: Global) extends PluginCo
     assert(mockSymbol.isModuleClass)
 
     override lazy val fullClassName = qualifiedClassName
+
+    override def forwardTo = super.forwardTo +"\n\n"+ resetForwarding
+      
+    lazy val resetForwarding =
+      "  resetForwarding\n\n"+
+      "  def resetForwarding() {\n"+
+      "    val clazz = com.borachio.ReflectionUtilities.getUnmockedClass(getClass, \""+ fullClassName +"$\")\n"+
+      "    forwardTo = clazz.getField(\"MODULE$\").get(null)\n"+
+      "  }\n\n"+
+      "  def enableForwarding() {\n"+
+      "    forwardTo = null\n"+
+      "  }"
 
     override def getMockTraitOrClassName = "Mock$$"+ className
 

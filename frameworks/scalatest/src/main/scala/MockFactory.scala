@@ -85,6 +85,9 @@ trait MockFactory extends AbstractSuite with MockFactoryBase { this: Suite =>
             case None => throw laterException
           }
       }
+      finally {
+        resetMocks
+      }
     }
   }
 
