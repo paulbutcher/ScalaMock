@@ -20,28 +20,20 @@
 
 package org.scalamock.plugin.test
 
-import org.scalamock.annotation.{mock, mockObject, mockWithCompanion}
+import org.scalatest.FunSuite
+import org.scalamock.generated.GeneratedMockFactory
+import org.scalamock.scalatest.MockFactory
+import org.scalamock.{CallLogging, VerboseErrors}
 
-@mock[SimpleClass] 
-@mock[SimpleClass2]
-@mock[SimpleClass3]
-@mock[SimpleClass4]
-@mock[FinalClass]
-@mock[ClassWithFinalMethod]
-@mock[AbstractClass]
-@mock[SimpleTrait]
-@mock[ClassWithNonTrivialConstructor]
-@mock[ClassWithOverloadedMethods]
-@mock[ClassWithPrivateConstructor]
-@mock[ClassWithValsAndVars]
-@mock[DerivedClass]
-@mock[ClassWithNestedTypes]
-@mock[ClassThatOverridesObjectMethods]
-@mock[SimpleJavaClass]
-@mock[JavaClassWithConstants]
-@mock[JavaClassWithStaticVars]
-@mock[JavaClassWithStaticMethods]
-@mockObject(SimpleObject)
-@mockWithCompanion[ClassWithCompanionObject]
-@mockWithCompanion[TraitWithCompanionObject]
-class Dummy
+class PluginTest2 extends FunSuite with MockFactory with GeneratedMockFactory with VerboseErrors with CallLogging {
+  
+  // Thanks to a compiler bug, mock generation is broken for case classes with
+  // 2.9.1. See: https://issues.scala-lang.org/browse/SI-5067  
+  test("case class") {
+    val m = mock[CaseClass]
+    
+    m.expects.x returning 42
+    
+    expect(42) { m.x }
+  }
+}

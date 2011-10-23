@@ -20,28 +20,9 @@
 
 package org.scalamock.plugin.test
 
-import org.scalamock.annotation.{mock, mockObject, mockWithCompanion}
+import org.scalamock.annotation.mockWithCompanion
 
-@mock[SimpleClass] 
-@mock[SimpleClass2]
-@mock[SimpleClass3]
-@mock[SimpleClass4]
-@mock[FinalClass]
-@mock[ClassWithFinalMethod]
-@mock[AbstractClass]
-@mock[SimpleTrait]
-@mock[ClassWithNonTrivialConstructor]
-@mock[ClassWithOverloadedMethods]
-@mock[ClassWithPrivateConstructor]
-@mock[ClassWithValsAndVars]
-@mock[DerivedClass]
-@mock[ClassWithNestedTypes]
-@mock[ClassThatOverridesObjectMethods]
-@mock[SimpleJavaClass]
-@mock[JavaClassWithConstants]
-@mock[JavaClassWithStaticVars]
-@mock[JavaClassWithStaticMethods]
-@mockObject(SimpleObject)
-@mockWithCompanion[ClassWithCompanionObject]
-@mockWithCompanion[TraitWithCompanionObject]
-class Dummy
+// Thanks to a compiler bug, mock generation is broken for case classes with
+// 2.9.1. See: https://issues.scala-lang.org/browse/SI-5067  
+@mockWithCompanion[CaseClass]
+class Dummy2

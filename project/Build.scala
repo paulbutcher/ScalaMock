@@ -28,7 +28,7 @@ object ScalaMockBuild extends Build {
   override lazy val settings = super.settings ++ Seq(
     organization := "org.scalamock",
     version := "2.0-SNAPSHOT",
-    scalaVersion := "2.9.0",
+    crossScalaVersions := Seq("2.9.0", "2.9.0-1", "2.9.1"),
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings"),
 
     publishTo <<= version { v =>
@@ -64,12 +64,13 @@ object ScalaMockBuild extends Build {
 
   lazy val compiler_plugin = Project("compiler_plugin", file("compiler_plugin")) settings(
     name := "ScalaMock Compiler Plugin",
-    libraryDependencies += "org.scala-lang" % "scala-compiler" % "2.9.0"
+    libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-compiler" % _)
   ) dependsOn(core)
     
   lazy val compiler_plugin_tests = Project("compiler_plugin_tests", file("compiler_plugin_tests")) settings(
     generateMocksSettings: _*) settings(
       publish := (),
+      excludeFilter in unmanagedSources <<= scalaVersion( v => if (v == "2.9.1") "*_not_2.9.1.scala" else ""),
       scalacOptions in GenerateMocks <+= packageBin in (compiler_plugin, Compile) map { plug =>
         "-Xplugin:"+ plug.absolutePath
       }

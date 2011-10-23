@@ -291,12 +291,4 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     
     expect("doubly nested method") { x.nonNestedMethod.nestedClassMethod.doublyNestedMethod }
   }
-  
-  test("case class") {
-    val m = mock[CaseClass]
-    
-    m.expects.x returning 42
-    
-    expect(42) { m.x }
-  }
 }
