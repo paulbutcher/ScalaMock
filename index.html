@@ -3,7 +3,7 @@
 <head>
   <meta charset='utf-8'>
 
-  <title>Borachio</title>
+  <title>ScalaMock</title>
 
   <style type="text/css">
     body {
@@ -35,7 +35,7 @@
 
   <div id="container">
 
-    <h1><a href="http://github.com/paulbutcher/borachio">Borachio</a></h1>
+    <h1><a href="http://github.com/paulbutcher/scalamock">ScalaMock</a></h1>
 
     <div class="description">
       Native Scala mocking
@@ -46,10 +46,10 @@
     <pre>def testTurtle {
   val t = mock[Turtle]
 
-  t expects 'penDown
-  t expects 'turn withArgs (90.0)
-  t expects 'forward withArgs (10.0)
-  t expects 'getPosition returning (0.0, 10.0)
+  t.expects.penDown()
+  t.expects.turn(90.0)
+  t.expects.forward(10.0)
+  t.expects.getPosition returning (0.0, 10.0)
   
   drawLine(t)
 }</pre>
@@ -68,54 +68,46 @@
 }</pre>
 
     <p>
-      <a href="http://www.paulbutcher.com/2011/02/mocking-in-scala-with-borachio-step-by-step/">Full worked example</a>
+      <a href="http://www.paulbutcher.com/2011/10/scalamock-step-by-step/">Full worked example</a>.
+    </p>
+    
+    <h2>Downloading</h2>
+    
+    <p>
+      Download from <a href="http://scala-tools.org/repo-releases/org/scalamock/">scala-tools</a>.
     </p>
 
     <p>
-      <a href="https://github.com/paulbutcher/borachio/tree/master/core_tests/src/test/scala/examples">More examples</a>
-    </p>
-    
-    <p>
-      <a href="http://www.paulbutcher.com/2011/03/mock-objects-on-android-with-borachio-part-1/">Using Borachio on Android</a>
-    </p>
-    
-    <p>
-      <a href="https://github.com/jaley/borachio-warehouse">Android, Dependency Injection and Mock Testing</a>
+      To use ScalaMock in <a href="https://github.com/harrah/xsbt/wiki">sbt 0.11</a> with <a href="http://www.scalatest.org/">ScalaTest</a> add the following to your project file:
     </p>
 
-    <h2>Installing</h2>
-    
-    <p>
-      Borachio is <a href="https://github.com/paulbutcher/borachio">hosted on GitHub</a>
-    </p>
-    
-    <p>
-      To use Borachio in <a href="https://github.com/harrah/xsbt/wiki">sbt</a> add the following to your project file:
-    </p>
-    
     <pre>libraryDependencies +=
-  "com.borachio" %% "borachio-scalatest-support" % "latest.integration")</pre>
+  "org.scalamock" %% "scalamock-scalatest-support" % "latest.integration"</pre>
     
     <p>
-      <a href="http://maven.apache.org/">Maven</a> users, or if you just want to download the JAR, <a href="http://scala-tools.org/repo-releases/com/borachio/">look here</a>.
+      The source is <a href="https://github.com/paulbutcher/scalamock">hosted on GitHub</a>.
     </p>
     
     <h2>Documentation</h2>
     
     <p>
-      <a href="api/index.html#com.borachio.package">Scaladoc</a>
+      <a href="api/index.html#org.scalamock.package">Scaladoc</a>.
     </p>
 
   </div>
 
   <script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-try {
-var pageTracker = _gat._getTracker("UA-21647215-2");
-pageTracker._trackPageview();
-} catch(err) {}</script>
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-21647215-3']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
 </body>
 </html>
