@@ -47,7 +47,12 @@ object ScalaMockBuild extends Build {
   ) aggregate(core, core_tests, scalatest, junit3, compiler_plugin, compiler_plugin_tests
   ) configs(Mock)
   
-  lazy val core = Project("core", file("core")) settings(name := "ScalaMock Core")
+  lazy val core = Project("core", file("core")) settings(
+    name := "ScalaMock Core",
+
+    // Workaround https://github.com/harrah/xsbt/issues/193
+    unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist"))
+  )
     
   lazy val scalatest: Project = Project("scalatest", file("frameworks/scalatest")) settings(
     name := "ScalaMock ScalaTest Support",
