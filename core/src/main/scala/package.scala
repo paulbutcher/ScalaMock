@@ -23,25 +23,20 @@ package org
 /**
  * =ScalaMock: Native Scala mocking=
  *
- * To use ScalaMock with ScalaTest, mix the [[org.scalamock.scalatest.MockFactory]] trait into a
- * Suite:
+ * ScalaMock supports three different mocking styles:
  *
- * {{{
- * class MyTest extends Suite with MockFactory
- * }}}
+ *   - Function mocks.
  *
- * To use ScalaMock with JUnit3 on Android, mix the [[org.scalamock.android.MockFactory]] trait into a
- * TestCase:
+ *   - Proxy (type-unsafe) mocks.
  *
- * {{{
- * class MyTest extends TestCase with MockFactory
- * }}}
- * 
- * ScalaMock supports two different mocking styles - ''Functional mocking'' and ''Proxy mocking''.
+ *   - Generated (type-safe) mocks.
  *
- * ==Functional mocking==
+ * In all cases, mix the relevant `MockFactory` trait into your test class. For ScalaTest use
+ * [[org.scalamock.scalatest.MockFactory]], and for JUnit3 use [[org.scalamock.junit3.MockFactory]].
  *
- * Functional mocks are created with `mockFunction`. The following, for example, creates a mock
+ * ==Function mocks==
+ *
+ * Function mocks are created with `mockFunction`. The following, for example, creates a mock
  * function taking a single `Int` argument and returning a `String`:
  *
  * {{{
@@ -56,7 +51,7 @@ package org
  * m expects (42) returning "Forty two" once
  * }}}
  *
- * ==Proxy mocking==
+ * ==Proxy mocks==
  *
  * Proxy mocks are created with `mock`. The following, for example, creates a mock which implements
  * all the `Turtle` trait (interface):
@@ -87,6 +82,43 @@ package org
  * m stubs 'forward
  * }}}
  *
+ * ==Generated mocks==
+ *
+ * Generated mocks rely on the ScalaMock compiler plugin. See
+ * [[http://www.paulbutcher.com/2011/10/scalamock-step-by-step/ full worked example]].
+ *
+ * Classes that are going to be mocked need to be declared with the [[org.scalamock.annotation.mock]]
+ * annotation. To mock a class together with its companion object, use
+ * [[org.scalamock.annotation.mockWithCompanion]]. To mock a singleton object, use
+ * [[org.scalamock.annotation.mockObject]].
+ *
+ * As well as `MockFactory`, your test class also needs to mix in `GeneratedMockFactory`.
+ *
+ * Create a mock object with `mock`:
+ *
+ * {{{
+ * val m = mock[Turtle]
+ *
+ * m.expects.forward(10.0) twice
+ * }}}
+ *
+ * Create a mock object (singleton or companion) with mockObject:
+ *
+ * {{{
+ * val m = mockObject(Turtle)
+ *
+ * m.expects.createTurtle
+ * }}}
+ *
+ * To mock construtor invocation, use `newInstance`:
+ *
+ * {{{
+ * val m = mock[Turtle]
+ * 
+ * m.expects.newInstance('blue)
+ * m.expects.forward(10.0)
+ * }}}
+ * 
  * ==Expectations==
  *
  * Expectations can be set on the arguments a function or method is called with and how many times
@@ -245,16 +277,16 @@ package org
  * val m2 = mock[Turtle]
  *
  * inSequence {
- *   m1 expects 'setPosition withArguments (0.0, 0.0)
- *   m1 expects 'penDown
- *   m1 expects 'forward withArguments (10.0)
- *   m1 expects 'penUp
+ *   m1.expects.setPosition(0.0, 0.0)
+ *   m1.expects.penDown
+ *   m1.expects.forward(10.0)
+ *   m1.expects.penUp
  * }
  * inSequence {
- *   m2 expects 'setPosition withArguments(1.0, 1.0)
- *   m2 expects 'turn withArguments (90.0)
- *   m2 expects 'forward withArguments (1.0)
- *   m2 expects 'getPosition returning (2.0, 1.0)
+ *   m2.expects.setPosition(1.0, 1.0)
+ *   m2.expects.turn(90.0)
+ *   m2.expects.forward(1.0)
+ *   m2.expects.getPosition returning (2.0, 1.0)
  * }
  *
  * m2.setPosition(1.0, 1.0)
@@ -272,18 +304,18 @@ package org
  * nested. For example:
  *
  * {{{
- * m expects 'a
+ * m.expects.a
  * inSequence {
- *   m expects 'b
+ *   m.expects.b
  *   inAnyOrder {
- *     m expects 'c
+ *     m.expects.c
  *     inSequence {
- *       m expects 'd
- *       m expects 'e
+ *       m.expects.d
+ *       m.expects.e
  *     }
- *     m expects 'f
+ *     m.expects.f
  *   }
- *   m expects 'g
+ *   m.expects.g
  * }}}
  *
  * == Debugging ==
