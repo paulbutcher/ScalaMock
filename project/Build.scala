@@ -28,7 +28,7 @@ object ScalaMockBuild extends Build {
   override lazy val settings = super.settings ++ Seq(
     organization := "org.scalamock",
     version := "2.0-SNAPSHOT",
-    crossScalaVersions := Seq("2.9.0", "2.9.0-1", "2.9.1"),
+    crossScalaVersions := Seq("2.8.1", "2.9.0", "2.9.0-1", "2.9.1"),
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings"),
 
     publishTo <<= version { v =>
@@ -49,9 +49,8 @@ object ScalaMockBuild extends Build {
     publishArtifact in (Compile, packageSrc) := false,
     publishArtifact in (Compile, packageDoc) := true,
     publishArtifact in Test := false,
-    libraryDependencies ++= Seq(
-      "org.scalatest" %% "scalatest" % "1.6.1",
-      "junit" % "junit" % "3.8.2"),
+    libraryDependencies <+= scalaVersion("org.scalatest" %% "scalatest" % scalatestVersion(_)),
+    libraryDependencies += "junit" % "junit" % "3.8.2",
     sources in Compile <<= (Seq(core, scalatest, junit3).map(sources in Compile in _).join).map(_.flatten)
   ) aggregate(core, core_tests, scalatest, junit3, compiler_plugin, compiler_plugin_tests
   ) configs(Mock)
@@ -65,7 +64,7 @@ object ScalaMockBuild extends Build {
     
   lazy val scalatest: Project = Project("scalatest", file("frameworks/scalatest")) settings(
     name := "ScalaMock ScalaTest Support",
-    libraryDependencies += "org.scalatest" %% "scalatest" % "1.6.1"
+    libraryDependencies <+= scalaVersion("org.scalatest" %% "scalatest" % scalatestVersion(_))
   ) dependsOn(core)
   
   lazy val junit3: Project = Project("junit", file("frameworks/junit3")) settings(
@@ -90,4 +89,11 @@ object ScalaMockBuild extends Build {
         "-Xplugin:"+ plug.absolutePath
       }
     ) dependsOn(scalatest % "mock;test", compiler_plugin) configs(Mock)
+    
+  val scalatestVersions = Map("2.8" -> "1.5.1", "2.9" -> "1.6.1")
+
+  def scalatestVersion(scalaVersion: String) = getLibraryVersion(scalatestVersions, scalaVersion)
+
+  def getLibraryVersion(versionMap: Map[String, String], scalaVersion: String) =
+    versionMap.getOrElse(scalaVersion take 3, sys.error("Unsupported Scala version: "+ scalaVersion))
 }
