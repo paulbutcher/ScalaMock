@@ -20,8 +20,8 @@
 
 package org.scalamock.annotation
 
-class mock[T] extends scala.annotation.StaticAnnotation
+class mock[T] extends scala.StaticAnnotation
 
-class mockWithCompanion[T] extends scala.annotation.StaticAnnotation
+class mockWithCompanion[T] extends scala.StaticAnnotation
 
-class mockObject(o: Any) extends scala.annotation.StaticAnnotation
+class mockObject(o: Any) extends scala.StaticAnnotation
