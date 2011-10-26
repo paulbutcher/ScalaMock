@@ -95,5 +95,5 @@ object ScalaMockBuild extends Build {
   def scalatestVersion(scalaVersion: String) = getLibraryVersion(scalatestVersions, scalaVersion)
 
   def getLibraryVersion(versionMap: Map[String, String], scalaVersion: String) =
-    versionMap.getOrElse(scalaVersion take 3, error("Unsupported Scala version: "+ scalaVersion))
+    versionMap.getOrElse(scalaVersion take 3, sys.error("Unsupported Scala version: "+ scalaVersion))
 }
