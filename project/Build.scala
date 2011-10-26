@@ -43,6 +43,11 @@ object ScalaMockBuild extends Build {
     credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
     publishArtifact in (Compile, packageDoc) := false
   )
+  
+  lazy val versionSpecificSettings = Seq(
+    versionSpecificDirectory <<= (sourceDirectory, scalaVersion)((d, v) => d / "main" / ("scala-"+ majorVersion(v))),
+    sources in Compile <++= collectSource(versionSpecificDirectory)
+  )
     
   lazy val scalamock = Project("ScalaMock", file(".")) settings(
     compile in Mock := Analysis.Empty,
@@ -57,11 +62,8 @@ object ScalaMockBuild extends Build {
   ) aggregate(core, core_tests, scalatest, junit3, compiler_plugin, compiler_plugin_tests
   ) configs(Mock)
   
-  lazy val core = Project("core", file("core")) settings(
+  lazy val core = Project("core", file("core")) settings(versionSpecificSettings: _*) settings(
     name := "ScalaMock Core",
-    
-    versionSpecificDirectory <<= (sourceDirectory, scalaVersion)((d, v) => d / "main" / ("scala-"+ majorVersion(v))),
-    sources in Compile <++= collectSource(versionSpecificDirectory),
     
     // Workaround https://github.com/harrah/xsbt/issues/193
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist"))
@@ -81,9 +83,10 @@ object ScalaMockBuild extends Build {
     dependencies = Seq(scalatest % "test")) settings(publish := (), publishLocal := ())
 
   lazy val compiler_plugin = Project("compiler_plugin", file("compiler_plugin")) settings(
-    name := "ScalaMock Compiler Plugin",
-    libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-compiler" % _)
-  ) dependsOn(core)
+    versionSpecificSettings: _*) settings(
+      name := "ScalaMock Compiler Plugin",
+      libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-compiler" % _)
+    ) dependsOn(core)
     
   lazy val compiler_plugin_tests = Project("compiler_plugin_tests", file("compiler_plugin_tests")) settings(
     generateMocksSettings: _*) settings(

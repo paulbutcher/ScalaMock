@@ -28,7 +28,7 @@ import java.io.{File, FileWriter}
 import scala.collection.mutable.{ListBuffer, Map}
 import scala.util.matching.Regex
 
-class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginComponent {
+class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginComponent with VersionSpecific {
   import global._
   import definitions._
   
@@ -528,12 +528,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
         t
         
     def handleMethodOpt(method: Symbol)(handler: (Symbol, Option[List[Symbol]], Type) => String) =
-      method.info.asSeenFrom(mockSymbol.thisType, method.owner) match {
-        case MethodType(params, result) => handler(method, Some(params), result)
-        case PolyType(params, result) if params.isEmpty => handler(method, None, result)
-        case PolyType(params, result) => "  //"+ method +" // ScalaMock doesn't (yet) handle type-parameterised methods"
-        case _ => throw new RuntimeException("ScalaMock plugin: Don't know how to handle "+ method)
-      }
+      handleMethodByType(method, method.info.asSeenFrom(mockSymbol.thisType, method.owner))(handler)
     
     def handleMethod(method: Symbol)(handler: (Symbol, List[Symbol], Type) => String) = handleMethodOpt(method) { 
       (method, params, result) =>

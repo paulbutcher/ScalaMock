@@ -30,7 +30,8 @@ abstract class Class1 extends Trait1 with Trait2
 
 class ProxyTest extends WordSpec {
   
-  def unimplemented(proxy: AnyRef, name: Symbol, args: Array[AnyRef]): AnyRef = error("unimplemented")
+  def unimplemented(proxy: AnyRef, name: Symbol, args: Array[AnyRef]): AnyRef =
+    throw new RuntimeException("unimplemented")
   
   "A proxy" should {
     
