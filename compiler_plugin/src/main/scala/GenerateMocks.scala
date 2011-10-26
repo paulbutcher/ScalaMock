@@ -51,7 +51,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
           new ForeachTreeTraverser(findMockAnnotations).traverse(unit.body)
           generateMockFactory
         } else {
-          globalError("Both -P:scalamock:generatemocks and -P:scalamock:generatetest must be given")
+          error("Both -P:scalamock:generatemocks and -P:scalamock:generatetest must be given")
         }
       }
     }
@@ -89,7 +89,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     val symbol = atp.typeArgs.head.typeSymbol
     val companion = symbol.companionModule
     if (companion == NoSymbol || companion.isJavaDefined)
-      globalError("@mockWithCompanion["+ symbol +"] - no companion found")
+      error("@mockWithCompanion["+ symbol +"] - no companion found")
     else
       new MockWithCompanion(symbol, companion.moduleClass).generate
   }
@@ -100,7 +100,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     if (symbol.isModule)
       new MockObject(symbol.moduleClass).generate
     else
-      globalError("@mockObject("+ symbol +") parameter must be a singleton object")
+      error("@mockObject("+ symbol +") parameter must be a singleton object")
   }
   
   def generateMockFactory() {
@@ -532,7 +532,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
         case MethodType(params, result) => handler(method, Some(params), result)
         case NullaryMethodType(result) => handler(method, None, result)
         case PolyType(params, result) => "  //"+ method +" // ScalaMock doesn't (yet) handle type-parameterised methods"
-        case _ => error("ScalaMock plugin: Don't know how to handle "+ method)
+        case _ => throw new RuntimeException("ScalaMock plugin: Don't know how to handle "+ method)
       }
     
     def handleMethod(method: Symbol)(handler: (Symbol, List[Symbol], Type) => String) = handleMethodOpt(method) { 
