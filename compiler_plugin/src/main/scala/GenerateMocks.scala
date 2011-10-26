@@ -532,7 +532,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
         case MethodType(params, result) => handler(method, Some(params), result)
         case NullaryMethodType(result) => handler(method, None, result)
         case PolyType(params, result) => "  //"+ method +" // ScalaMock doesn't (yet) handle type-parameterised methods"
-        case _ => sys.error("ScalaMock plugin: Don't know how to handle "+ method)
+        case _ => error("ScalaMock plugin: Don't know how to handle "+ method)
       }
     
     def handleMethod(method: Symbol)(handler: (Symbol, List[Symbol], Type) => String) = handleMethodOpt(method) { 
