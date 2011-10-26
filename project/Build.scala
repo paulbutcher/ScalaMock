@@ -25,6 +25,8 @@ import ScalaMockPlugin._
 
 object ScalaMockBuild extends Build {
   
+  lazy val versionSpecificDirectory = SettingKey[File]("version-specific-directory", "Version specific source code")
+  
   override lazy val settings = super.settings ++ Seq(
     organization := "org.scalamock",
     version := "2.0-SNAPSHOT",
@@ -57,7 +59,10 @@ object ScalaMockBuild extends Build {
   
   lazy val core = Project("core", file("core")) settings(
     name := "ScalaMock Core",
-
+    
+    versionSpecificDirectory <<= (sourceDirectory, scalaVersion)((d, v) => d / "main" / ("scala-"+ majorVersion(v))),
+    sources in Compile <++= collectSource(versionSpecificDirectory),
+    
     // Workaround https://github.com/harrah/xsbt/issues/193
     unmanagedClasspath in Compile += Attributed.blank(new java.io.File("doesnotexist"))
   )
@@ -90,10 +95,12 @@ object ScalaMockBuild extends Build {
       }
     ) dependsOn(scalatest % "mock;test", compiler_plugin) configs(Mock)
     
+  def majorVersion(scalaVersion: String) = if (scalaVersion startsWith "2.8") "2.8" else "2.9"
+    
   val scalatestVersions = Map("2.8" -> "1.5.1", "2.9" -> "1.6.1")
 
-  def scalatestVersion(scalaVersion: String) = getLibraryVersion(scalatestVersions, scalaVersion)
+  def scalatestVersion(scalaVersion: String) = getLibraryVersion(scalatestVersions, majorVersion(scalaVersion))
 
-  def getLibraryVersion(versionMap: Map[String, String], scalaVersion: String) =
-    versionMap.getOrElse(scalaVersion take 3, sys.error("Unsupported Scala version: "+ scalaVersion))
+  def getLibraryVersion(versionMap: Map[String, String], version: String) =
+    versionMap.getOrElse(version, sys.error("Unsupported Scala version: "+ version))
 }
