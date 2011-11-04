@@ -33,6 +33,7 @@ trait ProxyMockFactory { self: MockFactoryBase =>
           name match {
             case 'expects => addExpectation(proxy, args(0).asInstanceOf[Symbol])
             case 'stubs => addExpectation(proxy, args(0).asInstanceOf[Symbol]).anyNumberOfTimes
+            case 'toString => "proxy mock object "+ System.identityHashCode(proxy)
             case _ => methodsFor(proxy)(name)(args).asInstanceOf[AnyRef]
           }
         } catch {

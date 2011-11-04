@@ -6,6 +6,10 @@ Version 2.0:
   - Constructor mocking
 - Rename to ScalaMock
 
+Version 1.5:
+
+- Fix mocks that return mocks
+
 Version 1.4:
 
 - Add `stubs` method as syntactic sugar for `expects ... anyNumberOfTimes`

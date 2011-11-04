@@ -114,4 +114,20 @@ class ProxyMockTest extends Suite with MockFactory with ProxyMockFactory {
     m.setPosition(3.14159, 3.14159)
     intercept[ExpectationException] { m.setPosition(1.0, 2.0) }
   }
+  
+  def testMockReturningMock {
+    trait Parent {
+      def getChild: Child
+    }
+    trait Child
+    
+    val p = mock[Parent]
+    val c = mock[Child]
+    
+    p expects 'getChild returning c
+    
+    expect(c) { p.getChild }
+    
+    verifyExpectations
+  }
 }
