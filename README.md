@@ -62,3 +62,10 @@ To use ScalaMock in [sbt 0.11](https://github.com/harrah/xsbt/wiki) with [ScalaT
 ## Documentation
 
 [Scaladoc](http://scalamock.org/api/index.html#org.scalamock.package).
+
+## Building
+
+Install [sbt 0.11](https://github.com/harrah/xsbt/wiki) and then:
+
+    sbt generate-mocks
+    sbt test
