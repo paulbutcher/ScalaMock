@@ -53,6 +53,7 @@ package org
  *
  * ==Proxy mocks==
  *
+ * To use proxy mocks, mix [[org.scalamock.ProxyMockFactory]] into your test suite.
  * Proxy mocks are created with `mock`. The following, for example, creates a mock which implements
  * all the `Turtle` trait (interface):
  *
