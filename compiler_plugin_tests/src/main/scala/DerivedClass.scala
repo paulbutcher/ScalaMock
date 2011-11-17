@@ -28,12 +28,17 @@ class ParentClass extends GrandparentClass {
   def parentMethod(x: Int) = "parent method: "+ x
 }
 
-trait Mixin {
-  def abstractMixinMethod(x: Int): String
-  def concreteMixinMethod(x: Int) = "concrete mixin method: "+ x
+trait Mixin1 {
+  def abstractMixin1Method(x: Int): String
+  def concreteMixin1Method(x: Int) = "concrete mixin method: "+ x
 }
 
-class DerivedClass extends ParentClass with Mixin {
+trait Mixin2 {
+  def mixin2Method(x: Int) = "mixin2 method: "+ x
+}
+
+class DerivedClass extends ParentClass with Mixin1 with Mixin2 {
   def derivedClassMethod(x: Int) = "derived method: "+ x
-  def abstractMixinMethod(x: Int) = "abstract mixin method: "+ x
+  def abstractMixin1Method(x: Int) = "abstract mixin1 method: "+ x
+  override def mixin2Method(x: Int) = "overridden mixin2 method: "+ x
 }

@@ -243,15 +243,17 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     
     m.expects.grandparentMethod(1) returning "mocked grandparentMethod"
     m.expects.parentMethod(2) returning "mocked parentMethod"
-    m.expects.abstractMixinMethod(3) returning "mocked abstractMixinMethod"
-    m.expects.concreteMixinMethod(4) returning "mocked concreteMixinMethod"
+    m.expects.abstractMixin1Method(3) returning "mocked abstractMixin1Method"
+    m.expects.concreteMixin1Method(4) returning "mocked concreteMixin1Method"
     m.expects.derivedClassMethod(5) returning "mocked derivedClassMethod"
+    m.expects.mixin2Method(6) returning "mocked mixin2Method"
 
     expect("mocked grandparentMethod") { m.grandparentMethod(1) }
     expect("mocked parentMethod") { m.parentMethod(2) }
-    expect("mocked abstractMixinMethod") { m.abstractMixinMethod(3) }
-    expect("mocked concreteMixinMethod") { m.concreteMixinMethod(4) }
+    expect("mocked abstractMixin1Method") { m.abstractMixin1Method(3) }
+    expect("mocked concreteMixin1Method") { m.concreteMixin1Method(4) }
     expect("mocked derivedClassMethod") { m.derivedClassMethod(5) }
+    expect("mocked mixin2Method") { m.mixin2Method(6) }
   }
   
   test("val") {
