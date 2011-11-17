@@ -1,3 +1,7 @@
+Version 2.1:
+
+- Fix String constants in Java classes
+
 Version 2.0:
 
 - Add compiler plugin to provide:
