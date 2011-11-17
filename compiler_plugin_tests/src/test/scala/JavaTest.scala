@@ -42,6 +42,7 @@ class JavaTest extends FunSuite with MockFactory with GeneratedMockFactory with 
     expect(2) { JavaClassWithConstants.INTEGER_CONSTANT }
     expect(42) { JavaClassWithConstants.CLASS_CONSTANT.x }
     expect("foo") { JavaClassWithConstants.CLASS_CONSTANT.y }
+    expect("Foo") { JavaClassWithConstants.STRING_CONSTANT }
 
     //! TODO - the following should also work
     // expect(new CaseClass(42, "foo")) { JavaClassWithConstants.CLASS_CONSTANT }

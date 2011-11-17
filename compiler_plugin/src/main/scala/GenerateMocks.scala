@@ -550,6 +550,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       case IntClass => "int"
       case LongClass => "long"
       case ShortClass => "short"
+      case StringClass => "String"
       case _ => t.toString
     }
     

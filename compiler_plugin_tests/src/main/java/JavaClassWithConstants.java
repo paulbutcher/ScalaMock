@@ -25,6 +25,7 @@ public class JavaClassWithConstants {
     public static final int INT_CONSTANT = 1;
     public static final Integer INTEGER_CONSTANT = 2;
     public static final CaseClass CLASS_CONSTANT = new CaseClass(42, "foo");
+    public static final String STRING_CONSTANT = "Foo";
 
     public String methodWithOneArgument(int x) {
         return "methodWithOneArgument: "+ x;
