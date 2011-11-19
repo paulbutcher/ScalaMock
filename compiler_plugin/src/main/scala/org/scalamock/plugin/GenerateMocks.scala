@@ -340,16 +340,16 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     def mockMethod(method: Symbol) = handleMethod(method) {
       (method, params, result) =>
         if (method.isConstructor)
-          mockMethodConstructor(method, params)
+          mockMethodConstructor(method, params, result)
         else
           mockMethodNormal(method, params, result)
     }
         
-    def mockMethodConstructor(method: Symbol, params: List[List[Symbol]]) =
-      methodDeclaration(method, params) +" = "+ mockBodyConstructor(method, params)
+    def mockMethodConstructor(method: Symbol, params: List[List[Symbol]], result: Type) =
+      methodDeclaration(method, params) +" = "+ mockBodyConstructor(method, params.flatten, result)
 
     def mockMethodNormal(method: Symbol, params: List[List[Symbol]], result: Type) =
-      methodDeclarationWithReturnType(method, params, result) +" = "+ mockBodyNormal(method, params)
+      methodDeclarationWithReturnType(method, params, result) +" = "+ mockBodyNormal(method, params.flatten, result)
       
     def methodDeclarationWithReturnType(method: Symbol, params: List[List[Symbol]], result: Type) =
       methodDeclaration(method, params) +": "+ fixedType(result)
@@ -371,9 +371,9 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       
     def parameterDeclaration(parameter: Symbol) = parameter.name +": "+ parameter.tpe
     
-    def mockBodyConstructor(method: Symbol, params: List[List[Symbol]]) = "{\n"+
+    def mockBodyConstructor(method: Symbol, params: List[Symbol], result: Type) = "{\n"+
       "    this(new org.scalamock.MockConstructorDummy)\n"+
-      "    val mock = "+ mockBodySimple(method, params) +"\n"+
+      "    val mock = "+ mockBodySimple(method, params, result) +"\n"+
       "    if (mock != null) {\n"+
       "      forwardTo$Mocks = mock\n"+
       "    } else {\n"+
@@ -383,21 +383,22 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       "    }\n"+
       "  }"
       
-    def mockBodyNormal(method: Symbol, params: List[List[Symbol]]) = 
-      "if (forwardTo$Mocks != null) "+ forwarderNames(method) + forwardParams(params) +
-      " else "+ mockBodySimple(method, params)
+    def mockBodyNormal(method: Symbol, params: List[Symbol], result: Type) = 
+      "if (forwardTo$Mocks != null) "+ forwarderNames(method) +"("+ forwardParams(params) +
+      	") else "+ mockBodySimple(method, params, result)
         
-    def mockBodySimple(method: Symbol, params: List[List[Symbol]]) = mockMethodName(method) + forwardParams(params)
+    def mockBodySimple(method: Symbol, params: List[Symbol], result: Type) =
+      mockMethodName(method) +".handle(Array("+ forwardParams(params) +")).asInstanceOf["+ result +"]"
     
     def mockMethodName(method: Symbol) = mockMethodNames(method)
 
-    def forwardParams(params: List[List[Symbol]]) = (params.flatten map (_.name)).mkString("(", ", ", ")") 
+    def forwardParams(params: List[Symbol]) = (params map (_.name)).mkString(", ")
+    
+    def forwardConstructorParams(params: List[Symbol]) =
+      (params map (_.name +".asInstanceOf[AnyRef]")).mkString("(", ", ", ")")
       
-    def forwardConstructorParams(params: List[List[Symbol]]) =
-      (params.flatten map (_.name +".asInstanceOf[AnyRef]")).mkString("(", ", ", ")")
-      
-    def constructorParamTypes(params: List[List[Symbol]]) =
-      (params.flatten map (p => "classOf["+ p.tpe +"]")).mkString(", ")
+    def constructorParamTypes(params: List[Symbol]) =
+      (params map (p => "classOf["+ p.tpe +"]")).mkString(", ")
 
     def expectForwarder(method: Symbol) = handleMethod(method) {
       (method, params, result) =>
@@ -408,12 +409,12 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     }
         
     def expectForwarderConstructor(method: Symbol, params: List[List[Symbol]], result: Type) =
-      forwarderDeclarationConstructor(method, params) +" = "+ forwarderBody(method, params) +
+      forwarderDeclarationConstructor(method, params) +" = "+ forwarderBody(method, params.flatten, result) +
         ".returning("+ mockTraitOrClassName +".this.asInstanceOf["+ fullClassName +"])"
       
     def expectForwarderNormal(method: Symbol, params: List[List[Symbol]], result: Type) =
-      forwarderDeclarationNormal(method, params, result) +" = "+ forwarderBody(method, params) +"\n"+
-      matchingForwarder(method, params)
+      forwarderDeclarationNormal(method, params, result) +" = "+ forwarderBody(method, params.flatten, result) +"\n"+
+      matchingForwarder(method, params, result)
       
     def forwarderDeclarationConstructor(method: Symbol, params: List[List[Symbol]]) =
       "    def newInstance"+ forwarderParams(params)
@@ -422,18 +423,18 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       "    def "+ method.name.decode + forwarderParams(params) + overloadDisambiguation(method) +": "+ 
         expectationType(params.flatten, result)
         
-    def matchingForwarder(method: Symbol, params: List[List[Symbol]]) = {
+    def matchingForwarder(method: Symbol, params: List[List[Symbol]], result: Type) = {
       val ps = params.flatten
       if (ps.length > 0)
-        matchingForwarderList(method, ps)
+        matchingForwarderList(method, ps, result)
       else
         ""
     }
     
-    def matchingForwarderList(method: Symbol, params: List[Symbol]) = 
+    def matchingForwarderList(method: Symbol, params: List[Symbol], result: Type) = 
       "    def "+ method.name.decode + "(matcher: org.scalamock.MockMatcher"+ params.length +"["+ 
         fixedTypes(paramTypes(params)).mkString(", ") +"])"+ overloadDisambiguation(method) +" = "+
-        mockFunctionToExpectation(method, params) +".expects(matcher)"
+        mockFunctionToExpectation(method, params, result) +".expects(matcher)"
         
     def forwarderParams(params: List[List[Symbol]]) = (params map forwarderParamList _).mkString
     
@@ -457,11 +458,12 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       "org.scalamock.TypeSafeExpectation"+ params.length +"["+ 
         fixedTypes(paramTypes(params) :+ result).mkString(", ") +"]"
         
-    def forwarderBody(method: Symbol, params: List[List[Symbol]]) =
-      mockFunctionToExpectation(method, params.flatten) +".expects"+ forwardParams(params)
+    def forwarderBody(method: Symbol, params: List[Symbol], result: Type) =
+      mockFunctionToExpectation(method, params, result) +".expects("+ forwardParams(params) +")"
       
-    def mockFunctionToExpectation(method: Symbol, params: List[Symbol]) =
-      "factory.mockFunction"+ params.length +"ToExpectation("+ mockMethodName(method) +")"
+    def mockFunctionToExpectation(method: Symbol, params: List[Symbol], result: Type) =
+      mockMethodName(method) +".toTypeSafeExpectation"+ params.length + 
+      	fixedTypes(paramTypes(params) :+ result).mkString("[", ", ", "]")
     
     def cachedMockMethod(method: Symbol): String = handleMethod(method) {
       (method, params, result) =>
@@ -479,11 +481,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     }
 
     def mockFunction(method: Symbol, params: List[Symbol], result: Type) =
-      mockFunctionType(method) + params.length +"["+ fixedTypes(paramTypes(params) :+ result).mkString(", ") +"]"
-      
-    def mockFunctionType(method: Symbol) =
       if (method.isConstructor)
-        "org.scalamock.MockConstructor"
+        "org.scalamock.MockConstructor["+ fixedType(result) +"]"
       else
         "org.scalamock.MockFunction"
         
@@ -577,7 +576,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     override lazy val mockTraitOrClassDeclaration = 
       "class "+ mockTraitOrClassName +"(dummy: org.scalamock.MockConstructorDummy) extends "+ className
 
-    override def mockBodyNormal(method: Symbol, params: List[List[Symbol]]) = mockBodySimple(method, params)
+    override def mockBodyNormal(method: Symbol, params: List[Symbol], result: Type) =
+      mockBodySimple(method, params, result)
 
     override def getMethodsToMock = super.getMethodsToMock filter (!_.isConstructor)
 

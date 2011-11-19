@@ -26,7 +26,7 @@ package org.scalamock
 abstract class Expectation(target: MockFunction) extends Handler {
   
   def throws(e: Throwable) = {
-    if (target.isInstanceOf[MockConstructor]) {
+    if (target.isInstanceOf[MockConstructor[_]]) {
       assert(onCallHandler.isDefined)
       onCallHandler = None
     }
