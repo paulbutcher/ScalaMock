@@ -69,17 +69,17 @@ trait MockFactoryBase {
   protected def mockFunction[T1, T2, T3, T4, T5, T6, T7, T8, T9, R] = new MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](this, Symbol("unnamed MockFunction9"))
   protected def mockFunction[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R] = new MockFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](this, Symbol("unnamed MockFunction10"))
   
-  implicit def mockFunction0ToExpectation[R](m: MockFunction0[R]) = add(new TypeSafeExpectation0[R](m))
-  implicit def mockFunction1ToExpectation[T1, R](m: MockFunction1[T1, R]) = add(new TypeSafeExpectation1[T1, R](m))
-  implicit def mockFunction2ToExpectation[T1, T2, R](m: MockFunction2[T1, T2, R]) = add(new TypeSafeExpectation2[T1, T2, R](m))
-  implicit def mockFunction3ToExpectation[T1, T2, T3, R](m: MockFunction3[T1, T2, T3, R]) = add(new TypeSafeExpectation3[T1, T2, T3, R](m))
-  implicit def mockFunction4ToExpectation[T1, T2, T3, T4, R](m: MockFunction4[T1, T2, T3, T4, R]) = add(new TypeSafeExpectation4[T1, T2, T3, T4, R](m))
-  implicit def mockFunction5ToExpectation[T1, T2, T3, T4, T5, R](m: MockFunction5[T1, T2, T3, T4, T5, R]) = add(new TypeSafeExpectation5[T1, T2, T3, T4, T5, R](m))
-  implicit def mockFunction6ToExpectation[T1, T2, T3, T4, T5, T6, R](m: MockFunction6[T1, T2, T3, T4, T5, T6, R]) = add(new TypeSafeExpectation6[T1, T2, T3, T4, T5, T6, R](m))
-  implicit def mockFunction7ToExpectation[T1, T2, T3, T4, T5, T6, T7, R](m: MockFunction7[T1, T2, T3, T4, T5, T6, T7, R]) = add(new TypeSafeExpectation7[T1, T2, T3, T4, T5, T6, T7, R](m))
-  implicit def mockFunction8ToExpectation[T1, T2, T3, T4, T5, T6, T7, T8, R](m: MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R]) = add(new TypeSafeExpectation8[T1, T2, T3, T4, T5, T6, T7, T8, R](m))
-  implicit def mockFunction9ToExpectation[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](m: MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]) = add(new TypeSafeExpectation9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](m))
-  implicit def mockFunction10ToExpectation[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](m: MockFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]) = add(new TypeSafeExpectation10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](m))
+  implicit def mockFunction0ToExpectation[R](m: MockFunction0[R]) = m.toTypeSafeExpectation0[R]
+  implicit def mockFunction1ToExpectation[T1, R](m: MockFunction1[T1, R]) = m.toTypeSafeExpectation1[T1, R]
+  implicit def mockFunction2ToExpectation[T1, T2, R](m: MockFunction2[T1, T2, R]) = m.toTypeSafeExpectation2[T1, T2, R]
+  implicit def mockFunction3ToExpectation[T1, T2, T3, R](m: MockFunction3[T1, T2, T3, R]) = m.toTypeSafeExpectation3[T1, T2, T3, R]
+  implicit def mockFunction4ToExpectation[T1, T2, T3, T4, R](m: MockFunction4[T1, T2, T3, T4, R]) = m.toTypeSafeExpectation4[T1, T2, T3, T4, R]
+  implicit def mockFunction5ToExpectation[T1, T2, T3, T4, T5, R](m: MockFunction5[T1, T2, T3, T4, T5, R]) = m.toTypeSafeExpectation5[T1, T2, T3, T4, T5, R]
+  implicit def mockFunction6ToExpectation[T1, T2, T3, T4, T5, T6, R](m: MockFunction6[T1, T2, T3, T4, T5, T6, R]) = m.toTypeSafeExpectation6[T1, T2, T3, T4, T5, T6, R]
+  implicit def mockFunction7ToExpectation[T1, T2, T3, T4, T5, T6, T7, R](m: MockFunction7[T1, T2, T3, T4, T5, T6, T7, R]) = m.toTypeSafeExpectation7[T1, T2, T3, T4, T5, T6, T7, R]
+  implicit def mockFunction8ToExpectation[T1, T2, T3, T4, T5, T6, T7, T8, R](m: MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R]) = m.toTypeSafeExpectation8[T1, T2, T3, T4, T5, T6, T7, T8, R]
+  implicit def mockFunction9ToExpectation[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](m: MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]) = m.toTypeSafeExpectation9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]
+  implicit def mockFunction10ToExpectation[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](m: MockFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]) = m.toTypeSafeExpectation10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]
   
   protected def where[T1](matcher: T1 => Boolean) = new MockMatcher1(matcher)
   protected def where[T1, T2](matcher: (T1, T2) => Boolean) = new MockMatcher2(matcher)

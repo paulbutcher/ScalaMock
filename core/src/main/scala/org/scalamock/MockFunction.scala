@@ -27,6 +27,18 @@ abstract class MockFunction(protected val factory: MockFactoryBase, name: Symbol
   private[scalamock] def canHandle(that: MockFunction) = this == that
   
   private[scalamock] val failIfUnexpected = true
+  
+  def toTypeSafeExpectation0[R] = factory.add(new TypeSafeExpectation0[R](this))
+  def toTypeSafeExpectation1[T1, R] = factory.add(new TypeSafeExpectation1[T1, R](this))
+  def toTypeSafeExpectation2[T1, T2, R] = factory.add(new TypeSafeExpectation2[T1, T2, R](this))
+  def toTypeSafeExpectation3[T1, T2, T3, R] = factory.add(new TypeSafeExpectation3[T1, T2, T3, R](this))
+  def toTypeSafeExpectation4[T1, T2, T3, T4, R] = factory.add(new TypeSafeExpectation4[T1, T2, T3, T4, R](this))
+  def toTypeSafeExpectation5[T1, T2, T3, T4, T5, R] = factory.add(new TypeSafeExpectation5[T1, T2, T3, T4, T5, R](this))
+  def toTypeSafeExpectation6[T1, T2, T3, T4, T5, T6, R] = factory.add(new TypeSafeExpectation6[T1, T2, T3, T4, T5, T6, R](this))
+  def toTypeSafeExpectation7[T1, T2, T3, T4, T5, T6, T7, R] = factory.add(new TypeSafeExpectation7[T1, T2, T3, T4, T5, T6, T7, R](this))
+  def toTypeSafeExpectation8[T1, T2, T3, T4, T5, T6, T7, T8, R] = factory.add(new TypeSafeExpectation8[T1, T2, T3, T4, T5, T6, T7, T8, R](this))
+  def toTypeSafeExpectation9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R] = factory.add(new TypeSafeExpectation9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](this))
+  def toTypeSafeExpectation10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R] = factory.add(new TypeSafeExpectation10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](this))
 }
 
 class MockFunction0[R](factory: MockFactoryBase, name: Symbol)
