@@ -27,10 +27,10 @@ trait VersionSpecific { this: GenerateMocks =>
   import global._
   import definitions._
   
-  def handleMethodByType(method: Symbol, tpe: Type)(handler: (Symbol, Option[List[Symbol]], Type) => String) =
+  def handleMethodByType(method: Symbol, tpe: Type)(handler: (Symbol, List[List[Symbol]], Type) => String) =
     tpe match {
-      case MethodType(params, result) => handler(method, Some(params), result)
-      case PolyType(params, result) if params.isEmpty => handler(method, None, result)
+      case MethodType(_, result) => handler(method, tpe.paramss, result)
+      case PolyType(params, result) if params.isEmpty => handler(method, List(), result)
       case PolyType(params, result) => "  //"+ method +" // ScalaMock doesn't (yet) handle type-parameterised methods"
       case _ => throw new RuntimeException("ScalaMock plugin: Don't know how to handle "+ method)
     }
