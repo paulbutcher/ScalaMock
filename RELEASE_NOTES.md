@@ -1,5 +1,6 @@
 Version 2.1:
 
+- Add support for curried methods
 - Fix String constants in Java classes
 
 Version 2.0:
