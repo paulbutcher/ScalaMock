@@ -104,9 +104,15 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
   }
   
   def generateMockFactory() {
-    val writer = new FileWriter(new File(testRoot, "GeneratedMockFactory.scala"))
+    val writer = new FileWriter(new File(generatedMockFactoryPath, "GeneratedMockFactory.scala"))
     writer.write(mockFactory)
     writer.close
+  }
+  
+  def generatedMockFactoryPath = {
+    val d = new File(testRoot, "org/scalamock/generated")
+    d.mkdirs
+    d
   }
   
   def mockFactory =
