@@ -25,16 +25,15 @@ class SimpleClass {
   def methodWithZeroArguments() = "methodWithZeroArguments"
   def methodWithOneArgument(x: Int) = "methodWithOneArgument: "+ x
   def methodWithTwoArguments(x: Int, y: Int) = "methodWithTwoArguments: "+ (x, y)
+  def methodWithNonPrimitiveArgument(x: SimpleClass4) = x.toString
   
   def +(s: String) = toString + s
   def callSimpleClass2(x: Int) = (new SimpleClass2).doSomething(x)
   def nestDeeply(x: Int) = (new SimpleClass2).nestDeeply(x)
   
-  def methodWithNonPrimitiveArgument(x: SimpleClass4) = x.toString
-  
   def methodReturningFunction(x: Int) = (y: Int) => x * y
-  
   def curriedMethod(a: Int, b: Double)(c: String, d: Boolean) = "curriedMethod: "+ (a, b, c, d)
+  def withImplicitParameters(x: Int)(implicit i1: ImplicitTest1, i2: ImplicitTest2) = (x, i1, i2).toString
 }
 
 class SimpleClass2 {
@@ -49,3 +48,6 @@ class SimpleClass3 {
 class SimpleClass4 {
   def doSomething(x: Int) = "doSomething: "+ x
 }
+
+class ImplicitTest1
+class ImplicitTest2

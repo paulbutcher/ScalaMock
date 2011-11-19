@@ -212,6 +212,17 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     val partiallyApplied = m.curriedMethod(42, 1.23) _
     expect("curried method called") { partiallyApplied("foo", false) }
   }
+  
+  test("implicit parameters") {
+    implicit val i1 = new ImplicitTest1
+    implicit val i2 = new ImplicitTest2
+
+    val m = mock[SimpleClass]
+    
+    m.expects.withImplicitParameters(42)(i1, i2) returning "success"
+    
+    expect("success") { m.withImplicitParameters(42) }
+  }
 
   test("simple object") {
     val m = mockObject(SimpleObject)
