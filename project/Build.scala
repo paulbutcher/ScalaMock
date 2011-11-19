@@ -80,7 +80,11 @@ object ScalaMockBuild extends Build {
   ) dependsOn(core)
   
   lazy val core_tests: Project = Project("core_tests", file("core_tests"), 
-    dependencies = Seq(scalatest % "test")) settings(publish := (), publishLocal := ())
+    dependencies = Seq(scalatest % "test")) settings(
+      name := "ScalaMock Core Tests",
+      publish := (),
+      publishLocal := ()
+    )
 
   lazy val compiler_plugin = Project("compiler_plugin", file("compiler_plugin")) settings(
     versionSpecificSettings: _*) settings(
@@ -90,6 +94,7 @@ object ScalaMockBuild extends Build {
     
   lazy val compiler_plugin_tests = Project("compiler_plugin_tests", file("compiler_plugin_tests")) settings(
     generateMocksSettings: _*) settings(
+      name := "ScalaMock Compiler Plugin Tests",
       publish := (),
       publishLocal := (),
       excludeFilter in unmanagedSources <<= scalaVersion( v => if (v == "2.9.1") "*_not_2.9.1.scala" else ""),
