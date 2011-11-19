@@ -33,6 +33,8 @@ class SimpleClass {
   def methodWithNonPrimitiveArgument(x: SimpleClass4) = x.toString
   
   def methodReturningFunction(x: Int) = (y: Int) => x * y
+  
+  def curriedMethod(a: Int, b: Double)(c: String, d: Boolean) = "curriedMethod: "+ (a, b, c, d)
 }
 
 class SimpleClass2 {

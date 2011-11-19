@@ -203,6 +203,15 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     
     expect(90) { m.methodReturningFunction(10)(9) }
   }
+  
+  test("curried method") {
+    val m = mock[SimpleClass]
+    
+    m.expects.curriedMethod(42, 1.23)("foo", false) returning "curried method called"
+    
+    val partiallyApplied = m.curriedMethod(42, 1.23) _
+    expect("curried method called") { partiallyApplied("foo", false) }
+  }
 
   test("simple object") {
     val m = mockObject(SimpleObject)

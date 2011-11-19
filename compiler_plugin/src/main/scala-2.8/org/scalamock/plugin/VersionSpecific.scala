@@ -29,9 +29,9 @@ trait VersionSpecific { this: GenerateMocks =>
   
   def handleMethodByType(method: Symbol, tpe: Type)(handler: (Symbol, List[List[Symbol]], Type) => String) =
     tpe match {
-      case MethodType(_, result) => handler(method, tpe.paramss, result)
-      case PolyType(params, result) if params.isEmpty => handler(method, List(), result)
-      case PolyType(params, result) => "  //"+ method +" // ScalaMock doesn't (yet) handle type-parameterised methods"
+      case MethodType(_, _) => handler(method, tpe.paramss, tpe.finalResultType)
+      case PolyType(params, _) if params.isEmpty => handler(method, List(), tpe.finalResultType)
+      case PolyType(_, _) => "  //"+ method +" // ScalaMock doesn't (yet) handle type-parameterised methods"
       case _ => throw new RuntimeException("ScalaMock plugin: Don't know how to handle "+ method)
     }
 }
