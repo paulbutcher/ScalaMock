@@ -223,6 +223,16 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     
     expect("success") { m.withImplicitParameters(42) }
   }
+  
+  test("polymorphic method") {
+    val m = mock[SimpleClass]
+    
+    m.expects.polymorphicMethod(42, "foo", 1.23) returning (1, "bar", 3.14)
+    m.expects.polymorphicMethod(1, true, List("foo", "bar")) returning (0, false, List("alice"))
+    
+    expect((0, false, List("alice"))) { m.polymorphicMethod(1, true, List("foo", "bar")) }
+    expect((1, "bar", 3.14)) { m.polymorphicMethod(42, "foo", 1.23) }
+  }
 
   test("simple object") {
     val m = mockObject(SimpleObject)

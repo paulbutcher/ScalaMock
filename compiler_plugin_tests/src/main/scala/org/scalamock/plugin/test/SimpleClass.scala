@@ -34,6 +34,8 @@ class SimpleClass {
   def methodReturningFunction(x: Int) = (y: Int) => x * y
   def curriedMethod(a: Int, b: Double)(c: String, d: Boolean) = "curriedMethod: "+ (a, b, c, d)
   def withImplicitParameters(x: Int)(implicit i1: ImplicitTest1, i2: ImplicitTest2) = (x, i1, i2).toString
+  
+  def polymorphicMethod[A, B](x: Int, a: A, b: B) = (x, a, b)
 }
 
 class SimpleClass2 {

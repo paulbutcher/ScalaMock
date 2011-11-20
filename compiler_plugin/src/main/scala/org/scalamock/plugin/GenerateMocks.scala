@@ -144,11 +144,17 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     val fullMockTraitOrClassName = null
   }
   
-  case class MethodInfo(symbol: Symbol, params: List[List[Symbol]], result: Type) {
+  case class MethodInfo(symbol: Symbol, tpe: Type) {
+    lazy val params = tpe.paramss
+    lazy val result = tpe.finalResultType
+    lazy val typeParams = tpe.typeParams
     lazy val flatParams = params.flatten
     lazy val name = symbol.name
     lazy val decoded = name.decode
     lazy val isConstructor = symbol.isConstructor
+    lazy val applied = appliedType(tpe, List.fill(typeParams.length)(AnyClass.tpe)) 
+    lazy val appliedParams = applied.paramss.flatten
+    lazy val appliedResult = applied.finalResultType
   }
 
   abstract class Mock(mockSymbol: Symbol, enclosing: Context) extends Context {
@@ -361,7 +367,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       methodDeclaration(info) +": "+ fixedType(info.result)
         
     def methodDeclaration(info: MethodInfo) = 
-      "  "+ overrideIfNecessary(info) +"def "+ info.decoded + mockParams(info)
+      "  "+ overrideIfNecessary(info) +"def "+ info.decoded + typeParams(info) + mockParams(info)
       
     def overrideIfNecessary(info: MethodInfo) = if (needsOverride(info)) "override " else ""
     
@@ -369,6 +375,12 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       val superMethod = p.typeSymbol.info.member(info.name)
       superMethod != NoSymbol && !superMethod.isDeferred
     }
+    
+    def typeParams(info: MethodInfo) =
+      if (info.typeParams.length > 0)
+    	(info.typeParams map (_.name)).mkString("[", ", ", "]")
+      else
+        ""
         
     def mockParams(info: MethodInfo) = (info.params map mockParamList _).mkString 
     
@@ -390,7 +402,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       "  }"
       
     def mockBodyNormal(info: MethodInfo) = "if (forwardTo$Mocks != null) "+
-      forwarderNames(info.symbol) + "("+ forwardParams(info) + ") else "+ mockBodySimple(info)
+      forwarderNames(info.symbol) + "("+ forwardParams(info) + ").asInstanceOf["+ fixedType(info.result) +"] else "+ mockBodySimple(info)
         
     def mockBodySimple(info: MethodInfo) =
       mockMethodNames(info.symbol) +".handle(Array("+ forwardParams(info) +")).asInstanceOf["+ info.result +"]"
@@ -418,12 +430,12 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       
     def forwarderDeclarationConstructor(info: MethodInfo) = "    def newInstance"+ forwarderParams(info)
         
-    def forwarderDeclarationNormal(info: MethodInfo) = "    def "+ info.decoded + forwarderParams(info) +
+    def forwarderDeclarationNormal(info: MethodInfo) = "    def "+ info.decoded + typeParams(info) + forwarderParams(info) +
       overloadDisambiguation(info) +": "+ expectationType(info)
         
     def matchingForwarder(info: MethodInfo) =
       if (info.flatParams.length > 0) {
-	    "    def "+ info.decoded + "(matcher: org.scalamock.MockMatcher"+ info.flatParams.length +"["+ 
+	    "    def "+ info.decoded + typeParams(info) + "(matcher: org.scalamock.MockMatcher"+ info.flatParams.length +"["+ 
 	      fixedTypes(paramTypes(info.flatParams)).mkString(", ") +"])"+ overloadDisambiguation(info) +" = "+
 	      mockFunctionToExpectation(info) +".expects(matcher)"
       } else {
@@ -489,14 +501,14 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     def forwardMethod(method: Symbol): String = handleMethod(method) { info =>
       "  private lazy val "+ forwarderNames(info.symbol) +" = {\n"+
       "    val method = forwardTo$Mocks.getClass.getMethod("+ forwarderGetMethodParams(info) +")\n"+
-      "    ("+ mockParamList(info.flatParams) +" => method.invoke(forwardTo$Mocks"+ forwardForwarderParams(info) +").asInstanceOf["+ fixedType(info.result) +"])\n"+
+      "    ("+ mockParamList(info.appliedParams) +" => method.invoke(forwardTo$Mocks"+ forwardForwarderParams(info) +"))\n"+
       "  }"
     }
       
-    def forwarderGetMethodParams(info: MethodInfo) = 
-      (("\""+ info.decoded +"\"") +: (paramTypes(info.flatParams) map (p => "classOf["+ p +"]"))).mkString(", ")
+    def forwarderGetMethodParams(info: MethodInfo) =
+      (("\""+ info.decoded +"\"") +: (paramTypes(info.appliedParams) map (p => "classOf["+ p +"]"))).mkString(", ")
       
-    def forwardForwarderParams(info: MethodInfo) = info.flatParams match {
+    def forwardForwarderParams(info: MethodInfo) = info.appliedParams match {
         case Nil => ""
         case ps => ", "+ (ps map (_.name +".asInstanceOf[AnyRef]")).mkString(", ")
       }
@@ -511,7 +523,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
         
     def handleMethod(method: Symbol)(handler: MethodInfo => String) = {
       val tpe = method.info.asSeenFrom(mockSymbol.thisType, method.owner)
-      handler(MethodInfo(method, tpe.paramss, tpe.finalResultType))
+      handler(MethodInfo(method, tpe))
     }
         
     def javaValueForwarder(value: Symbol) =
