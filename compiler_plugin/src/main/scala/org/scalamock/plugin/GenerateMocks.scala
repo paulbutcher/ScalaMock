@@ -146,6 +146,9 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
   
   case class MethodInfo(symbol: Symbol, params: List[List[Symbol]], result: Type) {
     lazy val flatParams = params.flatten
+    lazy val name = symbol.name
+    lazy val decoded = name.decode
+    lazy val isConstructor = symbol.isConstructor
   }
 
   abstract class Mock(mockSymbol: Symbol, enclosing: Context) extends Context {
@@ -342,7 +345,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     def qualify(name: String) = packageName +"."+ name
     
     def mockMethod(method: Symbol) = handleMethod(method) { info =>
-      if (info.symbol.isConstructor)
+      if (info.isConstructor)
         mockMethodConstructor(info)
       else
         mockMethodNormal(info)
@@ -358,14 +361,14 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       methodDeclaration(info) +": "+ fixedType(info.result)
         
     def methodDeclaration(info: MethodInfo) = 
-      "  "+ overrideIfNecessary(info) +"def "+ info.symbol.name.decode + mockParams(info)
+      "  "+ overrideIfNecessary(info) +"def "+ info.decoded + mockParams(info)
       
     def overrideIfNecessary(info: MethodInfo) = if (needsOverride(info)) "override " else ""
     
-    def needsOverride(info: MethodInfo) = !info.symbol.isConstructor && parents.exists { p => 
-        val superMethod = p.typeSymbol.info.member(info.symbol.name)
-        superMethod != NoSymbol && !superMethod.isDeferred
-      }
+    def needsOverride(info: MethodInfo) = !info.isConstructor && parents.exists { p => 
+      val superMethod = p.typeSymbol.info.member(info.name)
+      superMethod != NoSymbol && !superMethod.isDeferred
+    }
         
     def mockParams(info: MethodInfo) = (info.params map mockParamList _).mkString 
     
@@ -401,7 +404,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       (info.flatParams map (p => "classOf["+ p.tpe +"]")).mkString(", ")
 
     def expectForwarder(method: Symbol) = handleMethod(method) { info =>
-      if (method.isConstructor)
+      if (info.isConstructor)
         expectForwarderConstructor(info)
       else
         expectForwarderNormal(info)
@@ -415,12 +418,12 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       
     def forwarderDeclarationConstructor(info: MethodInfo) = "    def newInstance"+ forwarderParams(info)
         
-    def forwarderDeclarationNormal(info: MethodInfo) = "    def "+ info.symbol.name.decode + forwarderParams(info) +
+    def forwarderDeclarationNormal(info: MethodInfo) = "    def "+ info.decoded + forwarderParams(info) +
       overloadDisambiguation(info) +": "+ expectationType(info)
         
     def matchingForwarder(info: MethodInfo) =
       if (info.flatParams.length > 0) {
-	    "    def "+ info.symbol.name.decode + "(matcher: org.scalamock.MockMatcher"+ info.flatParams.length +"["+ 
+	    "    def "+ info.decoded + "(matcher: org.scalamock.MockMatcher"+ info.flatParams.length +"["+ 
 	      fixedTypes(paramTypes(info.flatParams)).mkString(", ") +"])"+ overloadDisambiguation(info) +" = "+
 	      mockFunctionToExpectation(info) +".expects(matcher)"
       } else {
@@ -465,11 +468,11 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
 
     def mockMember(method: Symbol): String = handleMethod(method) { info =>
       "  protected lazy val "+ mockMethodNames(info.symbol) +" = new "+ mockFunction(info) +
-      "(factory, Symbol(\""+ info.symbol.name.decode +"\"))"
+      "(factory, Symbol(\""+ info.decoded +"\"))"
     }
 
     def mockFunction(info: MethodInfo) =
-      if (info.symbol.isConstructor)
+      if (info.isConstructor)
         "org.scalamock.MockConstructor["+ fixedType(info.result) +"]"
       else
         "org.scalamock.MockFunction"
@@ -491,7 +494,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     }
       
     def forwarderGetMethodParams(info: MethodInfo) = 
-      (("\""+ info.symbol.name.decode +"\"") +: (paramTypes(info.flatParams) map (p => "classOf["+ p +"]"))).mkString(", ")
+      (("\""+ info.decoded +"\"") +: (paramTypes(info.flatParams) map (p => "classOf["+ p +"]"))).mkString(", ")
       
     def forwardForwarderParams(info: MethodInfo) = info.flatParams match {
         case Nil => ""
