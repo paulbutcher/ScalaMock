@@ -28,7 +28,7 @@ import java.io.{File, FileWriter}
 import scala.collection.mutable.{ListBuffer, Map}
 import scala.util.matching.Regex
 
-class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginComponent with VersionSpecific {
+class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginComponent {
   import global._
   import definitions._
   
@@ -521,8 +521,10 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       else
         t
         
-    def handleMethod(method: Symbol)(handler: (Symbol, List[List[Symbol]], Type) => String) =
-      handleMethodByType(method, method.info.asSeenFrom(mockSymbol.thisType, method.owner))(handler)
+    def handleMethod(method: Symbol)(handler: (Symbol, List[List[Symbol]], Type) => String) = {
+      val tpe = method.info.asSeenFrom(mockSymbol.thisType, method.owner)
+      handler(method, tpe.paramss, tpe.finalResultType)
+    }
         
     def javaValueForwarder(value: Symbol) =
       "  public static "+ javaType(value.info) +" "+ value.name +" = "+ fieldGetter(value)
