@@ -184,6 +184,11 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     
     expect("foo added") { m + "foo" }
   }
+  
+  test("unmocked operator") {
+    val x = new SimpleClass
+    expect("SimpleClass foo") { x + " foo" }
+  }
 
   test("non-primitive parameter type") {
     val m = mock[SimpleClass]

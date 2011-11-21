@@ -506,7 +506,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     }
       
     def forwarderGetMethodParams(info: MethodInfo) =
-      (("\""+ info.decoded +"\"") +: (paramTypes(info.appliedParams) map (p => "classOf["+ p +"]"))).mkString(", ")
+      (("\""+ info.name +"\"") +: (paramTypes(info.appliedParams) map (p => "classOf["+ p +"]"))).mkString(", ")
       
     def forwardForwarderParams(info: MethodInfo) = info.appliedParams match {
         case Nil => ""
