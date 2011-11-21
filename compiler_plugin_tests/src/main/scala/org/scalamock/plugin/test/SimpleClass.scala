@@ -21,6 +21,8 @@
 package org.scalamock.plugin.test
 
 class SimpleClass {
+  override def toString = "SimpleClass"
+
   def nullMethod {}
   def methodWithZeroArguments() = "methodWithZeroArguments"
   def methodWithOneArgument(x: Int) = "methodWithOneArgument: "+ x
@@ -36,6 +38,11 @@ class SimpleClass {
   def withImplicitParameters(x: Int)(implicit i1: ImplicitTest1, i2: ImplicitTest2) = (x, i1, i2).toString
   
   def polymorphicMethod[A, B](x: Int, a: A, b: B) = (x, a, b)
+  
+  //! TODO
+//  def withUpperBound[T <: Ordered[T]](x: T, y: T) = x < y
+//  def withViewBound[T <% Ordered[T]](x: T, y: T) = x < y
+//  def withContextBound[T: ClassManifest] = "erasure is: "+ classManifest[T].erasure
 }
 
 class SimpleClass2 {
