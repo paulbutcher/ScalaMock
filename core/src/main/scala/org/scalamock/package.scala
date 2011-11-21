@@ -53,7 +53,8 @@ package org
  *
  * ==Proxy mocks==
  *
- * Proxy mocks can only be used to mock traits and interfaces.
+ * Proxy mocks can only be used to mock traits and interfaces. To mock classes, singleton/companion
+ * objects etc, please use generated mocks.
  * To use proxy mocks, mix [[org.scalamock.ProxyMockFactory]] into your test suite.
  * Proxy mocks are created with `mock`. The following, for example, creates a mock which implements
  * all the `Turtle` trait (interface):
