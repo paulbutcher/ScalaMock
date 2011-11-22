@@ -38,11 +38,12 @@ class SimpleClass {
   def withImplicitParameters(x: Int)(implicit i1: ImplicitTest1, i2: ImplicitTest2) = (x, i1, i2).toString
   
   def polymorphicMethod[A, B](x: Int, a: A, b: B) = (x, a, b)
+  def withUpperBound[T <: Product](x: T) = x.productArity
   
   //! TODO
-//  def withUpperBound[T <: Ordered[T]](x: T, y: T) = x < y
 //  def withViewBound[T <% Ordered[T]](x: T, y: T) = x < y
 //  def withContextBound[T: ClassManifest] = "erasure is: "+ classManifest[T].erasure
+//  def byName(x: => Unit) = x; x
 }
 
 class SimpleClass2 {

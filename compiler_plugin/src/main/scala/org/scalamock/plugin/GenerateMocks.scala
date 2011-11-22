@@ -367,7 +367,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       methodDeclaration(info) +": "+ fixedType(info.result)
         
     def methodDeclaration(info: MethodInfo) = 
-      "  "+ overrideIfNecessary(info) +"def "+ info.decoded + typeParams(info) + mockParams(info)
+      "  "+ overrideIfNecessary(info) +"def "+ info.decoded + typeParamsString(info) + mockParams(info)
       
     def overrideIfNecessary(info: MethodInfo) = if (needsOverride(info)) "override " else ""
     
@@ -376,12 +376,12 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       superMethod != NoSymbol && !superMethod.isDeferred
     }
     
-    def typeParams(info: MethodInfo) =
-      if (info.typeParams.length > 0)
-    	(info.typeParams map (_.name)).mkString("[", ", ", "]")
+    def typeParamsString(info: MethodInfo) =
+      if (!info.typeParams.isEmpty )
+    	(info.typeParams map (_.defString) mkString ("[", ",", "]"))
       else
         ""
-        
+    
     def mockParams(info: MethodInfo) = (info.params map mockParamList _).mkString 
     
     def mockParamList(params: List[Symbol]) = 
@@ -430,12 +430,12 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       
     def forwarderDeclarationConstructor(info: MethodInfo) = "    def newInstance"+ forwarderParams(info)
         
-    def forwarderDeclarationNormal(info: MethodInfo) = "    def "+ info.decoded + typeParams(info) + forwarderParams(info) +
+    def forwarderDeclarationNormal(info: MethodInfo) = "    def "+ info.decoded + typeParamsString(info) + forwarderParams(info) +
       overloadDisambiguation(info) +": "+ expectationType(info)
         
     def matchingForwarder(info: MethodInfo) =
       if (info.flatParams.length > 0) {
-	    "    def "+ info.decoded + typeParams(info) + "(matcher: org.scalamock.MockMatcher"+ info.flatParams.length +"["+ 
+	    "    def "+ info.decoded + typeParamsString(info) + "(matcher: org.scalamock.MockMatcher"+ info.flatParams.length +"["+ 
 	      fixedTypes(paramTypes(info.flatParams)).mkString(", ") +"])"+ overloadDisambiguation(info) +" = "+
 	      mockFunctionToExpectation(info) +".expects(matcher)"
       } else {

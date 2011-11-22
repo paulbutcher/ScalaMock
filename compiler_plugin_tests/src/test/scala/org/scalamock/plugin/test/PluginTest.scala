@@ -25,6 +25,8 @@ import org.scalamock.generated.GeneratedMockFactory
 import org.scalamock.scalatest.MockFactory
 import org.scalamock.{CallLogging, ExpectationException, VerboseErrors, MockFunction0}
 
+import scala.runtime.RichInt
+
 class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory with VerboseErrors with CallLogging {
   
   test("simple class") {
@@ -237,6 +239,15 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     
     expect((0, false, List("alice"))) { m.polymorphicMethod(1, true, List("foo", "bar")) }
     expect((1, "bar", 3.14)) { m.polymorphicMethod(42, "foo", 1.23) }
+  }
+  
+  test("upper bound") {
+    val m = mock[SimpleClass]
+    
+    //! TODO - Find a way to make the explicit type unnecessary
+    m.expects.withUpperBound(where { (x: Product) => x.productArity == 2 })
+    
+    m.withUpperBound((1, 2))
   }
 
   test("simple object") {
