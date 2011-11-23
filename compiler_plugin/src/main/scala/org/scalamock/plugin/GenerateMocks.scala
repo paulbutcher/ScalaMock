@@ -397,19 +397,19 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       "    } else {\n"+
       "      val clazz = org.scalamock.ReflectionUtilities.getUnmockedClass(getClass, \""+ qualifiedClassName +"\")\n"+
       "      val constructor = clazz.getConstructor("+ constructorParamTypes(info) +")\n"+
-      "      forwardTo$Mocks = constructor.newInstance"+ forwardConstructorParams(info) +".asInstanceOf[AnyRef]\n"+
+      "      forwardTo$Mocks = constructor.newInstance"+ forwardParamsAsAnyRef(info) +".asInstanceOf[AnyRef]\n"+
       "    }\n"+
       "  }"
       
     def mockBodyNormal(info: MethodInfo) = "if (forwardTo$Mocks != null) "+
-      forwarderNames(info.symbol) + "("+ forwardParams(info) + ").asInstanceOf["+ fixedType(info.result) +"] else "+ mockBodySimple(info)
+      forwarderNames(info.symbol) + forwardParamsAsAnyRef(info) + ".asInstanceOf["+ fixedType(info.result) +"] else "+ mockBodySimple(info)
         
     def mockBodySimple(info: MethodInfo) =
       mockMethodNames(info.symbol) +".handle(Array("+ forwardParams(info) +")).asInstanceOf["+ info.result +"]"
 
     def forwardParams(info: MethodInfo) = (info.flatParams map (_.name)).mkString(", ")
     
-    def forwardConstructorParams(info: MethodInfo) =
+    def forwardParamsAsAnyRef(info: MethodInfo) =
       (info.flatParams map (_.name +".asInstanceOf[AnyRef]")).mkString("(", ", ", ")")
       
     def constructorParamTypes(info: MethodInfo) =
@@ -501,17 +501,19 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     def forwardMethod(method: Symbol): String = handleMethod(method) { info =>
       "  private lazy val "+ forwarderNames(info.symbol) +" = {\n"+
       "    val method = forwardTo$Mocks.getClass.getMethod("+ forwarderGetMethodParams(info) +")\n"+
-      "    ("+ mockParamList(info.appliedParams) +" => method.invoke(forwardTo$Mocks"+ forwardForwarderParams(info) +"))\n"+
+      "    "+ paramListAsAnyRef(info) +" => method.invoke(forwardTo$Mocks"+ forwardForwarderParams(info) +")\n"+
       "  }"
     }
       
     def forwarderGetMethodParams(info: MethodInfo) =
       (("\""+ info.name +"\"") +: (paramTypes(info.appliedParams) map (p => "classOf["+ p +"]"))).mkString(", ")
       
-    def forwardForwarderParams(info: MethodInfo) = info.appliedParams match {
-        case Nil => ""
-        case ps => ", "+ (ps map (_.name +".asInstanceOf[AnyRef]")).mkString(", ")
-      }
+    def paramListAsAnyRef(info: MethodInfo) = (info.flatParams map (_.name +": AnyRef")).mkString("(", ", ", ")")
+      
+    def forwardForwarderParams(info: MethodInfo) = info.flatParams match {
+      case Nil => ""
+      case _ => ", "+ forwardParams(info)
+    }
 
     def fixedTypes(ts: List[Type]) = ts map fixedType _
       

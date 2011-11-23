@@ -39,10 +39,10 @@ class SimpleClass {
   
   def polymorphicMethod[A, B](x: Int, a: A, b: B) = (x, a, b)
   def withUpperBound[T <: Product](x: T) = x.productArity
+  def withViewBound[T <% Ordered[T]](x: T, y: T) = x < y
+  def withContextBound[T: ClassManifest] = "erasure is: "+ classManifest[T].erasure
   
   //! TODO
-//  def withViewBound[T <% Ordered[T]](x: T, y: T) = x < y
-//  def withContextBound[T: ClassManifest] = "erasure is: "+ classManifest[T].erasure
 //  def byName(x: => Unit) = x; x
 }
 
