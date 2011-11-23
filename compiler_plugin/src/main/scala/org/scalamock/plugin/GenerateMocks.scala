@@ -444,9 +444,12 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     
     def forwarderParams(info: MethodInfo) = (info.params map forwarderParamList _).mkString
     
-    def forwarderParamList(params: List[Symbol]): String = (params map forwarderParam _).mkString("(", ", ", ")") 
+    def forwarderParamList(params: List[Symbol]): String = 
+      (params map forwarderParam _).mkString("("+ implicitIfNecessary(params), ", ", ")") 
       
     def forwarderParam(parameter: Symbol) = parameter.name +": org.scalamock.MockParameter["+ parameter.tpe +"]"
+    
+    def implicitIfNecessary(params: List[Symbol]) = if (params.nonEmpty && params.head.isImplicit) "implicit " else ""
     
     // Add DummyImplicit sentinel parameters to overloaded methods to avoid problems with
     // ambiguity in the face of type erasure. See:

@@ -94,6 +94,8 @@ trait MockFactoryBase {
   
   protected def * = new MatchAny
   
+  protected implicit def wildcard[T] = new MockParameter[T](*)
+  
   protected class EpsilonMatcher(d: Double) {
     def unary_~() = new MatchEpsilon(d)
   }

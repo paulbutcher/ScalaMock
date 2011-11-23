@@ -226,9 +226,21 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
 
     val m = mock[SimpleClass]
     
-    m.expects.withImplicitParameters(42)(i1, i2) returning "success"
+    inSequence {
+      m.expects.withImplicitParameters(1)(i1, i2) returning "implicits supplied"
+      m.expects.withImplicitParameters(1) returning "implicits not supplied"
+    }
     
-    expect("success") { m.withImplicitParameters(42) }
+    expect("implicits supplied") { m.withImplicitParameters(1) }
+    expect("implicits not supplied") { m.withImplicitParameters(1)(new ImplicitTest1, new ImplicitTest2) }
+  }
+  
+  test("with view bound") {
+    val m = mock[SimpleClass]
+    
+    m.expects.withViewBound(3, 4) returning true
+    
+    expect(true) { m.withViewBound(3, 4) }
   }
   
   test("polymorphic method") {
