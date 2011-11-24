@@ -29,14 +29,17 @@
       </h4>
       
           <div class="fullcommenttop" id="comment"><div class="comment cmt"><h3>ScalaMock: Native Scala mocking</h3><p>ScalaMock supports three different mocking styles:</p><ul><li>Function mocks.</li><li>Proxy (type-unsafe) mocks.</li><li>Generated (type-safe) mocks.</li></ul><p>In all cases, mix the relevant <code>MockFactory</code> trait into your test class. For ScalaTest use
-<a name="org.scalamock.scalatest.MockFactory" class="extype" href="scalatest/MockFactory.html">MockFactory</a>, and for JUnit3 use <a name="org.scalamock.junit3.MockFactory" class="extype" href="junit3/MockFactory.html">MockFactory</a>.</p><h4>Function mocks</h4><p>Function mocks are created with <code>mockFunction</code>. The following, for example, creates a mock
+org.scalamock.scalatest.MockFactory, and for JUnit3 use org.scalamock.junit3.MockFactory.</p><h4>Function mocks</h4><p>Function mocks are created with <code>mockFunction</code>. The following, for example, creates a mock
 function taking a single <code>Int</code> argument and returning a <code>String</code>:</p><pre>
 val m = mockFunction[Int, String]
 </pre><p>Expectations then can be set on a mock function. The following, for example, says that we expect our
 mock to be called once with the argument <code>42</code>, and that when called like that it should return the
 value <code>&quot;Forty two&quot;</code>:</p><pre>
 m expects (42) returning &quot;Forty two&quot; once
-</pre><h4>Proxy mocks</h4><p>Proxy mocks are created with <code>mock</code>. The following, for example, creates a mock which implements
+</pre><h4>Proxy mocks</h4><p>Proxy mocks can only be used to mock traits and interfaces. To mock classes, singleton/companion
+objects etc, please use generated mocks.
+To use proxy mocks, mix <a name="org.scalamock.ProxyMockFactory" class="extype" href="ProxyMockFactory.html">ProxyMockFactory</a> into your test suite.
+Proxy mocks are created with <code>mock</code>. The following, for example, creates a mock which implements
 all the <code>Turtle</code> trait (interface):</p><pre>
 val m = mock[Turtle]
 </pre><p>Expectations can then be set on each of the methods within those traits. For example:</p><pre>
@@ -292,135 +295,14 @@ call logging.</p>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="org.scalamock.MockConstructor" data-isabs="true">
-      <a id="MockConstructor:MockConstructor"></a>
+    </li><li visbl="pub" name="org.scalamock.MockConstructor" data-isabs="false">
+      <a id="MockConstructor:MockConstructor[R]"></a>
       <h4 class="signature">
-      <span class="kind">trait</span>
+      <span class="kind">class</span>
       <span class="symbol"> 
         <a href="MockConstructor.html"><span class="name">MockConstructor</span></a>
-        
-        <span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockConstructor0" data-isabs="false">
-      <a id="MockConstructor0:MockConstructor0[R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockConstructor0.html"><span class="name">MockConstructor0</span></a>
         <span class="tparams">[<span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction0[R] with MockConstructor</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockConstructor1" data-isabs="false">
-      <a id="MockConstructor1:MockConstructor1[T1, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockConstructor1.html"><span class="name">MockConstructor1</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction1[T1, R] with MockConstructor</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockConstructor10" data-isabs="false">
-      <a id="MockConstructor10:MockConstructor10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockConstructor10.html"><span class="name">MockConstructor10</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="T10">T10</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R] with MockConstructor</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockConstructor2" data-isabs="false">
-      <a id="MockConstructor2:MockConstructor2[T1, T2, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockConstructor2.html"><span class="name">MockConstructor2</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction2[T1, T2, R] with MockConstructor</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockConstructor3" data-isabs="false">
-      <a id="MockConstructor3:MockConstructor3[T1, T2, T3, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockConstructor3.html"><span class="name">MockConstructor3</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction3[T1, T2, T3, R] with MockConstructor</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockConstructor4" data-isabs="false">
-      <a id="MockConstructor4:MockConstructor4[T1, T2, T3, T4, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockConstructor4.html"><span class="name">MockConstructor4</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction4[T1, T2, T3, T4, R] with MockConstructor</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockConstructor5" data-isabs="false">
-      <a id="MockConstructor5:MockConstructor5[T1, T2, T3, T4, T5, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockConstructor5.html"><span class="name">MockConstructor5</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction5[T1, T2, T3, T4, T5, R] with MockConstructor</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockConstructor6" data-isabs="false">
-      <a id="MockConstructor6:MockConstructor6[T1, T2, T3, T4, T5, T6, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockConstructor6.html"><span class="name">MockConstructor6</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction6[T1, T2, T3, T4, T5, T6, R] with MockConstructor</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockConstructor7" data-isabs="false">
-      <a id="MockConstructor7:MockConstructor7[T1, T2, T3, T4, T5, T6, T7, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockConstructor7.html"><span class="name">MockConstructor7</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction7[T1, T2, T3, T4, T5, T6, T7, R] with MockConstructor</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockConstructor8" data-isabs="false">
-      <a id="MockConstructor8:MockConstructor8[T1, T2, T3, T4, T5, T6, T7, T8, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockConstructor8.html"><span class="name">MockConstructor8</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R] with MockConstructor</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockConstructor9" data-isabs="false">
-      <a id="MockConstructor9:MockConstructor9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockConstructor9.html"><span class="name">MockConstructor9</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R] with MockConstructor</span>
+        <span class="result"> extends MockFunction</span>
       </span>
       </h4>
       
@@ -446,7 +328,7 @@ call logging.</p>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="org.scalamock.MockFunction" data-isabs="true">
+    </li><li visbl="pub" name="org.scalamock.MockFunction" data-isabs="false">
       <a id="MockFunction:MockFunction"></a>
       <h4 class="signature">
       <span class="kind">class</span>
@@ -456,7 +338,7 @@ call logging.</p>
         <span class="result"> extends AnyRef</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>abstract </dd></dl></div>
+      
     </li><li visbl="pub" name="org.scalamock.MockFunction0" data-isabs="false">
       <a id="MockFunction0:MockFunction0[R]"></a>
       <h4 class="signature">
@@ -922,28 +804,6 @@ verbose error messages.</p>
       <span class="kind">package</span>
       <span class="symbol"> 
         <a href="annotation/package.html"><span class="name">annotation</span></a>
-        
-        
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.junit3" data-isabs="false">
-      <a id="junit3:junit3"></a>
-      <h4 class="signature">
-      <span class="kind">package</span>
-      <span class="symbol"> 
-        <a href="junit3/package.html"><span class="name">junit3</span></a>
-        
-        
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.scalatest" data-isabs="false">
-      <a id="scalatest:scalatest"></a>
-      <h4 class="signature">
-      <span class="kind">package</span>
-      <span class="symbol"> 
-        <a href="scalatest/package.html"><span class="name">scalatest</span></a>
         
         
       </span>
