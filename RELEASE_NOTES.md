@@ -1,5 +1,6 @@
 Version 2.1:
 
+- Add support for polymorphic (type parameterised) methods
 - Add support for curried methods
 - Fix String constants in Java classes
 - Fix unmocked operators

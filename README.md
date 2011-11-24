@@ -39,6 +39,7 @@ As well as traits (interfaces) and functions, ScalaMock can also mock:
 * Classes
 * Singleton and companion objects (static methods)
 * Object creation (constructor invocation)
+* Polymorphic (type parameterised) methods
 * Classes with private constructors
 * Final classes and classes with final methods
 * Operators (methods with symbolic names)
@@ -46,8 +47,9 @@ As well as traits (interfaces) and functions, ScalaMock can also mock:
 
 Known limitations:
 
-* No support (yet) for type-parameterised methods or classes.
+* No support (yet) for type-parameterised classes.
 * No support (yet) for static methods defined in Java.
+* No support (yet) for methods that take by-name parameters.
 * Methods that take a single tuple argument are broken on 2.9.1 due to a [compiler bug](https://issues.scala-lang.org/browse/SI-5067).
 
 ## Downloading
