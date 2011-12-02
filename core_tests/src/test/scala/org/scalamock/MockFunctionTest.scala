@@ -310,6 +310,11 @@ class MockFunctionTest extends WordSpec with MockFactory {
       expect("a helpful name") { m.toString }
     }
 
+    "have the name we gave a ProxyMockFunction" in {
+      val m = new ProxyMockFunction(this, Symbol("a helpful name"))
+      expect("a helpful name") { m.toString }
+    }
+
     "match a simple predicate" in {
       val m = mockFunction[Int, Double, String]
       
