@@ -21,6 +21,7 @@
 package org.scalamock
 
 private[scalamock] class ProxyMockFunction(factory: MockFactoryBase, name: Symbol) extends MockFunction(factory, name) {
+  override def toString = name.name.toString
   
   def apply(args: Array[AnyRef]) = handle(if (args != null) args.map(_.asInstanceOf[Any]) else Array[Any]())
 
