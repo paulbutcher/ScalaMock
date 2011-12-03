@@ -29,7 +29,7 @@ object ScalaMockBuild extends Build {
   
   override lazy val settings = super.settings ++ Seq(
     organization := "org.scalamock",
-    version := "2.1",
+    version := "2.2-SNAPSHOT",
     crossScalaVersions := Seq("2.8.1", "2.8.2", "2.9.0", "2.9.0-1", "2.9.1"),
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings"),
 
