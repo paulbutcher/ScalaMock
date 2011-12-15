@@ -1,0 +1,7 @@
+TM_GIT         = "/usr/bin/git"
+excludeDirectories = "target"
+tabSize        = 2
+softTabs       = true
+
+[ *.{java} ]
+tabSize        = 4
