@@ -154,10 +154,10 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     lazy val name = symbol.name
     lazy val decoded = name.decode
     lazy val isConstructor = symbol.isConstructor
-    lazy val applied = appliedType(tpe, List.fill(typeParams.length)(AnyClass.tpe)) 
-    lazy val appliedParams = applied.paramss.flatten
-    lazy val appliedResult = applied.finalResultType
+    lazy val reflectableParams = reflectableType(tpe).paramss.flatten
   }
+  
+  def reflectableType(tpe: Type) = appliedType(tpe, List.fill(tpe.typeParams.length)(AnyClass.tpe))
 
   abstract class Mock(mockSymbol: Symbol, enclosing: Context) extends Context {
     
@@ -517,7 +517,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     }
       
     def forwarderGetMethodParams(info: MethodInfo) =
-      (("\""+ info.name +"\"") +: (paramTypes(info.appliedParams) map (p => "classOf["+ p +"]"))).mkString(", ")
+      (("\""+ info.name +"\"") +: (paramTypes(info.reflectableParams) map (p => "classOf["+ p +"]"))).mkString(", ")
       
     def paramListAsAnyRef(info: MethodInfo) = (info.flatParams map (_.name +": AnyRef")).mkString("(", ", ", ")")
       
