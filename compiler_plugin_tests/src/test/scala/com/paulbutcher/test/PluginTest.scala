@@ -354,4 +354,12 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     
     expect("doubly nested method") { x.nonNestedMethod.nestedClassMethod.doublyNestedMethod }
   }
+  
+  test("parameterised class") {
+    val m = mock[ParameterisedClass[Double, List[String]]]
+    
+    m.expects.normalMethod(42, "foo") returning "normalMethod called"
+    
+    expect("normalMethod called") { m.normalMethod(42, "foo") }
+  }
 }

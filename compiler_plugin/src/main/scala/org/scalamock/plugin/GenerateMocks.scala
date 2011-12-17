@@ -35,8 +35,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
   val runsAfter = List[String]("typer")
   val phaseName = "generatemocks"
   
-  val mocks = new ListBuffer[(String, String)]
-  val mockObjects = new ListBuffer[(String, String)]
+  val mocks = new ListBuffer[Mock]
+  val mockObjects = new ListBuffer[Mock]
   
   lazy val MockAnnotation = definitions.getClass("org.scalamock.annotation.mock")
   lazy val MockWithCompanionAnnotation = definitions.getClass("org.scalamock.annotation.mockWithCompanion")
@@ -123,16 +123,18 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     "}"
     
   def toMockMethods =
-    (mocks map { case (target, mock) => mockFactoryEntry(target, mock) }).mkString("\n")
+    (mocks.zipWithIndex map mockFactoryEntry _).mkString("\n")
   
   def mockObjectMethods =
-    (mockObjects map { case (target, mock) => mockObjectEntry(target, mock) }).mkString("\n")
+    (mockObjects map mockObjectEntry _).mkString("\n")
   
-  def mockFactoryEntry(target: String, mock: String) =
-    "  implicit def toMock(m: "+ target +") = m.asInstanceOf["+ mock +"]"
+  def mockFactoryEntry(m: (Mock, Int)) = m match { case (mock, index) =>
+    "  implicit def toMock$"+ index + mock.typeParamsString +"(m: "+ mock.fullClassName +
+    ") = m.asInstanceOf["+ mock.fullMockTraitOrClassName + mock.typeParamsString +"]"
+  }
     
-  def mockObjectEntry(target: String, mock: String) =
-    "  def mockObject(x: "+ target +".type) = objectToMock["+ mock +"](x)"
+  def mockObjectEntry(mock: Mock) = "  def mockObject(x: "+ mock.fullClassName +
+    ".type) = objectToMock["+ mock.fullMockTraitOrClassName +"](x)"
     
   trait Context {
     val topLevel: Boolean
@@ -222,8 +224,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       "}"
       
     def getTest: String = {
-      val mapping = (fullClassName -> fullMockTraitOrClassName)
-      recordMapping(mapping)
+      recordMock()
 
       mockTraitOrClassDeclaration +" {\n\n"+
         expectForwarders +"\n\n"+
@@ -241,8 +242,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     
     def indent(s: String) = "  " + new Regex("\n").replaceAllIn(s, "\n  ")
 
-    def recordMapping(mapping: (String, String)) {
-      mocks += mapping
+    def recordMock() {
+      mocks += this
     }
 
     lazy val mockClassEntries = 
@@ -254,9 +255,10 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     lazy val packageStatement = "package "+ packageName +";"
 
     lazy val mockedTypeDeclaration =
-      classOrObject +" extends "+ (javaFeaturesParent ++ parents :+ mockTraitOrClassName).mkString(" with ")
+      classOrObject +" extends "+ (javaFeaturesParent ++ parents :+ mockTraitInstance).mkString(" with ")
         
-    lazy val classOrObject: String = "class "+ className +"(dummy: org.scalamock.MockConstructorDummy)"
+    lazy val classOrObject: String = "class "+ className + typeParamsString +
+      "(dummy: org.scalamock.MockConstructorDummy)"
       
     lazy val factoryReference = 
       "  protected val factory = {\n"+
@@ -290,7 +292,9 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
 
     lazy val mockMembers = (methodsToMock map mockMember _).mkString("\n")
     
-    lazy val mockTraitOrClassDeclaration = "trait "+ mockTraitOrClassName
+    lazy val mockTraitOrClassDeclaration = "trait "+ mockTraitOrClassName + typeParamsString
+    
+    lazy val mockTraitInstance = mockTraitOrClassName + typeParamsString
         
     lazy val packageName = mockSymbol.enclosingPackage.fullName.toString
 
@@ -376,9 +380,13 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       superMethod != NoSymbol && !superMethod.isDeferred
     }
     
-    def typeParamsString(info: MethodInfo) =
-      if (!info.typeParams.isEmpty )
-    	(info.typeParams map (_.defString) mkString ("[", ",", "]"))
+    def typeParamsString: String = typeParamsString(mockSymbol.typeParams)
+    
+    def typeParamsString(info: MethodInfo): String = typeParamsString(info.typeParams)
+    
+    def typeParamsString(typeParams: List[Symbol]): String =
+      if (!typeParams.isEmpty )
+        (typeParams map (_.defString) mkString ("[", ", ", "]"))
       else
         ""
     
@@ -581,7 +589,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     override lazy val mockTraitEntries = mockClassEntries
 
     override lazy val mockTraitOrClassDeclaration = 
-      "class "+ mockTraitOrClassName +"(dummy: org.scalamock.MockConstructorDummy) extends "+ className
+      "class "+ mockTraitOrClassName + typeParamsString +
+      "(dummy: org.scalamock.MockConstructorDummy) extends "+ className
 
     override def mockBodyNormal(info: MethodInfo) = mockBodySimple(info)
 
@@ -609,8 +618,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
 
     override def getMockTraitOrClassName = "Mock$$"+ className
 
-    override def recordMapping(mapping: (String, String)) {
-      mockObjects += mapping
+    override def recordMock() {
+      mockObjects += this
     }
 
     override lazy val classOrObject = "object "+ className
