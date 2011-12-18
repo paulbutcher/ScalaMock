@@ -304,7 +304,9 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     
     lazy val mockTraitOrClassName = getMockTraitOrClassName
     
-    lazy val methodsToMock = getMethodsToMock
+    lazy val methodsToMock = getMethodsToMock map { method =>
+      MethodInfo(method, method.info.asSeenFrom(mockSymbol.thisType, method.owner))
+    }
       
     lazy val mockMethodNames = methodNames("mock")
     
@@ -354,7 +356,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       
     def qualify(name: String) = packageName +"."+ name
     
-    def mockMethod(method: Symbol) = handleMethod(method) { info =>
+    def mockMethod(info: MethodInfo) = {
       if (info.isConstructor)
         mockMethodConstructor(info)
       else
@@ -423,7 +425,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     def constructorParamTypes(info: MethodInfo) =
       (info.flatParams map (p => "classOf["+ p.tpe +"]")).mkString(", ")
 
-    def expectForwarder(method: Symbol) = handleMethod(method) { info =>
+    def expectForwarder(info: MethodInfo) = {
       if (info.isConstructor)
         expectForwarderConstructor(info)
       else
@@ -482,14 +484,14 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       mockMethodNames(info.symbol) +".toTypeSafeExpectation"+ info.flatParams.length + 
       	fixedTypes(paramTypes(info.flatParams) :+ info.result).mkString("[", ", ", "]")
     
-    def cachedMockMethod(method: Symbol): String = handleMethod(method) { info =>
+    def cachedMockMethod(info: MethodInfo): String = {
       "    private lazy val "+ mockMethodNames(info.symbol) +" = "+ cacheLookup(info)
     }
       
     def cacheLookup(info: MethodInfo) = "clazz.getMethod(\""+ mockMethodNames(info.symbol) +"\").invoke("+
       mockTraitOrClassName +".this).asInstanceOf["+ mockFunction(info) +"]"
 
-    def mockMember(method: Symbol): String = handleMethod(method) { info =>
+    def mockMember(info: MethodInfo): String = {
       "  protected lazy val "+ mockMethodNames(info.symbol) +" = new "+ mockFunction(info) +
       "(factory, Symbol(\""+ info.decoded +"\"))"
     }
@@ -507,9 +509,10 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
         
     def paramTypes(params: List[Symbol]) = params map (_.tpe)
     
-    def methodNames(prefix: String) = (methodsToMock.zipWithIndex map { case (m, i) => (m -> (prefix +"$"+ i)) }).toMap
+    def methodNames(prefix: String) = 
+      (methodsToMock.zipWithIndex map { case (m, i) => (m.symbol -> (prefix +"$"+ i)) }).toMap
     
-    def forwardMethod(method: Symbol): String = handleMethod(method) { info =>
+    def forwardMethod(info: MethodInfo): String = {
       "  private lazy val "+ forwarderNames(info.symbol) +" = {\n"+
       "    val method = forwardTo$Mocks.getClass.getMethod("+ forwarderGetMethodParams(info) +")\n"+
       "    "+ paramListAsAnyRef(info) +" => method.invoke(forwardTo$Mocks"+ forwardForwarderParams(info) +")\n"+
@@ -533,11 +536,6 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
         erasure.erasure(t)
       else
         t
-        
-    def handleMethod(method: Symbol)(handler: MethodInfo => String) = {
-      val tpe = method.info.asSeenFrom(mockSymbol.thisType, method.owner)
-      handler(MethodInfo(method, tpe))
-    }
         
     def javaValueForwarder(value: Symbol) =
       "  public static "+ javaType(value.info) +" "+ value.name +" = "+ fieldGetter(value)
@@ -583,7 +581,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     
     override def getMock =
       "trait "+ className +" {\n\n"+
-        (methodsToMock map methodDeclaration _).mkString("\n") +"\n"+
+        (methodsToMock map methodDeclarationWithReturnType _).mkString("\n") +"\n"+
       "}"
     
     override lazy val mockTraitEntries = mockClassEntries
@@ -595,8 +593,6 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     override def mockBodyNormal(info: MethodInfo) = mockBodySimple(info)
 
     override def getMethodsToMock = super.getMethodsToMock filter (!_.isConstructor)
-
-    def methodDeclaration(method: Symbol) = handleMethod(method){ methodDeclarationWithReturnType _ }
   }
   
   class MockObject(mockSymbol: Symbol) extends Mock(mockSymbol, TopLevel) {
