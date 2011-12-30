@@ -359,7 +359,19 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     val m = mock[ParameterisedClass[Double, List[String]]]
     
     m.expects.normalMethod(42, "foo") returning "normalMethod called"
+    m.expects.referencesParameters(1.23, List("foo", "bar")) returning "referencesParameters called"
+    m.expects.polymorphic(true, 3.14) returning "polymorphic called"
     
     expect("normalMethod called") { m.normalMethod(42, "foo") }
+    expect("referencesParameters called") { m.referencesParameters(1.23, List("foo", "bar")) }
+    expect("polymorphic called") { m.polymorphic(true, 3.14) }
+  }
+  
+  test("unmocked parameterised class") {
+    val x = new ParameterisedClass[Double, List[String]]
+
+    expect("normalMethod: (42,foo)") { x.normalMethod(42, "foo") }
+    expect("referencesParameters: (1.23,List(foo, bar))") { x.referencesParameters(1.23, List("foo", "bar")) }
+    expect("polymorphic: (true,3.14)") { x.polymorphic(true, 3.14) }
   }
 }
