@@ -146,7 +146,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     val fullMockTraitOrClassName = null
   }
   
-  case class MethodInfo(symbol: Symbol, tpe: Type) {
+  case class MethodInfo(symbol: Symbol, reflectable: Type, enclosing: Mock) {
+    lazy val tpe = symbol.info.asSeenFrom(enclosing.mockSymbol.thisType, symbol.owner)
     lazy val params = tpe.paramss
     lazy val result = tpe.finalResultType
     lazy val typeParams = tpe.typeParams
@@ -154,12 +155,12 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     lazy val name = symbol.name
     lazy val decoded = name.decode
     lazy val isConstructor = symbol.isConstructor
-    lazy val reflectableParams = reflectableType(tpe).paramss.flatten
+    lazy val reflectableParams = toReflectableType(reflectable).paramss.flatten
   }
   
-  def reflectableType(tpe: Type) = appliedType(tpe, List.fill(tpe.typeParams.length)(AnyClass.tpe))
+  def toReflectableType(tpe: Type) = appliedType(tpe, List.fill(tpe.typeParams.length)(AnyClass.tpe))
 
-  abstract class Mock(mockSymbol: Symbol, enclosing: Context) extends Context {
+  abstract class Mock(val mockSymbol: Symbol, val enclosing: Context) extends Context {
     
     val topLevel = false
     
@@ -304,8 +305,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     
     lazy val mockTraitOrClassName = getMockTraitOrClassName
     
-    lazy val methodsToMock = getMethodsToMock map { method =>
-      MethodInfo(method, method.info.asSeenFrom(mockSymbol.thisType, method.owner))
+    lazy val methodsToMock = getMethodsToMock map { case (m, r) =>
+      MethodInfo(m, r, this)
     }
       
     lazy val mockMethodNames = methodNames("mock")
@@ -345,10 +346,20 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       (javaValues map javaValueForwarder _).mkString("\n")
       
     lazy val javaFeaturesParent = if (hasJavaFeatures) List(javaFeaturesClassName) else List()
+    
+      lazy val reflectableType = toReflectableType(mockSymbol.typeConstructor)
   
-    def getMethodsToMock = mockSymbol.info.nonPrivateMembers filter { s => 
-        s.isMethod && !isMemberOfObject(s) && !s.isMixinConstructor
+    def getMethodsToMock = {
+      val members = mockSymbol.info.nonPrivateMembers
+      val reflectableMemberTypes = reflectableType.nonPrivateMembers map {
+        case meth: MethodSymbol => meth.typeAsMemberOf(reflectableType)
+        case m => m.info
       }
+      assert(members.length == reflectableMemberTypes.length)
+      (members zip reflectableMemberTypes) filter { case (m, _) =>
+        m.isMethod && !isMemberOfObject(m) && !m.isMixinConstructor
+      }
+    }
       
     def isMemberOfObject(s: Symbol) = !s.isConstructor && (ObjectClass.info.member(s.name) != NoSymbol)
       
@@ -592,7 +603,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
 
     override def mockBodyNormal(info: MethodInfo) = mockBodySimple(info)
 
-    override def getMethodsToMock = super.getMethodsToMock filter (!_.isConstructor)
+    override def getMethodsToMock =
+      super.getMethodsToMock filter { case (m, _) => !m.isConstructor }
   }
   
   class MockObject(mockSymbol: Symbol) extends Mock(mockSymbol, TopLevel) {
@@ -620,7 +632,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
 
     override lazy val classOrObject = "object "+ className
     
-    override def getMethodsToMock = super.getMethodsToMock filter (!_.isConstructor)
+    override def getMethodsToMock =
+      super.getMethodsToMock filter { case (m, _) => !m.isConstructor }
   }
   
   class MockWithCompanion(mockSymbol: Symbol, companionSymbol: Symbol) extends Mock(mockSymbol, TopLevel) {

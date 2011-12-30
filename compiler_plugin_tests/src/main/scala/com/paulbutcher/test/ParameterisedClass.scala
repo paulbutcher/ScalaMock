@@ -22,4 +22,5 @@ package com.paulbutcher.test
 
 class ParameterisedClass[T1, T2] {
   def normalMethod(x: Int, y: String) = "normalMethod: "+ (x, y)
+  def referencesParameters(x: T1, y: T2) = "referencesParameters: "+ (x, y)
 }
