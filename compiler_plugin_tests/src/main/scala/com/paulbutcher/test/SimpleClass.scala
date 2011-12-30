@@ -44,6 +44,7 @@ class SimpleClass {
   
   //! TODO
 //  def byName(x: => Unit) = x; x
+//  def referencesPackageObject(x: TestType) = "referencesPackageObject: "+ x
 }
 
 class SimpleClass2 {
