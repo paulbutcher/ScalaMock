@@ -27,6 +27,8 @@ import org.scalamock.{CallLogging, VerboseErrors}
 
 class JavaTest extends FunSuite with MockFactory with GeneratedMockFactory with VerboseErrors with CallLogging {
   
+  val array = Array("foo", "bar", "baz")
+  
   test("simple class") {
     val m = mock[SimpleJavaClass]
     
@@ -35,6 +37,24 @@ class JavaTest extends FunSuite with MockFactory with GeneratedMockFactory with 
     
     m.methodWithZeroArguments
     expect("Expected return value") { m.methodWithOneArgument(42) }
+  }
+  
+  test("unmocked simple class") {
+    val x = new SimpleJavaClass
+    expect("methodWithOneArgument: 42") { x.methodWithOneArgument(42) }
+  }
+  
+  test("array arguments") {
+    val m = mock[SimpleJavaClass]
+
+    m.expects.methodWithArrayArgument(42, array) returning "Expected return value"
+    
+    expect("Expected return value") { m.methodWithArrayArgument(42, array) }
+  }
+  
+  test("unmocked array arguments") {
+    val x = new SimpleJavaClass
+    expect("methodWithArrayArgument: 42, [foo, bar, baz]") { x.methodWithArrayArgument(42, array) }
   }
   
   test("constants") {

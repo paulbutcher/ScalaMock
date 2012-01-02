@@ -33,6 +33,10 @@ public class SimpleJavaClass {
         return "methodWithTwoArguments: "+ x +", "+ y;
     }
     
+    public String methodWithArrayArgument(int x, String[] ys) {
+      return "methodWithArrayArgument: "+ x +", ["+ ys[0] +", "+ ys[1] +", "+ ys[2] +"]";
+    }
+    
     //! TODO
     // public String methodWithRepeatedParameter(int x, String... ys) {
     //   return "methodWithRepeatedParameter: "+ x +", "+ ys;
