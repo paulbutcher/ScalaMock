@@ -32,4 +32,9 @@ public class SimpleJavaClass {
     public String methodWithTwoArguments(int x, int y) {
         return "methodWithTwoArguments: "+ x +", "+ y;
     }
+    
+    //! TODO
+    // public String methodWithRepeatedParameter(int x, String... ys) {
+    //   return "methodWithRepeatedParameter: "+ x +", "+ ys;
+    // }
 }

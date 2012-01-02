@@ -43,6 +43,7 @@ class SimpleClass {
   def withContextBound[T: ClassManifest] = "erasure is: "+ classManifest[T].erasure
   
   //! TODO
+//  def repeatedParameter(x: Int, ys: String*) = "repeatedParameter: "+ (x, ys)
 //  def byName(x: => Unit) = x; x
 //  def referencesPackageObject(x: TestType) = "referencesPackageObject: "+ x
 }
