@@ -101,6 +101,8 @@ trait MockFactoryBase {
   }
   protected implicit def doubleToEpsilon(d: Double) = new EpsilonMatcher(d)
   
+  protected def **(values: MockParameter[_]*) = new MatchRepeated(values: _*)
+  
   protected implicit def toMockParameter[T](v: T) = new MockParameter(v)
   
   protected implicit def MatchAnyToMockParameter[T](m: MatchAny) = new MockParameter[T](m)

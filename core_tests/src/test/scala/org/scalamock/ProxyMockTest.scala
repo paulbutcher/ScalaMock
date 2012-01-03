@@ -23,7 +23,7 @@ package org.scalamock
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.Suite
 
-class ProxyMockTest extends Suite with MockFactory with ProxyMockFactory {
+class ProxyMockTest extends Suite with MockFactory with ProxyMockFactory with VerboseErrors {
   
   autoVerify = false
   
@@ -82,11 +82,12 @@ class ProxyMockTest extends Suite with MockFactory with ProxyMockFactory {
   def testRepeatedParameters {
     val m = mock[Turtle]
     
-    m expects 'moveInSequence withArguments(Seq((1.0, 1.0)))
-    m expects 'moveInSequence withArguments(Seq((2.0, 2.0), (-1.0, -2.0), (10.0, 0.0)))
+    m expects 'moveInSequence withArguments(**((1.0, 1.0)))
+    m expects 'moveInSequence withArguments(**((2.0, 2.0), (-1.0, -2.0), *)) anyNumberOfTimes
     
     m.moveInSequence((1.0, 1.0))
     m.moveInSequence((2.0, 2.0), (-1.0, -2.0), (10.0, 0.0))
+    m.moveInSequence((2.0, 2.0), (-1.0, -2.0), (1.0, 2.0))
     
     verifyExpectations
   }
