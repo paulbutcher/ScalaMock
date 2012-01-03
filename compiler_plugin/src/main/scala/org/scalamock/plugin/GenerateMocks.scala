@@ -516,11 +516,6 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       else
         "org.scalamock.MockFunction"
         
-    def paramTypes(params: Option[List[Symbol]]): List[Type] = params match {
-      case Some(ps) => paramTypes(ps)
-      case None => Nil
-    }
-        
     def paramTypes(params: List[Symbol]) = params map (_.tpe)
     
     def methodNames(prefix: String) = 
