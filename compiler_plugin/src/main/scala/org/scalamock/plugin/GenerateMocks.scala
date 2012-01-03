@@ -451,8 +451,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       
     def forwarderDeclarationConstructor(info: MethodInfo) = "    def newInstance"+ forwarderParams(info)
         
-    def forwarderDeclarationNormal(info: MethodInfo) = "    def "+ info.decoded + typeParamsString(info) + forwarderParams(info) +
-      overloadDisambiguation(info) +": "+ expectationType(info)
+    def forwarderDeclarationNormal(info: MethodInfo) =
+      "    def "+ info.decoded + typeParamsString(info) + forwarderParams(info) + overloadDisambiguation(info)
         
     def matchingForwarder(info: MethodInfo) =
       if (info.flatParams.length > 0) {
@@ -485,9 +485,6 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
         ""
     }
     
-    def expectationType(info: MethodInfo) = "org.scalamock.TypeSafeExpectation"+
-      info.flatParams.length +"["+ fixedTypes(paramTypes(info.flatParams) :+ info.result).mkString(", ") +"]"
-        
     def forwarderBody(info: MethodInfo) =
       mockFunctionToExpectation(info) +".expects("+ forwardParams(info) +")"
       
