@@ -57,6 +57,14 @@ class JavaTest extends FunSuite with MockFactory with GeneratedMockFactory with 
     expect("methodWithArrayArgument: 42, [foo, bar, baz]") { x.methodWithArrayArgument(42, array) }
   }
   
+  ignore("repeated parameter") {
+    val m = mock[SimpleJavaClass]
+    
+    m.expects.methodWithRepeatedParameter(42, Array("foo", "bar", "baz")) returning "Expected return value"
+    
+    expect("ExpectedReturnValue") { m.methodWithRepeatedParameter(42, "foo", "bar", "baz") }
+  }
+  
   test("constants") {
     expect(1) { JavaClassWithConstants.INT_CONSTANT }
     expect(2) { JavaClassWithConstants.INTEGER_CONSTANT }

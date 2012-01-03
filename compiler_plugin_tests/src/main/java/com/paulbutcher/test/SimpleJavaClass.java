@@ -37,8 +37,7 @@ public class SimpleJavaClass {
       return "methodWithArrayArgument: "+ x +", ["+ ys[0] +", "+ ys[1] +", "+ ys[2] +"]";
     }
     
-    //! TODO
-    // public String methodWithRepeatedParameter(int x, String... ys) {
-    //   return "methodWithRepeatedParameter: "+ x +", "+ ys;
-    // }
+    public String methodWithRepeatedParameter(int x, String... ys) {
+      return "methodWithRepeatedParameter: "+ x +", "+ ys;
+    }
 }
