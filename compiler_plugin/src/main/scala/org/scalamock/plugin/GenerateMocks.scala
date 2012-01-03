@@ -476,7 +476,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     def forwarderParam(parameter: Symbol) = {
       val t = parameter.tpe
       parameter.name +": org.scalamock.MockParameter"+ (
-        if (isRepeatedParamType(t)) "[Seq["+ t.typeArgs.head +"]]" else "["+ t +"]")
+        if (isRepeatedParamType(t)) "["+ t.typeArgs.head +"]*" else "["+ t +"]")
     }
     
     def implicitIfNecessary(params: List[Symbol]) = if (params.nonEmpty && params.head.isImplicit) "implicit " else ""
@@ -495,7 +495,16 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     }
     
     def forwarderBody(info: MethodInfo) =
-      mockFunctionToExpectation(info) +".expects("+ forwardParams(info) +")"
+      mockFunctionToExpectation(info) +".expects("+ forwardExpectationParams(info) +")"
+      
+    def forwardExpectationParams(info: MethodInfo) = {
+        info.flatParams map { p =>
+          if (isRepeatedParamType(p.info))
+            "new org.scalamock.MockParameter(new org.scalamock.MatchRepeated("+ p.name +": _*))"
+          else
+            p.name
+        }
+      }.mkString(", ")
       
     def mockFunctionToExpectation(info: MethodInfo) =
       mockMethodNames(info.symbol) +".toTypeSafeExpectation"+ info.flatParams.length + 
@@ -545,7 +554,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       
     def fixedType(t: Type) = 
       if (isRepeatedParamType(t))
-        "Seq["+ t.typeArgs.head +"]"
+        "org.scalamock.MatchRepeated"
       else if (t.typeSymbol.isNestedClass)
         erasure.erasure(t).toString
       else

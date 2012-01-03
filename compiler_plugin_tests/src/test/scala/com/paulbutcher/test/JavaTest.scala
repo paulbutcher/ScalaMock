@@ -60,7 +60,7 @@ class JavaTest extends FunSuite with MockFactory with GeneratedMockFactory with 
   ignore("repeated parameter") {
     val m = mock[SimpleJavaClass]
     
-    m.expects.methodWithRepeatedParameter(42, Array("foo", "bar", "baz")) returning "Expected return value"
+    m.expects.methodWithRepeatedParameter(42, "foo", "bar", "baz") returning "Expected return value"
     
     expect("ExpectedReturnValue") { m.methodWithRepeatedParameter(42, "foo", "bar", "baz") }
   }
