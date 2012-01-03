@@ -155,7 +155,9 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     lazy val name = symbol.name
     lazy val decoded = name.decode
     lazy val isConstructor = symbol.isConstructor
-    lazy val reflectableParams = toReflectableType(reflectable).paramss.flatten
+    lazy val reflectableParams = toReflectableType(reflectable).paramss.flatten map { t =>
+        if (isRepeatedParamType(t.info)) "Seq[_]" else t.info.toString
+      }
   }
   
   def toReflectableType(tpe: Type) = appliedType(tpe, List.fill(tpe.typeParams.length)(AnyClass.tpe))
@@ -468,7 +470,11 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     def forwarderParamList(params: List[Symbol]): String = 
       (params map forwarderParam _).mkString("("+ implicitIfNecessary(params), ", ", ")") 
       
-    def forwarderParam(parameter: Symbol) = parameter.name +": org.scalamock.MockParameter["+ parameter.tpe +"]"
+    def forwarderParam(parameter: Symbol) = {
+      val t = parameter.tpe
+      parameter.name +": org.scalamock.MockParameter"+ (
+        if (isRepeatedParamType(t)) "[Seq["+ t.typeArgs.head +"]]" else "["+ t +"]")
+    }
     
     def implicitIfNecessary(params: List[Symbol]) = if (params.nonEmpty && params.head.isImplicit) "implicit " else ""
     
@@ -528,7 +534,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     }
       
     def forwarderGetMethodParams(info: MethodInfo) =
-      (("\""+ info.name +"\"") +: (paramTypes(info.reflectableParams) map (p => "classOf["+ p +"]"))).mkString(", ")
+      (("\""+ info.name +"\"") +: (info.reflectableParams map (p => "classOf["+ p +"]"))).mkString(", ")
       
     def paramListAsAnyRef(info: MethodInfo) = (info.flatParams map (_.name +": AnyRef")).mkString("(", ", ", ")")
       
@@ -540,10 +546,12 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     def fixedTypes(ts: List[Type]) = ts map fixedType _
       
     def fixedType(t: Type) = 
-      if (t.typeSymbol.isNestedClass)
-        erasure.erasure(t)
+      if (isRepeatedParamType(t))
+        "Seq["+ t.typeArgs.head +"]"
+      else if (t.typeSymbol.isNestedClass)
+        erasure.erasure(t).toString
       else
-        t
+        t.toString
         
     def javaValueForwarder(value: Symbol) =
       "  public static "+ javaType(value.info) +" "+ value.name +" = "+ fieldGetter(value)

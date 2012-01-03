@@ -42,8 +42,9 @@ class SimpleClass {
   def withViewBound[T <% Ordered[T]](x: T, y: T) = x < y
   def withContextBound[T: ClassManifest] = "erasure is: "+ classManifest[T].erasure
   
+  def repeatedParameter(x: Int, ys: String*) = "repeatedParameter: "+ (x, ys)
+
   //! TODO
-//  def repeatedParameter(x: Int, ys: String*) = "repeatedParameter: "+ (x, ys)
 //  def byName(x: => Unit) = x; x
 //  def referencesPackageObject(x: TestType) = "referencesPackageObject: "+ x
 }
