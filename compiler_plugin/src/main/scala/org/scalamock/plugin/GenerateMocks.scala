@@ -152,15 +152,25 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     lazy val result = tpe.finalResultType
     lazy val typeParams = tpe.typeParams
     lazy val flatParams = params.flatten
+    lazy val paramTypes = flatParams map (t => fixedType(t.tpe))
     lazy val name = symbol.name
     lazy val decoded = name.decode
     lazy val isConstructor = symbol.isConstructor
     lazy val reflectableParams = toReflectableType(reflectable).paramss.flatten map { t =>
         if (isRepeatedParamType(t.info)) "Seq[_]" else t.info.toString
       }
+    lazy val expectationParamTypes = paramTypes map { t =>
+        if (isRepeatedParamType(t)) "org.scalamock.MatchRepeated" else t.toString
+      }
   }
   
   def toReflectableType(tpe: Type) = appliedType(tpe, List.fill(tpe.typeParams.length)(AnyClass.tpe))
+      
+  def fixedType(t: Type) = 
+    if (t.typeSymbol.isNestedClass)
+      erasure.erasure(t)
+    else
+      t
 
   abstract class Mock(val mockSymbol: Symbol, val enclosing: Context) extends Context {
     
@@ -461,8 +471,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
         
     def matchingForwarder(info: MethodInfo) =
       if (info.flatParams.length > 0) {
-	    "    def "+ info.decoded + typeParamsString(info) + "(matcher: org.scalamock.MockMatcher"+ info.flatParams.length +"["+ 
-	      fixedTypes(paramTypes(info.flatParams)).mkString(", ") +"])"+ overloadDisambiguation(info) +" = "+
+	    "    def "+ info.decoded + typeParamsString(info) + "(matcher: org.scalamock.MockMatcher"+ info.flatParams.length +
+	      info.expectationParamTypes.mkString("[", ", ", "])") + overloadDisambiguation(info) +" = "+
 	      mockFunctionToExpectation(info) +".expects(matcher)"
       } else {
         ""
@@ -508,7 +518,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       
     def mockFunctionToExpectation(info: MethodInfo) =
       mockMethodNames(info.symbol) +".toTypeSafeExpectation"+ info.flatParams.length + 
-      	fixedTypes(paramTypes(info.flatParams) :+ info.result).mkString("[", ", ", "]")
+      	(info.expectationParamTypes :+ fixedType(info.result)).mkString("[", ", ", "]")
     
     def cachedMockMethod(info: MethodInfo): String = {
       "    private lazy val "+ mockMethodNames(info.symbol) +" = "+ cacheLookup(info)
@@ -528,8 +538,6 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       else
         "org.scalamock.MockFunction"
         
-    def paramTypes(params: List[Symbol]) = params map (_.tpe)
-    
     def methodNames(prefix: String) = 
       (methodsToMock.zipWithIndex map { case (m, i) => (m.symbol -> (prefix +"$"+ i)) }).toMap
     
@@ -549,16 +557,6 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       case Nil => ""
       case _ => ", "+ forwardParams(info)
     }
-
-    def fixedTypes(ts: List[Type]) = ts map fixedType _
-      
-    def fixedType(t: Type) = 
-      if (isRepeatedParamType(t))
-        "org.scalamock.MatchRepeated"
-      else if (t.typeSymbol.isNestedClass)
-        erasure.erasure(t).toString
-      else
-        t.toString
         
     def javaValueForwarder(value: Symbol) =
       "  public static "+ javaType(value.info) +" "+ value.name +" = "+ fieldGetter(value)
