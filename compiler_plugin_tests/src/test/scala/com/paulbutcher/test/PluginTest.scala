@@ -23,9 +23,7 @@ package com.paulbutcher.test
 import org.scalatest.FunSuite
 import org.scalamock.generated.GeneratedMockFactory
 import org.scalamock.scalatest.MockFactory
-import org.scalamock.{CallLogging, ExpectationException, VerboseErrors, MockFunction0}
-
-import scala.runtime.RichInt
+import org.scalamock.{CallLogging, VerboseErrors}
 
 class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory with VerboseErrors with CallLogging {
   
