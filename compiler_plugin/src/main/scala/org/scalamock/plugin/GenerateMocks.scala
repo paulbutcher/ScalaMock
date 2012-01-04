@@ -162,6 +162,9 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     lazy val expectationParamTypes = paramTypes map { t =>
         if (isRepeatedParamType(t)) "org.scalamock.MatchRepeated" else t.toString
       }
+    lazy val matcherParamTypes = paramTypes map { t =>
+        if (isRepeatedParamType(t)) "Seq["+ t.typeArgs.head +"]" else t.toString
+      }
   }
   
   def toReflectableType(tpe: Type) = appliedType(tpe, List.fill(tpe.typeParams.length)(AnyClass.tpe))
@@ -471,9 +474,9 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
         
     def matchingForwarder(info: MethodInfo) =
       if (info.flatParams.length > 0) {
-	    "    def "+ info.decoded + typeParamsString(info) + "(matcher: org.scalamock.MockMatcher"+ info.flatParams.length +
-	      info.expectationParamTypes.mkString("[", ", ", "])") + overloadDisambiguation(info) +" = "+
-	      mockFunctionToExpectation(info) +".expects(matcher)"
+        "    def "+ info.decoded + typeParamsString(info) + "(matcher: org.scalamock.MockMatcher"+ info.flatParams.length +
+        info.matcherParamTypes.mkString("[", ", ", "])") + overloadDisambiguation(info) +" = "+
+        mockFunctionToExpectation(info, info.matcherParamTypes) +".expects(matcher)"
       } else {
         ""
       }
@@ -504,8 +507,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
         ""
     }
     
-    def forwarderBody(info: MethodInfo) =
-      mockFunctionToExpectation(info) +".expects("+ forwardExpectationParams(info) +")"
+    def forwarderBody(info: MethodInfo) = mockFunctionToExpectation(info, info.expectationParamTypes) +
+      ".expects("+ forwardExpectationParams(info) +")"
       
     def forwardExpectationParams(info: MethodInfo) = {
         info.flatParams map { p =>
@@ -516,9 +519,9 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
         }
       }.mkString(", ")
       
-    def mockFunctionToExpectation(info: MethodInfo) =
+    def mockFunctionToExpectation(info: MethodInfo, paramTypes: Seq[String]) =
       mockMethodNames(info.symbol) +".toTypeSafeExpectation"+ info.flatParams.length + 
-      	(info.expectationParamTypes :+ fixedType(info.result)).mkString("[", ", ", "]")
+        (paramTypes :+ fixedType(info.result)).mkString("[", ", ", "]")
     
     def cachedMockMethod(info: MethodInfo): String = {
       "    private lazy val "+ mockMethodNames(info.symbol) +" = "+ cacheLookup(info)

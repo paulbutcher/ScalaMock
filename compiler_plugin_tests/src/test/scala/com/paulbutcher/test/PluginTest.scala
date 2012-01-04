@@ -273,6 +273,14 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     expect("Expected return value") { m.repeatedParameter(42, "foo", "fnagle", "baz") }
   }
   
+  test("repeated parameter with matcher") {
+    val m = mock[SimpleClass]
+    
+    m.expects.repeatedParameter(where { (x: Int, y: Seq[String]) => x == 42 && (y forall (_ == "foo")) }) returning "Expected return value"
+    
+    expect("Expected return value") { m.repeatedParameter(42, "foo", "foo", "foo") }
+  }
+  
   test("unmocked repeated parameter") {
     val x = new SimpleClass
     expect("repeatedParameter: (42,WrappedArray(foo, bar, baz))") { x.repeatedParameter(42, "foo", "bar", "baz") }
