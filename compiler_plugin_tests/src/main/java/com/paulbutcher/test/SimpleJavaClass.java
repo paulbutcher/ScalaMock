@@ -38,6 +38,6 @@ public class SimpleJavaClass {
     }
     
     public String methodWithRepeatedParameter(int x, String... ys) {
-      return "methodWithRepeatedParameter: "+ x +", "+ ys;
+      return "methodWithRepeatedParameter: "+ x +", ["+ ys[0] +", "+ ys[1] +", "+ ys[2] +"]";
     }
 }
