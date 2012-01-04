@@ -423,9 +423,12 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     def mockParamList(params: List[Symbol]) = 
       (params map parameterDeclaration _).mkString("(", ", ", ")")
       
-    def parameterDeclaration(parameter: Symbol) = {
-      val t = parameter.tpe
-      parameter.name +": "+ (if (isRepeatedParamType(t)) t.typeArgs.head.toString +"*" else t.toString)
+    def parameterDeclaration(parameter: Symbol) = parameter.name +": "+ parameterType(parameter.tpe)
+    
+    def parameterType(t: Type) = t match {
+      case _ if isScalaRepeatedParamType(t) => t.typeArgs.head.toString +"*"
+      case _ if isJavaRepeatedParamType(t) => "Array["+ t.typeArgs.head +"]"
+      case _ => t.toString
     }
     
     def mockBodyConstructor(info: MethodInfo) = "{\n"+
