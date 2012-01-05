@@ -28,7 +28,7 @@ import java.io.{File, FileWriter}
 import scala.collection.mutable.{ListBuffer, Map}
 import scala.util.matching.Regex
 
-class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginComponent {
+class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginComponent with Utils {
   import global._
   import definitions._
   

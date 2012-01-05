@@ -86,7 +86,7 @@ object ScalaMockBuild extends Build {
       publishLocal := ()
     )
 
-  lazy val compiler_plugin = Project("compiler_plugin", file("compiler_plugin")) settings(
+  lazy val compiler_plugin = Project("compiler_plugin", file("compiler_plugin")) settings(versionSpecificSettings: _*) settings(
       name := "ScalaMock Compiler Plugin",
       libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-compiler" % _)
     ) dependsOn(core)
