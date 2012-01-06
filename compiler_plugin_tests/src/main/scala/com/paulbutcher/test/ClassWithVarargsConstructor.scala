@@ -20,31 +20,6 @@
 
 package com.paulbutcher.test
 
-import org.scalamock.annotation.{mock, mockObject, mockWithCompanion}
-
-@mock[SimpleClass] 
-@mock[SimpleClass2]
-@mock[SimpleClass3]
-@mock[SimpleClass4]
-@mock[FinalClass]
-@mock[ClassWithFinalMethod]
-@mock[AbstractClass]
-@mock[SimpleTrait]
-@mock[ClassWithNonTrivialConstructor]
-@mock[ClassWithVarargsConstructor]
-@mock[ClassWithOverloadedMethods]
-@mock[ClassWithPrivateConstructor]
-@mock[ClassWithValsAndVars]
-@mock[DerivedClass]
-@mock[ClassWithNestedTypes]
-@mock[ClassThatOverridesObjectMethods]
-@mock[SimpleJavaClass]
-@mock[JavaClassWithConstants]
-@mock[JavaClassWithStaticVars]
-@mock[JavaClassWithStaticMethods]
-@mock[ClassWithParameterisedParent]
-@mock[ParameterisedClass[_, _]]
-@mockObject(SimpleObject)
-@mockWithCompanion[ClassWithCompanionObject]
-@mockWithCompanion[TraitWithCompanionObject]
-class Dummy
+class ClassWithVarargsConstructor(args: Int*) {
+  def getArgs: Seq[Int] = args
+}

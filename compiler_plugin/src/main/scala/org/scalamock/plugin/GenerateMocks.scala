@@ -461,7 +461,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       (info.flatParams map (_.name +".asInstanceOf[AnyRef]")).mkString("(", ", ", ")")
       
     def constructorParamTypes(info: MethodInfo) =
-      (info.flatParams map (p => "classOf["+ p.tpe +"]")).mkString(", ")
+      (info.reflectableParams map (p => "classOf["+ p +"]")).mkString(", ")
 
     def expectForwarder(info: MethodInfo) = {
       if (info.isConstructor)
