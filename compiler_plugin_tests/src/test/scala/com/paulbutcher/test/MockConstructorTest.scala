@@ -56,6 +56,19 @@ class MockConstructorTest extends Suite with MockFactory with GeneratedMockFacto
     val x = new ClassWithVarargsConstructor(2, 4, 6, 8)
     expect(Seq(2, 4, 6, 8)) { x.getArgs }
   }
+
+  def testExpectNewJavaInstanceWithRepeatedArgs {
+    val m = mock[JavaClassWithVarargsConstructor]
+    
+    m.expects.newInstance("foo", "bar", "baz")
+    m.expects.getArgs returning Array("this", "that")
+    
+    new JavaClassWithVarargsConstructor("foo", "bar", "baz")
+    expect(Seq("this", "that")) { m.getArgs.toSeq }
+    
+    val x = new JavaClassWithVarargsConstructor("tom", "dick", "harry")
+    expect(Seq("tom", "dick", "harry")) { x.getArgs.toSeq }
+  }
   
   def testThrowingConstructor {
     val m = mock[ClassWithNonTrivialConstructor]
