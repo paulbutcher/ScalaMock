@@ -65,6 +65,16 @@ class JavaTest extends FunSuite with MockFactory with GeneratedMockFactory with 
     expect("Expected return value") { m.methodWithRepeatedParameter(42, "foo", "bar", "baz") }
   }
   
+  test("repeated parameter with matcher") {
+    val m = mock[SimpleJavaClass]
+    
+    m.expects.methodWithRepeatedParameter(where { (x: Int, y: Array[String]) =>
+        x == 42 && (y sameElements Seq("foo", "bar", "baz"))
+      })
+      
+      m.methodWithRepeatedParameter(42, "foo", "bar", "baz")
+  }
+  
   test("unmocked repeated parameter") {
     val x = new SimpleJavaClass
     expect("methodWithRepeatedParameter: 42, [foo, bar, baz]") { x.methodWithRepeatedParameter(42, "foo", "bar", "baz") }

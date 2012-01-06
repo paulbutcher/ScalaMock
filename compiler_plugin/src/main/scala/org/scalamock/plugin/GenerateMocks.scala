@@ -168,7 +168,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
         case t => t.toString
       }
     lazy val matcherParamTypes = paramTypes map {
-        case t if isRepeatedParamType(t) => "Seq["+ t.typeArgs.head +"]"
+        case t if isScalaRepeatedParamType(t) => "Seq["+ t.typeArgs.head +"]"
+        case t if isJavaRepeatedParamType(t) => "Array["+ t.typeArgs.head +"]"
         case t => t.toString
       }
   }
