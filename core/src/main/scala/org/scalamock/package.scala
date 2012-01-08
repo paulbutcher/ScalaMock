@@ -185,6 +185,22 @@ package org
  * m(42.1)
  * }}}
  *
+ * ====Repeated parameters====
+ *
+ * If you're using generated mocks, you need do nothing special to set expectations on methods
+ * that take repeated parameters. If you're using proxy mocks you will need to use
+ * the `**` operator. For example, given:
+ *
+ * {{{
+ * def takesRepeatedParameter(x: Int, ys: String*)
+ * }}}
+ *
+ * you can set an expectation with:
+ * 
+ * {{{
+ * m expects 'takesRepeatedParameter withArgs(42, **("red", "green", "blue"))
+ * }}}
+ *
  * ====Predicate matching====
  *
  * More complicated argument matching can be implemented by using `where` to pass a predicate:
