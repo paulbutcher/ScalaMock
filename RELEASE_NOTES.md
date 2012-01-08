@@ -1,3 +1,8 @@
+Version 2.2:
+
+- Add support for repeated parameters (varargs)
+- Basic parameterised class support
+
 Version 2.1:
 
 - Add support for polymorphic (type parameterised) methods
