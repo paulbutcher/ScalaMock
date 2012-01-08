@@ -24,13 +24,13 @@
       <span class="symbol"> 
         <span class="name">MockFunction4</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends <a name="org.scalamock.MockFunction" class="extype" href="MockFunction.html">MockFunction</a> with (T1, T2, T3, T4) ⇒ R</span>
+        <span class="result"> extends <a name="org.scalamock.MockFunction" class="extype" href="MockFunction.html">MockFunction</a> with (T1, T2, T3, T4) ⇒ R with <a name="org.scalamock.NiceToString" class="extype" href="NiceToString.html">NiceToString</a></span>
       </span>
       </h4>
       
           <div class="fullcommenttop" id="comment"><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent">(T1, T2, T3, T4) ⇒ R, <a name="org.scalamock.MockFunction" class="extype" href="MockFunction.html">MockFunction</a>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+          <div class="superTypes hiddenContent"><a name="org.scalamock.NiceToString" class="extype" href="NiceToString.html">NiceToString</a>, (T1, T2, T3, T4) ⇒ R, <a name="org.scalamock.MockFunction" class="extype" href="MockFunction.html">MockFunction</a>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div></div>
         
 
@@ -46,7 +46,7 @@
                 <span class="filtertype">Inherited</span>
                 <ol><li class="hideall out"><span>Hide All</span></li>
                 <li class="showall in"><span>Show all</span></li></ol>
-                <ol id="linearization"><li name="org.scalamock.MockFunction4" class="in"><span>MockFunction4</span></li><li name="scala.Function4" class="in"><span>Function4</span></li><li name="org.scalamock.MockFunction" class="in"><span>MockFunction</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+                <ol id="linearization"><li name="org.scalamock.MockFunction4" class="in"><span>MockFunction4</span></li><li name="org.scalamock.NiceToString" class="in"><span>NiceToString</span></li><li name="scala.Function4" class="in"><span>Function4</span></li><li name="org.scalamock.MockFunction" class="in"><span>MockFunction</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
               </div>
           <div id="visbl">
               <span class="filtertype">Visibility</span>
@@ -302,7 +302,7 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>final </dd><dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="org.scalamock.MockFunction4#toString" data-isabs="false">
+    </li><li visbl="pub" name="org.scalamock.NiceToString#toString" data-isabs="false">
       <a id="toString():String"></a>
       <h4 class="signature">
       <span class="kind">def</span>
@@ -312,7 +312,128 @@
         <span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="org.scalamock.MockFunction4" class="extype" href="">MockFunction4</a> → Function4 → AnyRef → Any</dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="org.scalamock.NiceToString" class="extype" href="NiceToString.html">NiceToString</a> → AnyRef → Any</dd></dl></div>
+    </li><li visbl="pub" name="org.scalamock.MockFunction#toTypeSafeExpectation0" data-isabs="false">
+      <a id="toTypeSafeExpectation0[R]:TypeSafeExpectation0[R]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">toTypeSafeExpectation0</span>
+        <span class="tparams">[<span name="R">R</span>]</span>
+        <span class="result">: <a name="org.scalamock.TypeSafeExpectation0" class="extype" href="TypeSafeExpectation0.html">TypeSafeExpectation0</a>[R]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="org.scalamock.MockFunction" class="extype" href="MockFunction.html">MockFunction</a></dd></dl></div>
+    </li><li visbl="pub" name="org.scalamock.MockFunction#toTypeSafeExpectation1" data-isabs="false">
+      <a id="toTypeSafeExpectation1[T1, R]:TypeSafeExpectation1[T1, R]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">toTypeSafeExpectation1</span>
+        <span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span>
+        <span class="result">: <a name="org.scalamock.TypeSafeExpectation1" class="extype" href="TypeSafeExpectation1.html">TypeSafeExpectation1</a>[T1, R]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="org.scalamock.MockFunction" class="extype" href="MockFunction.html">MockFunction</a></dd></dl></div>
+    </li><li visbl="pub" name="org.scalamock.MockFunction#toTypeSafeExpectation10" data-isabs="false">
+      <a id="toTypeSafeExpectation10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]:TypeSafeExpectation10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">toTypeSafeExpectation10</span>
+        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="T10">T10</span>, <span name="R">R</span>]</span>
+        <span class="result">: <a name="org.scalamock.TypeSafeExpectation10" class="extype" href="TypeSafeExpectation10.html">TypeSafeExpectation10</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="org.scalamock.MockFunction" class="extype" href="MockFunction.html">MockFunction</a></dd></dl></div>
+    </li><li visbl="pub" name="org.scalamock.MockFunction#toTypeSafeExpectation2" data-isabs="false">
+      <a id="toTypeSafeExpectation2[T1, T2, R]:TypeSafeExpectation2[T1, T2, R]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">toTypeSafeExpectation2</span>
+        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span>
+        <span class="result">: <a name="org.scalamock.TypeSafeExpectation2" class="extype" href="TypeSafeExpectation2.html">TypeSafeExpectation2</a>[T1, T2, R]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="org.scalamock.MockFunction" class="extype" href="MockFunction.html">MockFunction</a></dd></dl></div>
+    </li><li visbl="pub" name="org.scalamock.MockFunction#toTypeSafeExpectation3" data-isabs="false">
+      <a id="toTypeSafeExpectation3[T1, T2, T3, R]:TypeSafeExpectation3[T1, T2, T3, R]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">toTypeSafeExpectation3</span>
+        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span>
+        <span class="result">: <a name="org.scalamock.TypeSafeExpectation3" class="extype" href="TypeSafeExpectation3.html">TypeSafeExpectation3</a>[T1, T2, T3, R]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="org.scalamock.MockFunction" class="extype" href="MockFunction.html">MockFunction</a></dd></dl></div>
+    </li><li visbl="pub" name="org.scalamock.MockFunction#toTypeSafeExpectation4" data-isabs="false">
+      <a id="toTypeSafeExpectation4[T1, T2, T3, T4, R]:TypeSafeExpectation4[T1, T2, T3, T4, R]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">toTypeSafeExpectation4</span>
+        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span>
+        <span class="result">: <a name="org.scalamock.TypeSafeExpectation4" class="extype" href="TypeSafeExpectation4.html">TypeSafeExpectation4</a>[T1, T2, T3, T4, R]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="org.scalamock.MockFunction" class="extype" href="MockFunction.html">MockFunction</a></dd></dl></div>
+    </li><li visbl="pub" name="org.scalamock.MockFunction#toTypeSafeExpectation5" data-isabs="false">
+      <a id="toTypeSafeExpectation5[T1, T2, T3, T4, T5, R]:TypeSafeExpectation5[T1, T2, T3, T4, T5, R]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">toTypeSafeExpectation5</span>
+        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span>
+        <span class="result">: <a name="org.scalamock.TypeSafeExpectation5" class="extype" href="TypeSafeExpectation5.html">TypeSafeExpectation5</a>[T1, T2, T3, T4, T5, R]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="org.scalamock.MockFunction" class="extype" href="MockFunction.html">MockFunction</a></dd></dl></div>
+    </li><li visbl="pub" name="org.scalamock.MockFunction#toTypeSafeExpectation6" data-isabs="false">
+      <a id="toTypeSafeExpectation6[T1, T2, T3, T4, T5, T6, R]:TypeSafeExpectation6[T1, T2, T3, T4, T5, T6, R]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">toTypeSafeExpectation6</span>
+        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span>
+        <span class="result">: <a name="org.scalamock.TypeSafeExpectation6" class="extype" href="TypeSafeExpectation6.html">TypeSafeExpectation6</a>[T1, T2, T3, T4, T5, T6, R]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="org.scalamock.MockFunction" class="extype" href="MockFunction.html">MockFunction</a></dd></dl></div>
+    </li><li visbl="pub" name="org.scalamock.MockFunction#toTypeSafeExpectation7" data-isabs="false">
+      <a id="toTypeSafeExpectation7[T1, T2, T3, T4, T5, T6, T7, R]:TypeSafeExpectation7[T1, T2, T3, T4, T5, T6, T7, R]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">toTypeSafeExpectation7</span>
+        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span>
+        <span class="result">: <a name="org.scalamock.TypeSafeExpectation7" class="extype" href="TypeSafeExpectation7.html">TypeSafeExpectation7</a>[T1, T2, T3, T4, T5, T6, T7, R]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="org.scalamock.MockFunction" class="extype" href="MockFunction.html">MockFunction</a></dd></dl></div>
+    </li><li visbl="pub" name="org.scalamock.MockFunction#toTypeSafeExpectation8" data-isabs="false">
+      <a id="toTypeSafeExpectation8[T1, T2, T3, T4, T5, T6, T7, T8, R]:TypeSafeExpectation8[T1, T2, T3, T4, T5, T6, T7, T8, R]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">toTypeSafeExpectation8</span>
+        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span>
+        <span class="result">: <a name="org.scalamock.TypeSafeExpectation8" class="extype" href="TypeSafeExpectation8.html">TypeSafeExpectation8</a>[T1, T2, T3, T4, T5, T6, T7, T8, R]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="org.scalamock.MockFunction" class="extype" href="MockFunction.html">MockFunction</a></dd></dl></div>
+    </li><li visbl="pub" name="org.scalamock.MockFunction#toTypeSafeExpectation9" data-isabs="false">
+      <a id="toTypeSafeExpectation9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]:TypeSafeExpectation9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">toTypeSafeExpectation9</span>
+        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span>
+        <span class="result">: <a name="org.scalamock.TypeSafeExpectation9" class="extype" href="TypeSafeExpectation9.html">TypeSafeExpectation9</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]</span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="org.scalamock.MockFunction" class="extype" href="MockFunction.html">MockFunction</a></dd></dl></div>
     </li><li visbl="pub" name="scala.Function4#tupled" data-isabs="false">
       <a id="tupled:((T1, T2, T3, T4)) ⇒ R"></a>
       <h4 class="signature">
@@ -388,7 +509,9 @@
     </li></ol>
             </div>
 
-        <div name="scala.Function4" class="parent">
+        <div name="org.scalamock.NiceToString" class="parent">
+              <h3>Inherited from <a name="org.scalamock.NiceToString" class="extype" href="NiceToString.html">NiceToString</a></h3>
+            </div><div name="scala.Function4" class="parent">
               <h3>Inherited from (T1, T2, T3, T4) ⇒ R</h3>
             </div><div name="org.scalamock.MockFunction" class="parent">
               <h3>Inherited from <a name="org.scalamock.MockFunction" class="extype" href="MockFunction.html">MockFunction</a></h3>

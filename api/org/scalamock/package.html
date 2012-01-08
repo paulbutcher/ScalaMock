@@ -29,7 +29,7 @@
       </h4>
       
           <div class="fullcommenttop" id="comment"><div class="comment cmt"><h3>ScalaMock: Native Scala mocking</h3><p>ScalaMock supports three different mocking styles:</p><ul><li>Function mocks.</li><li>Proxy (type-unsafe) mocks.</li><li>Generated (type-safe) mocks.</li></ul><p>In all cases, mix the relevant <code>MockFactory</code> trait into your test class. For ScalaTest use
-org.scalamock.scalatest.MockFactory, and for JUnit3 use org.scalamock.junit3.MockFactory.</p><h4>Function mocks</h4><p>Function mocks are created with <code>mockFunction</code>. The following, for example, creates a mock
+<a name="org.scalamock.scalatest.MockFactory" class="extype" href="scalatest/MockFactory.html">MockFactory</a>, and for JUnit3 use <a name="org.scalamock.junit3.MockFactory" class="extype" href="junit3/MockFactory.html">MockFactory</a>.</p><h4>Function mocks</h4><p>Function mocks are created with <code>mockFunction</code>. The following, for example, creates a mock
 function taking a single <code>Int</code> argument and returning a <code>String</code>:</p><pre>
 val m = mockFunction[Int, String]
 </pre><p>Expectations then can be set on a mock function. The following, for example, says that we expect our
@@ -92,6 +92,12 @@ m(41.9999)
 </pre><p>but will not match:</p><pre>
 m(43.0)
 m(42.1)
+</pre><h6>Repeated parameters</h6><p>If you're using generated mocks, you need do nothing special to set expectations on methods
+that take repeated parameters. If you're using proxy mocks you will need to use
+the <code>**</code> operator. For example, given:</p><pre>
+def takesRepeatedParameter(x: Int, ys: String*)
+</pre><p>you can set an expectation with:</p><pre>
+m expects 'takesRepeatedParameter withArgs(42, **(&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;))
 </pre><h6>Predicate matching</h6><p>More complicated argument matching can be implemented by using <code>where</code> to pass a predicate:</p><pre>
 m = mockFunction[Double, Double, Unit]
 m expects { where _ &lt; _ }
@@ -284,6 +290,18 @@ call logging.</p>
       </span>
       </h4>
       
+    </li><li visbl="pub" name="org.scalamock.MatchRepeated" data-isabs="false">
+      <a id="MatchRepeated:MatchRepeated"></a>
+      <h4 class="signature">
+      <span class="kind">class</span>
+      <span class="symbol"> 
+        <a href="MatchRepeated.html"><span class="name">MatchRepeated</span></a>
+        
+        <span class="result"> extends Equals</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Matches repeated (varargs) parameters
+</p>
     </li><li visbl="pub" name="org.scalamock.Mock" data-isabs="true">
       <a id="Mock:Mock"></a>
       <h4 class="signature">
@@ -346,7 +364,7 @@ call logging.</p>
       <span class="symbol"> 
         <a href="MockFunction0.html"><span class="name">MockFunction0</span></a>
         <span class="tparams">[<span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with () ⇒ R</span>
+        <span class="result"> extends MockFunction with () ⇒ R with NiceToString</span>
       </span>
       </h4>
       
@@ -357,7 +375,7 @@ call logging.</p>
       <span class="symbol"> 
         <a href="MockFunction1.html"><span class="name">MockFunction1</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1) ⇒ R</span>
+        <span class="result"> extends MockFunction with (T1) ⇒ R with NiceToString</span>
       </span>
       </h4>
       
@@ -368,7 +386,7 @@ call logging.</p>
       <span class="symbol"> 
         <a href="MockFunction10.html"><span class="name">MockFunction10</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="T10">T10</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) ⇒ R</span>
+        <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) ⇒ R with NiceToString</span>
       </span>
       </h4>
       
@@ -379,7 +397,7 @@ call logging.</p>
       <span class="symbol"> 
         <a href="MockFunction2.html"><span class="name">MockFunction2</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1, T2) ⇒ R</span>
+        <span class="result"> extends MockFunction with (T1, T2) ⇒ R with NiceToString</span>
       </span>
       </h4>
       
@@ -390,7 +408,7 @@ call logging.</p>
       <span class="symbol"> 
         <a href="MockFunction3.html"><span class="name">MockFunction3</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1, T2, T3) ⇒ R</span>
+        <span class="result"> extends MockFunction with (T1, T2, T3) ⇒ R with NiceToString</span>
       </span>
       </h4>
       
@@ -401,7 +419,7 @@ call logging.</p>
       <span class="symbol"> 
         <a href="MockFunction4.html"><span class="name">MockFunction4</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1, T2, T3, T4) ⇒ R</span>
+        <span class="result"> extends MockFunction with (T1, T2, T3, T4) ⇒ R with NiceToString</span>
       </span>
       </h4>
       
@@ -412,7 +430,7 @@ call logging.</p>
       <span class="symbol"> 
         <a href="MockFunction5.html"><span class="name">MockFunction5</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5) ⇒ R</span>
+        <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5) ⇒ R with NiceToString</span>
       </span>
       </h4>
       
@@ -423,7 +441,7 @@ call logging.</p>
       <span class="symbol"> 
         <a href="MockFunction6.html"><span class="name">MockFunction6</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6) ⇒ R</span>
+        <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6) ⇒ R with NiceToString</span>
       </span>
       </h4>
       
@@ -434,7 +452,7 @@ call logging.</p>
       <span class="symbol"> 
         <a href="MockFunction7.html"><span class="name">MockFunction7</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6, T7) ⇒ R</span>
+        <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6, T7) ⇒ R with NiceToString</span>
       </span>
       </h4>
       
@@ -445,7 +463,7 @@ call logging.</p>
       <span class="symbol"> 
         <a href="MockFunction8.html"><span class="name">MockFunction8</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6, T7, T8) ⇒ R</span>
+        <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6, T7, T8) ⇒ R with NiceToString</span>
       </span>
       </h4>
       
@@ -456,7 +474,7 @@ call logging.</p>
       <span class="symbol"> 
         <a href="MockFunction9.html"><span class="name">MockFunction9</span></a>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6, T7, T8, T9) ⇒ R</span>
+        <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6, T7, T8, T9) ⇒ R with NiceToString</span>
       </span>
       </h4>
       
@@ -600,6 +618,17 @@ call logging.</p>
         <a href="MockingURLClassLoader.html"><span class="name">MockingURLClassLoader</span></a>
         
         <span class="result"> extends MockingClassLoader</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.scalamock.NiceToString" data-isabs="true">
+      <a id="NiceToString:NiceToString"></a>
+      <h4 class="signature">
+      <span class="kind">trait</span>
+      <span class="symbol"> 
+        <a href="NiceToString.html"><span class="name">NiceToString</span></a>
+        
+        <span class="result"> extends AnyRef</span>
       </span>
       </h4>
       
@@ -804,6 +833,28 @@ verbose error messages.</p>
       <span class="kind">package</span>
       <span class="symbol"> 
         <a href="annotation/package.html"><span class="name">annotation</span></a>
+        
+        
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.scalamock.junit3" data-isabs="false">
+      <a id="junit3:junit3"></a>
+      <h4 class="signature">
+      <span class="kind">package</span>
+      <span class="symbol"> 
+        <a href="junit3/package.html"><span class="name">junit3</span></a>
+        
+        
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.scalamock.scalatest" data-isabs="false">
+      <a id="scalatest:scalatest"></a>
+      <h4 class="signature">
+      <span class="kind">package</span>
+      <span class="symbol"> 
+        <a href="scalatest/package.html"><span class="name">scalatest</span></a>
         
         
       </span>

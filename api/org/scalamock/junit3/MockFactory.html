@@ -2,38 +2,60 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>org.scalamock.MockFactoryBase</title>
+          <title>org.scalamock.junit3.MockFactory</title>
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
-      <script type="text/javascript" src="../../lib/jquery.js"></script>
-      <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
-      <script type="text/javascript" src="../../lib/template.js"></script>
-      <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+      <link type="text/css" media="screen" rel="stylesheet" href="../../../lib/template.css" />
+      <script type="text/javascript" src="../../../lib/jquery.js"></script>
+      <script type="text/javascript" src="../../../lib/jquery-ui.js"></script>
+      <script type="text/javascript" src="../../../lib/template.js"></script>
+      <script type="text/javascript" src="../../../lib/tools.tooltip.js"></script>
     
         </head>
         <body class="type">
       <div id="definition">
-        <img src="../../lib/trait_big.png" />
-        <p id="owner"><a name="org" class="extype" href="../package.html">org</a>.<a name="org.scalamock" class="extype" href="package.html">scalamock</a></p>
-        <h1>MockFactoryBase</h1>
+        <img src="../../../lib/trait_big.png" />
+        <p id="owner"><a name="org" class="extype" href="../../package.html">org</a>.<a name="org.scalamock" class="extype" href="../package.html">scalamock</a>.<a name="org.scalamock.junit3" class="extype" href="package.html">junit3</a></p>
+        <h1>MockFactory</h1>
       </div>
 
       <h4 class="signature" id="signature">
       <span class="kind">trait</span>
       <span class="symbol"> 
-        <span class="name">MockFactoryBase</span>
+        <span class="name">MockFactory</span>
         
-        <span class="result"> extends AnyRef</span>
+        <span class="result"> extends <a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></span>
       </span>
       </h4>
       
-          <div class="fullcommenttop" id="comment"><div class="toggleContainer block">
+          <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Trait that can be mixed into a <a href="http://www.junit.org/">JUnit3</a> suite to provide
+mocking support.</p><p>See <a name="org.scalamock" class="extype" href="../package.html">scalamock</a> for overview documentation.</p><p>ScalaMock requires that you call reset expectations before each test and
+verify them afterwards. You can achieve this in two different ways: with
+the <code>withExpectations</code> method (recommended), or by overriding <code>setUp</code> and <code>tearDown</code>.</p><h4> withExpectations </h4><pre>
+def testSomething {
+  withExpectations {
+    // Setup expectations
+    // Exercise code under test
+  }
+}
+</pre><h4> setUp and tearDown </h4><p>This is not the recommended approach, because JUnit calls <code>tearDown</code> even if a
+test fails, and exceptions in <code>tearDown</code> override exceptions thrown by the test.
+This will result in the original cause of the failure being masked.</p><pre>
+override def setUp() {
+  resetExpectations
+}
+
+override def tearDown() {
+  verifyExpectations
+}
+
+def testSomething {
+  // Setup expectations
+  // Exercise code under test
+}
+</pre></div><dl class="attributes block"> <dt>Self Type</dt><dd><a name="org.scalamock.junit3.MockFactory" class="extype" href="">MockFactory</a> with <span name="junit.framework.TestCase" class="extype">TestCase</span></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent">AnyRef, <span name="scala.Any" class="extype">Any</span></div>
-        </div><div class="toggleContainer block">
-          <span class="toggle">Known Subclasses</span>
-          <div class="subClasses hiddenContent"><a name="org.scalamock.scalatest.MockFactory" class="extype" href="scalatest/MockFactory.html">MockFactory</a>, <a name="org.scalamock.junit3.MockFactory" class="extype" href="junit3/MockFactory.html">MockFactory</a></div>
+          <div class="superTypes hiddenContent"><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div></div>
         
 
@@ -49,7 +71,7 @@
                 <span class="filtertype">Inherited</span>
                 <ol><li class="hideall out"><span>Hide All</span></li>
                 <li class="showall in"><span>Show all</span></li></ol>
-                <ol id="linearization"><li name="org.scalamock.MockFactoryBase" class="in"><span>MockFactoryBase</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
+                <ol id="linearization"><li name="org.scalamock.junit3.MockFactory" class="in"><span>MockFactory</span></li><li name="org.scalamock.MockFactoryBase" class="in"><span>MockFactoryBase</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
               </div>
           <div id="visbl">
               <span class="filtertype">Visibility</span>
@@ -66,7 +88,7 @@
       <h4 class="signature">
       <span class="kind">class</span>
       <span class="symbol"> 
-        <a href="MockFactoryBase$EpsilonMatcher.html"><span class="name">EpsilonMatcher</span></a>
+        <a href="../MockFactoryBase$EpsilonMatcher.html"><span class="name">EpsilonMatcher</span></a>
         
         <span class="result"> extends AnyRef</span>
       </span>
@@ -119,10 +141,10 @@
       <span class="symbol"> 
         <span class="name">*</span>
         
-        <span class="result">: <a name="org.scalamock.MatchAny" class="extype" href="MatchAny.html">MatchAny</a></span>
+        <span class="result">: <a name="org.scalamock.MatchAny" class="extype" href="../MatchAny.html">MatchAny</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#**" data-isabs="false">
       <a id="**(org.scalamock.MockParameter[_]*):MatchRepeated"></a>
       <h4 class="signature">
@@ -130,10 +152,10 @@
       <span class="symbol"> 
         <span class="name">**</span>
         
-        <span class="params">(<span name="values">values: org.scalamock.MockParameter[_]*</span>)</span><span class="result">: <a name="org.scalamock.MatchRepeated" class="extype" href="MatchRepeated.html">MatchRepeated</a></span>
+        <span class="params">(<span name="values">values: org.scalamock.MockParameter[_]*</span>)</span><span class="result">: <a name="org.scalamock.MatchRepeated" class="extype" href="../MatchRepeated.html">MatchRepeated</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#==" data-isabs="false">
       <a id="==(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -163,10 +185,10 @@
       <span class="symbol"> 
         <span class="name">MatchAnyToMockParameter</span>
         <span class="tparams">[<span name="T">T</span>]</span>
-        <span class="params">(<span name="m">m: <a name="org.scalamock.MatchAny" class="extype" href="MatchAny.html">MatchAny</a></span>)</span><span class="result">: <a name="org.scalamock.MockParameter" class="extype" href="MockParameter.html">MockParameter</a>[T]</span>
+        <span class="params">(<span name="m">m: <a name="org.scalamock.MatchAny" class="extype" href="../MatchAny.html">MatchAny</a></span>)</span><span class="result">: <a name="org.scalamock.MockParameter" class="extype" href="../MockParameter.html">MockParameter</a>[T]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected implicit </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected implicit </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#MatchEpsilonToMockParameter" data-isabs="false">
       <a id="MatchEpsilonToMockParameter[T](MatchEpsilon):EpsilonMockParameter"></a>
       <h4 class="signature">
@@ -174,10 +196,10 @@
       <span class="symbol"> 
         <span class="name">MatchEpsilonToMockParameter</span>
         <span class="tparams">[<span name="T">T</span>]</span>
-        <span class="params">(<span name="m">m: <a name="org.scalamock.MatchEpsilon" class="extype" href="MatchEpsilon.html">MatchEpsilon</a></span>)</span><span class="result">: <a name="org.scalamock.EpsilonMockParameter" class="extype" href="EpsilonMockParameter.html">EpsilonMockParameter</a></span>
+        <span class="params">(<span name="m">m: <a name="org.scalamock.MatchEpsilon" class="extype" href="../MatchEpsilon.html">MatchEpsilon</a></span>)</span><span class="result">: <a name="org.scalamock.EpsilonMockParameter" class="extype" href="../EpsilonMockParameter.html">EpsilonMockParameter</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected implicit </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected implicit </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
       <a id="asInstanceOf[T0]:T0"></a>
       <h4 class="signature">
@@ -199,7 +221,7 @@
         <span class="params">()</span><span class="result">: AnyRef</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -210,10 +232,10 @@
       <span class="symbol"> 
         <span class="name">doubleToEpsilon</span>
         
-        <span class="params">(<span name="d">d: <span name="scala.Double" class="extype">Double</span></span>)</span><span class="result">: <a name="org.scalamock.MockFactoryBase.EpsilonMatcher" class="extype" href="MockFactoryBase$EpsilonMatcher.html">EpsilonMatcher</a></span>
+        <span class="params">(<span name="d">d: <span name="scala.Double" class="extype">Double</span></span>)</span><span class="result">: <a name="org.scalamock.MockFactoryBase.EpsilonMatcher" class="extype" href="../MockFactoryBase$EpsilonMatcher.html">EpsilonMatcher</a></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected implicit </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected implicit </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -246,7 +268,7 @@
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
@@ -282,7 +304,7 @@
         <span class="params">(<span name="what">what: ⇒ <span name="scala.Unit" class="extype">Unit</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#inSequence" data-isabs="false">
       <a id="inSequence(⇒ Unit):Unit"></a>
       <h4 class="signature">
@@ -293,7 +315,7 @@
         <span class="params">(<span name="what">what: ⇒ <span name="scala.Unit" class="extype">Unit</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <h4 class="signature">
@@ -312,10 +334,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="T10">T10</span>, <span name="R">R</span>]</span>
-        <span class="result">: <a name="org.scalamock.MockFunction10" class="extype" href="MockFunction10.html">MockFunction10</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]</span>
+        <span class="result">: <a name="org.scalamock.MockFunction10" class="extype" href="../MockFunction10.html">MockFunction10</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#mockFunction" data-isabs="false">
       <a id="mockFunction[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]:MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]"></a>
       <h4 class="signature">
@@ -323,10 +345,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span>
-        <span class="result">: <a name="org.scalamock.MockFunction9" class="extype" href="MockFunction9.html">MockFunction9</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]</span>
+        <span class="result">: <a name="org.scalamock.MockFunction9" class="extype" href="../MockFunction9.html">MockFunction9</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#mockFunction" data-isabs="false">
       <a id="mockFunction[T1, T2, T3, T4, T5, T6, T7, T8, R]:MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R]"></a>
       <h4 class="signature">
@@ -334,10 +356,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span>
-        <span class="result">: <a name="org.scalamock.MockFunction8" class="extype" href="MockFunction8.html">MockFunction8</a>[T1, T2, T3, T4, T5, T6, T7, T8, R]</span>
+        <span class="result">: <a name="org.scalamock.MockFunction8" class="extype" href="../MockFunction8.html">MockFunction8</a>[T1, T2, T3, T4, T5, T6, T7, T8, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#mockFunction" data-isabs="false">
       <a id="mockFunction[T1, T2, T3, T4, T5, T6, T7, R]:MockFunction7[T1, T2, T3, T4, T5, T6, T7, R]"></a>
       <h4 class="signature">
@@ -345,10 +367,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span>
-        <span class="result">: <a name="org.scalamock.MockFunction7" class="extype" href="MockFunction7.html">MockFunction7</a>[T1, T2, T3, T4, T5, T6, T7, R]</span>
+        <span class="result">: <a name="org.scalamock.MockFunction7" class="extype" href="../MockFunction7.html">MockFunction7</a>[T1, T2, T3, T4, T5, T6, T7, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#mockFunction" data-isabs="false">
       <a id="mockFunction[T1, T2, T3, T4, T5, T6, R]:MockFunction6[T1, T2, T3, T4, T5, T6, R]"></a>
       <h4 class="signature">
@@ -356,10 +378,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span>
-        <span class="result">: <a name="org.scalamock.MockFunction6" class="extype" href="MockFunction6.html">MockFunction6</a>[T1, T2, T3, T4, T5, T6, R]</span>
+        <span class="result">: <a name="org.scalamock.MockFunction6" class="extype" href="../MockFunction6.html">MockFunction6</a>[T1, T2, T3, T4, T5, T6, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#mockFunction" data-isabs="false">
       <a id="mockFunction[T1, T2, T3, T4, T5, R]:MockFunction5[T1, T2, T3, T4, T5, R]"></a>
       <h4 class="signature">
@@ -367,10 +389,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span>
-        <span class="result">: <a name="org.scalamock.MockFunction5" class="extype" href="MockFunction5.html">MockFunction5</a>[T1, T2, T3, T4, T5, R]</span>
+        <span class="result">: <a name="org.scalamock.MockFunction5" class="extype" href="../MockFunction5.html">MockFunction5</a>[T1, T2, T3, T4, T5, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#mockFunction" data-isabs="false">
       <a id="mockFunction[T1, T2, T3, T4, R]:MockFunction4[T1, T2, T3, T4, R]"></a>
       <h4 class="signature">
@@ -378,10 +400,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span>
-        <span class="result">: <a name="org.scalamock.MockFunction4" class="extype" href="MockFunction4.html">MockFunction4</a>[T1, T2, T3, T4, R]</span>
+        <span class="result">: <a name="org.scalamock.MockFunction4" class="extype" href="../MockFunction4.html">MockFunction4</a>[T1, T2, T3, T4, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#mockFunction" data-isabs="false">
       <a id="mockFunction[T1, T2, T3, R]:MockFunction3[T1, T2, T3, R]"></a>
       <h4 class="signature">
@@ -389,10 +411,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span>
-        <span class="result">: <a name="org.scalamock.MockFunction3" class="extype" href="MockFunction3.html">MockFunction3</a>[T1, T2, T3, R]</span>
+        <span class="result">: <a name="org.scalamock.MockFunction3" class="extype" href="../MockFunction3.html">MockFunction3</a>[T1, T2, T3, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#mockFunction" data-isabs="false">
       <a id="mockFunction[T1, T2, R]:MockFunction2[T1, T2, R]"></a>
       <h4 class="signature">
@@ -400,10 +422,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span>
-        <span class="result">: <a name="org.scalamock.MockFunction2" class="extype" href="MockFunction2.html">MockFunction2</a>[T1, T2, R]</span>
+        <span class="result">: <a name="org.scalamock.MockFunction2" class="extype" href="../MockFunction2.html">MockFunction2</a>[T1, T2, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#mockFunction" data-isabs="false">
       <a id="mockFunction[T1, R]:MockFunction1[T1, R]"></a>
       <h4 class="signature">
@@ -411,10 +433,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span>
-        <span class="result">: <a name="org.scalamock.MockFunction1" class="extype" href="MockFunction1.html">MockFunction1</a>[T1, R]</span>
+        <span class="result">: <a name="org.scalamock.MockFunction1" class="extype" href="../MockFunction1.html">MockFunction1</a>[T1, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#mockFunction" data-isabs="false">
       <a id="mockFunction[R]:MockFunction0[R]"></a>
       <h4 class="signature">
@@ -422,10 +444,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction</span>
         <span class="tparams">[<span name="R">R</span>]</span>
-        <span class="result">: <a name="org.scalamock.MockFunction0" class="extype" href="MockFunction0.html">MockFunction0</a>[R]</span>
+        <span class="result">: <a name="org.scalamock.MockFunction0" class="extype" href="../MockFunction0.html">MockFunction0</a>[R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="org.scalamock.MockFactoryBase#mockFunction0ToExpectation" data-isabs="false">
       <a id="mockFunction0ToExpectation[R](MockFunction0[R]):TypeSafeExpectation0[R]"></a>
       <h4 class="signature">
@@ -433,10 +455,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction0ToExpectation</span>
         <span class="tparams">[<span name="R">R</span>]</span>
-        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction0" class="extype" href="MockFunction0.html">MockFunction0</a>[R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation0" class="extype" href="TypeSafeExpectation0.html">TypeSafeExpectation0</a>[R]</span>
+        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction0" class="extype" href="../MockFunction0.html">MockFunction0</a>[R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation0" class="extype" href="../TypeSafeExpectation0.html">TypeSafeExpectation0</a>[R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="org.scalamock.MockFactoryBase#mockFunction10ToExpectation" data-isabs="false">
       <a id="mockFunction10ToExpectation[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](MockFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]):TypeSafeExpectation10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]"></a>
       <h4 class="signature">
@@ -444,10 +466,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction10ToExpectation</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="T10">T10</span>, <span name="R">R</span>]</span>
-        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction10" class="extype" href="MockFunction10.html">MockFunction10</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation10" class="extype" href="TypeSafeExpectation10.html">TypeSafeExpectation10</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]</span>
+        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction10" class="extype" href="../MockFunction10.html">MockFunction10</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation10" class="extype" href="../TypeSafeExpectation10.html">TypeSafeExpectation10</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="org.scalamock.MockFactoryBase#mockFunction1ToExpectation" data-isabs="false">
       <a id="mockFunction1ToExpectation[T1, R](MockFunction1[T1, R]):TypeSafeExpectation1[T1, R]"></a>
       <h4 class="signature">
@@ -455,10 +477,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction1ToExpectation</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span>
-        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction1" class="extype" href="MockFunction1.html">MockFunction1</a>[T1, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation1" class="extype" href="TypeSafeExpectation1.html">TypeSafeExpectation1</a>[T1, R]</span>
+        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction1" class="extype" href="../MockFunction1.html">MockFunction1</a>[T1, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation1" class="extype" href="../TypeSafeExpectation1.html">TypeSafeExpectation1</a>[T1, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="org.scalamock.MockFactoryBase#mockFunction2ToExpectation" data-isabs="false">
       <a id="mockFunction2ToExpectation[T1, T2, R](MockFunction2[T1, T2, R]):TypeSafeExpectation2[T1, T2, R]"></a>
       <h4 class="signature">
@@ -466,10 +488,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction2ToExpectation</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span>
-        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction2" class="extype" href="MockFunction2.html">MockFunction2</a>[T1, T2, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation2" class="extype" href="TypeSafeExpectation2.html">TypeSafeExpectation2</a>[T1, T2, R]</span>
+        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction2" class="extype" href="../MockFunction2.html">MockFunction2</a>[T1, T2, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation2" class="extype" href="../TypeSafeExpectation2.html">TypeSafeExpectation2</a>[T1, T2, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="org.scalamock.MockFactoryBase#mockFunction3ToExpectation" data-isabs="false">
       <a id="mockFunction3ToExpectation[T1, T2, T3, R](MockFunction3[T1, T2, T3, R]):TypeSafeExpectation3[T1, T2, T3, R]"></a>
       <h4 class="signature">
@@ -477,10 +499,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction3ToExpectation</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span>
-        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction3" class="extype" href="MockFunction3.html">MockFunction3</a>[T1, T2, T3, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation3" class="extype" href="TypeSafeExpectation3.html">TypeSafeExpectation3</a>[T1, T2, T3, R]</span>
+        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction3" class="extype" href="../MockFunction3.html">MockFunction3</a>[T1, T2, T3, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation3" class="extype" href="../TypeSafeExpectation3.html">TypeSafeExpectation3</a>[T1, T2, T3, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="org.scalamock.MockFactoryBase#mockFunction4ToExpectation" data-isabs="false">
       <a id="mockFunction4ToExpectation[T1, T2, T3, T4, R](MockFunction4[T1, T2, T3, T4, R]):TypeSafeExpectation4[T1, T2, T3, T4, R]"></a>
       <h4 class="signature">
@@ -488,10 +510,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction4ToExpectation</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span>
-        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction4" class="extype" href="MockFunction4.html">MockFunction4</a>[T1, T2, T3, T4, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation4" class="extype" href="TypeSafeExpectation4.html">TypeSafeExpectation4</a>[T1, T2, T3, T4, R]</span>
+        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction4" class="extype" href="../MockFunction4.html">MockFunction4</a>[T1, T2, T3, T4, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation4" class="extype" href="../TypeSafeExpectation4.html">TypeSafeExpectation4</a>[T1, T2, T3, T4, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="org.scalamock.MockFactoryBase#mockFunction5ToExpectation" data-isabs="false">
       <a id="mockFunction5ToExpectation[T1, T2, T3, T4, T5, R](MockFunction5[T1, T2, T3, T4, T5, R]):TypeSafeExpectation5[T1, T2, T3, T4, T5, R]"></a>
       <h4 class="signature">
@@ -499,10 +521,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction5ToExpectation</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span>
-        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction5" class="extype" href="MockFunction5.html">MockFunction5</a>[T1, T2, T3, T4, T5, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation5" class="extype" href="TypeSafeExpectation5.html">TypeSafeExpectation5</a>[T1, T2, T3, T4, T5, R]</span>
+        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction5" class="extype" href="../MockFunction5.html">MockFunction5</a>[T1, T2, T3, T4, T5, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation5" class="extype" href="../TypeSafeExpectation5.html">TypeSafeExpectation5</a>[T1, T2, T3, T4, T5, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="org.scalamock.MockFactoryBase#mockFunction6ToExpectation" data-isabs="false">
       <a id="mockFunction6ToExpectation[T1, T2, T3, T4, T5, T6, R](MockFunction6[T1, T2, T3, T4, T5, T6, R]):TypeSafeExpectation6[T1, T2, T3, T4, T5, T6, R]"></a>
       <h4 class="signature">
@@ -510,10 +532,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction6ToExpectation</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span>
-        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction6" class="extype" href="MockFunction6.html">MockFunction6</a>[T1, T2, T3, T4, T5, T6, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation6" class="extype" href="TypeSafeExpectation6.html">TypeSafeExpectation6</a>[T1, T2, T3, T4, T5, T6, R]</span>
+        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction6" class="extype" href="../MockFunction6.html">MockFunction6</a>[T1, T2, T3, T4, T5, T6, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation6" class="extype" href="../TypeSafeExpectation6.html">TypeSafeExpectation6</a>[T1, T2, T3, T4, T5, T6, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="org.scalamock.MockFactoryBase#mockFunction7ToExpectation" data-isabs="false">
       <a id="mockFunction7ToExpectation[T1, T2, T3, T4, T5, T6, T7, R](MockFunction7[T1, T2, T3, T4, T5, T6, T7, R]):TypeSafeExpectation7[T1, T2, T3, T4, T5, T6, T7, R]"></a>
       <h4 class="signature">
@@ -521,10 +543,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction7ToExpectation</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span>
-        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction7" class="extype" href="MockFunction7.html">MockFunction7</a>[T1, T2, T3, T4, T5, T6, T7, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation7" class="extype" href="TypeSafeExpectation7.html">TypeSafeExpectation7</a>[T1, T2, T3, T4, T5, T6, T7, R]</span>
+        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction7" class="extype" href="../MockFunction7.html">MockFunction7</a>[T1, T2, T3, T4, T5, T6, T7, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation7" class="extype" href="../TypeSafeExpectation7.html">TypeSafeExpectation7</a>[T1, T2, T3, T4, T5, T6, T7, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="org.scalamock.MockFactoryBase#mockFunction8ToExpectation" data-isabs="false">
       <a id="mockFunction8ToExpectation[T1, T2, T3, T4, T5, T6, T7, T8, R](MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R]):TypeSafeExpectation8[T1, T2, T3, T4, T5, T6, T7, T8, R]"></a>
       <h4 class="signature">
@@ -532,10 +554,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction8ToExpectation</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span>
-        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction8" class="extype" href="MockFunction8.html">MockFunction8</a>[T1, T2, T3, T4, T5, T6, T7, T8, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation8" class="extype" href="TypeSafeExpectation8.html">TypeSafeExpectation8</a>[T1, T2, T3, T4, T5, T6, T7, T8, R]</span>
+        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction8" class="extype" href="../MockFunction8.html">MockFunction8</a>[T1, T2, T3, T4, T5, T6, T7, T8, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation8" class="extype" href="../TypeSafeExpectation8.html">TypeSafeExpectation8</a>[T1, T2, T3, T4, T5, T6, T7, T8, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="org.scalamock.MockFactoryBase#mockFunction9ToExpectation" data-isabs="false">
       <a id="mockFunction9ToExpectation[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]):TypeSafeExpectation9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]"></a>
       <h4 class="signature">
@@ -543,10 +565,10 @@
       <span class="symbol"> 
         <span class="name">mockFunction9ToExpectation</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span>
-        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction9" class="extype" href="MockFunction9.html">MockFunction9</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation9" class="extype" href="TypeSafeExpectation9.html">TypeSafeExpectation9</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]</span>
+        <span class="params">(<span name="m">m: <a name="org.scalamock.MockFunction9" class="extype" href="../MockFunction9.html">MockFunction9</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]</span>)</span><span class="result">: <a name="org.scalamock.TypeSafeExpectation9" class="extype" href="../TypeSafeExpectation9.html">TypeSafeExpectation9</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>implicit </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
       <a id="ne(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -590,7 +612,7 @@
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#resetMocks" data-isabs="false">
       <a id="resetMocks():Unit"></a>
       <h4 class="signature">
@@ -601,7 +623,7 @@
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">
@@ -620,10 +642,10 @@
       <span class="symbol"> 
         <span class="name">toMockParameter</span>
         <span class="tparams">[<span name="T">T</span>]</span>
-        <span class="params">(<span name="v">v: T</span>)</span><span class="result">: <a name="org.scalamock.MockParameter" class="extype" href="MockParameter.html">MockParameter</a>[T]</span>
+        <span class="params">(<span name="v">v: T</span>)</span><span class="result">: <a name="org.scalamock.MockParameter" class="extype" href="../MockParameter.html">MockParameter</a>[T]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected implicit </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected implicit </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#toString" data-isabs="false">
       <a id="toString():String"></a>
       <h4 class="signature">
@@ -645,7 +667,7 @@
         <span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
       <a id="wait():Unit"></a>
       <h4 class="signature">
@@ -695,10 +717,10 @@
       <span class="symbol"> 
         <span class="name">where</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="T10">T10</span>]</span>
-        <span class="params">(<span name="matcher">matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher10" class="extype" href="MockMatcher10.html">MockMatcher10</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10]</span>
+        <span class="params">(<span name="matcher">matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher10" class="extype" href="../MockMatcher10.html">MockMatcher10</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#where" data-isabs="false">
       <a id="where[T1, T2, T3, T4, T5, T6, T7, T8, T9]((T1, T2, T3, T4, T5, T6, T7, T8, T9) ⇒ Boolean):MockMatcher9[T1, T2, T3, T4, T5, T6, T7, T8, T9]"></a>
       <h4 class="signature">
@@ -706,10 +728,10 @@
       <span class="symbol"> 
         <span class="name">where</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>]</span>
-        <span class="params">(<span name="matcher">matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher9" class="extype" href="MockMatcher9.html">MockMatcher9</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9]</span>
+        <span class="params">(<span name="matcher">matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher9" class="extype" href="../MockMatcher9.html">MockMatcher9</a>[T1, T2, T3, T4, T5, T6, T7, T8, T9]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#where" data-isabs="false">
       <a id="where[T1, T2, T3, T4, T5, T6, T7, T8]((T1, T2, T3, T4, T5, T6, T7, T8) ⇒ Boolean):MockMatcher8[T1, T2, T3, T4, T5, T6, T7, T8]"></a>
       <h4 class="signature">
@@ -717,10 +739,10 @@
       <span class="symbol"> 
         <span class="name">where</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>]</span>
-        <span class="params">(<span name="matcher">matcher: (T1, T2, T3, T4, T5, T6, T7, T8) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher8" class="extype" href="MockMatcher8.html">MockMatcher8</a>[T1, T2, T3, T4, T5, T6, T7, T8]</span>
+        <span class="params">(<span name="matcher">matcher: (T1, T2, T3, T4, T5, T6, T7, T8) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher8" class="extype" href="../MockMatcher8.html">MockMatcher8</a>[T1, T2, T3, T4, T5, T6, T7, T8]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#where" data-isabs="false">
       <a id="where[T1, T2, T3, T4, T5, T6, T7]((T1, T2, T3, T4, T5, T6, T7) ⇒ Boolean):MockMatcher7[T1, T2, T3, T4, T5, T6, T7]"></a>
       <h4 class="signature">
@@ -728,10 +750,10 @@
       <span class="symbol"> 
         <span class="name">where</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>]</span>
-        <span class="params">(<span name="matcher">matcher: (T1, T2, T3, T4, T5, T6, T7) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher7" class="extype" href="MockMatcher7.html">MockMatcher7</a>[T1, T2, T3, T4, T5, T6, T7]</span>
+        <span class="params">(<span name="matcher">matcher: (T1, T2, T3, T4, T5, T6, T7) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher7" class="extype" href="../MockMatcher7.html">MockMatcher7</a>[T1, T2, T3, T4, T5, T6, T7]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#where" data-isabs="false">
       <a id="where[T1, T2, T3, T4, T5, T6]((T1, T2, T3, T4, T5, T6) ⇒ Boolean):MockMatcher6[T1, T2, T3, T4, T5, T6]"></a>
       <h4 class="signature">
@@ -739,10 +761,10 @@
       <span class="symbol"> 
         <span class="name">where</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>]</span>
-        <span class="params">(<span name="matcher">matcher: (T1, T2, T3, T4, T5, T6) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher6" class="extype" href="MockMatcher6.html">MockMatcher6</a>[T1, T2, T3, T4, T5, T6]</span>
+        <span class="params">(<span name="matcher">matcher: (T1, T2, T3, T4, T5, T6) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher6" class="extype" href="../MockMatcher6.html">MockMatcher6</a>[T1, T2, T3, T4, T5, T6]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#where" data-isabs="false">
       <a id="where[T1, T2, T3, T4, T5]((T1, T2, T3, T4, T5) ⇒ Boolean):MockMatcher5[T1, T2, T3, T4, T5]"></a>
       <h4 class="signature">
@@ -750,10 +772,10 @@
       <span class="symbol"> 
         <span class="name">where</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>]</span>
-        <span class="params">(<span name="matcher">matcher: (T1, T2, T3, T4, T5) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher5" class="extype" href="MockMatcher5.html">MockMatcher5</a>[T1, T2, T3, T4, T5]</span>
+        <span class="params">(<span name="matcher">matcher: (T1, T2, T3, T4, T5) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher5" class="extype" href="../MockMatcher5.html">MockMatcher5</a>[T1, T2, T3, T4, T5]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#where" data-isabs="false">
       <a id="where[T1, T2, T3, T4]((T1, T2, T3, T4) ⇒ Boolean):MockMatcher4[T1, T2, T3, T4]"></a>
       <h4 class="signature">
@@ -761,10 +783,10 @@
       <span class="symbol"> 
         <span class="name">where</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>]</span>
-        <span class="params">(<span name="matcher">matcher: (T1, T2, T3, T4) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher4" class="extype" href="MockMatcher4.html">MockMatcher4</a>[T1, T2, T3, T4]</span>
+        <span class="params">(<span name="matcher">matcher: (T1, T2, T3, T4) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher4" class="extype" href="../MockMatcher4.html">MockMatcher4</a>[T1, T2, T3, T4]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#where" data-isabs="false">
       <a id="where[T1, T2, T3]((T1, T2, T3) ⇒ Boolean):MockMatcher3[T1, T2, T3]"></a>
       <h4 class="signature">
@@ -772,10 +794,10 @@
       <span class="symbol"> 
         <span class="name">where</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>]</span>
-        <span class="params">(<span name="matcher">matcher: (T1, T2, T3) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher3" class="extype" href="MockMatcher3.html">MockMatcher3</a>[T1, T2, T3]</span>
+        <span class="params">(<span name="matcher">matcher: (T1, T2, T3) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher3" class="extype" href="../MockMatcher3.html">MockMatcher3</a>[T1, T2, T3]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#where" data-isabs="false">
       <a id="where[T1, T2]((T1, T2) ⇒ Boolean):MockMatcher2[T1, T2]"></a>
       <h4 class="signature">
@@ -783,10 +805,10 @@
       <span class="symbol"> 
         <span class="name">where</span>
         <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>]</span>
-        <span class="params">(<span name="matcher">matcher: (T1, T2) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher2" class="extype" href="MockMatcher2.html">MockMatcher2</a>[T1, T2]</span>
+        <span class="params">(<span name="matcher">matcher: (T1, T2) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher2" class="extype" href="../MockMatcher2.html">MockMatcher2</a>[T1, T2]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#where" data-isabs="false">
       <a id="where[T1]((T1) ⇒ Boolean):MockMatcher1[T1]"></a>
       <h4 class="signature">
@@ -794,10 +816,10 @@
       <span class="symbol"> 
         <span class="name">where</span>
         <span class="tparams">[<span name="T1">T1</span>]</span>
-        <span class="params">(<span name="matcher">matcher: (T1) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher1" class="extype" href="MockMatcher1.html">MockMatcher1</a>[T1]</span>
+        <span class="params">(<span name="matcher">matcher: (T1) ⇒ <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result">: <a name="org.scalamock.MockMatcher1" class="extype" href="../MockMatcher1.html">MockMatcher1</a>[T1]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
     </li><li visbl="prt" name="org.scalamock.MockFactoryBase#wildcard" data-isabs="false">
       <a id="wildcard[T]:MockParameter[T]"></a>
       <h4 class="signature">
@@ -805,16 +827,29 @@
       <span class="symbol"> 
         <span class="name">wildcard</span>
         <span class="tparams">[<span name="T">T</span>]</span>
-        <span class="result">: <a name="org.scalamock.MockParameter" class="extype" href="MockParameter.html">MockParameter</a>[T]</span>
+        <span class="result">: <a name="org.scalamock.MockParameter" class="extype" href="../MockParameter.html">MockParameter</a>[T]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected implicit </dd></dl></div>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected implicit </dd><dt>Definition Classes</dt><dd><a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></dd></dl></div>
+    </li><li visbl="prt" name="org.scalamock.junit3.MockFactory#withExpectations" data-isabs="false">
+      <a id="withExpectations(⇒ Unit):Unit"></a>
+      <h4 class="signature">
+      <span class="kind">def</span>
+      <span class="symbol"> 
+        <span class="name">withExpectations</span>
+        
+        <span class="params">(<span name="what">what: ⇒ <span name="scala.Unit" class="extype">Unit</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+      </span>
+      </h4>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd></dl></div>
     </li></ol>
             </div>
 
         
 
-        <div name="scala.AnyRef" class="parent">
+        <div name="org.scalamock.MockFactoryBase" class="parent">
+              <h3>Inherited from <a name="org.scalamock.MockFactoryBase" class="extype" href="../MockFactoryBase.html">MockFactoryBase</a></h3>
+            </div><div name="scala.AnyRef" class="parent">
               <h3>Inherited from AnyRef</h3>
             </div><div name="scala.Any" class="parent">
               <h3>Inherited from <span name="scala.Any" class="extype">Any</span></h3>
