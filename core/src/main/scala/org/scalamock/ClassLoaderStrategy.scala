@@ -24,6 +24,14 @@ trait ClassLoaderStrategy {
   def getClassLoader(interfaces: Class[_]*): ClassLoader
 }
 
+object ClassLoaderStrategy {
+  var default: ClassLoaderStrategy = threadContextClassLoaderStrategy
+}
+
 object threadContextClassLoaderStrategy extends ClassLoaderStrategy {
   def getClassLoader(interfaces: Class[_]*) = Thread.currentThread.getContextClassLoader
+}
+
+object classClassLoaderStrategy extends ClassLoaderStrategy {
+  def getClassLoader(interfaces: Class[_]*) = interfaces.head.getClassLoader
 }

@@ -20,7 +20,7 @@
 
 package org.scalamock.scalatest
 
-import org.scalamock.{MockFactoryBase, MockingURLClassLoader}
+import org.scalamock.{ClassLoaderStrategy, classClassLoaderStrategy, MockFactoryBase, MockingURLClassLoader}
 import org.scalatest.{AbstractSuite, Distributor, Filter, Reporter, Stopper, Suite, Tracker}
 import java.net.URL
 
@@ -50,6 +50,9 @@ trait MockFactory extends AbstractSuite with MockFactoryBase { this: Suite =>
   def runInternal(testName: Option[String], reporter: Reporter, stopper: Stopper, filter: Filter,
     configMap: Map[String, Any], distributor: Option[Distributor], tracker: Tracker) {
     
+    if (configMap contains "mock.classes")
+      ClassLoaderStrategy.default = classClassLoaderStrategy
+
     super.runTests(testName, reporter, stopper, filter, configMap, distributor, tracker)
   }
   
