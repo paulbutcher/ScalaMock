@@ -354,6 +354,12 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     expect(2001) { m.aVal }
   }
   
+  test("unmocked val") {
+    val x = new ClassWithValsAndVars
+    
+    expect(42) { x.aVal }
+  }
+  
   test("var") {
     val m = mock[ClassWithValsAndVars]
     
@@ -362,6 +368,28 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     
     m.aVar = "a new value"
     expect("another value") { m.aVar }
+  }
+  
+  test("unmocked var") {
+    val x = new ClassWithValsAndVars
+    
+    expect("I'm a var") { x.aVar }
+    x.aVar = "Some new value"
+    expect("Some new value") { x.aVar }
+  }
+  
+  test("lazy val") {
+    val m = mock[ClassWithValsAndVars]
+    
+    m.expects.aLazyVal returning 1.23
+    
+    expect(1.23) { m.aLazyVal }
+  }
+  
+  test("unmocked lazy val") {
+    val x = new ClassWithValsAndVars
+    
+    expect(3.14) { x.aLazyVal }
   }
   
   test("class with nested types") {

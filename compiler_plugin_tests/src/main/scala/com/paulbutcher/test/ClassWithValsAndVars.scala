@@ -23,4 +23,5 @@ package com.paulbutcher.test
 class ClassWithValsAndVars {
   val aVal = 42
   var aVar = "I'm a var"
+  lazy val aLazyVal = 3.14
 }
