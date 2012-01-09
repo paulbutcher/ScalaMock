@@ -30,6 +30,7 @@ class SimpleClass {
   def methodWithNonPrimitiveArgument(x: SimpleClass4) = x.toString
   
   def +(s: String) = toString + s
+  def query_? = true
   def callSimpleClass2(x: Int) = (new SimpleClass2).doSomething(x)
   def nestDeeply(x: Int) = (new SimpleClass2).nestDeeply(x)
   

@@ -189,6 +189,14 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     val x = new SimpleClass
     expect("SimpleClass foo") { x + " foo" }
   }
+  
+  test("method ending in question mark") {
+    val m = mock[SimpleClass]
+    
+    m.expects.query_? returning false
+    
+    expect(false) { m.query_? }
+  }
 
   test("non-primitive parameter type") {
     val m = mock[SimpleClass]

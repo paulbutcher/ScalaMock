@@ -403,7 +403,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       methodDeclarationWithReturnType(info) +" = "+ mockBodyNormal(info)
       
     def methodDeclarationWithReturnType(info: MethodInfo) =
-      methodDeclaration(info) +": "+ fixedType(info.result)
+      methodDeclaration(info) +" : "+ fixedType(info.result)
         
     def methodDeclaration(info: MethodInfo) = 
       "  "+ overrideIfNecessary(info) +"def "+ info.decoded + typeParamsString(info) + mockParams(info)
@@ -430,7 +430,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     def mockParamList(params: List[Symbol]) = 
       (params map parameterDeclaration _).mkString("(", ", ", ")")
       
-    def parameterDeclaration(parameter: Symbol) = parameter.name +": "+ parameterType(parameter.tpe)
+    def parameterDeclaration(parameter: Symbol) = parameter.name +" : "+ parameterType(parameter.tpe)
     
     def parameterType(t: Type) = t match {
       case _ if isScalaRepeatedParamType(t) => t.typeArgs.head.toString +"*"
@@ -498,7 +498,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       
     def forwarderParam(parameter: Symbol) = {
       val t = parameter.tpe
-      parameter.name +": org.scalamock.MockParameter"+ (
+      parameter.name +" : org.scalamock.MockParameter"+ (
         if (isRepeatedParamType(t)) "["+ t.typeArgs.head +"]*" else "["+ t +"]")
     }
     
@@ -512,7 +512,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       val index = symbol.owner.info.member(symbol.name).alternatives.indexOf(symbol)
       assert(index >= 0)
       if (index > 0)
-        ((1 to index) map { i => "sentinel"+ i +": DummyImplicit" }).mkString("(implicit ", ", ", ")")
+        ((1 to index) map { i => "sentinel"+ i +" : DummyImplicit" }).mkString("(implicit ", ", ", ")")
       else
         ""
     }
@@ -523,7 +523,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     def forwardExpectationParams(info: MethodInfo) = {
         info.flatParams map { p =>
           if (isRepeatedParamType(p.info))
-            "new org.scalamock.MockParameter(new org.scalamock.MatchRepeated("+ p.name +": _*))"
+            "new org.scalamock.MockParameter(new org.scalamock.MatchRepeated("+ p.name +" : _*))"
           else
             p.name
         }
@@ -564,7 +564,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     def forwarderGetMethodParams(info: MethodInfo) =
       (("\""+ info.name +"\"") +: (info.reflectableParams map (p => "classOf["+ p +"]"))).mkString(", ")
       
-    def paramListAsAnyRef(info: MethodInfo) = (info.flatParams map (_.name +": AnyRef")).mkString("(", ", ", ")")
+    def paramListAsAnyRef(info: MethodInfo) = (info.flatParams map (_.name +" : AnyRef")).mkString("(", ", ", ")")
       
     def forwardForwarderParams(info: MethodInfo) = info.flatParams match {
       case Nil => ""
