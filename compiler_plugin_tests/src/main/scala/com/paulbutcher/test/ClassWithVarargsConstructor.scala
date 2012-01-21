@@ -20,6 +20,6 @@
 
 package com.paulbutcher.test
 
-class ClassWithVarargsConstructor(args: Int*) {
+class ClassWithVarargsConstructor(val args: Int*) {
   def getArgs: Seq[Int] = args
 }

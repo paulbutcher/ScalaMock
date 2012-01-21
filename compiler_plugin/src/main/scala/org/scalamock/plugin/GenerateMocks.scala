@@ -149,7 +149,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
   case class MethodInfo(symbol: Symbol, reflectable: Type, enclosing: Mock) {
     lazy val tpe = symbol.info.asSeenFrom(enclosing.mockSymbol.thisType, symbol.owner)
     lazy val params = tpe.paramss
-    lazy val result = tpe.finalResultType
+    lazy val result = fixRepeatedParams(fixedType(tpe.finalResultType))
     lazy val typeParams = tpe.typeParams
     lazy val flatParams = params.flatten
     lazy val paramTypes = flatParams map (t => fixedType(t.tpe))
@@ -167,14 +167,16 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
         case t if isRepeatedParamType(t) => "org.scalamock.MatchRepeated"
         case t => t.toString
       }
-    lazy val matcherParamTypes = paramTypes map {
-        case t if isScalaRepeatedParamType(t) => "Seq["+ t.typeArgs.head +"]"
-        case t if isJavaRepeatedParamType(t) => "Array["+ t.typeArgs.head +"]"
-        case t => t.toString
-      }
+    lazy val matcherParamTypes = paramTypes map fixRepeatedParams _
   }
   
   def toReflectableType(tpe: Type) = appliedType(tpe, List.fill(tpe.typeParams.length)(AnyClass.tpe))
+  
+  def fixRepeatedParams(tpe: Type) = tpe match {
+      case t if isScalaRepeatedParamType(t) => "Seq["+ t.typeArgs.head +"]"
+      case t if isJavaRepeatedParamType(t) => "Array["+ t.typeArgs.head +"]"
+      case t => t.toString
+    }
       
   def fixedType(t: Type) = 
     if (t.typeSymbol.isNestedClass)
@@ -403,7 +405,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       methodDeclarationWithReturnType(info) +" = "+ mockBodyNormal(info)
       
     def methodDeclarationWithReturnType(info: MethodInfo) =
-      methodDeclaration(info) +" : "+ fixedType(info.result)
+      methodDeclaration(info) +" : "+ info.result
         
     def methodDeclaration(info: MethodInfo) = 
       "  "+ overrideIfNecessary(info) +"def "+ info.decoded + typeParamsString(info) + mockParams(info)
@@ -451,7 +453,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       "  }"
       
     def mockBodyNormal(info: MethodInfo) = "if (forwardTo$Mocks != null) "+
-      forwarderNames(info.symbol) + forwardParamsAsAnyRef(info) + ".asInstanceOf["+ fixedType(info.result) +"] else "+ mockBodySimple(info)
+      forwarderNames(info.symbol) + forwardParamsAsAnyRef(info) + ".asInstanceOf["+ info.result +"] else "+ mockBodySimple(info)
         
     def mockBodySimple(info: MethodInfo) =
       mockMethodNames(info.symbol) +".handle(Array("+ forwardParams(info) +")).asInstanceOf["+ info.result +"]"
@@ -531,7 +533,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       
     def mockFunctionToExpectation(info: MethodInfo, paramTypes: Seq[String]) =
       mockMethodNames(info.symbol) +".toTypeSafeExpectation"+ info.flatParams.length + 
-        (paramTypes :+ fixedType(info.result)).mkString("[", ", ", "]")
+        (paramTypes :+ info.result).mkString("[", ", ", "]")
     
     def cachedMockMethod(info: MethodInfo): String = {
       "    private lazy val "+ mockMethodNames(info.symbol) +" = "+ cacheLookup(info)
@@ -547,7 +549,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
 
     def mockFunction(info: MethodInfo) =
       if (info.isConstructor)
-        "org.scalamock.MockConstructor["+ fixedType(info.result) +"]"
+        "org.scalamock.MockConstructor["+ info.result +"]"
       else
         "org.scalamock.MockFunction"
         

@@ -49,12 +49,15 @@ class MockConstructorTest extends Suite with MockFactory with GeneratedMockFacto
     
     m.expects.newInstance(2, 3, 5, 7, 11)
     m.expects.getArgs returning Seq(1, 2, 3)
+    m.expects.args returning Seq(2, 4, 6)
     
     new ClassWithVarargsConstructor(2, 3, 5, 7, 11)
     expect(Seq(1, 2, 3)) { m.getArgs }
+    expect(Seq(2, 4, 6)) { m.args }
     
     val x = new ClassWithVarargsConstructor(2, 4, 6, 8)
     expect(Seq(2, 4, 6, 8)) { x.getArgs }
+    expect(Seq(2, 4, 6, 8)) { x.args }
   }
 
   def testExpectNewJavaInstanceWithRepeatedArgs {
