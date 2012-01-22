@@ -114,9 +114,11 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     
     m.expects.nullMethod
     m.expects.methodWithOneArgument(42) returning "Expected return value"
+    m.expects.methodWithImplementation(456) returning "Another expected value"
     
     m.nullMethod
     expect("Expected return value") { m.methodWithOneArgument(42) }
+    expect("Another expected value") { m.methodWithImplementation(456) }
   }
   
   test("unmocked simple trait") {
@@ -127,6 +129,7 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
       def methodWithTwoArguments(x: Int, y: Int) = "implemented: "+ (x, y)
     }
     expect("implemented: 42") { x.methodWithOneArgument(42) }
+    expect("methodWithImplementation: 456") { x.methodWithImplementation(456) }
   }
 
   test("class with non-trivial constructor") {

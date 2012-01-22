@@ -25,4 +25,5 @@ trait SimpleTrait {
   def methodWithZeroArguments()
   def methodWithOneArgument(x: Int): String
   def methodWithTwoArguments(x: Int, y: Int): String
+  def methodWithImplementation(x: Int) = "methodWithImplementation: "+ x
 }

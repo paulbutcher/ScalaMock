@@ -399,16 +399,16 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     }
         
     def mockMethodConstructor(info: MethodInfo) =
-      methodDeclaration(info) +" = "+ mockBodyConstructor(info)
+      "  "+ methodDeclaration(info) +" = "+ mockBodyConstructor(info)
 
     def mockMethodNormal(info: MethodInfo) =
-      methodDeclarationWithReturnType(info) +" = "+ mockBodyNormal(info)
+      "  "+ overrideIfNecessary(info) + methodDeclarationWithReturnType(info) +" = "+ mockBodyNormal(info)
       
     def methodDeclarationWithReturnType(info: MethodInfo) =
       methodDeclaration(info) +" : "+ info.result
         
     def methodDeclaration(info: MethodInfo) = 
-      "  "+ overrideIfNecessary(info) +"def "+ info.decoded + typeParamsString(info) + mockParams(info)
+      "def "+ info.decoded + typeParamsString(info) + mockParams(info)
       
     def overrideIfNecessary(info: MethodInfo) = if (needsOverride(info)) "override " else ""
     
@@ -616,8 +616,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     override def generateMock() { /* NOOP */ }
     
     override def getMock =
-      "trait "+ className +" {\n\n"+
-        (methodsToMock map methodDeclarationWithReturnType _).mkString("\n") +"\n"+
+      "trait "+ className +" {\n\n  "+
+        (methodsToMock map methodDeclarationWithReturnType _).mkString("\n  ") +"\n"+
       "}"
     
     override lazy val mockTraitEntries = mockClassEntries
@@ -630,6 +630,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
 
     override def getMethodsToMock =
       super.getMethodsToMock filter { case (m, _) => !m.isConstructor }
+      
+    override def needsOverride(info: MethodInfo) = true
   }
   
   class MockObject(mockSymbol: Symbol) extends Mock(mockSymbol, TopLevel) {
