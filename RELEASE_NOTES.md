@@ -1,3 +1,12 @@
+Version 2.3:
+
+- Add support for parameterised traits
+- Bug fixes:
+  - Fix compile errors for methods ending in a question mark
+  - Fix a bug that stopped proxy mocks and generated mocks from co-existing
+  - Fix methods that return "leaked" repeated parameters
+  - Fix traits with implementations
+
 Version 2.2:
 
 - Add support for repeated parameters (varargs)
