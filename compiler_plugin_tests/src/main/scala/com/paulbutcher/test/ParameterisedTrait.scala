@@ -20,33 +20,8 @@
 
 package com.paulbutcher.test
 
-import org.scalamock.annotation.{mock, mockObject, mockWithCompanion}
-
-@mock[SimpleClass] 
-@mock[SimpleClass2]
-@mock[SimpleClass3]
-@mock[SimpleClass4]
-@mock[FinalClass]
-@mock[ClassWithFinalMethod]
-@mock[AbstractClass]
-@mock[SimpleTrait]
-@mock[ClassWithNonTrivialConstructor]
-@mock[ClassWithVarargsConstructor]
-@mock[ClassWithOverloadedMethods]
-@mock[ClassWithPrivateConstructor]
-@mock[ClassWithValsAndVars]
-@mock[DerivedClass]
-@mock[ClassWithNestedTypes]
-@mock[ClassThatOverridesObjectMethods]
-@mock[SimpleJavaClass]
-@mock[JavaClassWithConstants]
-@mock[JavaClassWithStaticVars]
-@mock[JavaClassWithStaticMethods]
-@mock[JavaClassWithVarargsConstructor]
-@mock[ClassWithParameterisedParent]
-@mock[ParameterisedClass[_, _]]
-@mock[ParameterisedTrait[_, _]]
-@mockObject(SimpleObject)
-@mockWithCompanion[ClassWithCompanionObject]
-@mockWithCompanion[TraitWithCompanionObject]
-class Dummy
+trait ParameterisedTrait[T1, T2] {
+  def normalMethod(x: Int, y: String): String
+  def referencesParameters(x: T1, y: T2): (T1, T2)
+  def polymorphic[A](x: A, y: T1): String
+}

@@ -624,7 +624,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
 
     override lazy val mockTraitOrClassDeclaration = 
       "class "+ mockTraitOrClassName + typeParamsString +
-      "(dummy: org.scalamock.MockConstructorDummy) extends "+ className
+      "(dummy: org.scalamock.MockConstructorDummy) extends "+ className + typeParamsString
 
     override def mockBodyNormal(info: MethodInfo) = mockBodySimple(info)
 
