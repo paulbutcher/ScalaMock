@@ -22,7 +22,8 @@ package com.paulbutcher.test
 
 import org.scalamock.annotation.{mock, mockObject, mockWithCompanion}
 
-@mock[SimpleClass] 
+@mock[SimpleClass]
+@mock[SimpleClass] // Deliberately duplicated to test that ScalaMock handles this correctly
 @mock[SimpleClass2]
 @mock[SimpleClass3]
 @mock[SimpleClass4]

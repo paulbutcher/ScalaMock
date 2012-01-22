@@ -61,11 +61,15 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     tree match {
       case ClassDef(_, _, _, _) if tree.hasSymbol =>
         for (AnnotationInfo(atp, args, _) <- tree.symbol.annotations)
-          atp.typeSymbol match {
-            case MockAnnotation => mockType(atp)
-            case MockWithCompanionAnnotation => mockWithCompanion(atp)
-            case MockObjectAnnotation => mockObject(args)
-            case _ =>
+          try {
+            atp.typeSymbol match {
+              case MockAnnotation => mockType(atp)
+              case MockWithCompanionAnnotation => mockWithCompanion(atp)
+              case MockObjectAnnotation => mockObject(args)
+              case _ =>
+            }
+          } catch {
+            case AlreadyMockedException => // Do nothing - it's already been mocked
           }
                   
       case _ =>
@@ -170,6 +174,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     lazy val matcherParamTypes = paramTypes map fixRepeatedParams _
   }
   
+  case object AlreadyMockedException extends Exception
+  
   def toReflectableType(tpe: Type) = appliedType(tpe, List.fill(tpe.typeParams.length)(AnyClass.tpe))
   
   def fixRepeatedParams(tpe: Type) = tpe match {
@@ -186,6 +192,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
 
   abstract class Mock(val mockSymbol: Symbol, val enclosing: Context) extends Context {
     
+    recordMock()
+
     val topLevel = false
     
     val fullMockTraitOrClassName =
@@ -249,8 +257,6 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       "}"
       
     def getTest: String = {
-      recordMock()
-
       mockTraitOrClassDeclaration +" {\n\n"+
         expectForwarders +"\n\n"+
         (if (hasNestedTypes) nestedMockCreator +"\n\n" else "") +
@@ -268,6 +274,8 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     def indent(s: String) = "  " + new Regex("\n").replaceAllIn(s, "\n  ")
 
     def recordMock() {
+      if (mocks exists (_.mockSymbol == mockSymbol))
+        throw AlreadyMockedException
       mocks += this
     }
 
@@ -671,5 +679,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     override def getMock = mockType.getMock +"\n\n"+ companionMock.getMock
     
     override def getTest = mockType.getTest +"\n\n"+ companionMock.getTest
+    
+    override def recordMock() { /* NOOP */ }
   }
 }
