@@ -45,6 +45,7 @@ import org.scalamock.annotation.{mock, mockObject, mockWithCompanion}
 @mock[JavaClassWithVarargsConstructor]
 @mock[ClassWithParameterisedParent]
 @mock[ParameterisedClass[_, _]]
+@mock[ParameterisedTrait[_, _]]
 @mockObject(SimpleObject)
 @mockWithCompanion[ClassWithCompanionObject]
 @mockWithCompanion[TraitWithCompanionObject]
