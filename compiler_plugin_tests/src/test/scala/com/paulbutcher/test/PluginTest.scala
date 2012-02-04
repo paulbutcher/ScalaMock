@@ -296,6 +296,39 @@ class PluginTest extends FunSuite with MockFactory with GeneratedMockFactory wit
     val x = new SimpleClass
     expect("repeatedParameter: (42,WrappedArray(foo, bar, baz))") { x.repeatedParameter(42, "foo", "bar", "baz") }
   }
+  
+  test("by name") {
+    val m = mock[SimpleClass]
+    
+    m.expects.byName(*) returning "Expected return value"
+    
+    expect("Expected return value") { m.byName(42) }
+  }
+  
+  test("by name with matcher") {
+    val m = mock[SimpleClass]
+    
+    m.expects.byName(where { (x: scala.Function0[Int]) => x() == 2 && x() == 3 }) returning "Expected return value"
+    
+    expect("Expected return value") { 
+      var y = 1
+      m.byName {
+        y += 1
+        y
+      }
+    }
+  }
+  
+  test("unmocked by name") {
+    val x = new SimpleClass
+    expect("First time: 2 second time: 3") { 
+      var y = 1
+      x.byName {
+        y += 1
+        y
+      }
+    }
+  }
 
   test("simple object") {
     val m = mockObject(SimpleObject)

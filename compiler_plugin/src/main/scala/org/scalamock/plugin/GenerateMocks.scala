@@ -164,11 +164,13 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
         s.info match {
           case t if isScalaRepeatedParamType(t) => "Seq[_]"
           case t if isJavaRepeatedParamType(t) => "Array["+ t.typeArgs.head +"]"
+          case t if isByNameParamType(t) => "scala.Function0[_]"
           case t => t.toString
         }
       }
     lazy val expectationParamTypes = paramTypes map {
         case t if isRepeatedParamType(t) => "org.scalamock.MatchRepeated"
+        case t if isByNameParamType(t) => "scala.Function0[_]"
         case t => t.toString
       }
     lazy val matcherParamTypes = paramTypes map fixRepeatedParams _
@@ -181,6 +183,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
   def fixRepeatedParams(tpe: Type) = tpe match {
       case t if isScalaRepeatedParamType(t) => "Seq["+ t.typeArgs.head +"]"
       case t if isJavaRepeatedParamType(t) => "Array["+ t.typeArgs.head +"]"
+      case TypeRef(_, ByNameParamClass, arg :: _) => "scala.Function0["+ arg +"]"
       case t => t.toString
     }
       
@@ -466,10 +469,15 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     def mockBodySimple(info: MethodInfo) =
       mockMethodNames(info.symbol) +".handle(Array("+ forwardParams(info) +")).asInstanceOf["+ info.result +"]"
 
-    def forwardParams(info: MethodInfo) = (info.flatParams map (_.name)).mkString(", ")
+    def forwardParams(info: MethodInfo) = (info.flatParams map forwardParam _).mkString(", ")
+    
+    def forwardParam(param: Symbol) = param match {
+      case p if isByNameParamType(p.tpe) => "() => "+ p.name
+      case p => p.name
+    }
     
     def forwardParamsAsAnyRef(info: MethodInfo) =
-      (info.flatParams map (_.name +".asInstanceOf[AnyRef]")).mkString("(", ", ", ")")
+      (info.flatParams map { p => "("+ forwardParam(p) +").asInstanceOf[AnyRef]" }).mkString("(", ", ", ")")
       
     def constructorParamTypes(info: MethodInfo) =
       (info.reflectableParams map (p => "classOf["+ p +"]")).mkString(", ")
@@ -506,11 +514,14 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
     def forwarderParamList(params: List[Symbol]): String = 
       (params map forwarderParam _).mkString("("+ implicitIfNecessary(params), ", ", ")") 
       
-    def forwarderParam(parameter: Symbol) = {
-      val t = parameter.tpe
-      parameter.name +" : org.scalamock.MockParameter"+ (
-        if (isRepeatedParamType(t)) "["+ t.typeArgs.head +"]*" else "["+ t +"]")
-    }
+    def forwarderParam(parameter: Symbol) =
+      parameter.name +" : org.scalamock.MockParameter"+ forwarderParamType(parameter.tpe)
+    
+    def forwarderParamType(t: Type) = t match {
+        case t if isRepeatedParamType(t) => "["+ t.typeArgs.head +"]*"
+        case t if isByNameParamType(t) => "[scala.Function0[_]]"
+        case _ => "["+ t +"]"
+      }
     
     def implicitIfNecessary(params: List[Symbol]) = if (params.nonEmpty && params.head.isImplicit) "implicit " else ""
     
@@ -578,7 +589,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
       
     def forwardForwarderParams(info: MethodInfo) = info.flatParams match {
       case Nil => ""
-      case _ => ", "+ forwardParams(info)
+      case _ => ", "+ (info.flatParams map (_.name)).mkString(", ")
     }
         
     def javaValueForwarder(value: Symbol) =

@@ -42,11 +42,11 @@ class SimpleClass {
   def withUpperBound[T <: Product](x: T) = x.productArity
   def withViewBound[T <% Ordered[T]](x: T, y: T) = x < y
   def withContextBound[T: ClassManifest] = "erasure is: "+ classManifest[T].erasure
+  def byName(x: => Int) = "First time: "+ x +" second time: "+ x
   
   def repeatedParameter(x: Int, ys: String*) = "repeatedParameter: "+ (x, ys)
 
   //! TODO
-//  def byName(x: => Unit) = x; x
 //  def referencesPackageObject(x: TestType) = "referencesPackageObject: "+ x
 }
 

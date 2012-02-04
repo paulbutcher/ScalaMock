@@ -30,4 +30,5 @@ trait Utils extends CompilerAccess {
   // Back-ported from 2.9
   def isScalaRepeatedParamType(tp: Type) = tp.typeSymbol == RepeatedParamClass
   def isJavaRepeatedParamType(tp: Type)  = tp.typeSymbol == JavaRepeatedParamClass
+  def isByNameParamType(tp: Type)        = tp.typeSymbol == ByNameParamClass
 }
