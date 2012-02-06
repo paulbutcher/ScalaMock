@@ -183,7 +183,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
   def toUnderlying(tpe: Type) = tpe match {
       case t if isScalaRepeatedParamType(t) => "Seq["+ t.typeArgs.head +"]"
       case t if isJavaRepeatedParamType(t) => "Array["+ t.typeArgs.head +"]"
-      case TypeRef(_, ByNameParamClass, arg :: _) => "scala.Function0["+ arg +"]"
+      case t if isByNameParamType(t) => "scala.Function0["+ t.typeArgs.head +"]"
       case t => t.toString
     }
       
