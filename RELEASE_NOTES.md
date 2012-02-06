@@ -1,6 +1,7 @@
 Version 2.3:
 
 - Add support for parameterised traits
+- Add support for by name parameters
 - Bug fixes:
   - Fix compile errors for methods ending in a question mark
   - Fix a bug that stopped proxy mocks and generated mocks from co-existing
