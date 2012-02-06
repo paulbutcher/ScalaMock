@@ -153,10 +153,10 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
   case class MethodInfo(symbol: Symbol, reflectable: Type, enclosing: Mock) {
     lazy val tpe = symbol.info.asSeenFrom(enclosing.mockSymbol.thisType, symbol.owner)
     lazy val params = tpe.paramss
-    lazy val result = fixRepeatedParams(fixedType(tpe.finalResultType))
+    lazy val result = toUnderlying(fixNested(tpe.finalResultType))
     lazy val typeParams = tpe.typeParams
     lazy val flatParams = params.flatten
-    lazy val paramTypes = flatParams map (t => fixedType(t.tpe))
+    lazy val paramTypes = flatParams map (t => fixNested(t.tpe))
     lazy val name = symbol.name
     lazy val decoded = name.decode
     lazy val isConstructor = symbol.isConstructor
@@ -173,21 +173,21 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
         case t if isByNameParamType(t) => "scala.Function0[_]"
         case t => t.toString
       }
-    lazy val matcherParamTypes = paramTypes map fixRepeatedParams _
+    lazy val matcherParamTypes = paramTypes map toUnderlying _
   }
   
   case object AlreadyMockedException extends Exception
   
   def toReflectableType(tpe: Type) = appliedType(tpe, List.fill(tpe.typeParams.length)(AnyClass.tpe))
   
-  def fixRepeatedParams(tpe: Type) = tpe match {
+  def toUnderlying(tpe: Type) = tpe match {
       case t if isScalaRepeatedParamType(t) => "Seq["+ t.typeArgs.head +"]"
       case t if isJavaRepeatedParamType(t) => "Array["+ t.typeArgs.head +"]"
       case TypeRef(_, ByNameParamClass, arg :: _) => "scala.Function0["+ arg +"]"
       case t => t.toString
     }
       
-  def fixedType(t: Type) = 
+  def fixNested(t: Type) = 
     if (t.typeSymbol.isNestedClass)
       erasure.erasure(t)
     else
@@ -336,7 +336,7 @@ class GenerateMocks(plugin: ScalaMockPlugin, val global: Global) extends PluginC
 
     lazy val className = mockSymbol.name.toString
     
-    lazy val fullClassName = fixedType(mockSymbol.tpe).toString
+    lazy val fullClassName = fixNested(mockSymbol.tpe).toString
     
     lazy val mockTraitOrClassName = getMockTraitOrClassName
     
