@@ -27,17 +27,6 @@ class ProxyMockTest extends Suite with MockFactory with ProxyMockFactory with Ve
   
   autoVerify = false
   
-  trait Turtle {
-    def penUp()
-    def penDown()
-    def forward(distance: Double): (Double, Double)
-    def turn(angle: Double)
-    def getAngle: Double
-    def getPosition(): (Double, Double)
-    def setPosition(x: Double, y: Double): (Double, Double)
-    def moveInSequence(positions: (Double, Double)*)
-  }
-  
   def testUnexpectedCall {
     val m = mock[Turtle]
     intercept[ExpectationException] { m.penDown }
