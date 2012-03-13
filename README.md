@@ -54,10 +54,13 @@ Known limitations:
 
 ## Downloading
 
-Download from [scala-tools](http://scala-tools.org/repo-releases/org/scalamock/).
+Download from [Sonatype](https://oss.sonatype.org/content/repositories/releases/org/scalamock/).
 
 To use ScalaMock in [sbt 0.11](https://github.com/harrah/xsbt/wiki) with [ScalaTest](http://www.scalatest.org/) add the following to your project file:
 
+    resolvers += "Sonatype OSS Releases" at 
+      "http://oss.sonatype.org/content/repositories/releases/"
+    
     libraryDependencies +=
       "org.scalamock" %% "scalamock-scalatest-support" % "latest.integration"
 
