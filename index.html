@@ -91,14 +91,16 @@
     <h2>Downloading</h2>
     
     <p>
-      Download from <a href="http://scala-tools.org/repo-releases/org/scalamock/">scala-tools</a>.
+      Download from <a href="https://oss.sonatype.org/content/repositories/releases/org/scalamock/">Sonatype</a>.
     </p>
 
     <p>
       To use ScalaMock in <a href="https://github.com/harrah/xsbt/wiki">sbt 0.11</a> with <a href="http://www.scalatest.org/">ScalaTest</a> add the following to your project file:
     </p>
 
-    <pre>libraryDependencies +=
+    <pre>resolvers += "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/releases/"
+
+libraryDependencies +=
   "org.scalamock" %% "scalamock-scalatest-support" % "latest.integration"</pre>
     
     <p>
