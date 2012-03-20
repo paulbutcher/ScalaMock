@@ -30,7 +30,7 @@ Native Scala mocking.
       expect("final") { Seq(0, 1, 2, 3).foldLeft("initial")(f) }
     }
 
-[Full worked example](http://www.paulbutcher.com/2011/10/scalamock-step-by-step/).
+[Full worked example](http://www.paulbutcher.com/2011/11/scalamock-step-by-step/).
 
 ## Features
 
