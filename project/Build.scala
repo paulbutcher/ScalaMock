@@ -34,14 +34,34 @@ object ScalaMockBuild extends Build {
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings"),
 
     publishTo <<= version { v =>
-      val nexus = "http://nexus.scala-tools.org/content/repositories/"
+      val nexus = "https://oss.sonatype.org/"
       if (v.trim.endsWith("SNAPSHOT"))
-        Some("snapshots" at nexus + "snapshots/") 
+        Some("snapshots" at nexus + "content/repositories/snapshots") 
       else
-        Some("releases" at nexus + "releases/")
+        Some("releases" at nexus + "service/local/staging/deploy/maven2")
     },
-    credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
-    publishArtifact in (Compile, packageDoc) := false
+    publishArtifact in (Compile, packageDoc) := false,
+    pomIncludeRepository := { _ => false },
+    pomExtra := (
+      <url>http://jsuereth.com/scala-arm</url>
+      <licenses>
+        <license>
+          <name>BSD-style</name>
+          <url>http://www.opensource.org/licenses/bsd-license.php</url>
+          <distribution>repo</distribution>
+        </license>
+      </licenses>
+      <scm>
+        <url>git@github.com:jsuereth/scala-arm.git</url>
+        <connection>scm:git:git@github.com:paulbutcher/ScalaMock.git</connection>
+      </scm>
+      <developers>
+        <developer>
+          <id>paulbutcher</id>
+          <name>Paul Butcher</name>
+          <url>http://paulbutcher.com/</url>
+        </developer>
+      </developers>)
   )
   
   lazy val versionSpecificSettings = Seq(
