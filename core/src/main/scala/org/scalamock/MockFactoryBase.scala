@@ -20,6 +20,8 @@
 
 package org.scalamock
 
+import collection.mutable.ListBuffer
+
 trait MockFactoryBase {
   import language.implicitConversions
   
@@ -45,13 +47,17 @@ trait MockFactoryBase {
     
   }
   
-  private[scalamock] def logCall(target: MockFunction, arguments: Product) = callLog.log(target, arguments)
+  private[scalamock] def logCall(target: MockFunction, arguments: Product) {
+    callLog += Call(target, arguments)
+  }
   
   private def add[E <: Expectation](e: E) = {
     expectationContext.add(e)
     e
   }
   
-  private val callLog = new CallLog
+  private case class Call(target: MockFunction, arguments: Product)
+
+  private val callLog = new ListBuffer[Call]
   private var expectationContext = new UnorderedExpectations
 }
