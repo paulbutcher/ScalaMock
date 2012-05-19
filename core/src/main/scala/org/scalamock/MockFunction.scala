@@ -41,7 +41,6 @@ class MockFunction0[R](factory: MockFactoryBase, name: Symbol)
   def apply() = handle(None).asInstanceOf[R]
 }
 
-
 class MockFunction1[T1, R](factory: MockFactoryBase, name: Symbol)
   extends MockFunction(factory, name) with Function1[T1, R] with NiceToString {
 
