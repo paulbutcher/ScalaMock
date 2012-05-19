@@ -20,36 +20,4 @@
 
 package org.scalamock
 
-// This has to be a separate trait, not a method in MockFunction, because
-// otherwise linearization will choose the MockFunctionN toString
-trait NiceToString { self: MockFunction =>
-
-  override def toString = name.name.toString
-}
-
-abstract class MockFunction(protected val factory: MockFactoryBase, protected val name: Symbol) extends Handler {
-  
-  def handle(arguments: Product) = {
-    factory.logCall(this, arguments)
-    null
-  }
-}
-
-class MockFunction0[R](factory: MockFactoryBase, name: Symbol)
-  extends MockFunction(factory, name) with Function0[R] with NiceToString {
-
-  def apply() = handle(None).asInstanceOf[R]
-}
-
-
-class MockFunction1[T1, R](factory: MockFactoryBase, name: Symbol)
-  extends MockFunction(factory, name) with Function1[T1, R] with NiceToString {
-
-  def apply(v1: T1) = handle(Tuple1(v1)).asInstanceOf[R]
-}
-
-class MockFunction2[T1, T2, R](factory: MockFactoryBase, name: Symbol)
-  extends MockFunction(factory, name) with Function2[T1, T2, R] with NiceToString {
-
-  def apply(v1: T1, v2: T2) = handle((v1, v2)).asInstanceOf[R]
-}
+trait Handler
