@@ -28,7 +28,7 @@ object ScalaMockBuild extends Build {
     organization := "org.scalamock",
     version := "3.0-SNAPSHOT",
     scalaVersion := "2.10.0-M3",
-    scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings"),
+    scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-Xfatal-warnings"),
 	resolvers += "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/",
 
     publishTo <<= version { v =>

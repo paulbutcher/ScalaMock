@@ -21,10 +21,15 @@
 package org.scalamock
 
 trait MockFactoryBase {
+  import language.implicitConversions
+  
+  protected case class MockFunctionName(name: Symbol)
+  protected implicit def mockFunctionName(name: Symbol) = MockFunctionName(name)
+  protected implicit def mockFunctionName(name: String) = MockFunctionName(Symbol(name))
 
-  protected def mockFunction[R](name: Symbol) = new MockFunction0[R](this, name)
-  protected def mockFunction[T1, R](name: Symbol) = new MockFunction1[T1, R](this, name)
-  protected def mockFunction[T1, T2, R](name: Symbol) = new MockFunction2[T1, T2, R](this, name)
+  protected def mockFunction[R](name: MockFunctionName) = new MockFunction0[R](this, name.name)
+  protected def mockFunction[T1, R](name: MockFunctionName) = new MockFunction1[T1, R](this, name.name)
+  protected def mockFunction[T1, T2, R](name: MockFunctionName) = new MockFunction2[T1, T2, R](this, name.name)
 
   protected def mockFunction[R] = new MockFunction0[R](this, Symbol("unnamed MockFunction0"))
   protected def mockFunction[T1, R] = new MockFunction1[T1, R](this, Symbol("unnamed MockFunction1"))
