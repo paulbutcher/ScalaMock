@@ -82,5 +82,5 @@ object ScalaMockBuild extends Build {
 	name := "ScalaMock Core Tests",
     publish := (),
     publishLocal := ()
-  ) dependsOn(scalatest % "test")
+  ) dependsOn(scalatest, core)
 }
