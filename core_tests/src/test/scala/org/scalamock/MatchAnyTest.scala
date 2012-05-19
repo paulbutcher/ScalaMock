@@ -20,11 +20,11 @@
 
 package org.scalamock
 
-import org.scalatest.Suite
+import org.scalatest.FreeSpec
 
-class MatchAnyTest extends Suite {
+class MatchAnyTest extends FreeSpec {
 
-  def testMatchAny {
+  "MatchAny should match anything" in {
     assert(new MatchAny == 1.0)
     assert(new MatchAny == "")
     assert(new MatchAny == (0, 42))
