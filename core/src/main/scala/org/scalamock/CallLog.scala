@@ -24,9 +24,11 @@ import collection.mutable.ListBuffer
 
 private[scalamock] class CallLog {
   
+  case class Call(target: MockFunction, arguments: Product)
+  
   def log(target: MockFunction, arguments: Product) {
-    calls += ((target, arguments))
+    calls += Call(target, arguments)
   }
   
-  private val calls = new ListBuffer[(MockFunction, Product)]
+  private val calls = new ListBuffer[Call]
 }
