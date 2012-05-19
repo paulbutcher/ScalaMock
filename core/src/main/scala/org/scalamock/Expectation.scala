@@ -31,8 +31,13 @@ trait Expectation[R] extends Handler {
     }
   }
   
+  def isSatisfied = expectedCalls match {
+    case Some(r) => r contains actualCalls
+    case None => actualCalls > 0
+  }
+  
   protected var expectedArguments: Option[Product] = None
-  protected var expectedCalls: Option[Int] = None
+  protected var expectedCalls: Option[Range] = None
   protected var actualCalls: Int = 0
   protected var returnVal: R = _
 }

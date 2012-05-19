@@ -45,6 +45,8 @@ trait MockFactoryBase {
   
   protected def verifyExpectations() {
     callLog foreach { c => expectationContext.handle(c) }
+    if (!expectationContext.isSatisfied)
+      throw new ExpectationException("Unsatisfied expectation")
   }
   
   private[scalamock] def logCall(target: MockFunction, arguments: Product) {

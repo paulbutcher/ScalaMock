@@ -24,9 +24,11 @@ import collection.mutable.ListBuffer
 
 private[scalamock] abstract class Expectations extends Handler {
   
-  private[scalamock] def add(handler: Handler) {
+  def add(handler: Handler) {
     handlers += handler
   }
+  
+  def isSatisfied = handlers forall (_.isSatisfied)
   
   protected val handlers = new ListBuffer[Handler]
 }

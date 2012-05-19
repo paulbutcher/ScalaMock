@@ -23,4 +23,6 @@ package org.scalamock
 private[scalamock] trait Handler {
   
   def handle(call: Call): Option[Any]
+  
+  def isSatisfied: Boolean
 }
