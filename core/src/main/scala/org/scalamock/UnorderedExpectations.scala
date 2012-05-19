@@ -20,4 +20,14 @@
 
 package org.scalamock
 
-private[scalamock] class UnorderedExpectations extends Expectations
+private[scalamock] class UnorderedExpectations extends Expectations {
+  
+  def handle(call: Call): Option[Any] = {
+    for (handler <- handlers) {
+      val r = handler.handle(call)
+      if (r.isDefined)
+        return r
+    }
+    return None
+  }
+}

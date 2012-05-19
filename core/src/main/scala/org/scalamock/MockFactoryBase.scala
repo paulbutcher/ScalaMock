@@ -44,20 +44,18 @@ trait MockFactoryBase {
   protected implicit def toMockParameter[T](v: T) = new MockParameter(v)
   
   protected def verifyExpectations() {
-    
+    callLog foreach { c => expectationContext.handle(c) }
   }
   
   private[scalamock] def logCall(target: MockFunction, arguments: Product) {
     callLog += Call(target, arguments)
   }
   
-  private def add[E <: Expectation](e: E) = {
+  private def add[E <: Expectation[_]](e: E) = {
     expectationContext.add(e)
     e
   }
   
-  private case class Call(target: MockFunction, arguments: Product)
-
   private val callLog = new ListBuffer[Call]
   private var expectationContext = new UnorderedExpectations
 }
