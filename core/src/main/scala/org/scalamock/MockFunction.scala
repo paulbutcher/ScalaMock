@@ -20,4 +20,6 @@
 
 package org.scalamock
 
-class MockFunction
+class MockFunction(protected val name: Symbol) {
+  
+}

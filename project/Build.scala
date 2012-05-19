@@ -28,6 +28,7 @@ object ScalaMockBuild extends Build {
     version := "3.0-SNAPSHOT",
     crossScalaVersions := Seq("2.10.0-M3"),
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings"),
+	resolvers += "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/",
 
     publishTo <<= version { v =>
       val nexus = "https://oss.sonatype.org/"
@@ -63,4 +64,15 @@ object ScalaMockBuild extends Build {
   lazy val core = Project("core", file("core")) settings(
     name := "ScalaMock Core"
   )
+
+  lazy val scalatest = Project("scalatest", file("frameworks/scalatest")) settings(
+    name := "ScalaMock ScalaTest Support",
+    libraryDependencies += "org.scalatest" %% "scalatest" % "1.8-SNAPSHOT"
+  ) dependsOn(core)
+
+  lazy val core_tests = Project("core_tests", file("core_tests")) settings(
+	name := "ScalaMock Core Tests",
+    publish := (),
+    publishLocal := ()
+  ) dependsOn(scalatest % "test")
 }
