@@ -20,34 +20,13 @@
 
 package org.scalamock
 
-trait Expectation extends Handler {
-  
-  protected var args: Option[Product] = None
-}
+import collection.mutable.ListBuffer
 
-class Expectation0[R] extends Expectation {
+private[scalamock] abstract class Expectations extends Handler {
   
-  def expects() = this
-
-  def verify() = expects()
-}
-
-class Expectation1[T1, R] extends Expectation {
-  
-  def expects(v1: MockParameter[T1]) = {
-    args = Some(Tuple1(v1))
-    this
+  private[scalamock] def add(handler: Handler) {
+    handlers += handler
   }
   
-  def verify(v1: MockParameter[T1]) = expects(v1)
-}
-
-class Expectation2[T1, T2, R] extends Expectation {
-  
-  def expects(v1: MockParameter[T1], v2: MockParameter[T2]) = {
-    args = Some((v1, v2))
-    this
-  } 
-  
-  def verify(v1: MockParameter[T1], v2: MockParameter[T2]) = expects(v1, v2)
+  protected val handlers = new ListBuffer[Handler]
 }

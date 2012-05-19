@@ -20,34 +20,4 @@
 
 package org.scalamock
 
-trait Expectation extends Handler {
-  
-  protected var args: Option[Product] = None
-}
-
-class Expectation0[R] extends Expectation {
-  
-  def expects() = this
-
-  def verify() = expects()
-}
-
-class Expectation1[T1, R] extends Expectation {
-  
-  def expects(v1: MockParameter[T1]) = {
-    args = Some(Tuple1(v1))
-    this
-  }
-  
-  def verify(v1: MockParameter[T1]) = expects(v1)
-}
-
-class Expectation2[T1, T2, R] extends Expectation {
-  
-  def expects(v1: MockParameter[T1], v2: MockParameter[T2]) = {
-    args = Some((v1, v2))
-    this
-  } 
-  
-  def verify(v1: MockParameter[T1], v2: MockParameter[T2]) = expects(v1, v2)
-}
+case class ExpectationException(msg: String) extends RuntimeException(msg)

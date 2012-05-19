@@ -35,13 +35,23 @@ trait MockFactoryBase {
   protected def mockFunction[T1, R] = new MockFunction1[T1, R](this, Symbol("unnamed MockFunction1"))
   protected def mockFunction[T1, T2, R] = new MockFunction2[T1, T2, R](this, Symbol("unnamed MockFunction2"))
   
-  protected implicit def toExpectation[R](m: MockFunction0[R]) = new Expectation0[R]
-  protected implicit def toExpectation[T1, R](m: MockFunction1[T1, R]) = new Expectation1[T1, R]
-  protected implicit def toExpectation[T1, T2, R](m: MockFunction2[T1, T2, R]) = new Expectation2[T1, T2, R]
+  protected implicit def toExpectation[R](m: MockFunction0[R]) = add(new Expectation0[R])
+  protected implicit def toExpectation[T1, R](m: MockFunction1[T1, R]) = add(new Expectation1[T1, R])
+  protected implicit def toExpectation[T1, T2, R](m: MockFunction2[T1, T2, R]) = add(new Expectation2[T1, T2, R])
   
   protected implicit def toMockParameter[T](v: T) = new MockParameter(v)
   
+  protected def verifyExpectations() {
+    
+  }
+  
   private[scalamock] def logCall(target: MockFunction, arguments: Product) = callLog.log(target, arguments)
   
+  private def add[E <: Expectation](e: E) = {
+    expectationContext.add(e)
+    e
+  }
+  
   private val callLog = new CallLog
+  private var expectationContext = new UnorderedExpectations
 }
