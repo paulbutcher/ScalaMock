@@ -27,26 +27,26 @@ trait NiceToString { self: MockFunction =>
   override def toString = name.name.toString
 }
 
-abstract class MockFunction(protected val name: Symbol) {
+abstract class MockFunction(protected val factory: MockFactoryBase, protected val name: Symbol) {
   
   def handle(arguments: Product) = null
 }
 
-class MockFunction0[R](name: Symbol)
-  extends MockFunction(name) with Function0[R] with NiceToString {
+class MockFunction0[R](factory: MockFactoryBase, name: Symbol)
+  extends MockFunction(factory, name) with Function0[R] with NiceToString {
 
   def apply() = handle(None).asInstanceOf[R]
 }
 
 
-class MockFunction1[T1, R](name: Symbol)
-  extends MockFunction(name) with Function1[T1, R] with NiceToString {
+class MockFunction1[T1, R](factory: MockFactoryBase, name: Symbol)
+  extends MockFunction(factory, name) with Function1[T1, R] with NiceToString {
 
   def apply(v1: T1) = handle(Tuple1(v1)).asInstanceOf[R]
 }
 
-class MockFunction2[T1, T2, R](name: Symbol)
-  extends MockFunction(name) with Function2[T1, T2, R] with NiceToString {
+class MockFunction2[T1, T2, R](factory: MockFactoryBase, name: Symbol)
+  extends MockFunction(factory, name) with Function2[T1, T2, R] with NiceToString {
 
   def apply(v1: T1, v2: T2) = handle((v1, v2)).asInstanceOf[R]
 }

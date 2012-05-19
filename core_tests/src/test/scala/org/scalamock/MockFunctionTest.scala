@@ -29,5 +29,15 @@ class MockFunctionTest extends FreeSpec with MockFactoryBase {
       val m = mockFunction[String]
       expect(null) { m() }
     }
+    
+    "have a sensible default name" in {
+      val m = mockFunction[String]
+      expect("unnamed MockFunction0"){ m.toString }
+    }
+    
+    "have the name we gave it" in {
+      val m = mockFunction[String](Symbol("a mock function"))
+      expect("a mock function"){ m.toString }
+    }
   }
 }

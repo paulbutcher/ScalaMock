@@ -21,8 +21,12 @@
 package org.scalamock
 
 trait MockFactoryBase {
-  
-  protected def mockFunction[R] = new MockFunction0[R](Symbol("unnamed MockFunction0"))
-  protected def mockFunction[T1, R] = new MockFunction1[T1, R](Symbol("unnamed MockFunction1"))
-  protected def mockFunction[T1, T2, R] = new MockFunction2[T1, T2, R](Symbol("unnamed MockFunction2"))
+
+  protected def mockFunction[R](name: Symbol) = new MockFunction0[R](this, name)
+  protected def mockFunction[T1, R](name: Symbol) = new MockFunction1[T1, R](this, name)
+  protected def mockFunction[T1, T2, R](name: Symbol) = new MockFunction2[T1, T2, R](this, name)
+
+  protected def mockFunction[R] = new MockFunction0[R](this, Symbol("unnamed MockFunction0"))
+  protected def mockFunction[T1, R] = new MockFunction1[T1, R](this, Symbol("unnamed MockFunction1"))
+  protected def mockFunction[T1, T2, R] = new MockFunction2[T1, T2, R](this, Symbol("unnamed MockFunction2"))
 }
