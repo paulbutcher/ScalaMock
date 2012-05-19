@@ -44,7 +44,7 @@ trait MockFactoryBase {
   protected implicit def toMockParameter[T](v: T) = new MockParameter(v)
   
   protected def verifyExpectations() {
-    callLog foreach { c => expectationContext.handle(c) }
+    callLog foreach expectationContext.handle _
     if (!expectationContext.isSatisfied)
       throw new ExpectationException("Unsatisfied expectation")
   }
