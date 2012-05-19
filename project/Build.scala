@@ -20,6 +20,7 @@
 
 import sbt._
 import Keys._
+import sbt.inc.Analysis
 
 object ScalaMockBuild extends Build {
 
@@ -61,6 +62,13 @@ object ScalaMockBuild extends Build {
       </developers>)
   )
 
+  lazy val scalamock = Project("ScalaMock", file(".")) settings(
+    compile in Compile := Analysis.Empty,
+    publishArtifact in (Compile, packageBin) := false,
+    publishArtifact in (Compile, packageSrc) := false,
+    sources in Compile <<= (Seq(core, scalatest).map(sources in Compile in _).join).map(_.flatten)
+  ) aggregate(core, core_tests, scalatest)
+
   lazy val core = Project("core", file("core")) settings(
     name := "ScalaMock Core"
   )
@@ -74,5 +82,5 @@ object ScalaMockBuild extends Build {
 	name := "ScalaMock Core Tests",
     publish := (),
     publishLocal := ()
-  ) dependsOn(scalatest % "test")
+  ) dependsOn(scalatest)
 }
