@@ -1,0 +1,16 @@
+project/boot/
+project/build/target/
+target/
+*_managed/
+*.tmproj
+.DS_Store
+*.iml
+*.ipr
+*.iws
+.idea/
+.history
+.classpath
+.project
+.target
+.cache
+.settings/
