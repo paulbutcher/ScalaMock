@@ -30,6 +30,12 @@ class MockFunctionTest extends FreeSpec with MockFactoryBase {
       expect(null) { m() }
     }
     
+    //! TODO - why is this failing?
+    "return a null-like value for non reference types" ignore {
+      val m = mockFunction[Int]
+      expect(0) { m() }
+    }
+    
     "have a sensible default name" in {
       val m = mockFunction[String]
       expect("unnamed MockFunction0"){ m.toString }
@@ -57,6 +63,11 @@ class MockFunctionTest extends FreeSpec with MockFactoryBase {
         val m2 = mockFunction[Symbol, String](mockFunctionName("a named mock"))
         expect("a named mock"){ m2.toString }
       }
+    }
+    
+    "match literal arguments" in {
+      val m = mockFunction[String, Int, Int]
+      m.expects("foo", 42)
     }
   }
 }
