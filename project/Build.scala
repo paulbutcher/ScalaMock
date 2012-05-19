@@ -40,10 +40,9 @@ object ScalaMockBuild extends Build {
       else
         Some("releases" at nexus + "service/local/staging/deploy/maven2")
     },
-    publishArtifact in (Compile, packageDoc) := false,
     pomIncludeRepository := { _ => false },
     pomExtra := (
-      <url>http://jsuereth.com/scala-arm</url>
+      <url>http://paulbutcher.com/</url>
       <licenses>
         <license>
           <name>BSD-style</name>
@@ -52,7 +51,7 @@ object ScalaMockBuild extends Build {
         </license>
       </licenses>
       <scm>
-        <url>git@github.com:jsuereth/scala-arm.git</url>
+        <url>git@github.com:paulbutcher/ScalaMock.git</url>
         <connection>scm:git:git@github.com:paulbutcher/ScalaMock.git</connection>
       </scm>
       <developers>
@@ -74,7 +73,6 @@ object ScalaMockBuild extends Build {
     compile in Compile := Analysis.Empty,
     publishArtifact in (Compile, packageBin) := false,
     publishArtifact in (Compile, packageSrc) := false,
-    publishArtifact in (Compile, packageDoc) := true,
     publishArtifact in Test := false,
     libraryDependencies <+= scalaVersion("org.scalatest" %% "scalatest" % scalatestVersion(_)),
     libraryDependencies += "junit" % "junit" % "3.8.2",
