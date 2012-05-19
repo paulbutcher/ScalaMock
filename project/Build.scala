@@ -27,7 +27,7 @@ object ScalaMockBuild extends Build {
   override lazy val settings = super.settings ++ Seq(
     organization := "org.scalamock",
     version := "3.0-SNAPSHOT",
-    crossScalaVersions := Seq("2.10.0-M3"),
+    scalaVersion := "2.10.0-M3",
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings"),
 	resolvers += "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/",
 
