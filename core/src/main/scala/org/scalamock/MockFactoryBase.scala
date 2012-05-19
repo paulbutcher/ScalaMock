@@ -41,7 +41,7 @@ trait MockFactoryBase {
   
   protected implicit def toMockParameter[T](v: T) = new MockParameter(v)
   
-  private[scalamock] def logCall(target: Handler, arguments: Product) = callLog.log(target, arguments)
+  private[scalamock] def logCall(target: MockFunction, arguments: Product) = callLog.log(target, arguments)
   
   private val callLog = new CallLog
 }

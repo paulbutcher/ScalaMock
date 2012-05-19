@@ -27,7 +27,7 @@ trait NiceToString { self: MockFunction =>
   override def toString = name.name.toString
 }
 
-abstract class MockFunction(protected val factory: MockFactoryBase, protected val name: Symbol) extends Handler {
+abstract class MockFunction(protected val factory: MockFactoryBase, protected val name: Symbol) {
   
   def handle(arguments: Product) = {
     factory.logCall(this, arguments)
