@@ -33,10 +33,12 @@ class MatchEpsilonTest extends FreeSpec {
       assert(new MatchEpsilon(1.0) == 1)
     }
     
-    "but not match anything that's not close enough" in {
+    "not match anything that's not close enough" in {
       assert(!(new MatchEpsilon(1.0) == 1.1))
       assert(!(new MatchEpsilon(1.0) == 0.9))
-  
+    }
+    
+    "only match numbers" in {
       assert(!(new MatchEpsilon(1.0) == "foo"))
     }
   }
