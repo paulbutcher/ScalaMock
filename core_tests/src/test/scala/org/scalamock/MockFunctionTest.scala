@@ -20,9 +20,12 @@
 
 package org.scalamock
 
+import org.scalamock.scalatest.MockFactory
 import org.scalatest.FreeSpec
 
-class MockFunctionTest extends FreeSpec with MockFactoryBase {
+class MockFunctionTest extends FreeSpec with MockFactory {
+  
+  autoVerify = false
   
   "A mock function should" - {
     "return null unless told otherwise" in {
@@ -71,6 +74,7 @@ class MockFunctionTest extends FreeSpec with MockFactoryBase {
       val m = mockFunction[String, Int, Int]
       m.expects("foo", 42)
       m("foo", 42)
+      verifyExpectations
     }
     
     "fail if an expectation is not met" in {
@@ -85,6 +89,7 @@ class MockFunctionTest extends FreeSpec with MockFactoryBase {
       val m = mockFunction[String, Int, Int]
       m("foo", 42)
       m.verify("foo", 42)
+      verifyExpectations
     }
     
     "fail if an expectation is not met" in {

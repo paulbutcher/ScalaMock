@@ -25,6 +25,19 @@ import collection.mutable.ListBuffer
 trait MockFactoryBase {
   import language.implicitConversions
   
+  protected def resetExpectations() {
+    callLog.clear
+    expectationContext = new UnorderedExpectations
+  }
+  
+  protected def verifyExpectations() {
+    callLog foreach expectationContext.handle _
+    if (!expectationContext.isSatisfied)
+      throw new ExpectationException("Unsatisfied expectation")
+    
+    expectationContext = null
+  }
+  
   protected case class MockFunctionName(name: Symbol)
   protected implicit def mockFunctionName(name: Symbol) = MockFunctionName(name)
   protected implicit def mockFunctionName(name: String) = MockFunctionName(Symbol(name))
@@ -42,12 +55,6 @@ trait MockFactoryBase {
   protected implicit def toExpectation[T1, T2, R](m: MockFunction2[T1, T2, R]) = add(new Expectation2[T1, T2, R])
   
   protected implicit def toMockParameter[T](v: T) = new MockParameter(v)
-  
-  protected def verifyExpectations() {
-    callLog foreach expectationContext.handle _
-    if (!expectationContext.isSatisfied)
-      throw new ExpectationException("Unsatisfied expectation")
-  }
   
   private[scalamock] def logCall(target: MockFunction, arguments: Product) {
     callLog += Call(target, arguments)
