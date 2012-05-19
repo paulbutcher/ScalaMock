@@ -86,5 +86,11 @@ class MockFunctionTest extends FreeSpec with MockFactoryBase {
       m("foo", 42)
       m.verify("foo", 42)
     }
+    
+    "fail if an expectation is not met" in {
+      val m = mockFunction[String, Int, Int]
+      m.verify("foo", 42)
+      intercept[ExpectationException] { verifyExpectations }
+    }
   }
 }
