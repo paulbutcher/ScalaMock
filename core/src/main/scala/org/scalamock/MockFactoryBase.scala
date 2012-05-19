@@ -34,4 +34,8 @@ trait MockFactoryBase {
   protected def mockFunction[R] = new MockFunction0[R](this, Symbol("unnamed MockFunction0"))
   protected def mockFunction[T1, R] = new MockFunction1[T1, R](this, Symbol("unnamed MockFunction1"))
   protected def mockFunction[T1, T2, R] = new MockFunction2[T1, T2, R](this, Symbol("unnamed MockFunction2"))
+  
+  private[scalamock] def logCall(target: MockFunction, arguments: Product) = callLog.log(target, arguments)
+  
+  private val callLog = new CallLog
 }

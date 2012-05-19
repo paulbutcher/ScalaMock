@@ -29,7 +29,10 @@ trait NiceToString { self: MockFunction =>
 
 abstract class MockFunction(protected val factory: MockFactoryBase, protected val name: Symbol) {
   
-  def handle(arguments: Product) = null
+  def handle(arguments: Product) = {
+    factory.logCall(this, arguments)
+    null
+  }
 }
 
 class MockFunction0[R](factory: MockFactoryBase, name: Symbol)
