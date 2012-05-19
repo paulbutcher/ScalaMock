@@ -20,33 +20,14 @@
 
 package org.scalamock
 
-// This has to be a separate trait, not a method in MockFunction, because
-// otherwise linearization will choose the MockFunctionN toString
-trait NiceToString { self: MockFunction =>
+import org.scalatest.FreeSpec
 
-  override def toString = name.name.toString
-}
-
-abstract class MockFunction(protected val name: Symbol) {
+class MockFunctionTest extends FreeSpec with MockFactoryBase {
   
-  def handle(arguments: Product) = null
-}
-
-class MockFunction0[R](name: Symbol)
-  extends MockFunction(name) with Function0[R] with NiceToString {
-
-  def apply() = handle(None).asInstanceOf[R]
-}
-
-
-class MockFunction1[T1, R](name: Symbol)
-  extends MockFunction(name) with Function1[T1, R] with NiceToString {
-
-  def apply(v1: T1) = handle(Tuple1(v1)).asInstanceOf[R]
-}
-
-class MockFunction2[T1, T2, R](name: Symbol)
-  extends MockFunction(name) with Function2[T1, T2, R] with NiceToString {
-
-  def apply(v1: T1, v2: T2) = handle((v1, v2)).asInstanceOf[R]
+  "A mock function should" - {
+    "return null unless told otherwise" in {
+      val m = mockFunction[String]
+      expect(null) { m() }
+    }
+  }
 }
