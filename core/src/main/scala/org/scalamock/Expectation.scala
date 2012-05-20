@@ -22,6 +22,28 @@ package org.scalamock
 
 abstract class Expectation[R](expectedArguments: Product) extends Handler {
   
+  def repeat(range: Range) = {
+    expectedCalls = range
+    this
+  }
+  
+  def repeat(count: Int): Expectation[R] = repeat(count to count)
+  
+  def never() = repeat(0)
+  def once() = repeat(1)
+  def twice() = repeat(2)
+  
+  def anyNumberOfTimes() = repeat(0 to scala.Int.MaxValue - 1)
+  def atLeastOnce() = repeat(1 to scala.Int.MaxValue - 1)
+  def atLeastTwice() = repeat(2 to scala.Int.MaxValue - 1)
+
+  def noMoreThanOnce() = repeat(0 to 1)
+  def noMoreThanTwice() = repeat(0 to 2)
+  
+  def repeated(range: Range) = repeat(range)
+  def repeated(count: Int) = repeat(count)
+  def times() = this
+
   def handle(call: Call) = {
     if (expectedArguments == call.arguments) {
       actualCalls += 1
@@ -31,12 +53,9 @@ abstract class Expectation[R](expectedArguments: Product) extends Handler {
     }
   }
   
-  def isSatisfied = expectedCalls match {
-    case Some(r) => r contains actualCalls
-    case None => actualCalls > 0
-  }
+  def isSatisfied = expectedCalls contains actualCalls
   
-  protected var expectedCalls: Option[Range] = None
+  protected var expectedCalls: Range = 1 to 1
   protected var actualCalls: Int = 0
   protected var returnVal: R = _
 }

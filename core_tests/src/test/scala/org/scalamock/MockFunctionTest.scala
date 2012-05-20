@@ -97,6 +97,13 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       intercept[ExpectationException] { verifyExpectations }
     }
     
+    "fail if a method isn't called often enough" in {
+      val m = mockFunction[String, Int, Int]
+      m.expects("foo", 42).twice
+      m("foo", 42)
+      intercept[ExpectationException] { verifyExpectations }
+    }
+    
     "fail if an unexpected call is made" ignore {
       val m = mockFunction[String, Int, Int]
       intercept[ExpectationException] { m("foo", 42) }
@@ -128,6 +135,13 @@ class MockFunctionTest extends FreeSpec with MockFactory {
     "fail if an expectation is not met" in {
       val m = mockFunction[String, Int, Int]
       m.verify("foo", 42)
+      intercept[ExpectationException] { verifyExpectations }
+    }
+
+    "fail if a method isn't called often enough" in {
+      val m = mockFunction[String, Int, Int]
+      m("foo", 42)
+      m.verify("foo", 42).twice
       intercept[ExpectationException] { verifyExpectations }
     }
   }
