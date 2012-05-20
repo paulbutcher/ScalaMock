@@ -102,7 +102,7 @@ class MockFunctionTest extends FreeSpec with MockFactory {
     "match wildcard arguments" in {
       val m = mockFunction[String, Int, Int]
       m("foo", 42)
-      m.expects(*, 42)
+      m.verify(*, 42)
       verifyExpectations
     }
     
