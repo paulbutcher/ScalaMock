@@ -99,6 +99,13 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       verifyExpectations
     }
     
+    "match wildcard arguments" in {
+      val m = mockFunction[String, Int, Int]
+      m("foo", 42)
+      m.expects(*, 42)
+      verifyExpectations
+    }
+    
     "fail if an expectation is not met" in {
       val m = mockFunction[String, Int, Int]
       m.verify("foo", 42)
