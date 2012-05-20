@@ -20,4 +20,4 @@
 
 package org.scalamock
 
-case class Call(target: MockFunction, arguments: Product)
+case class Call(target: FakeFunction, arguments: Product)

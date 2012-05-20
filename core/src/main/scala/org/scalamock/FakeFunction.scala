@@ -20,20 +20,35 @@
 
 package org.scalamock
 
-class MockFunction0[R](factory: MockFactoryBase, name: Symbol)
-  extends FakeFunction0[R](factory, name) {
+// This has to be a separate trait, not a method in MockFunction, because
+// otherwise linearization will choose the MockFunctionN toString
+trait NiceToString { self: FakeFunction =>
+
+  override def toString = name.name.toString
+}
+
+abstract class FakeFunction(protected val factory: MockFactoryBase, protected val name: Symbol) {
   
-  def expects() = factory.add(new Expectation0[R])
+  def handle(arguments: Product) = {
+    factory.logCall(this, arguments)
+    null
+  }
 }
 
-class MockFunction1[T1, R](factory: MockFactoryBase, name: Symbol)
-  extends FakeFunction1[T1, R](factory, name) {
+class FakeFunction0[R](factory: MockFactoryBase, name: Symbol)
+  extends FakeFunction(factory, name) with Function0[R] with NiceToString {
 
-  def expects(v1: MockParameter[T1]) = factory.add(new Expectation1[T1, R](v1))
+  def apply() = handle(None).asInstanceOf[R]
 }
 
-class MockFunction2[T1, T2, R](factory: MockFactoryBase, name: Symbol)
-  extends FakeFunction2[T1, T2, R](factory, name) {
+class FakeFunction1[T1, R](factory: MockFactoryBase, name: Symbol)
+  extends FakeFunction(factory, name) with Function1[T1, R] with NiceToString {
 
-  def expects(v1: MockParameter[T1], v2: MockParameter[T2]) = factory.add(new Expectation2[T1, T2, R](v1, v2))
+  def apply(v1: T1) = handle(Tuple1(v1)).asInstanceOf[R]
+}
+
+class FakeFunction2[T1, T2, R](factory: MockFactoryBase, name: Symbol)
+  extends FakeFunction(factory, name) with Function2[T1, T2, R] with NiceToString {
+
+  def apply(v1: T1, v2: T2) = handle((v1, v2)).asInstanceOf[R]
 }

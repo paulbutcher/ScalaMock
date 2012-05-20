@@ -112,34 +112,34 @@ class MockFunctionTest extends FreeSpec with MockFactory {
   
   "verifications should" - {
     "match literal arguments" in {
-      val m = mockFunction[String, Int, Int]
+      val m = stubFunction[String, Int, Int]
       m("foo", 42)
       m.verify("foo", 42)
       verifyExpectations
     }
     
     "match wildcard arguments" in {
-      val m = mockFunction[String, Int, Int]
+      val m = stubFunction[String, Int, Int]
       m("foo", 42)
       m.verify(*, 42)
       verifyExpectations
     }
     
     "match epsilon arguments" in {
-      val m = mockFunction[String, Double, Int]
+      val m = stubFunction[String, Double, Int]
       m("foo", 1.0001)
       m.verify("foo", ~1.0)
       verifyExpectations
     }
 
     "fail if an expectation is not met" in {
-      val m = mockFunction[String, Int, Int]
+      val m = stubFunction[String, Int, Int]
       m.verify("foo", 42)
       intercept[ExpectationException] { verifyExpectations }
     }
 
     "fail if a method isn't called often enough" in {
-      val m = mockFunction[String, Int, Int]
+      val m = stubFunction[String, Int, Int]
       m("foo", 42)
       m.verify("foo", 42).twice
       intercept[ExpectationException] { verifyExpectations }

@@ -49,7 +49,15 @@ trait MockFactoryBase {
   protected def mockFunction[R] = new MockFunction0[R](this, Symbol("unnamed MockFunction0"))
   protected def mockFunction[T1, R] = new MockFunction1[T1, R](this, Symbol("unnamed MockFunction1"))
   protected def mockFunction[T1, T2, R] = new MockFunction2[T1, T2, R](this, Symbol("unnamed MockFunction2"))
-  
+
+  protected def stubFunction[R](name: MockFunctionName) = new StubFunction0[R](this, name.name)
+  protected def stubFunction[T1, R](name: MockFunctionName) = new StubFunction1[T1, R](this, name.name)
+  protected def stubFunction[T1, T2, R](name: MockFunctionName) = new StubFunction2[T1, T2, R](this, name.name)
+
+  protected def stubFunction[R] = new StubFunction0[R](this, Symbol("unnamed StubFunction0"))
+  protected def stubFunction[T1, R] = new StubFunction1[T1, R](this, Symbol("unnamed StubFunction1"))
+  protected def stubFunction[T1, T2, R] = new StubFunction2[T1, T2, R](this, Symbol("unnamed StubFunction2"))
+
   protected def * = new MatchAny
 
   protected class EpsilonMatcher(d: Double) {
@@ -63,7 +71,7 @@ trait MockFactoryBase {
 
   protected implicit def MatchEpsilonToMockParameter[T](m: MatchEpsilon) = new EpsilonMockParameter(m)
 
-  private[scalamock] def logCall(target: MockFunction, arguments: Product) {
+  private[scalamock] def logCall(target: FakeFunction, arguments: Product) {
     callLog += Call(target, arguments)
   }
   
