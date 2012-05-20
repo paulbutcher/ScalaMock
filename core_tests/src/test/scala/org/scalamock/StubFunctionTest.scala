@@ -23,88 +23,83 @@ package org.scalamock
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.FreeSpec
 
-class MockFunctionTest extends FreeSpec with MockFactory {
+class StubFunctionTest extends FreeSpec with MockFactory {
   
   autoVerify = false
   
-  "Mock functions should" - {
+  "Stub functions should" - {
     "return null unless told otherwise" in {
-      val m = mockFunction[String]
+      val m = stubFunction[String]
       expect(null) { m() }
     }
     
     //! TODO - why is this failing?
     "return a null-like value for non reference types" ignore {
-      val m = mockFunction[Int]
+      val m = stubFunction[Int]
       expect(0) { m() }
     }
     
     "have a sensible default name" in {
-      val m = mockFunction[String]
-      expect("unnamed MockFunction0"){ m.toString }
+      val m = stubFunction[String]
+      expect("unnamed StubFunction0"){ m.toString }
     }
     
-    "have the name we gave them" - {
+    "have the name we gave it" - {
       "where we use a symbol" in {
-        val m1 = mockFunction[String](Symbol("a mock function"))
-        expect("a mock function"){ m1.toString }
+        val m1 = stubFunction[String](Symbol("a stub function"))
+        expect("a stub function"){ m1.toString }
       }
 
       "where we use a string" in {
-        val m2 = mockFunction[String]("another mock function")
-        expect("another mock function"){ m2.toString }
+        val m2 = stubFunction[String]("another stub function")
+        expect("another stub function"){ m2.toString }
       }
     }
     
     "resolve ambiguity when taking a symbol argument" - {
       "with no name specified" in {
-        val m1 = mockFunction[Symbol, String]
-        expect("unnamed MockFunction1"){ m1.toString }
+        val m1 = stubFunction[Symbol, String]
+        expect("unnamed StubFunction1"){ m1.toString }
       }
 
       "with a name specified" in {
-        val m2 = mockFunction[Symbol, String](mockFunctionName("a named mock"))
-        expect("a named mock"){ m2.toString }
+        val m2 = stubFunction[Symbol, String](mockFunctionName("a named stub"))
+        expect("a named stub"){ m2.toString }
       }
     }
 
     "match literal arguments" in {
-      val m = mockFunction[String, Int, Int]
-      m.expects("foo", 42)
+      val m = stubFunction[String, Int, Int]
       m("foo", 42)
+      m.verify("foo", 42)
       verifyExpectations
     }
     
     "match wildcard arguments" in {
-      val m = mockFunction[String, Int, Int]
-      m.expects(*, 42)
+      val m = stubFunction[String, Int, Int]
       m("foo", 42)
+      m.verify(*, 42)
       verifyExpectations
     }
     
     "match epsilon arguments" in {
-      val m = mockFunction[String, Double, Int]
-      m.expects("foo", ~1.0)
+      val m = stubFunction[String, Double, Int]
       m("foo", 1.0001)
+      m.verify("foo", ~1.0)
       verifyExpectations
     }
-    
+
     "fail if an expectation is not met" in {
-      val m = mockFunction[String, Int, Int]
-      m.expects("foo", 42)
+      val m = stubFunction[String, Int, Int]
+      m.verify("foo", 42)
       intercept[ExpectationException] { verifyExpectations }
     }
-    
+
     "fail if a method isn't called often enough" in {
-      val m = mockFunction[String, Int, Int]
-      m.expects("foo", 42).twice
+      val m = stubFunction[String, Int, Int]
       m("foo", 42)
+      m.verify("foo", 42).twice
       intercept[ExpectationException] { verifyExpectations }
-    }
-    
-    "fail if an unexpected call is made" ignore {
-      val m = mockFunction[String, Int, Int]
-      intercept[ExpectationException] { m("foo", 42) }
     }
   }
 }
