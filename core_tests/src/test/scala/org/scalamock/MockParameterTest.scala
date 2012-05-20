@@ -20,23 +20,41 @@
 
 package org.scalamock
 
-// The dummy argument (eugh!) is necessary to avoid:
-//
-// [error] double definition:
-// [error] constructor MockParameter:(v: T)org.scalamock.MockParameter[T] and
-// [error] constructor MockParameter:(value: AnyRef)org.scalamock.MockParameter[T]
-// [error] have same type after erasure: (v: java.lang.Object)org.scalamock.MockParameter
+import org.scalatest.FreeSpec
 
-class MockParameter[T] protected (private[scalamock] val value: AnyRef, dummy: Boolean = false) {
+class MockParameterTest extends FreeSpec {
   
-  def this(v: T) = this(v.asInstanceOf[AnyRef])
+  "A mock parameter should" - {
+    "be equal" - {
+      "if its value is equal" in {
+        assert(new MockParameter(42) == 42)
+      }
+    
+      "with a wildcard" in {
+        assert(new MockParameter(new MatchAny) == 123)
+      }
+    
+      "with an epsilon" in {
+        assert(new MockParameter(new MatchEpsilon(1.0)) == 1.0001)
+      }
+    }
+    
+    "not be equal" - {
+      "with different values" in {
+        assert(!(new MockParameter(42) == 43))
+      }
+      
+      "with different types" in {
+        assert(!(new MockParameter(42) == "forty two"))
+      }
+    }
+  }
   
-  override def equals(that: Any) = value equals that
-
-  override def toString = value.toString
-}
-
-class EpsilonMockParameter(value: AnyRef, dummy: Boolean = false) extends MockParameter[Double](value) {
-  
-  def this(v: MatchEpsilon) = this(v.asInstanceOf[AnyRef])
+  "A product of mock parameters should" - {
+    "compare correctly to a product of non mock parameters" in {
+      val p1 = (new MockParameter(42), new MockParameter(new MatchAny), new MockParameter(new MatchEpsilon(1.0)))
+      val p2 = (42, "foo", 1.0001)
+      assert(p1 == p2)
+    }
+  }
 }
