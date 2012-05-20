@@ -39,16 +39,28 @@ class MockFunction0[R](factory: MockFactoryBase, name: Symbol)
   extends MockFunction(factory, name) with Function0[R] with NiceToString {
 
   def apply() = handle(None).asInstanceOf[R]
+  
+  def expects() = factory.add(new Expectation0[R])
+  
+  def verify() = expects()
 }
 
 class MockFunction1[T1, R](factory: MockFactoryBase, name: Symbol)
   extends MockFunction(factory, name) with Function1[T1, R] with NiceToString {
 
   def apply(v1: T1) = handle(Tuple1(v1)).asInstanceOf[R]
+  
+  def expects(v1: MockParameter[T1]) = factory.add(new Expectation1[T1, R](v1))
+  
+  def verify(v1: MockParameter[T1]) = expects(v1)
 }
 
 class MockFunction2[T1, T2, R](factory: MockFactoryBase, name: Symbol)
   extends MockFunction(factory, name) with Function2[T1, T2, R] with NiceToString {
 
   def apply(v1: T1, v2: T2) = handle((v1, v2)).asInstanceOf[R]
+  
+  def expects(v1: MockParameter[T1], v2: MockParameter[T2]) = factory.add(new Expectation2[T1, T2, R](v1, v2))
+  
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2]) = expects(v1, v2)
 }

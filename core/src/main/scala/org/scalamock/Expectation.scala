@@ -20,7 +20,7 @@
 
 package org.scalamock
 
-trait Expectation[R] extends Handler {
+abstract class Expectation[R](expectedArguments: Product) extends Handler {
   
   def handle(call: Call) = {
     if (expectedArguments == call.arguments) {
@@ -36,35 +36,13 @@ trait Expectation[R] extends Handler {
     case None => actualCalls > 0
   }
   
-  protected var expectedArguments: Option[Product] = None
   protected var expectedCalls: Option[Range] = None
   protected var actualCalls: Int = 0
   protected var returnVal: R = _
 }
 
-class Expectation0[R] extends Expectation[R] {
-  
-  def expects() = this
+class Expectation0[R] extends Expectation[R](None)
 
-  def verify() = expects()
-}
+class Expectation1[T1, R](v1: MockParameter[T1]) extends Expectation[R](Tuple1(v1))
 
-class Expectation1[T1, R] extends Expectation[R] {
-  
-  def expects(v1: MockParameter[T1]) = {
-    expectedArguments = Some(Tuple1(v1))
-    this
-  }
-  
-  def verify(v1: MockParameter[T1]) = expects(v1)
-}
-
-class Expectation2[T1, T2, R] extends Expectation[R] {
-  
-  def expects(v1: MockParameter[T1], v2: MockParameter[T2]) = {
-    expectedArguments = Some((v1, v2))
-    this
-  } 
-  
-  def verify(v1: MockParameter[T1], v2: MockParameter[T2]) = expects(v1, v2)
-}
+class Expectation2[T1, T2, R](v1: MockParameter[T1], v2: MockParameter[T2]) extends Expectation[R]((v1, v2))
