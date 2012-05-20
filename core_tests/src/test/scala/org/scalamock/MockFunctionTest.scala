@@ -84,6 +84,13 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       verifyExpectations
     }
     
+    "match epsilon arguments" in {
+      val m = mockFunction[String, Double, Int]
+      m.expects("foo", ~1.0)
+      m("foo", 1.0001)
+      verifyExpectations
+    }
+    
     "fail if an expectation is not met" in {
       val m = mockFunction[String, Int, Int]
       m.expects("foo", 42)
@@ -106,6 +113,13 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       verifyExpectations
     }
     
+    "match epsilon arguments" in {
+      val m = mockFunction[String, Double, Int]
+      m("foo", 1.0001)
+      m.verify("foo", ~1.0)
+      verifyExpectations
+    }
+
     "fail if an expectation is not met" in {
       val m = mockFunction[String, Int, Int]
       m.verify("foo", 42)

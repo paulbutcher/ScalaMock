@@ -52,9 +52,16 @@ trait MockFactoryBase {
   
   protected def * = new MatchAny
 
+  protected class EpsilonMatcher(d: Double) {
+    def unary_~() = new MatchEpsilon(d)
+  }
+  protected implicit def doubleToEpsilon(d: Double) = new EpsilonMatcher(d)
+
   protected implicit def toMockParameter[T](v: T) = new MockParameter(v)
 
   protected implicit def MatchAnyToMockParameter[T](m: MatchAny) = new MockParameter[T](m)
+
+  protected implicit def MatchEpsilonToMockParameter[T](m: MatchEpsilon) = new EpsilonMockParameter(m)
 
   private[scalamock] def logCall(target: MockFunction, arguments: Product) {
     callLog += Call(target, arguments)
