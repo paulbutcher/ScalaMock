@@ -20,14 +20,14 @@
 
 package org.scalamock
 
-abstract class Expectation[R](expectedArguments: Product) extends Handler {
+abstract class ExpectationBase[R](expectedArguments: Product) extends Handler {
   
   def repeat(range: Range) = {
     expectedCalls = range
     this
   }
   
-  def repeat(count: Int): Expectation[R] = repeat(count to count)
+  def repeat(count: Int): ExpectationBase[R] = repeat(count to count)
   
   def never() = repeat(0)
   def once() = repeat(1)
@@ -59,9 +59,3 @@ abstract class Expectation[R](expectedArguments: Product) extends Handler {
   protected var actualCalls: Int = 0
   protected var returnVal: R = _
 }
-
-class Expectation0[R] extends Expectation[R](None)
-
-class Expectation1[T1, R](v1: MockParameter[T1]) extends Expectation[R](Tuple1(v1))
-
-class Expectation2[T1, T2, R](v1: MockParameter[T1], v2: MockParameter[T2]) extends Expectation[R]((v1, v2))
