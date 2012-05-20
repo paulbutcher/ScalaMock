@@ -31,7 +31,7 @@ class MockParameterTest extends FreeSpec {
       }
     
       "with a wildcard" in {
-        assert(new MockParameter(new MatchAny) == 123)
+        assert(new MockParameter[Int](new MatchAny) == 123)
       }
     
       "with an epsilon" in {
@@ -52,7 +52,7 @@ class MockParameterTest extends FreeSpec {
   
   "A product of mock parameters should" - {
     "compare correctly to a product of non mock parameters" in {
-      val p1 = (new MockParameter(42), new MockParameter(new MatchAny), new MockParameter(new MatchEpsilon(1.0)))
+      val p1 = (new MockParameter(42), new MockParameter[String](new MatchAny), new MockParameter(new MatchEpsilon(1.0)))
       val p2 = (42, "foo", 1.0001)
       assert(p1 == p2)
     }
