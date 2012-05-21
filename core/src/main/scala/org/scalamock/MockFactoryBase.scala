@@ -27,7 +27,7 @@ trait MockFactoryBase {
   
   protected def resetExpectations() {
     callLog.clear
-    expectationContext = new UnorderedExpectations
+    expectationContext = new UnorderedHandlers
   }
   
   protected def verifyExpectations() {
@@ -82,5 +82,5 @@ trait MockFactoryBase {
   }
   
   private val callLog = new ListBuffer[Call]
-  private var expectationContext = new UnorderedExpectations
+  private var expectationContext = new UnorderedHandlers
 }
