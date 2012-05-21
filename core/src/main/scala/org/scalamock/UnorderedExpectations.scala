@@ -20,7 +20,7 @@
 
 package org.scalamock
 
-private[scalamock] class UnorderedExpectations extends Expectations {
+private[scalamock] class UnorderedExpectations extends Handlers {
   
   def handle(call: Call): Option[Any] = {
     for (handler <- handlers) {

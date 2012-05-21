@@ -22,7 +22,7 @@ package org.scalamock
 
 import collection.mutable.ListBuffer
 
-private[scalamock] abstract class Expectations extends Handler {
+private[scalamock] abstract class Handlers extends Handler {
   
   def add(handler: Handler) {
     handlers += handler

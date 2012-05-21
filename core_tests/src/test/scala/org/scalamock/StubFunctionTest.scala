@@ -101,7 +101,6 @@ class StubFunctionTest extends FreeSpec with MockFactory {
       m.verify("foo", 42).twice
       intercept[ExpectationException] { verifyExpectations }
     }
-
       
     "fail if a method is called too often" in {
       val m = stubFunction[String, Int, Int]
