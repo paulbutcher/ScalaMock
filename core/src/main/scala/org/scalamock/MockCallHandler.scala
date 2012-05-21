@@ -20,14 +20,14 @@
 
 package org.scalamock
 
-class MockExpectation[R](expectedArguments: Product) 
+class MockCallHandler[R](expectedArguments: Product) 
   extends CallHandler[R](expectedArguments) {
   
   def verify(call: Call) = false
 }
 
-class MockExpectation0[R] extends MockExpectation[R](None)
+class MockCallHandler0[R] extends MockCallHandler[R](None)
 
-class MockExpectation1[T1, R](v1: MockParameter[T1]) extends MockExpectation[R](Tuple1(v1))
+class MockCallHandler1[T1, R](v1: MockParameter[T1]) extends MockCallHandler[R](Tuple1(v1))
 
-class MockExpectation2[T1, T2, R](v1: MockParameter[T1], v2: MockParameter[T2]) extends MockExpectation[R]((v1, v2))
+class MockCallHandler2[T1, T2, R](v1: MockParameter[T1], v2: MockParameter[T2]) extends MockCallHandler[R]((v1, v2))
