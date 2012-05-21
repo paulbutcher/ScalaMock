@@ -28,23 +28,12 @@ class StubFunctionTest extends FreeSpec with MockFactory {
   autoVerify = false
   
   "Stub functions should" - {
-    "return null unless told otherwise" in {
-      val m = stubFunction[String]
-      expect(null) { m() }
-    }
-    
-    //! TODO - why is this failing?
-    "return a null-like value for non reference types" ignore {
-      val m = stubFunction[Int]
-      expect(0) { m() }
-    }
-    
     "have a sensible default name" in {
       val m = stubFunction[String]
       expect("unnamed StubFunction0"){ m.toString }
     }
     
-    "have the name we gave it" - {
+    "have the name we gave them" - {
       "where we use a symbol" in {
         val m1 = stubFunction[String](Symbol("a stub function"))
         expect("a stub function"){ m1.toString }
@@ -68,6 +57,17 @@ class StubFunctionTest extends FreeSpec with MockFactory {
       }
     }
 
+    "return null by default" in {
+      val m = stubFunction[String]
+      expect(null) { m() }
+    }
+    
+    //! TODO - why is this failing?
+    "return a null-like default value for non reference types" ignore {
+      val m = stubFunction[Int]
+      expect(0) { m() }
+    }
+    
     "match literal arguments" in {
       val m = stubFunction[String, Int, Int]
       m("foo", 42)

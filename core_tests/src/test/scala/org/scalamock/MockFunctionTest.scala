@@ -28,19 +28,6 @@ class MockFunctionTest extends FreeSpec with MockFactory {
   autoVerify = false
   
   "Mock functions should" - {
-    "return null unless told otherwise" in {
-      val m = mockFunction[String]
-      m.expects()
-      expect(null) { m() }
-    }
-    
-    //! TODO - why is this failing?
-    "return a null-like value for non reference types" ignore {
-      val m = mockFunction[Int]
-      m.expects()
-      expect(0) { m() }
-    }
-    
     "have a sensible default name" in {
       val m = mockFunction[String]
       expect("unnamed MockFunction0"){ m.toString }
@@ -70,6 +57,25 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       }
     }
 
+    "return null by default" in {
+      val m = mockFunction[String]
+      m.expects()
+      expect(null) { m() }
+    }
+    
+    //! TODO - why is this failing?
+    "return a null-like default value for non reference types" ignore {
+      val m = mockFunction[Int]
+      m.expects()
+      expect(0) { m() }
+    }
+    
+    "return what they're told to" in {
+      val m = mockFunction[String]
+      m.expects().returning("a return value")
+      expect("a return value") { m() }
+    }
+    
     "match literal arguments" in {
       val m = mockFunction[String, Int, Int]
       m.expects("foo", 42)

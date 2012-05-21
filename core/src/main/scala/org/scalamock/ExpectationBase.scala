@@ -44,6 +44,12 @@ abstract class ExpectationBase[R](expectedArguments: Product) extends Handler {
   def repeated(count: Int) = repeat(count)
   def times() = this
 
+  def returns(value: R) = {
+    returnVal = value
+    this
+  }
+  def returning(value: R) = returns(value)
+
   def handle(call: Call) = {
     if (!isExhausted && expectedArguments == call.arguments) {
       actualCalls += 1
