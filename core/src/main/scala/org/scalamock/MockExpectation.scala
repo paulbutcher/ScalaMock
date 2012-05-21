@@ -21,7 +21,10 @@
 package org.scalamock
 
 class MockExpectation[R](expectedArguments: Product) 
-  extends ExpectationBase[R](expectedArguments)
+  extends ExpectationBase[R](expectedArguments) {
+  
+  def verify(call: Call) = false
+}
 
 class MockExpectation0[R] extends MockExpectation[R](None)
 

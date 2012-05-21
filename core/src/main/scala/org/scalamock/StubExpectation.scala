@@ -21,7 +21,17 @@
 package org.scalamock
 
 class StubExpectation[R](expectedArguments: Product) 
-  extends ExpectationBase[R](expectedArguments)
+  extends ExpectationBase[R](expectedArguments) {
+  
+  def verify(call: Call) = {
+    if (expectedArguments == call.arguments) {
+      actualCalls += 1
+      true
+    } else {
+      false
+    }
+  }
+}
 
 class StubExpectation0[R] extends StubExpectation[R](None)
 

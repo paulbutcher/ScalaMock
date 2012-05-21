@@ -28,6 +28,14 @@ private[scalamock] class UnorderedExpectations extends Expectations {
       if (r.isDefined)
         return r
     }
-    return None
+    None
+  }
+  
+  def verify(call: Call): Boolean = {
+    for (handler <- handlers) {
+      if (handler.verify(call))
+        return true
+    }
+    false
   }
 }

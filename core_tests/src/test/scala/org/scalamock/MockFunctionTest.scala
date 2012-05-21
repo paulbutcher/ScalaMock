@@ -30,12 +30,14 @@ class MockFunctionTest extends FreeSpec with MockFactory {
   "Mock functions should" - {
     "return null unless told otherwise" in {
       val m = mockFunction[String]
+      m.expects()
       expect(null) { m() }
     }
     
     //! TODO - why is this failing?
     "return a null-like value for non reference types" ignore {
       val m = mockFunction[Int]
+      m.expects()
       expect(0) { m() }
     }
     
@@ -102,7 +104,7 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       intercept[ExpectationException] { verifyExpectations }
     }
     
-    "fail if an unexpected call is made" ignore {
+    "fail if an unexpected call is made" in {
       val m = mockFunction[String, Int, Int]
       intercept[ExpectationException] { m("foo", 42) }
     }

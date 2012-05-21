@@ -20,20 +20,28 @@
 
 package org.scalamock
 
+trait StubFunction { self: FakeFunction =>
+  
+  def handle(arguments: Product): Any = self.factory.handle(new Call(this, arguments)) match {
+    case Some(retVal) => retVal
+    case None => null
+  }
+}
+
 class StubFunction0[R](factory: MockFactoryBase, name: Symbol)
-  extends FakeFunction0[R](factory, name) {
+  extends FakeFunction0[R](factory, name) with StubFunction {
   
   def verify() = factory.add(new StubExpectation0[R])
 }
 
 class StubFunction1[T1, R](factory: MockFactoryBase, name: Symbol)
-  extends FakeFunction1[T1, R](factory, name) {
+  extends FakeFunction1[T1, R](factory, name) with StubFunction {
 
   def verify(v1: MockParameter[T1]) = factory.add(new StubExpectation1[T1, R](v1))
 }
 
 class StubFunction2[T1, T2, R](factory: MockFactoryBase, name: Symbol)
-  extends FakeFunction2[T1, T2, R](factory, name) {
+  extends FakeFunction2[T1, T2, R](factory, name) with StubFunction {
 
   def verify(v1: MockParameter[T1], v2: MockParameter[T2]) = factory.add(new StubExpectation2[T1, T2, R](v1, v2))
 }

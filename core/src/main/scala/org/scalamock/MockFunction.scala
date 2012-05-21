@@ -20,20 +20,28 @@
 
 package org.scalamock
 
+trait MockFunction { self: FakeFunction =>
+  
+  def handle(arguments: Product): Any = self.factory.handle(new Call(this, arguments)) match {
+    case Some(retVal) => retVal
+    case None => throw new ExpectationException("Unexpected call")
+  }
+}
+
 class MockFunction0[R](factory: MockFactoryBase, name: Symbol)
-  extends FakeFunction0[R](factory, name) {
+  extends FakeFunction0[R](factory, name) with MockFunction {
   
   def expects() = factory.add(new MockExpectation0[R])
 }
 
 class MockFunction1[T1, R](factory: MockFactoryBase, name: Symbol)
-  extends FakeFunction1[T1, R](factory, name) {
+  extends FakeFunction1[T1, R](factory, name) with MockFunction {
 
   def expects(v1: MockParameter[T1]) = factory.add(new MockExpectation1[T1, R](v1))
 }
 
 class MockFunction2[T1, T2, R](factory: MockFactoryBase, name: Symbol)
-  extends FakeFunction2[T1, T2, R](factory, name) {
+  extends FakeFunction2[T1, T2, R](factory, name) with MockFunction {
 
   def expects(v1: MockParameter[T1], v2: MockParameter[T2]) = factory.add(new MockExpectation2[T1, T2, R](v1, v2))
 }

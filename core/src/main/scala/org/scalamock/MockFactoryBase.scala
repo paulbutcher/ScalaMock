@@ -31,7 +31,7 @@ trait MockFactoryBase {
   }
   
   protected def verifyExpectations() {
-    callLog foreach expectationContext.handle _
+    callLog foreach expectationContext.verify _
     if (!expectationContext.isSatisfied)
       throw new ExpectationException("Unsatisfied expectation")
     
@@ -71,8 +71,9 @@ trait MockFactoryBase {
 
   protected implicit def MatchEpsilonToMockParameter[T](m: MatchEpsilon) = new EpsilonMockParameter(m)
 
-  private[scalamock] def logCall(target: FakeFunction, arguments: Product) {
-    callLog += Call(target, arguments)
+  private[scalamock] def handle(call: Call) = {
+    callLog += call
+    expectationContext.handle(call)
   }
   
   private[scalamock] def add[E <: ExpectationBase[_]](e: E) = {
