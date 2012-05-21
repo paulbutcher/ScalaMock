@@ -63,7 +63,7 @@ class StubFunctionTest extends FreeSpec with MockFactory {
       }
 
       "with a name specified" in {
-        val m2 = stubFunction[Symbol, String](mockFunctionName("a named stub"))
+        val m2 = stubFunction[Symbol, String](functionName("a named stub"))
         expect("a named stub"){ m2.toString }
       }
     }
