@@ -20,14 +20,14 @@
 
 package org.scalamock
 
-abstract class ExpectationBase[R](expectedArguments: Product) extends Handler {
+abstract class CallHandler[R](expectedArguments: Product) extends Handler {
   
   def repeat(range: Range) = {
     expectedCalls = range
-    this
+    CallHandler.this
   }
   
-  def repeat(count: Int): ExpectationBase[R] = repeat(count to count)
+  def repeat(count: Int): CallHandler[R] = repeat(count to count)
   
   def never() = repeat(0)
   def once() = repeat(1)
@@ -42,11 +42,11 @@ abstract class ExpectationBase[R](expectedArguments: Product) extends Handler {
   
   def repeated(range: Range) = repeat(range)
   def repeated(count: Int) = repeat(count)
-  def times() = this
+  def times() = CallHandler.this
 
   def returns(value: R) = {
     returnVal = value
-    this
+    CallHandler.this
   }
   def returning(value: R) = returns(value)
 

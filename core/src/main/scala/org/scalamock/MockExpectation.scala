@@ -21,7 +21,7 @@
 package org.scalamock
 
 class MockExpectation[R](expectedArguments: Product) 
-  extends ExpectationBase[R](expectedArguments) {
+  extends CallHandler[R](expectedArguments) {
   
   def verify(call: Call) = false
 }

@@ -76,7 +76,7 @@ trait MockFactoryBase {
     expectationContext.handle(call)
   }
   
-  private[scalamock] def add[E <: ExpectationBase[_]](e: E) = {
+  private[scalamock] def add[E <: CallHandler[_]](e: E) = {
     expectationContext.add(e)
     e
   }

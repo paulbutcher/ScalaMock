@@ -21,7 +21,7 @@
 package org.scalamock
 
 class StubExpectation[R](expectedArguments: Product) 
-  extends ExpectationBase[R](expectedArguments) {
+  extends CallHandler[R](expectedArguments) {
   
   def verify(call: Call) = {
     if (expectedArguments == call.arguments) {
