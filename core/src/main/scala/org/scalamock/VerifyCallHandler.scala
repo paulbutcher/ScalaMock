@@ -20,7 +20,7 @@
 
 package org.scalamock
 
-class StubExpectation[R](expectedArguments: Product) 
+class VerifyCallHandler[R](expectedArguments: Product) 
   extends CallHandler[R](expectedArguments) {
   
   def verify(call: Call) = {
@@ -33,8 +33,8 @@ class StubExpectation[R](expectedArguments: Product)
   }
 }
 
-class StubExpectation0[R] extends StubExpectation[R](None)
+class VerifyCallHandler0[R] extends VerifyCallHandler[R](None)
 
-class StubExpectation1[T1, R](v1: MockParameter[T1]) extends StubExpectation[R](Tuple1(v1))
+class VerifyCallHandler1[T1, R](v1: MockParameter[T1]) extends VerifyCallHandler[R](Tuple1(v1))
 
-class StubExpectation2[T1, T2, R](v1: MockParameter[T1], v2: MockParameter[T2]) extends StubExpectation[R]((v1, v2))
+class VerifyCallHandler2[T1, T2, R](v1: MockParameter[T1], v2: MockParameter[T2]) extends VerifyCallHandler[R]((v1, v2))
