@@ -45,7 +45,7 @@ abstract class ExpectationBase[R](expectedArguments: Product) extends Handler {
   def times() = this
 
   def handle(call: Call) = {
-    if (expectedArguments == call.arguments) {
+    if (!isExhausted && expectedArguments == call.arguments) {
       actualCalls += 1
       Some(returnVal)
     } else {
@@ -54,6 +54,8 @@ abstract class ExpectationBase[R](expectedArguments: Product) extends Handler {
   }
   
   def isSatisfied = expectedCalls contains actualCalls
+  
+  def isExhausted = expectedCalls.last <= actualCalls
   
   protected var expectedCalls: Range = 1 to 1
   protected var actualCalls: Int = 0

@@ -108,5 +108,13 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       val m = mockFunction[String, Int, Int]
       intercept[ExpectationException] { m("foo", 42) }
     }
+    
+    "fail if a method is called too often" in {
+      val m = mockFunction[String, Int, Int]
+      m.expects("foo", 42).twice
+      m("foo", 42)
+      m("foo", 42)
+      intercept[ExpectationException] { m("foo", 42) }
+    }
   }
 }
