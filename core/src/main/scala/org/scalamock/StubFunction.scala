@@ -31,7 +31,7 @@ trait StubFunction { self: FakeFunction =>
 class StubFunction0[R](factory: MockFactoryBase, name: Symbol)
   extends FakeFunction0[R](factory, name) with StubFunction {
   
-  def when() = factory.add(new CallHandler0[R])
+  def when() = factory.add((new CallHandler0[R]).anyNumberOfTimes)
   
   def verify() = factory.add(new CallHandler0[R] with Verify)
 }
@@ -39,7 +39,7 @@ class StubFunction0[R](factory: MockFactoryBase, name: Symbol)
 class StubFunction1[T1, R](factory: MockFactoryBase, name: Symbol)
   extends FakeFunction1[T1, R](factory, name) with StubFunction {
 
-  def when(v1: MockParameter[T1]) = factory.add(new CallHandler1[T1, R](v1))
+  def when(v1: MockParameter[T1]) = factory.add((new CallHandler1[T1, R](v1)).anyNumberOfTimes)
 
   def verify(v1: MockParameter[T1]) = factory.add(new CallHandler1[T1, R](v1) with Verify)
 }
@@ -47,7 +47,7 @@ class StubFunction1[T1, R](factory: MockFactoryBase, name: Symbol)
 class StubFunction2[T1, T2, R](factory: MockFactoryBase, name: Symbol)
   extends FakeFunction2[T1, T2, R](factory, name) with StubFunction {
 
-  def when(v1: MockParameter[T1], v2: MockParameter[T2]) = factory.add(new CallHandler2[T1, T2, R](v1, v2))
+  def when(v1: MockParameter[T1], v2: MockParameter[T2]) = factory.add((new CallHandler2[T1, T2, R](v1, v2)).anyNumberOfTimes)
 
   def verify(v1: MockParameter[T1], v2: MockParameter[T2]) = factory.add(new CallHandler2[T1, T2, R](v1, v2) with Verify)
 }

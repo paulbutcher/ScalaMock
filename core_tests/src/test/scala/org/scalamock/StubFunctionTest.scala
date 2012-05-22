@@ -77,6 +77,14 @@ class StubFunctionTest extends FreeSpec with MockFactory {
       verifyExpectations
     }
     
+    "default to anyNumberOfTimes" in {
+      val m = stubFunction[String]
+      m.when().returns("a return value")
+      expect("a return value") { m() }
+      expect("a return value") { m() }
+      verifyExpectations
+    }
+    
     "match literal arguments" in {
       val m = stubFunction[String, Int, Int]
       m("foo", 42)
