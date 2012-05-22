@@ -20,7 +20,7 @@
 
 package org.scalamock
 
-abstract class CallHandler[R](expectedArguments: Product) extends Handler {
+class CallHandler[R](private[scalamock] val expectedArguments: Product) extends Handler {
   
   def repeat(range: Range) = {
     expectedCalls = range
@@ -59,11 +59,33 @@ abstract class CallHandler[R](expectedArguments: Product) extends Handler {
     }
   }
   
+  def verify(call: Call) = false
+  
   def isSatisfied = expectedCalls contains actualCalls
   
   def isExhausted = expectedCalls.last <= actualCalls
   
-  protected var expectedCalls: Range = 1 to 1
-  protected var actualCalls: Int = 0
-  protected var returnVal: R = _
+  private[scalamock] var expectedCalls: Range = 1 to 1
+  private[scalamock] var actualCalls: Int = 0
+  private[scalamock] var returnVal: R = _
 }
+
+trait Verify { self: CallHandler[_] =>
+  
+  override def handle(call: Call) = sys.error("verify should appear after all code under test has been exercised")
+  
+  override def verify(call: Call) = {
+    if (expectedArguments == call.arguments) {
+      actualCalls += 1
+      true
+    } else {
+      false
+    }
+  }
+}
+
+class CallHandler0[R] extends CallHandler[R](None)
+
+class CallHandler1[T1, R](v1: MockParameter[T1]) extends CallHandler[R](Tuple1(v1))
+
+class CallHandler2[T1, T2, R](v1: MockParameter[T1], v2: MockParameter[T2]) extends CallHandler[R]((v1, v2))
