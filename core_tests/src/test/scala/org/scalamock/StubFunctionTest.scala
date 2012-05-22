@@ -82,6 +82,16 @@ class StubFunctionTest extends FreeSpec with MockFactory {
       m.when().returns("a return value")
       expect("a return value") { m() }
       expect("a return value") { m() }
+      expect("a return value") { m() }
+      verifyExpectations
+    }
+    
+    "unless told otherwise" in {
+      val m = stubFunction[String]
+      m.when().returns("a return value").twice
+      expect("a return value") { m() }
+      expect("a return value") { m() }
+      expect(null) { m() }
       verifyExpectations
     }
     
