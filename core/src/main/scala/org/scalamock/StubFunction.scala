@@ -31,17 +31,23 @@ trait StubFunction { self: FakeFunction =>
 class StubFunction0[R](factory: MockFactoryBase, name: Symbol)
   extends FakeFunction0[R](factory, name) with StubFunction {
   
+  def when() = factory.add(new StubCallHandler0[R])
+  
   def verify() = factory.add(new VerifyCallHandler0[R])
 }
 
 class StubFunction1[T1, R](factory: MockFactoryBase, name: Symbol)
   extends FakeFunction1[T1, R](factory, name) with StubFunction {
 
+  def when(v1: MockParameter[T1]) = factory.add(new StubCallHandler1[T1, R](v1))
+
   def verify(v1: MockParameter[T1]) = factory.add(new VerifyCallHandler1[T1, R](v1))
 }
 
 class StubFunction2[T1, T2, R](factory: MockFactoryBase, name: Symbol)
   extends FakeFunction2[T1, T2, R](factory, name) with StubFunction {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2]) = factory.add(new StubCallHandler2[T1, T2, R](v1, v2))
 
   def verify(v1: MockParameter[T1], v2: MockParameter[T2]) = factory.add(new VerifyCallHandler2[T1, T2, R](v1, v2))
 }

@@ -74,6 +74,7 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       val m = mockFunction[String]
       m.expects().returning("a return value")
       expect("a return value") { m() }
+      verifyExpectations
     }
     
     "match literal arguments" in {

@@ -60,12 +60,21 @@ class StubFunctionTest extends FreeSpec with MockFactory {
     "return null by default" in {
       val m = stubFunction[String]
       expect(null) { m() }
+      verifyExpectations
     }
     
     //! TODO - why is this failing?
     "return a null-like default value for non reference types" ignore {
       val m = stubFunction[Int]
       expect(0) { m() }
+      verifyExpectations
+    }
+    
+    "return what they're told to" in {
+      val m = stubFunction[String]
+      m.when().returns("a return value")
+      expect("a return value") { m() }
+      verifyExpectations
     }
     
     "match literal arguments" in {
