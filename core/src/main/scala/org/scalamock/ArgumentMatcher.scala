@@ -20,6 +20,14 @@
 
 package org.scalamock
 
+class ArgumentMatcher0(f: () => Boolean) extends Function1[Product, Boolean] {
+  
+  def apply(args: Product) = {
+    assert(args.productArity == 0)
+    f()
+  }
+}
+
 class ArgumentMatcher1[T1](f: T1 => Boolean) extends Function1[Product, Boolean] {
   
   def apply(args: Product) = {

@@ -84,7 +84,7 @@ trait Verify { self: CallHandler[_] =>
   }
 }
 
-class CallHandler0[R] extends CallHandler[R](_ => true)
+class CallHandler0[R] extends CallHandler[R](new ArgumentMatcher0({() => true}))
 
 class CallHandler1[T1, R](v1: MockParameter[T1]) extends CallHandler[R](new ArgumentMatcher1({p1: T1 => v1 == p1}))
 
