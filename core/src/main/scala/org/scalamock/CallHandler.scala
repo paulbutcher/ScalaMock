@@ -20,7 +20,7 @@
 
 package org.scalamock
 
-class CallHandler[R](private[scalamock] val expectedArguments: Product) extends Handler {
+class CallHandler[R](private[scalamock] val argumentMatcher: Product => Boolean) extends Handler {
   
   def repeat(range: Range) = {
     expectedCalls = range
@@ -51,7 +51,7 @@ class CallHandler[R](private[scalamock] val expectedArguments: Product) extends 
   def returning(value: R) = returns(value)
 
   def handle(call: Call) = {
-    if (!isExhausted && expectedArguments == call.arguments) {
+    if (!isExhausted && argumentMatcher(call.arguments)) {
       actualCalls += 1
       Some(returnVal)
     } else {
@@ -75,7 +75,7 @@ trait Verify { self: CallHandler[_] =>
   override def handle(call: Call) = sys.error("verify should appear after all code under test has been exercised")
   
   override def verify(call: Call) = {
-    if (expectedArguments == call.arguments) {
+    if (argumentMatcher(call.arguments)) {
       actualCalls += 1
       true
     } else {
@@ -84,8 +84,8 @@ trait Verify { self: CallHandler[_] =>
   }
 }
 
-class CallHandler0[R] extends CallHandler[R](None)
+class CallHandler0[R] extends CallHandler[R](_ => true)
 
-class CallHandler1[T1, R](v1: MockParameter[T1]) extends CallHandler[R](Tuple1(v1))
+class CallHandler1[T1, R](v1: MockParameter[T1]) extends CallHandler[R](new ArgumentMatcher1({p1: T1 => v1 == p1}))
 
-class CallHandler2[T1, T2, R](v1: MockParameter[T1], v2: MockParameter[T2]) extends CallHandler[R]((v1, v2))
+class CallHandler2[T1, T2, R](v1: MockParameter[T1], v2: MockParameter[T2]) extends CallHandler[R](new ArgumentMatcher2({(p1: T1, p2: T2) => v1 == p1 && v2 == p2}))
