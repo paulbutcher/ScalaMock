@@ -61,6 +61,7 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       val m = mockFunction[String]
       m.expects()
       expect(null) { m() }
+      verifyExpectations
     }
     
     //! TODO - why is this failing?
@@ -68,6 +69,7 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       val m = mockFunction[Int]
       m.expects()
       expect(0) { m() }
+      verifyExpectations
     }
     
     "return what they're told to" in {
