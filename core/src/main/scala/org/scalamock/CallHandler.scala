@@ -45,7 +45,7 @@ class CallHandler[R](private[scalamock] val argumentMatcher: Product => Boolean)
   def times() = CallHandler.this
 
   def returns(value: R) = {
-    returnVal = value
+    onCallHandler = {_ => value}
     CallHandler.this
   }
   def returning(value: R) = returns(value)
@@ -53,7 +53,7 @@ class CallHandler[R](private[scalamock] val argumentMatcher: Product => Boolean)
   def handle(call: Call) = {
     if (!isExhausted && argumentMatcher(call.arguments)) {
       actualCalls += 1
-      Some(returnVal)
+      Some(onCallHandler(call.arguments))
     } else {
       None
     }
@@ -67,7 +67,7 @@ class CallHandler[R](private[scalamock] val argumentMatcher: Product => Boolean)
   
   private[scalamock] var expectedCalls: Range = 1 to 1
   private[scalamock] var actualCalls: Int = 0
-  private[scalamock] var returnVal: R = _
+  private[scalamock] var onCallHandler: Product => R = {_ => null.asInstanceOf[R]}
 }
 
 trait Verify { self: CallHandler[_] =>
