@@ -22,7 +22,7 @@ package org.scalamock
 
 import collection.mutable.ListBuffer
 
-trait MockFactoryBase {
+trait MockFactoryBase extends Mock {
   import language.implicitConversions
   
   protected def resetExpectations() {
