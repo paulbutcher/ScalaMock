@@ -55,7 +55,7 @@ class CallHandler[R](private[scalamock] val argumentMatcher: Product => Boolean)
     this
   }
 
-  def handle(call: Call) = {
+  private[scalamock] def handle(call: Call) = {
     if (!isExhausted && argumentMatcher(call.arguments)) {
       actualCalls += 1
       Some(onCallHandler(call.arguments))
@@ -64,11 +64,11 @@ class CallHandler[R](private[scalamock] val argumentMatcher: Product => Boolean)
     }
   }
   
-  def verify(call: Call) = false
+  private[scalamock] def verify(call: Call) = false
   
-  def isSatisfied = expectedCalls contains actualCalls
+  private[scalamock] def isSatisfied = expectedCalls contains actualCalls
   
-  def isExhausted = expectedCalls.last <= actualCalls
+  private[scalamock] def isExhausted = expectedCalls.last <= actualCalls
   
   private[scalamock] var expectedCalls: Range = 1 to 1
   private[scalamock] var actualCalls: Int = 0
@@ -77,9 +77,9 @@ class CallHandler[R](private[scalamock] val argumentMatcher: Product => Boolean)
 
 trait Verify { self: CallHandler[_] =>
   
-  override def handle(call: Call) = sys.error("verify should appear after all code under test has been exercised")
+  private[scalamock] override def handle(call: Call) = sys.error("verify should appear after all code under test has been exercised")
   
-  override def verify(call: Call) = {
+  private[scalamock] override def verify(call: Call) = {
     if (argumentMatcher(call.arguments)) {
       actualCalls += 1
       true

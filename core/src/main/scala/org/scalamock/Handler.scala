@@ -22,9 +22,9 @@ package org.scalamock
 
 private[scalamock] trait Handler {
   
-  def handle(call: Call): Option[Any]
+  private[scalamock] def handle(call: Call): Option[Any]
   
-  def verify(call: Call): Boolean
+  private[scalamock] def verify(call: Call): Boolean
   
-  def isSatisfied: Boolean
+  private[scalamock] def isSatisfied: Boolean
 }
