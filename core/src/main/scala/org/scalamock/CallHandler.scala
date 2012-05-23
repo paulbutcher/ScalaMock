@@ -24,7 +24,7 @@ class CallHandler[R](private[scalamock] val argumentMatcher: Product => Boolean)
   
   def repeat(range: Range) = {
     expectedCalls = range
-    CallHandler.this
+    this
   }
   
   def repeat(count: Int): CallHandler[R] = repeat(count to count)
@@ -46,9 +46,15 @@ class CallHandler[R](private[scalamock] val argumentMatcher: Product => Boolean)
 
   def returns(value: R) = {
     onCallHandler = {_ => value}
-    CallHandler.this
+    this
   }
   def returning(value: R) = returns(value)
+  
+  def throws(e: Throwable) = {
+    onCallHandler = {_ => throw e}
+    this
+  }
+  def throwing(e: Throwable) = throws(e)
 
   def handle(call: Call) = {
     if (!isExhausted && argumentMatcher(call.arguments)) {

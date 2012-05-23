@@ -77,6 +77,13 @@ class StubFunctionTest extends FreeSpec with MockFactory {
       verifyExpectations
     }
     
+    "throw what they're told to" in {
+      val m = stubFunction[String]
+      m.when().throws(new RuntimeException("bad thing happened"))
+      intercept[RuntimeException]{ m() }
+      verifyExpectations
+    }
+    
     "default to anyNumberOfTimes" in {
       val m = stubFunction[String]
       m.when().returns("a return value")

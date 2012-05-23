@@ -79,6 +79,13 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       verifyExpectations
     }
     
+    "throw what they're told to" in {
+      val m = mockFunction[String]
+      m.expects().throwing(new RuntimeException("bad thing happened"))
+      intercept[RuntimeException]{ m() }
+      verifyExpectations
+    }
+    
     "match literal arguments" in {
       val m = mockFunction[String, Int, Int]
       m.expects("foo", 42)
