@@ -20,7 +20,7 @@
 
 package org.scalamock
 
-class ArgumentMatcher0(f: () => Boolean) extends Function1[Product, Boolean] {
+class ArgumentMatcher0[R](f: () => R) extends Function1[Product, R] {
   
   def apply(args: Product) = {
     assert(args.productArity == 0)
@@ -28,7 +28,7 @@ class ArgumentMatcher0(f: () => Boolean) extends Function1[Product, Boolean] {
   }
 }
 
-class ArgumentMatcher1[T1](f: T1 => Boolean) extends Function1[Product, Boolean] {
+class ArgumentMatcher1[T1, R](f: T1 => R) extends Function1[Product, R] {
   
   def apply(args: Product) = {
     assert(args.productArity == 1)
@@ -36,7 +36,7 @@ class ArgumentMatcher1[T1](f: T1 => Boolean) extends Function1[Product, Boolean]
   }
 }
 
-class ArgumentMatcher2[T1, T2](f: (T1, T2) => Boolean) extends Function1[Product, Boolean] {
+class ArgumentMatcher2[T1, T2, R](f: (T1, T2) => R) extends Function1[Product, R] {
   
   def apply(args: Product) = {
     assert(args.productArity == 2)
@@ -44,7 +44,7 @@ class ArgumentMatcher2[T1, T2](f: (T1, T2) => Boolean) extends Function1[Product
   }
 }
 
-class ArgumentMatcher3[T1, T2, T3](f: (T1, T2, T3) => Boolean) extends Function1[Product, Boolean] {
+class ArgumentMatcher3[T1, T2, T3, R](f: (T1, T2, T3) => R) extends Function1[Product, R] {
   
   def apply(args: Product) = {
     assert(args.productArity == 3)

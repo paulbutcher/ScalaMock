@@ -32,28 +32,28 @@ class StubFunction0[R](factory: MockFactoryBase, name: Symbol)
   extends FakeFunction0[R](factory, name) with StubFunction {
   
   def when() = factory.add((new CallHandler0[R]).anyNumberOfTimes)
-  def when(matcher: ArgumentMatcher0) = factory.add((new CallHandler[R](matcher)).anyNumberOfTimes)
+  def when(matcher: ArgumentMatcher0[Boolean]) = factory.add((new CallHandler[R](matcher)).anyNumberOfTimes)
   
   def verify() = factory.add(new CallHandler0[R] with Verify)
-  def verify(matcher: ArgumentMatcher0) = factory.add(new CallHandler[R](matcher) with Verify)
+  def verify(matcher: ArgumentMatcher0[Boolean]) = factory.add(new CallHandler[R](matcher) with Verify)
 }
 
 class StubFunction1[T1, R](factory: MockFactoryBase, name: Symbol)
   extends FakeFunction1[T1, R](factory, name) with StubFunction {
 
   def when(v1: MockParameter[T1]) = factory.add((new CallHandler1[T1, R](v1)).anyNumberOfTimes)
-  def when(matcher: ArgumentMatcher1[T1]) = factory.add((new CallHandler[R](matcher)).anyNumberOfTimes)
+  def when(matcher: ArgumentMatcher1[T1, Boolean]) = factory.add((new CallHandler[R](matcher)).anyNumberOfTimes)
 
   def verify(v1: MockParameter[T1]) = factory.add(new CallHandler1[T1, R](v1) with Verify)
-  def verify(matcher: ArgumentMatcher1[T1]) = factory.add(new CallHandler[R](matcher) with Verify)
+  def verify(matcher: ArgumentMatcher1[T1, Boolean]) = factory.add(new CallHandler[R](matcher) with Verify)
 }
 
 class StubFunction2[T1, T2, R](factory: MockFactoryBase, name: Symbol)
   extends FakeFunction2[T1, T2, R](factory, name) with StubFunction {
 
   def when(v1: MockParameter[T1], v2: MockParameter[T2]) = factory.add((new CallHandler2[T1, T2, R](v1, v2)).anyNumberOfTimes)
-  def when(matcher: ArgumentMatcher2[T1, T2]) = factory.add((new CallHandler[R](matcher)).anyNumberOfTimes)
+  def when(matcher: ArgumentMatcher2[T1, T2, Boolean]) = factory.add((new CallHandler[R](matcher)).anyNumberOfTimes)
 
   def verify(v1: MockParameter[T1], v2: MockParameter[T2]) = factory.add(new CallHandler2[T1, T2, R](v1, v2) with Verify)
-  def verify(matcher: ArgumentMatcher2[T1, T2]) = factory.add(new CallHandler[R](matcher) with Verify)
+  def verify(matcher: ArgumentMatcher2[T1, T2, Boolean]) = factory.add(new CallHandler[R](matcher) with Verify)
 }
