@@ -125,5 +125,14 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       m("foo", 42)
       intercept[ExpectationException] { m("foo", 42) }
     }
+    
+    "match arguments" in {
+      val m = mockFunction[Int, Int, String]
+      m.expects(where { _ < _ }).returning("less")
+      m.expects(where { _ > _ }).returning("more")
+      expect("less"){ m(1, 2) }
+      expect("more"){ m(2, 1) }
+      verifyExpectations
+    }
   }
 }

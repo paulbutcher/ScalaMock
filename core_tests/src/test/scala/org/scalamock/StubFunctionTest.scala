@@ -137,5 +137,26 @@ class StubFunctionTest extends FreeSpec with MockFactory {
       m.verify("foo", 42).twice
       intercept[ExpectationException] { verifyExpectations }
     }
+    
+    "match arguments" - {
+      "when stubbing" in {
+        val m = stubFunction[Int, Int, String]
+        m.when(where { _ < _ }).returns("lower")
+        m.when(where { _ > _ }).returns("higher")
+        expect("lower"){ m(1, 2) }
+        expect("higher"){ m(2, 1) }
+        verifyExpectations
+      }
+      
+      "when verifying" in {
+        val m = stubFunction[Int, Int, String]
+        m(1, 2)
+        m(2, 1)
+        m(2, 1)
+        m.verify(where { _ < _}).once
+        m.verify(where { _ > _}).twice
+        verifyExpectations
+      }
+    }
   }
 }
