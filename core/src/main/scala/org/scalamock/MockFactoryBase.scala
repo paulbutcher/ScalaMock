@@ -58,9 +58,9 @@ trait MockFactoryBase {
   protected def stubFunction[T1, R] = new StubFunction1[T1, R](this, Symbol("unnamed StubFunction1"))
   protected def stubFunction[T1, T2, R] = new StubFunction2[T1, T2, R](this, Symbol("unnamed StubFunction2"))
 
-  protected def where[T1](matcher: T1 => Boolean) = new ArgumentMatcher1(matcher)
-  protected def where[T1, T2](matcher: (T1, T2) => Boolean) = new ArgumentMatcher2(matcher)
-  protected def where[T1, T2, T3](matcher: (T1, T2, T3) => Boolean) = new ArgumentMatcher3(matcher)
+  protected def where[T1](matcher: T1 => Boolean) = new FunctionAdapter1(matcher)
+  protected def where[T1, T2](matcher: (T1, T2) => Boolean) = new FunctionAdapter2(matcher)
+  protected def where[T1, T2, T3](matcher: (T1, T2, T3) => Boolean) = new FunctionAdapter3(matcher)
 
   protected def * = new MatchAny
 
