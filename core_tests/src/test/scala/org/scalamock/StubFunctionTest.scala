@@ -27,6 +27,13 @@ class StubFunctionTest extends FreeSpec with MockFactory {
   
   autoVerify = false
   
+  def repeat(n: Int)(what: => Unit) {
+    for (i <- 0 until n)
+      what
+  }
+  
+  case class TestException() extends RuntimeException
+
   "Stub functions should" - {
     "have a sensible default name" in {
       val m = stubFunction[String]
@@ -79,8 +86,8 @@ class StubFunctionTest extends FreeSpec with MockFactory {
     
     "throw what they're told to" in {
       val m = stubFunction[String]
-      m.when().throws(new RuntimeException("bad thing happened"))
-      intercept[RuntimeException]{ m() }
+      m.when().throws(new TestException)
+      intercept[TestException]{ m() }
       verifyExpectations
     }
     
@@ -164,6 +171,150 @@ class StubFunctionTest extends FreeSpec with MockFactory {
         m.verify(where { _ > _}).twice
         verifyExpectations
       }
+    }
+    
+    "handle a degenerate sequence" in {
+      val m = stubFunction[Int, Int]
+      m(42)
+      inSequence {
+        m.verify(42)
+      }
+      verifyExpectations
+    }
+    
+    "handle a sequence of calls" in {
+      val m = stubFunction[Int, Int]
+      repeat(5) { m(42) }
+      repeat(1) { m(43) }
+      repeat(2) { m(44) }
+      inSequence {
+        m.verify(42).repeated(3 to 7)
+        m.verify(43).once
+        m.verify(44).twice
+      }
+      verifyExpectations
+    }
+    
+    "fail if functions are called out of sequence" in {
+      val m = stubFunction[Int, Int]
+      repeat(5) { m(42) }
+      m(44)
+      inSequence {
+        m.verify(42).repeated(3 to 7)
+        m.verify(43).once
+        m.verify(44).twice
+      }
+      intercept[ExpectationException] { verifyExpectations }
+    }
+    
+    "fail if the entire sequence isn't called" in {
+      val m = stubFunction[Int, Int]
+      repeat(5) { m(42) }
+      repeat(1) { m(43) }
+      inSequence {
+        m.verify(42).repeated(3 to 7)
+        m.verify(43).once
+        m.verify(44).twice
+      }
+      intercept[ExpectationException] { verifyExpectations }
+    }
+
+    "handle a combination of ordered and unordered expectations" in {
+      val m = stubFunction[Int, Unit]
+      
+      m(21)
+      m(31)
+      m(11)
+      m(12)
+      m(1)
+      m(32)
+      m(41)
+      m(13)
+
+      m.verify(1)
+      inSequence {
+        m.verify(11)
+        m.verify(12)
+        m.verify(13)
+      }
+      m.verify(21)
+      inSequence {
+        m.verify(31)
+        m.verify(32)
+      }
+      m.verify(41)
+      
+      verifyExpectations
+    }
+
+    "handle a sequence in which functions are called zero times" in {
+      val m = stubFunction[Int, Unit]
+      m(1)
+      m(4)
+      inSequence {
+        m.verify(1).once
+        m.verify(2).never
+        m.verify(3).anyNumberOfTimes
+        m.verify(4).once
+      }
+      verifyExpectations
+    }
+
+    "handle valid deeply nested expectation contexts" in {
+      val m = stubFunction[String, Unit]
+      
+      m("2.1")
+      m("1")
+      m("2.2.3")
+      m("2.2.2.1")
+      m("2.2.2.2")
+      m("2.2.1")
+      m("3")
+      m("2.2.3")
+      m("2.3")
+      
+      m.verify("1")
+      inSequence {
+        m.verify("2.1")
+        inAnyOrder {
+          m.verify("2.2.1")
+          inSequence {
+            m.verify("2.2.2.1")
+            m.verify("2.2.2.2")
+          }
+          m.verify("2.2.3").anyNumberOfTimes
+        }
+        m.verify("2.3")
+      }
+      m.verify("3")
+      
+      verifyExpectations
+    }
+
+    "handle invalid deeply nested expectation contexts" in {
+      val m = stubFunction[String, Unit]
+      
+      m("2.1")
+      m("1")
+      m("2.2.3")
+      m("2.2.2.2")
+
+      m.verify("1")
+      inSequence {
+        m.verify("2.1")
+        inAnyOrder {
+          m.verify("2.2.1")
+          inSequence {
+            m.verify("2.2.2.1")
+            m.verify("2.2.2.2")
+          }
+          m.verify("2.2.3")
+        }
+        m.verify("2.3")
+      }
+      m.verify("3")
+    
+      intercept[ExpectationException] { verifyExpectations }
     }
   }
 }

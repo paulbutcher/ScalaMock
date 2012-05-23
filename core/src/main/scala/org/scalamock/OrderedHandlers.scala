@@ -22,27 +22,40 @@ package org.scalamock
 
 private[scalamock] class OrderedHandlers extends Handlers {
   
-  def handle(call: Call): Option[Any] = {
-    for (i <- currentIndex until handlers.length) {
-      val handler = handlers(i)
-      val r = handler.handle(call)
-      if (r.isDefined) {
-        currentIndex = i
-        return r
+  val handleFn = new Function1[Call, Option[Any]] {
+    
+    def apply(call: Call): Option[Any] = {
+      for (i <- currentIndex until handlers.length) {
+        val handler = handlers(i)
+        val r = handler.handle(call)
+        if (r.isDefined) {
+          currentIndex = i
+          return r
+        }
+        if (!handler.isSatisfied)
+          return None
       }
-      if (!handler.isSatisfied)
-        return None
+      None
     }
-    None
+
+    var currentIndex = 0
   }
   
-  def verify(call: Call): Boolean = {
-    for (handler <- handlers) {
-      if (handler.verify(call))
-        return true
-    }
-    false
-  }
+  def handle(call: Call) = handleFn(call)
   
-  private var currentIndex = 0
+  val verifyFn = new Function1[Call, Boolean] {
+    
+    def apply(call: Call): Boolean = {
+      for (i <- currentIndex until handlers.length) {
+        val handler = handlers(i)
+          if (handler.verify(call))
+            return true
+      }
+      false
+    }
+
+    var currentIndex = 0
+  }
+ 
+  def verify(call: Call) = verifyFn(call)
 }
