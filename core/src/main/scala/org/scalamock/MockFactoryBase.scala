@@ -38,6 +38,14 @@ trait MockFactoryBase {
     expectationContext = null
   }
   
+  protected def inAnyOrder(what: => Unit) {
+    inContext(new UnorderedHandlers)(what)
+  }
+  
+  protected def inSequence(what: => Unit) {
+    inContext(new OrderedHandlers)(what)
+  }
+  
   protected case class FunctionName(name: Symbol)
   protected implicit def functionName(name: Symbol) = FunctionName(name)
   protected implicit def functionName(name: String) = FunctionName(Symbol(name))
@@ -74,7 +82,7 @@ trait MockFactoryBase {
   protected implicit def MatchAnyToMockParameter[T](m: MatchAny) = new MockParameter[T](m)
 
   protected implicit def MatchEpsilonToMockParameter[T](m: MatchEpsilon) = new EpsilonMockParameter(m)
-
+  
   private[scalamock] def handle(call: Call) = {
     callLog += call
     expectationContext.handle(call)
@@ -85,6 +93,14 @@ trait MockFactoryBase {
     e
   }
   
+  private def inContext(context: Handlers)(what: => Unit) {
+    expectationContext.add(context)
+    val prevContext = expectationContext
+    expectationContext = context
+    what
+    expectationContext = prevContext
+  }
+  
   private val callLog = new ListBuffer[Call]
-  private var expectationContext = new UnorderedHandlers
+  private var expectationContext: Handlers = _
 }
