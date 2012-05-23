@@ -20,11 +20,13 @@
 
 package org.scalamock
 
-class CallHandler[R](private[scalamock] val argumentMatcher: Product => Boolean) extends Handler {
+abstract class CallHandler[R](private[scalamock] val argumentMatcher: Product => Boolean) extends Handler {
+  
+  type Derived <: CallHandler[R]
   
   def repeat(range: Range) = {
     expectedCalls = range
-    this
+    this.asInstanceOf[Derived]
   }
   
   def repeat(count: Int): CallHandler[R] = repeat(count to count)
@@ -42,7 +44,7 @@ class CallHandler[R](private[scalamock] val argumentMatcher: Product => Boolean)
   
   def repeated(range: Range) = repeat(range)
   def repeated(count: Int) = repeat(count)
-  def times() = CallHandler.this
+  def times() = this.asInstanceOf[Derived]
 
   def returns(value: R) = onCall({_ => value})
   def returning(value: R) = returns(value)
@@ -52,7 +54,7 @@ class CallHandler[R](private[scalamock] val argumentMatcher: Product => Boolean)
   
   def onCall(handler: Product => R) = {
     onCallHandler = handler
-    this
+    this.asInstanceOf[Derived]
   }
 
   private[scalamock] def handle(call: Call) = {
@@ -89,8 +91,29 @@ trait Verify { self: CallHandler[_] =>
   }
 }
 
-class CallHandler0[R] extends CallHandler[R](new FunctionAdapter0({() => true}))
+class CallHandler0[R](argumentMatcher: Product => Boolean) extends CallHandler[R](argumentMatcher) {
 
-class CallHandler1[T1, R](v1: MockParameter[T1]) extends CallHandler[R](new FunctionAdapter1({p1: T1 => v1 == p1}))
+  type Derived = CallHandler0[R]
+  
+  def this() = this(new FunctionAdapter0({() => true}))
+  
+  def onCall(handler: () => R): CallHandler0[R] = super.onCall(new FunctionAdapter0(handler))
+}
 
-class CallHandler2[T1, T2, R](v1: MockParameter[T1], v2: MockParameter[T2]) extends CallHandler[R](new FunctionAdapter2({(p1: T1, p2: T2) => v1 == p1 && v2 == p2}))
+class CallHandler1[T1, R](argumentMatcher: Product => Boolean) extends CallHandler[R](argumentMatcher) {
+  
+  type Derived = CallHandler1[T1, R]
+
+  def this(v1: MockParameter[T1]) = this(new FunctionAdapter1({p1: T1 => v1 == p1}))
+  
+  def onCall(handler: (T1) => R): CallHandler1[T1, R] = super.onCall(new FunctionAdapter1(handler))
+}
+
+class CallHandler2[T1, T2, R](argumentMatcher: Product => Boolean) extends CallHandler[R](argumentMatcher) {
+  
+  type Derived = CallHandler2[T1, T2, R]
+
+  def this(v1: MockParameter[T1], v2: MockParameter[T2]) = this(new FunctionAdapter2({(p1: T1, p2: T2) => v1 == p1 && v2 == p2}))
+  
+  def onCall(handler: (T1, T2) => R): CallHandler2[T1, T2, R] = super.onCall(new FunctionAdapter2(handler))
+}

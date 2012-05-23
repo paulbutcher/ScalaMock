@@ -93,6 +93,15 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       verifyExpectations
     }
     
+    "return a calculated return value" in {
+      val m1 = mockFunction[Int, String]
+      val m2 = mockFunction[Int, String]
+      m1.expects(42).onCall(m2)
+      m2.expects(42).returning("a return value")
+      expect("a return value") { m1(42) }
+      verifyExpectations
+    }
+    
     "match literal arguments" in {
       val m = mockFunction[String, Int, Int]
       m.expects("foo", 42)
