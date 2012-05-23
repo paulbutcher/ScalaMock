@@ -44,17 +44,16 @@ class CallHandler[R](private[scalamock] val argumentMatcher: Product => Boolean)
   def repeated(count: Int) = repeat(count)
   def times() = CallHandler.this
 
-  def returns(value: R) = {
-    onCallHandler = {_ => value}
-    this
-  }
+  def returns(value: R) = onCall({_ => value})
   def returning(value: R) = returns(value)
   
-  def throws(e: Throwable) = {
-    onCallHandler = {_ => throw e}
+  def throws(e: Throwable) = onCall({_ => throw e})
+  def throwing(e: Throwable) = throws(e)
+  
+  def onCall(handler: Product => R) = {
+    onCallHandler = handler
     this
   }
-  def throwing(e: Throwable) = throws(e)
 
   def handle(call: Call) = {
     if (!isExhausted && argumentMatcher(call.arguments)) {
