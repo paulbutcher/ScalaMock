@@ -97,13 +97,13 @@ object MockImpl {
       val params = buildParams(methodType)
       val body = Apply(
                    Select(Select(This(mockName), mockFunctionName(m)), newTermName("apply")),
-                   paramss(methodType).flatten map { p => Ident(p) })
+                   paramss(methodType).flatten map { p => Ident(newTermName(p.name.toString)) })
       DefDef(
         Modifiers(),
         m.name, 
         buildTypeParams(methodType), 
         params,
-        TypeTree().setType(finalResultType(methodType)),
+        TypeTree(),
         body)
     }
     
@@ -173,7 +173,7 @@ object MockImpl {
       val methodsToMock = t.members filterNot (m => isMemberOfObject(m))
       val forwarders = (methodsToMock map (m => methodImpl(m, t))).toList
       val mocks = (methodsToMock map (m => mockMethod(m, t))).toList
-      val ttree = TypeTree().setType(t)
+      val ttree = TypeTree(t)
       TypeApply(
         Select(
           Block(
