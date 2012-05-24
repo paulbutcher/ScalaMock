@@ -143,7 +143,7 @@ object MockImpl {
             List(Literal(Constant(m.name.toString))))))
     }
     
-    // val <|mockname|> = new MockFunctionN(null, '<|name|>)
+    // val <|mockname|> = new MockFunctionN(factory, '<|name|>)
     def mockMethod(m: Symbol, t: Type): ValDef = {
       val mt = m.asTypeIn(t)
       ValDef(Modifiers(),
