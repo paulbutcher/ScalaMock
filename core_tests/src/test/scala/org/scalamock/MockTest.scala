@@ -27,7 +27,7 @@ class MockTest extends FreeSpec with MockFactory {
   
   "a mock should" - {
     "be creatable" in {
-      val m = mock[Turtle]
+//      val m = mock[Turtle]
     }
   }
 }

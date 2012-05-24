@@ -54,6 +54,12 @@ object MockImpl {
       case _ => Nil
     }
     
+    def paramCount(methodType: Type): Int = methodType match {
+      case MethodType(params, result) => params.length + paramCount(result)
+      case PolyType(_, result) => paramCount(result)
+      case _ => 0
+    }
+    
     def buildParams(methodType: Type) =
       paramss(methodType) map { params =>
         params map { p =>
@@ -106,6 +112,37 @@ object MockImpl {
       }
     }
     
+    def mockFunctionClass(paramCount: Int): TypeTag[_] = paramCount match {
+      case 0 => implicitly[TypeTag[MockFunction0[_]]]
+      case 1 => implicitly[TypeTag[MockFunction1[_, _]]]
+      case 2 => implicitly[TypeTag[MockFunction2[_, _, _]]]
+      case _ => sys.error("Can't handle methods with more than 2 parameters (yet)")
+    }
+    
+    def mockFunction(m: Symbol, t: Type) = {
+      val clazz = mockFunctionClass(paramCount(t)) 
+      Apply(
+        Select(
+          New(
+            AppliedTypeTree(
+              Ident(clazz.sym),
+              List(Ident(newTypeName("String")), Ident(newTypeName("String"))))), 
+          newTermName("<init>")),
+        List(
+          Literal(Constant(null)), 
+          Apply(
+            Select(Select(Ident(newTermName("scala")), newTermName("Symbol")), newTermName("apply")),
+            List(Literal(Constant(m.name.toString))))))
+    }
+    
+    def mockMethod(m: Symbol, t: Type): ValDef = {
+      val mt = m.asTypeIn(t)
+      ValDef(Modifiers(),
+        newTermName("mock$"+ m.name.toString), 
+        TypeTree(), 
+        mockFunction(m, mt))
+    }
+    
     // def <init>() = { super.<init>(); () }
     def initDef = 
       DefDef(
@@ -125,7 +162,9 @@ object MockImpl {
 
     // { final class $anon extends T { ... }; new $anon() }.asInstanceOf[T])
     def anonClass(t: Type) = {
-      val methodsToImplement = t.members filterNot (m => isMemberOfObject(m))
+      val methodsToMock = t.members filterNot (m => isMemberOfObject(m))
+      val forwarders = (methodsToMock map (m => methodImpl(m, t))).toList
+      val mocks = (methodsToMock map (m => mockMethod(m, t))).toList
       val ttree = TypeTree().setType(t)
       TypeApply(
         Select(
@@ -138,7 +177,7 @@ object MockImpl {
                 Template(
                   List(ttree), 
                   emptyValDef,
-                  initDef +: (methodsToImplement map (m => methodImpl(m, t))).toList))),
+                  initDef +: (forwarders ++ mocks)))),
             Apply(
               Select(
                 New(Ident(newTypeName("$anon"))), 
