@@ -25,9 +25,19 @@ import org.scalatest.FreeSpec
 
 class MockTest extends FreeSpec with MockFactory {
   
-  "a mock should" - {
-    "be creatable" in {
-//      val m = mock[Turtle]
+  autoVerify = false
+  
+  trait SimpleTrait {
+    def nullary: String
+    def noParams(): String
+    def oneParam(x: Int): String
+    def twoParams(x: Int, y: Double): String
+  }
+  
+  "Mocks should" - {
+    "fail if an unexpected method call is made" in {
+      val m = mock[SimpleTrait]
+      intercept[ExpectationException] { m.oneParam(42) }
     }
   }
 }

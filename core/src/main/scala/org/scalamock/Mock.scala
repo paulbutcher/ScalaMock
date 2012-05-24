@@ -25,12 +25,12 @@ import reflect.makro.Context
 trait Mock {
   import language.experimental.macros
   
-  def mock[T] = macro MockImpl.mock[T]
+  def mock[T](implicit factory: MockFactoryBase) = macro MockImpl.mock[T]
 }
 
 object MockImpl {
   
-  def mock[T: c.TypeTag](c: Context): c.Expr[T] = {
+  def mock[T: c.TypeTag](c: Context)(factory: c.Expr[MockFactoryBase]): c.Expr[T] = {
     import c.mirror._
     import reflect.api.Modifier._
     
@@ -137,7 +137,7 @@ object MockImpl {
               types)),
           newTermName("<init>")),
         List(
-          Literal(Constant(null)), 
+          factory.tree, 
           Apply(
             Select(Select(Ident(newTermName("scala")), newTermName("Symbol")), newTermName("apply")),
             List(Literal(Constant(m.name.toString))))))

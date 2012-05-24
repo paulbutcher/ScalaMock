@@ -46,6 +46,9 @@ trait MockFactoryBase extends Mock {
     inContext(new OrderedHandlers)(what)
   }
   
+  //! TODO - https://issues.scala-lang.org/browse/SI-5831
+  implicit val _factory = this
+  
   protected case class FunctionName(name: Symbol)
   protected implicit def functionName(name: Symbol) = FunctionName(name)
   protected implicit def functionName(name: String) = FunctionName(Symbol(name))
