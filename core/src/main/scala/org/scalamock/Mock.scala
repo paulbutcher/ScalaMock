@@ -33,6 +33,8 @@ object MockImpl {
   def mock[T: c.TypeTag](c: Context): c.Expr[T] = {
     import c.mirror._
     import reflect.api.Modifier._
+    
+    val mockName = newTypeName("$anon") 
 
     // Convert a methodType into its ultimate result type
     // For nullary and normal methods, this is just the result type
@@ -59,6 +61,9 @@ object MockImpl {
       case PolyType(_, result) => paramCount(result)
       case _ => 0
     }
+    
+    def paramTypes(methodType: Type): List[Type] =
+      paramss(methodType).flatten map { _.asTypeIn(methodType) }
     
     def buildParams(methodType: Type) =
       paramss(methodType) map { params =>
@@ -88,26 +93,26 @@ object MockImpl {
       }
     
     // def <|name|>(p1: T1, p2: T2, ...): T = null.asInstanceOf[T]
-    def methodDef(name: Name, methodType: Type): DefDef = {
+    def methodDef(m: Symbol, methodType: Type): DefDef = {
       val params = buildParams(methodType)
-      val body = TypeApply(
-                   Select(Literal(Constant(null)), newTermName("asInstanceOf")), 
-                   List(TypeTree().setType(finalResultType(methodType)))) 
+      val body = Apply(
+                   Select(Select(This(mockName), mockFunctionName(m)), newTermName("apply")),
+                   paramss(methodType).flatten map { p => Ident(p) })
       DefDef(
         Modifiers(),
-        name, 
+        m.name, 
         buildTypeParams(methodType), 
         params,
-        TypeTree(),
+        TypeTree().setType(finalResultType(methodType)),
         body)
     }
     
     def methodImpl(m: Symbol, t: Type): DefDef = {
       val mt = m.asTypeIn(t) 
       mt match {
-        case NullaryMethodType(_) => methodDef(m.name, mt)
-        case MethodType(_, _) => methodDef(m.name, mt)
-        case PolyType(_, _) => methodDef(m.name, mt)
+        case NullaryMethodType(_) => methodDef(m, mt)
+        case MethodType(_, _) => methodDef(m, mt)
+        case PolyType(_, _) => methodDef(m, mt)
         case _ => sys.error("Don't know how to handle "+ mt.getClass)
       }
     }
@@ -119,14 +124,17 @@ object MockImpl {
       case _ => sys.error("Can't handle methods with more than 2 parameters (yet)")
     }
     
+    def mockFunctionName(m: Symbol) = newTermName("mock$"+ m.name.toString)
+    
     def mockFunction(m: Symbol, t: Type) = {
-      val clazz = mockFunctionClass(paramCount(t)) 
+      val clazz = mockFunctionClass(paramCount(t))
+      val types = (paramTypes(t) map { pt => Ident(pt.typeSymbol) }) :+ Ident(finalResultType(t).typeSymbol)
       Apply(
         Select(
           New(
             AppliedTypeTree(
               Ident(clazz.sym),
-              List(Ident(newTypeName("String")), Ident(newTypeName("String"))))), 
+              types)),
           newTermName("<init>")),
         List(
           Literal(Constant(null)), 
@@ -138,7 +146,7 @@ object MockImpl {
     def mockMethod(m: Symbol, t: Type): ValDef = {
       val mt = m.asTypeIn(t)
       ValDef(Modifiers(),
-        newTermName("mock$"+ m.name.toString), 
+        mockFunctionName(m), 
         TypeTree(), 
         mockFunction(m, mt))
     }
@@ -172,7 +180,7 @@ object MockImpl {
             List(
               ClassDef(
                 Modifiers(Set(`final`)), 
-                newTypeName("$anon"),
+                mockName,
                 List(),
                 Template(
                   List(ttree), 
@@ -180,12 +188,18 @@ object MockImpl {
                   initDef +: (forwarders ++ mocks)))),
             Apply(
               Select(
-                New(Ident(newTypeName("$anon"))), 
+                New(Ident(mockName)), 
                 newTermName("<init>")), 
               List())),
           newTermName("asInstanceOf")),
         List(ttree))
     }
+
+    println("-------")
+    println(show(anonClass(c.tag[T].tpe)))
+    println("-------")
+    println(showRaw(anonClass(c.tag[T].tpe)))
+    println("-------")
 
     c.Expr(anonClass(c.tag[T].tpe))
   }
