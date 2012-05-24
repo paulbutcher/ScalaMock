@@ -92,7 +92,7 @@ object MockImpl {
           TypeBoundsTree(Ident(staticClass("scala.Nothing")), Ident(staticClass("scala.Any"))))
       }
     
-    // def <|name|>(p1: T1, p2: T2, ...): T = null.asInstanceOf[T]
+    // def <|name|>(p1: T1, p2: T2, ...): T = <|mockname|>(p1, p2, ...)
     def methodDef(m: Symbol, methodType: Type): DefDef = {
       val params = buildParams(methodType)
       val body = Apply(
@@ -143,6 +143,7 @@ object MockImpl {
             List(Literal(Constant(m.name.toString))))))
     }
     
+    // val <|mockname|> = new MockFunctionN(null, '<|name|>)
     def mockMethod(m: Symbol, t: Type): ValDef = {
       val mt = m.asTypeIn(t)
       ValDef(Modifiers(),
@@ -194,12 +195,6 @@ object MockImpl {
           newTermName("asInstanceOf")),
         List(ttree))
     }
-
-    println("-------")
-    println(show(anonClass(c.tag[T].tpe)))
-    println("-------")
-    println(showRaw(anonClass(c.tag[T].tpe)))
-    println("-------")
 
     c.Expr(anonClass(c.tag[T].tpe))
   }
