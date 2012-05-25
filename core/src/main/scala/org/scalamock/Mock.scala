@@ -143,7 +143,7 @@ object MockImpl {
             List(Literal(Constant(m.name.toString))))))
     }
     
-    // val <|mockname|> = new MockFunctionN(factory, '<|name|>)
+    // val <|mockname|> = new MockFunctionN[T1, T2, ..., R](factory, '<|name|>)
     def mockMethod(m: Symbol, t: Type): ValDef = {
       val mt = m.asTypeIn(t)
       ValDef(Modifiers(),
@@ -166,6 +166,15 @@ object MockImpl {
               Select(Super(This(newTypeName("")), newTypeName("")), newTermName("<init>")), 
               List())), 
           Literal(Constant(()))))
+          
+    def expects(body: List[DefDef]) =
+      ValDef(
+        Modifiers(), 
+        newTermName("expects"), 
+        TypeTree(), 
+        Block(
+          List(),
+          Literal(Constant(()))))
       
     def isMemberOfObject(m: Symbol) = TypeTag.Object.tpe.member(m.name) != NoSymbol
 
@@ -186,7 +195,7 @@ object MockImpl {
                 Template(
                   List(ttree), 
                   emptyValDef,
-                  initDef +: (forwarders ++ mocks)))),
+                  List(initDef, expects(forwarders)) ++ forwarders ++ mocks))),
             Apply(
               Select(
                 New(Ident(mockName)), 
@@ -195,6 +204,12 @@ object MockImpl {
           newTermName("asInstanceOf")),
         List(ttree))
     }
+    
+    println("--------")
+    println(show(anonClass(c.tag[T].tpe)))
+    println("--------")
+    println(showRaw(anonClass(c.tag[T].tpe)))
+    println("--------")
 
     c.Expr(anonClass(c.tag[T].tpe))
   }
