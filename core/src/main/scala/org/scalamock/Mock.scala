@@ -204,12 +204,6 @@ object MockImpl {
           newTermName("asInstanceOf")),
         List(ttree))
     }
-    
-    println("--------")
-    println(show(anonClass(c.tag[T].tpe)))
-    println("--------")
-    println(showRaw(anonClass(c.tag[T].tpe)))
-    println("--------")
 
     c.Expr(anonClass(c.tag[T].tpe))
   }

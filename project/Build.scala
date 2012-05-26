@@ -24,12 +24,13 @@ import sbt.inc.Analysis
 
 object ScalaMockBuild extends Build {
 
-  override lazy val settings = super.settings ++ Seq(
+  val buildSettings = Defaults.defaultSettings ++ Seq(
     organization := "org.scalamock",
     version := "3.0-SNAPSHOT",
     scalaVersion := "2.10.0-M3",
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"),
-	resolvers += "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/",
+    scalacOptions in (Compile, console) += "-Yreify-copypaste",
+    resolvers += "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/",
 
     publishTo <<= version { v =>
       val nexus = "https://oss.sonatype.org/"
@@ -62,25 +63,37 @@ object ScalaMockBuild extends Build {
       </developers>)
   )
 
-  lazy val scalamock = Project("ScalaMock", file(".")) settings(
-    compile in Compile := Analysis.Empty,
-    publishArtifact in (Compile, packageBin) := false,
-    publishArtifact in (Compile, packageSrc) := false,
-    sources in Compile <<= (Seq(core, scalatest).map(sources in Compile in _).join).map(_.flatten)
-  ) aggregate(core, core_tests, scalatest)
+  lazy val scalamock = Project(
+    "ScalaMock", 
+    file("."),
+    settings = buildSettings ++ Seq(
+      compile in Compile := Analysis.Empty,
+      publishArtifact in (Compile, packageBin) := false,
+      publishArtifact in (Compile, packageSrc) := false,
+      sources in Compile <<= (Seq(core, scalatest).map(sources in Compile in _).join).map(_.flatten)
+    )) aggregate(core, core_tests, scalatest)
 
-  lazy val core = Project("core", file("core")) settings(
-    name := "ScalaMock Core"
-  )
+  lazy val core = Project(
+    "core", 
+    file("core"),
+    settings = buildSettings ++ Seq(
+      name := "ScalaMock Core"
+    ))
 
-  lazy val scalatest = Project("scalatest", file("frameworks/scalatest")) settings(
-    name := "ScalaMock ScalaTest Support",
-    libraryDependencies += "org.scalatest" %% "scalatest" % "1.8-SNAPSHOT"
-  ) dependsOn(core)
+  lazy val scalatest = Project(
+    "scalatest", 
+    file("frameworks/scalatest"),
+    settings = buildSettings ++ Seq(
+      name := "ScalaMock ScalaTest Support",
+      libraryDependencies += "org.scalatest" %% "scalatest" % "1.8-SNAPSHOT"
+    )) dependsOn(core)
 
-  lazy val core_tests = Project("core_tests", file("core_tests")) settings(
-	name := "ScalaMock Core Tests",
-    publish := (),
-    publishLocal := ()
-  ) dependsOn(scalatest, core)
+  lazy val core_tests = Project(
+    "core_tests", 
+    file("core_tests"),
+    settings = buildSettings ++ Seq(
+      name := "ScalaMock Core Tests",
+      publish := (),
+      publishLocal := ()
+    )) dependsOn(scalatest, core)
 }
