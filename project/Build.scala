@@ -22,12 +22,14 @@ import sbt._
 import Keys._
 import sbt.inc.Analysis
 
-object ScalaMockBuild extends Build {
+object BuildSettings {
+  val buildVersion = "3.0-SNAPSHOT"
+  val buildScalaVersion = "2.10.0-M3"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
     organization := "org.scalamock",
-    version := "3.0-SNAPSHOT",
-    scalaVersion := "2.10.0-M3",
+    version := buildVersion,
+    scalaVersion := buildScalaVersion,
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"),
     scalacOptions in (Compile, console) += "-Yreify-copypaste",
     resolvers += "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/",
@@ -60,8 +62,35 @@ object ScalaMockBuild extends Build {
           <name>Paul Butcher</name>
           <url>http://paulbutcher.com/</url>
         </developer>
-      </developers>)
+      </developers>),
+  
+    shellPrompt := ShellPrompt.buildShellPrompt
   )
+}
+
+object ShellPrompt {
+  object devnull extends ProcessLogger {
+    def info (s: => String) {}
+    def error (s: => String) { }
+    def buffer[T] (f: => T): T = f
+  }
+  def currBranch = (
+    ("git status -sb" lines_! devnull headOption)
+      getOrElse "-" stripPrefix "## "
+  )
+
+  val buildShellPrompt = { 
+    (state: State) => {
+      val currProject = Project.extract (state).currentProject.id
+      "%s:%s:%s> ".format (
+        currProject, currBranch, BuildSettings.buildVersion
+      )
+    }
+  }
+}
+
+object ScalaMockBuild extends Build {
+  import BuildSettings._
 
   lazy val scalamock = Project(
     "ScalaMock", 
