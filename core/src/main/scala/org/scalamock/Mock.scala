@@ -168,17 +168,25 @@ object MockImpl {
           Apply(
             Select(Super(This(newTypeName("")), newTypeName("")), newTermName("<init>")), 
             List())))
+            
+    def expectForwarder(m: Symbol, t: Type): DefDef = {
+      val mt = m.asTypeIn(t) 
+      val body = Literal(Constant(null))
+      methodImpl(m, mt, body)
+    }
           
-    def expects =
+    def expects(methodsToMock: List[Symbol], t: Type) = {
+      val members = methodsToMock map (m => expectForwarder(m, t))
       ValDef(
         Modifiers(), 
         newTermName("expects"), 
-        TypeTree(), 
-        Block())
+        TypeTree(),
+        anonClass(List(TypeTree(TypeTag.Object.tpe)), members))
+    }
       
     def isMemberOfObject(m: Symbol) = TypeTag.Object.tpe.member(m.name) != NoSymbol
 
-    // { final class $anon extends <|parents|> { <|members|> }; new $anon() }
+    // new { <|members|> }
     def anonClass(parents: List[TypeTree], members: List[Tree]) =
       Block(
         List(
@@ -189,7 +197,7 @@ object MockImpl {
             Template(
               parents, 
               emptyValDef,
-              members))),
+              initDef +: members))),
         Apply(
           Select(
             New(Ident(mockName)), 
@@ -203,11 +211,19 @@ object MockImpl {
         List(TypeTree(t)))
 
     val tpe = c.tag[T].tpe
-    val methodsToMock = tpe.members filterNot (m => isMemberOfObject(m))
-    val forwarders = (methodsToMock map (m => forwarderImpl(m, tpe))).toList
-    val mocks = (methodsToMock map (m => mockMethod(m, tpe))).toList
-    val members = List(initDef, expects) ++ forwarders ++ mocks
+    val methodsToMock = (tpe.members filterNot (m => isMemberOfObject(m))).toList
+    val forwarders = (methodsToMock map (m => forwarderImpl(m, tpe)))
+    val mocks = (methodsToMock map (m => mockMethod(m, tpe)))
+    val members = expects(methodsToMock, tpe) +: (forwarders ++ mocks)
+    
+    val result = castTo(anonClass(List(TypeTree(tpe)), members), tpe)
+    
+//    println("------")
+//    println(show(result))
+//    println("------")
+//    println(showRaw(result))
+//    println("------")
 
-    c.Expr(castTo(anonClass(List(TypeTree(tpe)), members), tpe))
+    c.Expr(result)
   }
 }
