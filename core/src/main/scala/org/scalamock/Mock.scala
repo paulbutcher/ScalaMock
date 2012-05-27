@@ -174,26 +174,28 @@ object MockImpl {
       
     def isMemberOfObject(m: Symbol) = TypeTag.Object.tpe.member(m.name) != NoSymbol
 
-    // { final class $anon extends T { ... }; new $anon() }.asInstanceOf[T])
-    def anonClass(t: Type, members: List[Tree]) =
+    // { final class $anon extends <|parents|> { <|members|> }; new $anon() }
+    def anonClass(parents: List[TypeTree], members: List[Tree]) =
+      Block(
+        List(
+          ClassDef(
+            Modifiers(Set(`final`)), 
+            mockName,
+            List(),
+            Template(
+              parents, 
+              emptyValDef,
+              members))),
+        Apply(
+          Select(
+            New(Ident(mockName)), 
+            newTermName("<init>")), 
+          List()))
+    
+    // <|expr|>.asInstanceOf[<|t|>]
+    def castTo(expr: Tree, t: Type) =
       TypeApply(
-        Select(
-          Block(
-            List(
-              ClassDef(
-                Modifiers(Set(`final`)), 
-                mockName,
-                List(),
-                Template(
-                  List(TypeTree(t)), 
-                  emptyValDef,
-                  members))),
-            Apply(
-              Select(
-                New(Ident(mockName)), 
-                newTermName("<init>")), 
-              List())),
-          newTermName("asInstanceOf")),
+        Select(expr, newTermName("asInstanceOf")),
         List(TypeTree(t)))
 
     val tpe = c.tag[T].tpe
@@ -201,6 +203,7 @@ object MockImpl {
     val forwarders = (methodsToMock map (m => methodImpl(m, tpe))).toList
     val mocks = (methodsToMock map (m => mockMethod(m, tpe))).toList
     val members = List(initDef, expects) ++ forwarders ++ mocks
-    c.Expr(anonClass(tpe, members))
+
+    c.Expr(castTo(anonClass(List(TypeTree(tpe)), members), tpe))
   }
 }
