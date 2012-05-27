@@ -93,11 +93,8 @@ object MockImpl {
       }
     
     // def <|name|>(p1: T1, p2: T2, ...): T = <|mockname|>(p1, p2, ...)
-    def methodDef(m: Symbol, methodType: Type): DefDef = {
+    def methodDef(m: Symbol, methodType: Type, body: Tree): DefDef = {
       val params = buildParams(methodType)
-      val body = Apply(
-                   Select(Select(This(mockName), mockFunctionName(m)), newTermName("apply")),
-                   paramss(methodType).flatten map { p => Ident(newTermName(p.name.toString)) })
       DefDef(
         Modifiers(),
         m.name, 
@@ -107,14 +104,21 @@ object MockImpl {
         body)
     }
     
-    def methodImpl(m: Symbol, t: Type): DefDef = {
-      val mt = m.asTypeIn(t) 
-      mt match {
-        case NullaryMethodType(_) => methodDef(m, mt)
-        case MethodType(_, _) => methodDef(m, mt)
-        case PolyType(_, _) => methodDef(m, mt)
-        case _ => sys.error("Don't know how to handle "+ mt.getClass)
+    def methodImpl(m: Symbol, methodType: Type, body: Tree): DefDef = {
+      methodType match {
+        case NullaryMethodType(_) => methodDef(m, methodType, body)
+        case MethodType(_, _) => methodDef(m, methodType, body)
+        case PolyType(_, _) => methodDef(m, methodType, body)
+        case _ => sys.error("Don't know how to handle "+ methodType.getClass)
       }
+    }
+    
+    def forwarderImpl(m: Symbol, t: Type): DefDef = {
+      val mt = m.asTypeIn(t) 
+      val body = Apply(
+                   Select(Select(This(mockName), mockFunctionName(m)), newTermName("apply")),
+                   paramss(mt).flatten map { p => Ident(newTermName(p.name.toString)) })
+      methodImpl(m, mt, body)
     }
     
     def mockFunctionClass(paramCount: Int): TypeTag[_] = paramCount match {
@@ -200,7 +204,7 @@ object MockImpl {
 
     val tpe = c.tag[T].tpe
     val methodsToMock = tpe.members filterNot (m => isMemberOfObject(m))
-    val forwarders = (methodsToMock map (m => methodImpl(m, tpe))).toList
+    val forwarders = (methodsToMock map (m => forwarderImpl(m, tpe))).toList
     val mocks = (methodsToMock map (m => mockMethod(m, tpe))).toList
     val members = List(initDef, expects) ++ forwarders ++ mocks
 
