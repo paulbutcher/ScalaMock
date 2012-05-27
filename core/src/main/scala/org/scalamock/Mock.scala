@@ -168,21 +168,6 @@ object MockImpl {
           Apply(
             Select(Super(This(newTypeName("")), newTypeName("")), newTermName("<init>")), 
             List())))
-            
-    def expectForwarder(m: Symbol, t: Type): DefDef = {
-      val mt = m.asTypeIn(t) 
-      val body = Literal(Constant(null))
-      methodImpl(m, mt, body)
-    }
-          
-    def expects(methodsToMock: List[Symbol], t: Type) = {
-      val members = methodsToMock map (m => expectForwarder(m, t))
-      ValDef(
-        Modifiers(), 
-        newTermName("expects"), 
-        TypeTree(),
-        anonClass(List(TypeTree(TypeTag.Object.tpe)), members))
-    }
       
     def isMemberOfObject(m: Symbol) = TypeTag.Object.tpe.member(m.name) != NoSymbol
 
@@ -214,7 +199,7 @@ object MockImpl {
     val methodsToMock = (tpe.members filterNot (m => isMemberOfObject(m))).toList
     val forwarders = (methodsToMock map (m => forwarderImpl(m, tpe)))
     val mocks = (methodsToMock map (m => mockMethod(m, tpe)))
-    val members = expects(methodsToMock, tpe) +: (forwarders ++ mocks)
+    val members = forwarders ++ mocks
     
     val result = castTo(anonClass(List(TypeTree(tpe)), members), tpe)
     
