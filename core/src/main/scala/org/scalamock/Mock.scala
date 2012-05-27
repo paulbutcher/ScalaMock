@@ -26,6 +26,8 @@ trait Mock {
   import language.experimental.macros
   
   def mock[T](implicit factory: MockFactoryBase) = macro MockImpl.mock[T]
+  
+  def toMockFunction2[T1, T2, R](f: Function2[T1, T2, R]) = macro MockImpl.toMockFunction2[T2, T2, R]
 }
 
 object MockImpl {
@@ -210,5 +212,39 @@ object MockImpl {
 //    println("------")
 
     c.Expr(result)
+  }
+
+  def toMockFunction2[T1: c.TypeTag, T2: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function2[T1, T2, R]]): c.Expr[MockFunction2[T1, T2, R]] = {
+    import c.mirror._
+
+    def mockFunctionName(m: Name) = "mock$"+ m.toString
+
+    val (obj, name) = f.tree match {
+      case Block(_, Function(_, Apply(Select(o, n), _))) => (o, n)
+      case _ => sys.error("Unrecognised structure: "+ f)
+    }
+    val ttag = implicitly[TypeTag[MockFunction2[T1, T2, R]]]
+    c.Expr(
+      TypeApply(
+        Select(
+          Apply(
+            Select(
+              Apply(
+                Select(
+                  Apply(Select(obj, newTermName("getClass")), List()),
+                  newTermName("getMethod")),
+                List(Literal(Constant(mockFunctionName(name))))),
+              newTermName("invoke")),
+            List(obj)),
+          newTermName("asInstanceOf")),
+        List(TypeTree(ttag.tpe))))
+        
+//    println("------")
+//    println(show(result))
+//    println("------")
+//    println(showRaw(result))
+//    println("------")
+//
+//    result
   }
 }
