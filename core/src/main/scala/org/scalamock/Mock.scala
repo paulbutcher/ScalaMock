@@ -165,7 +165,7 @@ object MockImpl {
             Select(Super(This(newTypeName("")), newTypeName("")), newTermName("<init>")), 
             List())))
           
-    def expects(body: List[DefDef]) =
+    def expects =
       ValDef(
         Modifiers(), 
         newTermName("expects"), 
@@ -175,11 +175,7 @@ object MockImpl {
     def isMemberOfObject(m: Symbol) = TypeTag.Object.tpe.member(m.name) != NoSymbol
 
     // { final class $anon extends T { ... }; new $anon() }.asInstanceOf[T])
-    def anonClass(t: Type) = {
-      val methodsToMock = t.members filterNot (m => isMemberOfObject(m))
-      val forwarders = (methodsToMock map (m => methodImpl(m, t))).toList
-      val mocks = (methodsToMock map (m => mockMethod(m, t))).toList
-      val ttree = TypeTree(t)
+    def anonClass(t: Type, members: List[Tree]) =
       TypeApply(
         Select(
           Block(
@@ -189,18 +185,22 @@ object MockImpl {
                 mockName,
                 List(),
                 Template(
-                  List(ttree), 
+                  List(TypeTree(t)), 
                   emptyValDef,
-                  List(initDef, expects(forwarders)) ++ forwarders ++ mocks))),
+                  members))),
             Apply(
               Select(
                 New(Ident(mockName)), 
                 newTermName("<init>")), 
               List())),
           newTermName("asInstanceOf")),
-        List(ttree))
-    }
+        List(TypeTree(t)))
 
-    c.Expr(anonClass(c.tag[T].tpe))
+    val tpe = c.tag[T].tpe
+    val methodsToMock = tpe.members filterNot (m => isMemberOfObject(m))
+    val forwarders = (methodsToMock map (m => methodImpl(m, tpe))).toList
+    val mocks = (methodsToMock map (m => mockMethod(m, tpe))).toList
+    val members = List(initDef, expects) ++ forwarders ++ mocks
+    c.Expr(anonClass(tpe, members))
   }
 }
