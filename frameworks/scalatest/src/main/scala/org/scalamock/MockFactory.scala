@@ -18,10 +18,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock.scalatest
+package org.scalamock
 
-import org.scalamock.MockFactoryBase
-import org.scalatest.{AbstractSuite, Distributor, Filter, Reporter, Stopper, Suite, Tracker}
+import org.scalatest.AbstractSuite
+import org.scalatest.Reporter
+import org.scalatest.Stopper
+import org.scalatest.Suite
+import org.scalatest.Tracker
 
 /** Trait that can be mixed into a [[http://www.scalatest.org/ ScalaTest]] suite to provide
   * mocking support.
