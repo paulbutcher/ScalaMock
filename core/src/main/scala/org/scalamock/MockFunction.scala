@@ -24,7 +24,7 @@ trait MockFunction { self: FakeFunction =>
   
   def handle(arguments: Product): Any = self.factory.handle(new Call(this, arguments)) match {
     case Some(retVal) => retVal
-    case None => throw new ExpectationException("Unexpected call")
+    case None => factory.reportUnexpectedCall
   }
 }
 

@@ -33,7 +33,7 @@ trait MockFactoryBase extends Mock {
   protected def verifyExpectations() {
     callLog foreach expectationContext.verify _
     if (!expectationContext.isSatisfied)
-      throw new ExpectationException("Unsatisfied expectation")
+      reportUnsatisfiedExpectation
     
     expectationContext = null
   }
@@ -94,6 +94,14 @@ trait MockFactoryBase extends Mock {
   private[scalamock] def add[E <: CallHandler[_]](e: E) = {
     expectationContext.add(e)
     e
+  }
+  
+  private[scalamock] def reportUnexpectedCall() = {
+    throw new ExpectationException("Unexpected call")
+  }
+  
+  private[scalamock] def reportUnsatisfiedExpectation() = {
+    throw new ExpectationException("Unsatisfied expectation")
   }
   
   private def inContext(context: Handlers)(what: => Unit) {
