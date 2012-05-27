@@ -95,7 +95,7 @@ class CallHandler0[R](argumentMatcher: Product => Boolean) extends CallHandler[R
 
   type Derived = CallHandler0[R]
   
-  def this() = this(new FunctionAdapter0({() => true}))
+  def this() = this(new ArgumentMatcher(None))
   
   def onCall(handler: () => R): CallHandler0[R] = super.onCall(new FunctionAdapter0(handler))
 }
@@ -104,7 +104,7 @@ class CallHandler1[T1, R](argumentMatcher: Product => Boolean) extends CallHandl
   
   type Derived = CallHandler1[T1, R]
 
-  def this(v1: MockParameter[T1]) = this(new FunctionAdapter1({p1: T1 => v1 == p1}))
+  def this(v1: MockParameter[T1]) = this(new ArgumentMatcher(new Tuple1(v1)))
   
   def onCall(handler: (T1) => R): CallHandler1[T1, R] = super.onCall(new FunctionAdapter1(handler))
 }
@@ -113,7 +113,7 @@ class CallHandler2[T1, T2, R](argumentMatcher: Product => Boolean) extends CallH
   
   type Derived = CallHandler2[T1, T2, R]
 
-  def this(v1: MockParameter[T1], v2: MockParameter[T2]) = this(new FunctionAdapter2({(p1: T1, p2: T2) => v1 == p1 && v2 == p2}))
+  def this(v1: MockParameter[T1], v2: MockParameter[T2]) = this(new ArgumentMatcher((v1, v2)))
   
   def onCall(handler: (T1, T2) => R): CallHandler2[T1, T2, R] = super.onCall(new FunctionAdapter2(handler))
 }
