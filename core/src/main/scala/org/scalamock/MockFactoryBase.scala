@@ -97,7 +97,8 @@ trait MockFactoryBase extends Mock {
   }
   
   private[scalamock] def reportUnexpectedCall(call: Call) = {
-    throw new ExpectationException(s"Unexpected call: ${call}")
+    val context = s"Expected:\n${expectationContext}\n\nActual:\n${callLog}" 
+    throw new ExpectationException(s"Unexpected call: ${call}\n\n${context}")
   }
   
   private[scalamock] def reportUnsatisfiedExpectation() = {
@@ -112,6 +113,19 @@ trait MockFactoryBase extends Mock {
     expectationContext = prevContext
   }
   
-  private val callLog = new ListBuffer[Call]
+  private object callLog {
+
+    def +=(call: Call) = log += call
+    
+    def clear() = log.clear
+    
+    def foreach(f: Call => Unit) = log foreach f
+    
+    override def toString = log mkString("  ", "\n  ", "")
+    
+    private val log = new ListBuffer[Call]
+  }
+  
+//  private val callLog = new CallLog
   private var expectationContext: Handlers = _
 }

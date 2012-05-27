@@ -58,4 +58,6 @@ private[scalamock] class OrderedHandlers extends Handlers {
   }
  
   def verify(call: Call) = verifyFn(call)
+
+  protected val prefix = "inSequence"
 }

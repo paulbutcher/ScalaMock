@@ -30,5 +30,9 @@ private[scalamock] abstract class Handlers extends Handler {
   
   def isSatisfied = handlers forall (_.isSatisfied)
   
+  override def toString = handlers.mkString(s"${prefix} {\n", "\n", "\n}")
+  
   protected val handlers = new ListBuffer[Handler]
+  
+  protected val prefix: String
 }

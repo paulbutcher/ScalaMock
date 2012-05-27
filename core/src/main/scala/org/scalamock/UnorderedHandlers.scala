@@ -38,4 +38,6 @@ private[scalamock] class UnorderedHandlers extends Handlers {
     }
     false
   }
+  
+  protected val prefix = "inAnyOrder"
 }
