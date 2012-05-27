@@ -152,7 +152,7 @@ object MockImpl {
         mockFunction(m, mt))
     }
     
-    // def <init>() = { super.<init>(); () }
+    // def <init>() = super.<init>()
     def initDef = 
       DefDef(
         Modifiers(), 
@@ -161,20 +161,16 @@ object MockImpl {
         List(List()), 
         TypeTree(),
         Block(
-          List(
-            Apply(
-              Select(Super(This(newTypeName("")), newTypeName("")), newTermName("<init>")), 
-              List())), 
-          Literal(Constant(()))))
+          Apply(
+            Select(Super(This(newTypeName("")), newTypeName("")), newTermName("<init>")), 
+            List())))
           
     def expects(body: List[DefDef]) =
       ValDef(
         Modifiers(), 
         newTermName("expects"), 
         TypeTree(), 
-        Block(
-          List(),
-          Literal(Constant(()))))
+        Block())
       
     def isMemberOfObject(m: Symbol) = TypeTag.Object.tpe.member(m.name) != NoSymbol
 
