@@ -96,8 +96,8 @@ trait MockFactoryBase extends Mock {
     e
   }
   
-  private[scalamock] def reportUnexpectedCall() = {
-    throw new ExpectationException("Unexpected call")
+  private[scalamock] def reportUnexpectedCall(call: Call) = {
+    throw new ExpectationException(s"Unexpected call: ${call}")
   }
   
   private[scalamock] def reportUnsatisfiedExpectation() = {

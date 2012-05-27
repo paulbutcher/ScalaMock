@@ -20,4 +20,7 @@
 
 package org.scalamock
 
-case class Call(target: FakeFunction, arguments: Product)
+case class Call(target: FakeFunction, arguments: Product) {
+  
+  override def toString = s"${target}${arguments}"
+}

@@ -22,9 +22,12 @@ package org.scalamock
 
 trait MockFunction { self: FakeFunction =>
   
-  def handle(arguments: Product): Any = self.factory.handle(new Call(this, arguments)) match {
-    case Some(retVal) => retVal
-    case None => factory.reportUnexpectedCall
+  def handle(arguments: Product): Any = {
+    val call = Call(this, arguments)
+    self.factory.handle(call) match {
+      case Some(retVal) => retVal
+      case None => factory.reportUnexpectedCall(call)
+    }
   }
 }
 
