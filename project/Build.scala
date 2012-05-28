@@ -97,6 +97,11 @@ object ScalaMockBuild extends Build {
     libraryDependencies += "junit" % "junit" % "3.8.2"
   ) dependsOn(core)
   
+  lazy val specs2: Project = Project("specs", file("frameworks/specs2")) settings(
+    name := "ScalaMock Specs2 Support",
+    libraryDependencies += "org.specs2" %% "specs2" % "1.7.1"
+  ) dependsOn(core)
+
   lazy val core_tests: Project = Project("core_tests", file("core_tests"), 
     dependencies = Seq(scalatest % "test")) settings(
       name := "ScalaMock Core Tests",
