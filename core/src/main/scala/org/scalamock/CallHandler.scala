@@ -20,7 +20,7 @@
 
 package org.scalamock
 
-abstract class CallHandler[R](private[scalamock] val argumentMatcher: Product => Boolean) extends Handler {
+abstract class CallHandler[R](target: FakeFunction, private[scalamock] val argumentMatcher: Product => Boolean) extends Handler {
   
   type Derived <: CallHandler[R]
   
@@ -56,6 +56,8 @@ abstract class CallHandler[R](private[scalamock] val argumentMatcher: Product =>
     onCallHandler = handler
     this.asInstanceOf[Derived]
   }
+  
+  override def toString = s"${target}${argumentMatcher}"
 
   private[scalamock] def handle(call: Call) = {
     if (!isExhausted && argumentMatcher(call.arguments)) {
@@ -91,29 +93,29 @@ trait Verify { self: CallHandler[_] =>
   }
 }
 
-class CallHandler0[R](argumentMatcher: Product => Boolean) extends CallHandler[R](argumentMatcher) {
+class CallHandler0[R](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
 
   type Derived = CallHandler0[R]
   
-  def this() = this(new ArgumentMatcher(None))
+  def this(target: FakeFunction) = this(target, new ArgumentMatcher(None))
   
   def onCall(handler: () => R): CallHandler0[R] = super.onCall(new FunctionAdapter0(handler))
 }
 
-class CallHandler1[T1, R](argumentMatcher: Product => Boolean) extends CallHandler[R](argumentMatcher) {
+class CallHandler1[T1, R](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
   
   type Derived = CallHandler1[T1, R]
 
-  def this(v1: MockParameter[T1]) = this(new ArgumentMatcher(new Tuple1(v1)))
+  def this(target: FakeFunction, v1: MockParameter[T1]) = this(target, new ArgumentMatcher(new Tuple1(v1)))
   
   def onCall(handler: (T1) => R): CallHandler1[T1, R] = super.onCall(new FunctionAdapter1(handler))
 }
 
-class CallHandler2[T1, T2, R](argumentMatcher: Product => Boolean) extends CallHandler[R](argumentMatcher) {
+class CallHandler2[T1, T2, R](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
   
   type Derived = CallHandler2[T1, T2, R]
 
-  def this(v1: MockParameter[T1], v2: MockParameter[T2]) = this(new ArgumentMatcher((v1, v2)))
+  def this(target: FakeFunction, v1: MockParameter[T1], v2: MockParameter[T2]) = this(target, new ArgumentMatcher((v1, v2)))
   
   def onCall(handler: (T1, T2) => R): CallHandler2[T1, T2, R] = super.onCall(new FunctionAdapter2(handler))
 }

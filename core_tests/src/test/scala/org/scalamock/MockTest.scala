@@ -40,7 +40,7 @@ class MockTest extends FreeSpec with MockFactory {
       intercept[ExpectationException] { m.oneParam(42) }
     }
     
-    "allow expectations to be set" ignore {
+    "allow expectations to be set" in {
       val m = mock[SimpleTrait]
       val mf = toMockFunction2(m.twoParams _)
       mf.expects(42, 1.23).returning("a return value")
