@@ -24,9 +24,12 @@ import reflect.makro.Context
 
 trait Mock {
   import language.experimental.macros
+  import language.implicitConversions
   
   def mock[T](implicit factory: MockFactoryBase) = macro MockImpl.mock[T]
   
+  implicit def toMockFunction0[R](f: Function0[R]) = macro MockImpl.toMockFunction0[R]
+  implicit def toMockFunction1[T1,  R](f: Function1[T1, R]) = macro MockImpl.toMockFunction1[T1, R]
   implicit def toMockFunction2[T1, T2, R](f: Function2[T1, T2, R]) = macro MockImpl.toMockFunction2[T1, T2, R]
 }
 
@@ -213,17 +216,16 @@ object MockImpl {
 
     c.Expr(result)
   }
-
-  def toMockFunction2[T1: c.TypeTag, T2: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function2[T1, T2, R]]): c.Expr[MockFunction2[T1, T2, R]] = {
+  
+  def findMockFunction[F: c.TypeTag, M: c.TypeTag](c: Context)(f: c.Expr[F]): c.Expr[M] = {
     import c.mirror._
-
+    
     def mockFunctionName(m: Name) = "mock$"+ m.toString
 
     val (obj, name) = f.tree match {
       case Block(_, Function(_, Apply(Select(o, n), _))) => (o, n)
       case _ => sys.error("Unrecognised structure: "+ f)
     }
-    val ttag = implicitly[TypeTag[MockFunction2[T1, T2, R]]]
     c.Expr(
       TypeApply(
         Select(
@@ -237,14 +239,15 @@ object MockImpl {
               newTermName("invoke")),
             List(obj)),
           newTermName("asInstanceOf")),
-        List(TypeTree(ttag.tpe))))
-        
-//    println("------")
-//    println(show(result))
-//    println("------")
-//    println(showRaw(result))
-//    println("------")
-//
-//    result
+        List(TypeTree(c.tag[M].tpe))))
   }
+
+  def toMockFunction0[R: c.TypeTag](c: Context)(f: c.Expr[Function0[R]]) =
+    findMockFunction[Function0[R], MockFunction0[R]](c)(f)
+
+  def toMockFunction1[T1: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function1[T1, R]]) =
+    findMockFunction[Function1[T1, R], MockFunction1[T1, R]](c)(f)
+
+  def toMockFunction2[T1: c.TypeTag, T2: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function2[T1, T2, R]]) =
+    findMockFunction[Function2[T1, T2, R], MockFunction2[T1, T2, R]](c)(f)
 }
