@@ -207,12 +207,6 @@ object MockImpl {
     val members = forwarders ++ mocks
     
     val result = castTo(anonClass(List(TypeTree(tpe)), members), tpe)
-    
-//    println("------")
-//    println(show(result))
-//    println("------")
-//    println(showRaw(result))
-//    println("------")
 
     c.Expr(result)
   }
