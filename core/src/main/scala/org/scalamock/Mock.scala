@@ -27,7 +27,7 @@ trait Mock {
   
   def mock[T](implicit factory: MockFactoryBase) = macro MockImpl.mock[T]
   
-  def toMockFunction2[T1, T2, R](f: Function2[T1, T2, R]) = macro MockImpl.toMockFunction2[T1, T2, R]
+  implicit def toMockFunction2[T1, T2, R](f: Function2[T1, T2, R]) = macro MockImpl.toMockFunction2[T1, T2, R]
 }
 
 object MockImpl {
