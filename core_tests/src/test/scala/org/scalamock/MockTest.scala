@@ -27,7 +27,7 @@ class MockTest extends FreeSpec with MockFactory {
   
   autoVerify = false
   
-  trait SimpleTrait {
+  trait TestTrait {
     def nullary: String
     def noParams(): String
     def oneParam(x: Int): String
@@ -36,14 +36,21 @@ class MockTest extends FreeSpec with MockFactory {
   
   "Mocks should" - {
     "fail if an unexpected method call is made" in {
-      val m = mock[SimpleTrait]
+      val m = mock[TestTrait]
       intercept[ExpectationException] { m.oneParam(42) }
     }
     
     "allow expectations to be set" in {
-      val m = mock[SimpleTrait]
+      val m = mock[TestTrait]
       (m.twoParams _).expects(42, 1.23).returning("a return value")
       expect("a return value") { m.twoParams(42, 1.23) }
+      verifyExpectations
+    }
+    
+    "cope with nullary methods" in {
+      val m = mock[TestTrait]
+      (m.nullary _).expects().returning("a return value")
+      expect("a return value") { m.nullary }
       verifyExpectations
     }
   }

@@ -211,6 +211,8 @@ object MockImpl {
     c.Expr(result)
   }
   
+  // Given something of the structure <|o.m _|> where o is a mock object
+  // and m is a method, find the corresponding MockFunction instance
   def findMockFunction[F: c.TypeTag, M: c.TypeTag](c: Context)(f: c.Expr[F]): c.Expr[M] = {
     import c.mirror._
     
@@ -218,6 +220,7 @@ object MockImpl {
 
     val (obj, name) = f.tree match {
       case Block(_, Function(_, Apply(Select(o, n), _))) => (o, n)
+      case Function(_, Select(o, n)) => (o, n)
       case _ => sys.error("Unrecognised structure: "+ f)
     }
     c.Expr(
