@@ -32,6 +32,8 @@ object ScalaMockBuild extends Build {
     version := "2.4",
     crossScalaVersions := Seq("2.8.1", "2.8.2", "2.9.0", "2.9.0-1", "2.9.1", "2.9.2"),
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings"),
+    resolvers ++= Seq("snapshots" at "http://oss.sonatype.org/content/repositories/snapshots",
+                      "releases"  at "http://oss.sonatype.org/content/repositories/releases"),
 
     publishTo <<= version { v =>
       val nexus = "https://oss.sonatype.org/"
@@ -99,7 +101,7 @@ object ScalaMockBuild extends Build {
   
   lazy val specs2: Project = Project("specs", file("frameworks/specs2")) settings(
     name := "ScalaMock Specs2 Support",
-    libraryDependencies += "org.specs2" %% "specs2" % "1.7.1"
+    libraryDependencies <++= scalaVersion(specs2Dependencies(_))
   ) dependsOn(core)
 
   lazy val core_tests: Project = Project("core_tests", file("core_tests"), 
@@ -142,4 +144,10 @@ object ScalaMockBuild extends Build {
 
   def getLibraryVersion(versionMap: Map[String, String], version: String) =
     versionMap.getOrElse(version, sys.error("Unsupported Scala version: "+ version))
+    
+  def specs2Dependencies(scalaVersion: String) = majorVersion(scalaVersion) match {
+    case "2.8" => Seq("org.specs2" %% "specs2" % "1.5",
+                      "org.specs2" %% "specs2-scalaz-core" % "5.1-SNAPSHOT")
+    case _ => Seq("org.specs2" %% "specs2" % "1.10" % "test")
+  }
 }
