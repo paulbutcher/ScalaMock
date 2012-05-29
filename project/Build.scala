@@ -145,9 +145,14 @@ object ScalaMockBuild extends Build {
   def getLibraryVersion(versionMap: Map[String, String], version: String) =
     versionMap.getOrElse(version, sys.error("Unsupported Scala version: "+ version))
     
-  def specs2Dependencies(scalaVersion: String) = majorVersion(scalaVersion) match {
-    case "2.8" => Seq("org.specs2" %% "specs2" % "1.5",
-                      "org.specs2" %% "specs2-scalaz-core" % "5.1-SNAPSHOT")
-    case _ => Seq("org.specs2" %% "specs2" % "1.10" % "test")
+  def specs2Dependencies(scalaVersion: String) = {
+    val Older = """2\.8\..""".r
+    val Old = """2\.9\.0.*""".r 
+    scalaVersion match {
+      case Older() => Seq("org.specs2" %% "specs2" % "1.5",
+                          "org.specs2" %% "specs2-scalaz-core" % "5.1-SNAPSHOT")
+      case Old() => Seq("org.specs2" %% "specs2" % "1.7.1")
+      case _ => Seq("org.specs2" %% "specs2" % "1.10")
+    }
   }
 }
