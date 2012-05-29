@@ -76,8 +76,8 @@ object ScalaMockBuild extends Build {
     publishArtifact in Test := false,
     libraryDependencies <+= scalaVersion("org.scalatest" %% "scalatest" % scalatestVersion(_)),
     libraryDependencies += "junit" % "junit" % "3.8.2",
-    sources in Compile <<= (Seq(core, scalatest, junit3).map(sources in Compile in _).join).map(_.flatten)
-  ) aggregate(core, core_tests, scalatest, junit3, compiler_plugin, compiler_plugin_tests, examples
+    sources in Compile <<= (Seq(core, scalatest, junit3, specs2).map(sources in Compile in _).join).map(_.flatten)
+  ) aggregate(core, core_tests, scalatest, junit3, specs2, compiler_plugin, compiler_plugin_tests, examples
   ) configs(Mock)
   
   lazy val core = Project("core", file("core")) settings(versionSpecificSettings: _*) settings(
