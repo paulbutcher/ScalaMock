@@ -32,6 +32,10 @@ class MockTest extends FreeSpec with MockFactory {
     def noParams(): String
     def oneParam(x: Int): String
     def twoParams(x: Int, y: Double): String
+//    
+//    def overloaded(x: Int): String
+//    def overloaded(x: String): String
+//    def overloaded(x: Int, y: Double): String
   }
   
   "Mocks should" - {
@@ -53,5 +57,12 @@ class MockTest extends FreeSpec with MockFactory {
       expect("a return value") { m.nullary }
       verifyExpectations
     }
+    
+//    "cope with overloaded methods" in {
+//      val m = mock[TestTrait]
+//      (m.overloaded _).expects(10).returning("got an integer")
+//      expect("got an integer") { m.overloaded(10) }
+//      verifyExpectations
+//    } 
   }
 }

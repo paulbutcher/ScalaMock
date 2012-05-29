@@ -39,7 +39,7 @@ object MockImpl {
     import c.mirror._
     import reflect.api.Modifier._
     
-    val mockName = newTypeName("$anon") 
+    val anon = newTypeName("$anon") 
 
     // Convert a methodType into its ultimate result type
     // For nullary and normal methods, this is just the result type
@@ -121,7 +121,7 @@ object MockImpl {
     def forwarderImpl(m: Symbol, t: Type): DefDef = {
       val mt = m.asTypeIn(t) 
       val body = Apply(
-                   Select(Select(This(mockName), mockFunctionName(m)), newTermName("apply")),
+                   Select(Select(This(anon), mockFunctionName(m)), newTermName("apply")),
                    paramss(mt).flatten map { p => Ident(newTermName(p.name.toString)) })
       methodImpl(m, mt, body)
     }
@@ -182,7 +182,7 @@ object MockImpl {
         List(
           ClassDef(
             Modifiers(Set(`final`)), 
-            mockName,
+            anon,
             List(),
             Template(
               parents, 
@@ -190,7 +190,7 @@ object MockImpl {
               initDef +: members))),
         Apply(
           Select(
-            New(Ident(mockName)), 
+            New(Ident(anon)), 
             newTermName("<init>")), 
           List()))
     
