@@ -1,3 +1,7 @@
+Version 2.4:
+
+- Reinstate specs2 support - [J.D. Marble](https://github.com/jdmarble)
+
 Version 2.3:
 
 - Add support for parameterised traits
