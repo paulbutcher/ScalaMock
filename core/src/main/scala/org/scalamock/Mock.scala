@@ -232,7 +232,8 @@ object MockImpl {
     val (obj, name) = f.tree match {
       case Block(_, Function(_, Apply(Select(o, n), _))) => (o, n)
       case Function(_, Select(o, n)) => (o, n)
-      case _ => sys.error("Unrecognised structure: "+ f)
+      case Function(_, Apply(Select(o, n), _)) => (o, n)
+      case _ => sys.error("Unrecognised structure: "+ showRaw(f.tree))
     }
     c.Expr(
       TypeApply(

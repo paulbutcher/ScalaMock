@@ -60,9 +60,8 @@ class MockTest extends FreeSpec with MockFactory {
     
     "cope with overloaded methods" in {
       val m = mock[TestTrait]
-      //! TODO - is there some way to avoid having to call toMockFunction here?
-      toMockFunction1[Int, String](m.overloaded _).expects(10).returning("got an integer")
-      toMockFunction2(m.overloaded _).expects(10, 1.23).returning("got two parameters")
+      (m.overloaded(_: Int)).expects(10).returning("got an integer")
+      (m.overloaded(_: Int, _: Double)).expects(10, 1.23).returning("got two parameters")
       expect("got an integer") { m.overloaded(10) }
       expect("got two parameters") { m.overloaded(10, 1.23) }
       verifyExpectations
