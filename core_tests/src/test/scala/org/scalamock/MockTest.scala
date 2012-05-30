@@ -83,6 +83,9 @@ class MockTest extends FreeSpec with MockFactory {
     "cope with curried methods" in {
       val m = mock[TestTrait]
       (m.curried(_: Int)(_: Double)).expects(10, 1.23).returning("curried method called")
+      val partial = m.curried(10) _
+      expect("curried method called") { partial(1.23) }
+      verifyExpectations
     }
   }
 }
