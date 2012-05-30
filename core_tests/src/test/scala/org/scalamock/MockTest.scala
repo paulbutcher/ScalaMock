@@ -36,6 +36,10 @@ class MockTest extends FreeSpec with MockFactory {
     def overloaded(x: Int): String
     def overloaded(x: String): String
     def overloaded(x: Int, y: Double): String
+    
+    def +(x: TestTrait): TestTrait
+    
+    def curried(x: Int)(y: Double): String
   }
   
   "Mocks should" - {
@@ -65,6 +69,20 @@ class MockTest extends FreeSpec with MockFactory {
       expect("got an integer") { m.overloaded(10) }
       expect("got two parameters") { m.overloaded(10, 1.23) }
       verifyExpectations
-    } 
+    }
+    
+    "cope with infix operators" in {
+      val m1 = mock[TestTrait]
+      val m2 = mock[TestTrait]
+      val m3 = mock[TestTrait]
+      (m1.+ _).expects(m2).returning(m3)
+      expect(m3) { m1 + m2 }
+      verifyExpectations
+    }
+    
+    "cope with curried methods" in {
+      val m = mock[TestTrait]
+      (m.curried(_: Int)(_: Double)).expects(10, 1.23).returning("curried method called")
+    }
   }
 }
