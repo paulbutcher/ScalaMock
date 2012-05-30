@@ -32,10 +32,10 @@ class MockTest extends FreeSpec with MockFactory {
     def noParams(): String
     def oneParam(x: Int): String
     def twoParams(x: Int, y: Double): String
-//    
-//    def overloaded(x: Int): String
-//    def overloaded(x: String): String
-//    def overloaded(x: Int, y: Double): String
+    
+    def overloaded(x: Int): String
+    def overloaded(x: String): String
+    def overloaded(x: Int, y: Double): String
   }
   
   "Mocks should" - {
@@ -58,11 +58,14 @@ class MockTest extends FreeSpec with MockFactory {
       verifyExpectations
     }
     
-//    "cope with overloaded methods" in {
-//      val m = mock[TestTrait]
-//      (m.overloaded _).expects(10).returning("got an integer")
-//      expect("got an integer") { m.overloaded(10) }
-//      verifyExpectations
-//    } 
+    "cope with overloaded methods" in {
+      val m = mock[TestTrait]
+      //! TODO - is there some way to avoid having to call toMockFunction here?
+      toMockFunction1[Int, String](m.overloaded _).expects(10).returning("got an integer")
+      toMockFunction2(m.overloaded _).expects(10, 1.23).returning("got two parameters")
+      expect("got an integer") { m.overloaded(10) }
+      expect("got two parameters") { m.overloaded(10, 1.23) }
+      verifyExpectations
+    } 
   }
 }

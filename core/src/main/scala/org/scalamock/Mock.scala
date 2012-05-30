@@ -121,7 +121,7 @@ object MockImpl {
     def forwarderImpl(m: Symbol, t: Type): DefDef = {
       val mt = m.asTypeIn(t) 
       val body = Apply(
-                   Select(Select(This(anon), mockFunctionName(m)), newTermName("apply")),
+                   Select(Select(This(anon), mockFunctionName(m, t)), newTermName("apply")),
                    paramss(mt).flatten map { p => Ident(newTermName(p.name.toString)) })
       methodImpl(m, mt, body)
     }
@@ -133,7 +133,10 @@ object MockImpl {
       case _ => sys.error("Can't handle methods with more than 2 parameters (yet)")
     }
     
-    def mockFunctionName(m: Symbol) = newTermName("mock$"+ m.name.toString)
+    def mockFunctionName(m: Symbol, t: Type) = {
+      val method = t.member(m.name)
+      newTermName("mock$"+ m.name +"$"+ method.alternatives.indexOf(m))
+    }
     
     def mockFunction(m: Symbol, t: Type) = {
       val clazz = mockFunctionClass(paramCount(t))
@@ -156,7 +159,7 @@ object MockImpl {
     def mockMethod(m: Symbol, t: Type): ValDef = {
       val mt = m.asTypeIn(t)
       ValDef(Modifiers(),
-        mockFunctionName(m), 
+        mockFunctionName(m, t), 
         TypeTree(), 
         mockFunction(m, mt))
     }
@@ -213,10 +216,18 @@ object MockImpl {
   
   // Given something of the structure <|o.m _|> where o is a mock object
   // and m is a method, find the corresponding MockFunction instance
-  def findMockFunction[F: c.TypeTag, M: c.TypeTag](c: Context)(f: c.Expr[F]): c.Expr[M] = {
+  def findMockFunction[F: c.TypeTag, M: c.TypeTag](c: Context)(f: c.Expr[F], actuals: List[c.mirror.Type]): c.Expr[M] = {
     import c.mirror._
     
-    def mockFunctionName(m: Name) = "mock$"+ m.toString
+    def mockFunctionName(name: Name, t: Type) = {
+      val method = t.member(name)
+      if (method.isOverloaded) {
+        val m = method.resolveOverloaded(NoPrefix, List(), actuals)
+        "mock$"+ name +"$"+ method.alternatives.indexOf(m)
+      } else {
+        "mock$"+ name +"$0"
+      }    
+    }
 
     val (obj, name) = f.tree match {
       case Block(_, Function(_, Apply(Select(o, n), _))) => (o, n)
@@ -232,7 +243,7 @@ object MockImpl {
                 Select(
                   Apply(Select(obj, newTermName("getClass")), List()),
                   newTermName("getMethod")),
-                List(Literal(Constant(mockFunctionName(name))))),
+                List(Literal(Constant(mockFunctionName(name, obj.tpe))))),
               newTermName("invoke")),
             List(obj)),
           newTermName("asInstanceOf")),
@@ -240,11 +251,11 @@ object MockImpl {
   }
 
   def toMockFunction0[R: c.TypeTag](c: Context)(f: c.Expr[Function0[R]]) =
-    findMockFunction[Function0[R], MockFunction0[R]](c)(f)
+    findMockFunction[Function0[R], MockFunction0[R]](c)(f, List())
 
   def toMockFunction1[T1: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function1[T1, R]]) =
-    findMockFunction[Function1[T1, R], MockFunction1[T1, R]](c)(f)
+    findMockFunction[Function1[T1, R], MockFunction1[T1, R]](c)(f, List(c.tag[T1].tpe))
 
   def toMockFunction2[T1: c.TypeTag, T2: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function2[T1, T2, R]]) =
-    findMockFunction[Function2[T1, T2, R], MockFunction2[T1, T2, R]](c)(f)
+    findMockFunction[Function2[T1, T2, R], MockFunction2[T1, T2, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe))
 }
