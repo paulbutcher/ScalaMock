@@ -40,6 +40,8 @@ class MockTest extends FreeSpec with MockFactory {
     def +(x: TestTrait): TestTrait
     
     def curried(x: Int)(y: Double): String
+    
+    def polymorphic[T](x: T): String
   }
   
   "Mocks should" - {
@@ -50,7 +52,7 @@ class MockTest extends FreeSpec with MockFactory {
     
     "allow expectations to be set" in {
       val m = mock[TestTrait]
-      (m.twoParams _).expects(42, 1.23).returning("a return value")
+      toMockFunction2(m.twoParams _).expects(42, 1.23).returning("a return value")
       expect("a return value") { m.twoParams(42, 1.23) }
       verifyExpectations
     }
@@ -85,6 +87,15 @@ class MockTest extends FreeSpec with MockFactory {
       (m.curried(_: Int)(_: Double)).expects(10, 1.23).returning("curried method called")
       val partial = m.curried(10) _
       expect("curried method called") { partial(1.23) }
+      verifyExpectations
+    }
+    
+    "cope with polymorphic methods" in {
+      val m = mock[TestTrait]
+      (m.polymorphic(_: Int)).expects(42).returning("called with integer")
+      (m.polymorphic(_: String)).expects("foo").returning("called with string")
+      expect("called with integer") { m.polymorphic(42) }
+      expect("called with string") { m.polymorphic("foo") }
       verifyExpectations
     }
   }

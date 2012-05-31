@@ -138,9 +138,17 @@ object MockImpl {
       newTermName("mock$"+ m.name +"$"+ method.alternatives.indexOf(m))
     }
     
+    def mockParamType(t: Type) = {
+      val sym = t.typeSymbol
+      if (sym.modifiers contains parameter)
+        staticClass("scala.Any")
+      else
+        sym
+    }  
+    
     def mockFunction(m: Symbol, t: Type) = {
       val clazz = mockFunctionClass(paramCount(t))
-      val types = (paramTypes(t) map { pt => Ident(pt.typeSymbol) }) :+ Ident(finalResultType(t).typeSymbol)
+      val types = (paramTypes(t) map { pt => Ident(mockParamType(pt)) }) :+ Ident(mockParamType(finalResultType(t)))
       Apply(
         Select(
           New(
@@ -210,6 +218,12 @@ object MockImpl {
     val members = forwarders ++ mocks
     
     val result = castTo(anonClass(List(TypeTree(tpe)), members), tpe)
+    
+//    println("------------")
+//    println(showRaw(result))
+//    println("------------")
+//    println(show(result))
+//    println("------------")
 
     c.Expr(result)
   }
@@ -236,6 +250,7 @@ object MockImpl {
       case Function(_, Apply(Apply(Select(o, n), _), _)) => (o, n)
       case Function(_, Apply(Apply(Apply(Select(o, n), _), _), _)) => (o, n)
       case Function(_, Apply(Apply(Apply(Apply(Select(o, n), _), _), _), _)) => (o, n)
+      case Function(_, Apply(TypeApply(Select(o, n), _), _)) => (o, n)
       case _ => sys.error("Unrecognised structure: "+ showRaw(f.tree))
     }
     c.Expr(
