@@ -40,8 +40,8 @@ class MockTest extends FreeSpec with MockFactory {
     def +(x: TestTrait): TestTrait
     
     def curried(x: Int)(y: Double): String
-    
     def polymorphic[T](x: T): String
+    def polycurried[T1, T2](x: T1)(y: T2): String
   }
   
   "Mocks should" - {
@@ -96,6 +96,14 @@ class MockTest extends FreeSpec with MockFactory {
       (m.polymorphic(_: String)).expects("foo").returning("called with string")
       expect("called with integer") { m.polymorphic(42) }
       expect("called with string") { m.polymorphic("foo") }
+      verifyExpectations
+    }
+    
+    "cope with curried polymorphic methods" in {
+      val m = mock[TestTrait]
+      toMockFunction2(m.polycurried(_: Int)(_: String)).expects(42, "foo").returning("it works")
+      val partial = m.polycurried(42) _
+      expect("it works") { partial("foo") }
       verifyExpectations
     }
   }

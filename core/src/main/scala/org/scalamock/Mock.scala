@@ -251,6 +251,9 @@ object MockImpl {
       case Function(_, Apply(Apply(Apply(Select(o, n), _), _), _)) => (o, n)
       case Function(_, Apply(Apply(Apply(Apply(Select(o, n), _), _), _), _)) => (o, n)
       case Function(_, Apply(TypeApply(Select(o, n), _), _)) => (o, n)
+      case Function(_, Apply(Apply(TypeApply(Select(o, n), _), _), _)) => (o, n)
+      case Function(_, Apply(Apply(Apply(TypeApply(Select(o, n), _), _), _), _)) => (o, n)
+      case Function(_, Apply(Apply(Apply(Apply(TypeApply(Select(o, n), _), _), _), _), _)) => (o, n)
       case _ => sys.error("Unrecognised structure: "+ showRaw(f.tree))
     }
     c.Expr(
