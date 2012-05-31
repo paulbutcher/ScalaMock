@@ -29,7 +29,15 @@ trait NiceToString { self: FakeFunction =>
 
 abstract class FakeFunction(protected val factory: MockFactoryBase, protected val name: Symbol) {
   
-  def handle(arguments: Product): Any
+  def handle(arguments: Product): Any = {
+    val call = new Call(this, arguments)
+    factory.handle(call) match {
+      case Some(retVal) => retVal
+      case None => onUnexpected(call)
+    }
+  }
+  
+  protected def onUnexpected(call: Call): Any
 }
 
 abstract class FakeFunction0[R](factory: MockFactoryBase, name: Symbol)

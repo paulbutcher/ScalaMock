@@ -22,10 +22,7 @@ package org.scalamock
 
 trait StubFunction { self: FakeFunction =>
   
-  def handle(arguments: Product): Any = self.factory.handle(new Call(this, arguments)) match {
-    case Some(retVal) => retVal
-    case None => null
-  }
+  protected def onUnexpected(call: Call) = null
 }
 
 class StubFunction0[R](factory: MockFactoryBase, name: Symbol)
