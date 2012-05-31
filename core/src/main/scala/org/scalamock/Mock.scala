@@ -31,12 +31,42 @@ trait Mock {
   implicit def toMockFunction0[R](f: Function0[R]) = macro MockImpl.toMockFunction0[R]
   implicit def toMockFunction1[T1,  R](f: Function1[T1, R]) = macro MockImpl.toMockFunction1[T1, R]
   implicit def toMockFunction2[T1, T2, R](f: Function2[T1, T2, R]) = macro MockImpl.toMockFunction2[T1, T2, R]
+  
+  def stub[T](implicit factory: MockFactoryBase) = macro MockImpl.stub[T]
 }
 
 object MockImpl {
   
   def mock[T: c.TypeTag](c: Context)(factory: c.Expr[MockFactoryBase]): c.Expr[T] = {
     import c.mirror._
+    val util = Util(c, factory)
+    import util._
+
+    val tpe = c.tag[T].tpe
+    val methodsToMock = (tpe.members filterNot (m => isMemberOfObject(m))).toList
+    val forwarders = (methodsToMock map (m => forwarderImpl(m, tpe)))
+    val mocks = (methodsToMock map (m => mockMethod(m, tpe)))
+    val members = forwarders ++ mocks
+    
+    val result = castTo(anonClass(List(TypeTree(tpe)), members), tpe)
+    
+//    println("------------")
+//    println(showRaw(result))
+//    println("------------")
+//    println(show(result))
+//    println("------------")
+
+    c.Expr(result)
+  }
+  
+  def stub[T: c.TypeTag](c: Context)(factory: c.Expr[MockFactoryBase]): c.Expr[T] = {
+    c.mirror.reify(null.asInstanceOf[T])
+  }
+  
+  def Util(c: Context, factory: AnyRef) = new Util[c.type](c, factory)
+  
+  class Util[C <: Context](val ctx: C, factory: AnyRef) {
+    import ctx.mirror._
     import reflect.api.Modifier._
     
     val anon = newTypeName("$anon") 
@@ -157,7 +187,7 @@ object MockImpl {
               types)),
           newTermName("<init>")),
         List(
-          factory.tree, 
+          factory.asInstanceOf[ctx.Expr[MockFactoryBase]].tree, 
           Apply(
             Select(Select(Ident(newTermName("scala")), newTermName("Symbol")), newTermName("apply")),
             List(Literal(Constant(m.name.toString))))))
@@ -210,22 +240,6 @@ object MockImpl {
       TypeApply(
         Select(expr, newTermName("asInstanceOf")),
         List(TypeTree(t)))
-
-    val tpe = c.tag[T].tpe
-    val methodsToMock = (tpe.members filterNot (m => isMemberOfObject(m))).toList
-    val forwarders = (methodsToMock map (m => forwarderImpl(m, tpe)))
-    val mocks = (methodsToMock map (m => mockMethod(m, tpe)))
-    val members = forwarders ++ mocks
-    
-    val result = castTo(anonClass(List(TypeTree(tpe)), members), tpe)
-    
-//    println("------------")
-//    println(showRaw(result))
-//    println("------------")
-//    println(show(result))
-//    println("------------")
-
-    c.Expr(result)
   }
   
   // Given something of the structure <|o.m _|> where o is a mock object
