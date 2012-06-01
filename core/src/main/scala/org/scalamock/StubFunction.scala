@@ -54,3 +54,73 @@ class StubFunction2[T1, T2, R](factory: MockFactoryBase, name: Symbol)
   def verify(v1: MockParameter[T1], v2: MockParameter[T2]) = factory.add(new CallHandler2[T1, T2, R](this, v1, v2) with Verify)
   def verify(matcher: FunctionAdapter2[T1, T2, Boolean]) = factory.add(new CallHandler2[T1, T2, R](this, matcher) with Verify)
 }
+
+class StubFunction3[T1, T2, T3, R](factory: MockFactoryBase, name: Symbol)
+  extends FakeFunction3[T1, T2, T3, R](factory, name) with StubFunction {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3]) = factory.add((new CallHandler3[T1, T2, T3, R](this, v1, v2, v3)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter3[T1, T2, T3, Boolean]) = factory.add((new CallHandler3[T1, T2, T3, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3]) = factory.add(new CallHandler3[T1, T2, T3, R](this, v1, v2, v3) with Verify)
+  def verify(matcher: FunctionAdapter3[T1, T2, T3, Boolean]) = factory.add(new CallHandler3[T1, T2, T3, R](this, matcher) with Verify)
+}
+
+class StubFunction4[T1, T2, T3, T4, R](factory: MockFactoryBase, name: Symbol)
+  extends FakeFunction4[T1, T2, T3, T4, R](factory, name) with StubFunction {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4]) = factory.add((new CallHandler4[T1, T2, T3, T4, R](this, v1, v2, v3, v4)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter4[T1, T2, T3, T4, Boolean]) = factory.add((new CallHandler4[T1, T2, T3, T4, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4]) = factory.add(new CallHandler4[T1, T2, T3, T4, R](this, v1, v2, v3, v4) with Verify)
+  def verify(matcher: FunctionAdapter4[T1, T2, T3, T4, Boolean]) = factory.add(new CallHandler4[T1, T2, T3, T4, R](this, matcher) with Verify)
+}
+
+class StubFunction5[T1, T2, T3, T4, T5, R](factory: MockFactoryBase, name: Symbol)
+  extends FakeFunction5[T1, T2, T3, T4, T5, R](factory, name) with StubFunction {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5]) = factory.add((new CallHandler5[T1, T2, T3, T4, T5, R](this, v1, v2, v3, v4, v5)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter5[T1, T2, T3, T4, T5, Boolean]) = factory.add((new CallHandler5[T1, T2, T3, T4, T5, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5]) = factory.add(new CallHandler5[T1, T2, T3, T4, T5, R](this, v1, v2, v3, v4, v5) with Verify)
+  def verify(matcher: FunctionAdapter5[T1, T2, T3, T4, T5, Boolean]) = factory.add(new CallHandler5[T1, T2, T3, T4, T5, R](this, matcher) with Verify)
+}
+
+class StubFunction6[T1, T2, T3, T4, T5, T6, R](factory: MockFactoryBase, name: Symbol)
+  extends FakeFunction6[T1, T2, T3, T4, T5, T6, R](factory, name) with StubFunction {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6]) = factory.add((new CallHandler6[T1, T2, T3, T4, T5, T6, R](this, v1, v2, v3, v4, v5, v6)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter6[T1, T2, T3, T4, T5, T6, Boolean]) = factory.add((new CallHandler6[T1, T2, T3, T4, T5, T6, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6]) = factory.add(new CallHandler6[T1, T2, T3, T4, T5, T6, R](this, v1, v2, v3, v4, v5, v6) with Verify)
+  def verify(matcher: FunctionAdapter6[T1, T2, T3, T4, T5, T6, Boolean]) = factory.add(new CallHandler6[T1, T2, T3, T4, T5, T6, R](this, matcher) with Verify)
+}
+
+class StubFunction7[T1, T2, T3, T4, T5, T6, T7, R](factory: MockFactoryBase, name: Symbol)
+  extends FakeFunction7[T1, T2, T3, T4, T5, T6, T7, R](factory, name) with StubFunction {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7]) = factory.add((new CallHandler7[T1, T2, T3, T4, T5, T6, T7, R](this, v1, v2, v3, v4, v5, v6, v7)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter7[T1, T2, T3, T4, T5, T6, T7, Boolean]) = factory.add((new CallHandler7[T1, T2, T3, T4, T5, T6, T7, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7]) = factory.add(new CallHandler7[T1, T2, T3, T4, T5, T6, T7, R](this, v1, v2, v3, v4, v5, v6, v7) with Verify)
+  def verify(matcher: FunctionAdapter7[T1, T2, T3, T4, T5, T6, T7, Boolean]) = factory.add(new CallHandler7[T1, T2, T3, T4, T5, T6, T7, R](this, matcher) with Verify)
+}
+
+class StubFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R](factory: MockFactoryBase, name: Symbol)
+  extends FakeFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R](factory, name) with StubFunction {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8]) = factory.add((new CallHandler8[T1, T2, T3, T4, T5, T6, T7, T8, R](this, v1, v2, v3, v4, v5, v6, v7, v8)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter8[T1, T2, T3, T4, T5, T6, T7, T8, Boolean]) = factory.add((new CallHandler8[T1, T2, T3, T4, T5, T6, T7, T8, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8]) = factory.add(new CallHandler8[T1, T2, T3, T4, T5, T6, T7, T8, R](this, v1, v2, v3, v4, v5, v6, v7, v8) with Verify)
+  def verify(matcher: FunctionAdapter8[T1, T2, T3, T4, T5, T6, T7, T8, Boolean]) = factory.add(new CallHandler8[T1, T2, T3, T4, T5, T6, T7, T8, R](this, matcher) with Verify)
+}
+
+class StubFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](factory: MockFactoryBase, name: Symbol)
+  extends FakeFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](factory, name) with StubFunction {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9]) = factory.add((new CallHandler9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter9[T1, T2, T3, T4, T5, T6, T7, T8, T9, Boolean]) = factory.add((new CallHandler9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9]) = factory.add(new CallHandler9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9) with Verify)
+  def verify(matcher: FunctionAdapter9[T1, T2, T3, T4, T5, T6, T7, T8, T9, Boolean]) = factory.add(new CallHandler9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](this, matcher) with Verify)
+}
