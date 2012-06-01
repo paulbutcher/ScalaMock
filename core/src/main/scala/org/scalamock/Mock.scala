@@ -33,6 +33,10 @@ trait Mock {
   implicit def toMockFunction2[T1, T2, R](f: Function2[T1, T2, R]) = macro MockImpl.toMockFunction2[T1, T2, R]
   
   def stub[T](implicit factory: MockFactoryBase) = macro MockImpl.stub[T]
+
+  implicit def toStubFunction0[R](f: Function0[R]) = macro MockImpl.toStubFunction0[R]
+  implicit def toStubFunction1[T1,  R](f: Function1[T1, R]) = macro MockImpl.toStubFunction1[T1, R]
+  implicit def toStubFunction2[T1, T2, R](f: Function2[T1, T2, R]) = macro MockImpl.toStubFunction2[T1, T2, R]
 }
 
 object MockImpl {
@@ -234,7 +238,6 @@ object MockImpl {
         Select(expr, newTermName("asInstanceOf")),
         List(TypeTree(t)))
 
-
     def mkMock[T: ctx.TypeTag](factory: ctx.Expr[MockFactoryBase], classTag: (Int) => TypeTag[_]) = {
       val tpe = ctx.tag[T].tpe
       val methodsToMock = membersNotInObject(tpe)
@@ -306,4 +309,13 @@ object MockImpl {
 
   def toMockFunction2[T1: c.TypeTag, T2: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function2[T1, T2, R]]) =
     findMockFunction[Function2[T1, T2, R], MockFunction2[T1, T2, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe))
+
+  def toStubFunction0[R: c.TypeTag](c: Context)(f: c.Expr[Function0[R]]) =
+    findMockFunction[Function0[R], StubFunction0[R]](c)(f, List())
+
+  def toStubFunction1[T1: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function1[T1, R]]) =
+    findMockFunction[Function1[T1, R], StubFunction1[T1, R]](c)(f, List(c.tag[T1].tpe))
+
+  def toStubFunction2[T1: c.TypeTag, T2: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function2[T1, T2, R]]) =
+    findMockFunction[Function2[T1, T2, R], StubFunction2[T1, T2, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe))
 }
