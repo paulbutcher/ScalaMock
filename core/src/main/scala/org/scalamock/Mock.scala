@@ -45,7 +45,7 @@ object MockImpl {
     val tpe = c.tag[T].tpe
     val methodsToMock = membersNotInObject(tpe)
     val forwarders = (methodsToMock map (m => forwarderImpl(m, tpe)))
-    val mocks = (methodsToMock map (m => mockMethod(m, tpe, factory.tree)))
+    val mocks = (methodsToMock map (m => mockMethod(m, tpe, factory.tree, mockFunctionClass _)))
     val members = forwarders ++ mocks
     
     val result = castTo(anonClass(List(TypeTree(tpe)), members), tpe)
@@ -67,7 +67,7 @@ object MockImpl {
     val tpe = c.tag[T].tpe
     val methodsToMock = membersNotInObject(tpe)
     val forwarders = (methodsToMock map (m => forwarderImpl(m, tpe)))
-    val mocks = (methodsToMock map (m => mockMethod(m, tpe, factory.tree)))
+    val mocks = (methodsToMock map (m => mockMethod(m, tpe, factory.tree, stubFunctionClass _)))
     val members = forwarders ++ mocks
     
     val result = castTo(anonClass(List(TypeTree(tpe)), members), tpe)
@@ -183,6 +183,13 @@ object MockImpl {
       case _ => sys.error("Can't handle methods with more than 2 parameters (yet)")
     }
     
+    def stubFunctionClass(paramCount: Int): TypeTag[_] = paramCount match {
+      case 0 => implicitly[TypeTag[StubFunction0[_]]]
+      case 1 => implicitly[TypeTag[StubFunction1[_, _]]]
+      case 2 => implicitly[TypeTag[StubFunction2[_, _, _]]]
+      case _ => sys.error("Can't handle methods with more than 2 parameters (yet)")
+    }
+
     def mockFunctionName(m: Symbol, t: Type) = {
       val method = t.member(m.name)
       newTermName("mock$"+ m.name +"$"+ method.alternatives.indexOf(m))
@@ -196,30 +203,26 @@ object MockImpl {
         sym
     }  
     
-    def mockFunction(m: Symbol, t: Type, factory: Tree) = {
-      val clazz = mockFunctionClass(paramCount(t))
-      val types = (paramTypes(t) map { pt => Ident(mockParamType(pt)) }) :+ Ident(mockParamType(finalResultType(t)))
-      Apply(
-        Select(
-          New(
-            AppliedTypeTree(
-              Ident(clazz.sym),
-              types)),
-          newTermName("<init>")),
-        List(
-          factory, 
-          Apply(
-            Select(Select(Ident(newTermName("scala")), newTermName("Symbol")), newTermName("apply")),
-            List(Literal(Constant(m.name.toString))))))
-    }
-    
     // val <|mockname|> = new MockFunctionN[T1, T2, ..., R](factory, '<|name|>)
-    def mockMethod(m: Symbol, t: Type, factory: Tree): ValDef = {
+    def mockMethod(m: Symbol, t: Type, factory: Tree, classTag: (Int) => TypeTag[_]): ValDef = {
       val mt = m.asTypeIn(t)
+      val clazz = classTag(paramCount(mt))
+      val types = (paramTypes(mt) map { pt => Ident(mockParamType(pt)) }) :+ Ident(mockParamType(finalResultType(mt)))
       ValDef(Modifiers(),
         mockFunctionName(m, t), 
         TypeTree(), 
-        mockFunction(m, mt, factory))
+        Apply(
+          Select(
+            New(
+              AppliedTypeTree(
+                Ident(clazz.sym),
+                types)),
+            newTermName("<init>")),
+          List(
+            factory, 
+            Apply(
+              Select(Select(Ident(newTermName("scala")), newTermName("Symbol")), newTermName("apply")),
+              List(Literal(Constant(m.name.toString)))))))
     }
     
     // def <init>() = super.<init>()

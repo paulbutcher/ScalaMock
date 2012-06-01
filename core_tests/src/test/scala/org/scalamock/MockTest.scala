@@ -107,4 +107,11 @@ class MockTest extends FreeSpec with MockFactory {
       verifyExpectations
     }
   }
+  
+  "Stubs should" - {
+    "return null unless told otherwise" in {
+      val m = stub[TestTrait]
+      expect(null) { m.oneParam(42) }
+    }
+  }
 }
