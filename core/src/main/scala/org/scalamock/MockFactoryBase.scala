@@ -53,7 +53,7 @@ trait MockFactoryBase extends Mock {
   protected implicit def functionName(name: Symbol) = FunctionName(name)
   protected implicit def functionName(name: String) = FunctionName(Symbol(name))
 
-  protected def mockFunction[R](name: FunctionName) = new MockFunction0[R](this, name.name)
+  protected def mockFunction[R](name: FunctionName = FunctionName(Symbol("unnamed MockFunction0"))) = new MockFunction0[R](this, name.name)
   protected def mockFunction[T1, R](name: FunctionName) = new MockFunction1[T1, R](this, name.name)
   protected def mockFunction[T1, T2, R](name: FunctionName) = new MockFunction2[T1, T2, R](this, name.name)
 
