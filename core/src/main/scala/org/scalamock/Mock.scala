@@ -39,13 +39,13 @@ object MockImpl {
   
   def mock[T: c.TypeTag](c: Context)(factory: c.Expr[MockFactoryBase]): c.Expr[T] = {
     import c.mirror._
-    val util = Util(c, factory)
+    val util = Util(c)
     import util._
 
     val tpe = c.tag[T].tpe
-    val methodsToMock = (tpe.members filterNot (m => isMemberOfObject(m))).toList
+    val methodsToMock = membersNotInObject(tpe)
     val forwarders = (methodsToMock map (m => forwarderImpl(m, tpe)))
-    val mocks = (methodsToMock map (m => mockMethod(m, tpe)))
+    val mocks = (methodsToMock map (m => mockMethod(m, tpe, factory.tree)))
     val members = forwarders ++ mocks
     
     val result = castTo(anonClass(List(TypeTree(tpe)), members), tpe)
@@ -60,12 +60,30 @@ object MockImpl {
   }
   
   def stub[T: c.TypeTag](c: Context)(factory: c.Expr[MockFactoryBase]): c.Expr[T] = {
-    c.mirror.reify(null.asInstanceOf[T])
+    import c.mirror._
+    val util = Util(c)
+    import util._
+
+    val tpe = c.tag[T].tpe
+    val methodsToMock = membersNotInObject(tpe)
+    val forwarders = (methodsToMock map (m => forwarderImpl(m, tpe)))
+    val mocks = (methodsToMock map (m => mockMethod(m, tpe, factory.tree)))
+    val members = forwarders ++ mocks
+    
+    val result = castTo(anonClass(List(TypeTree(tpe)), members), tpe)
+    
+//    println("------------")
+//    println(showRaw(result))
+//    println("------------")
+//    println(show(result))
+//    println("------------")
+
+    c.Expr(result)
   }
   
-  def Util(c: Context, factory: AnyRef) = new Util[c.type](c, factory)
+  def Util(c: Context) = new Util[c.type](c)
   
-  class Util[C <: Context](val ctx: C, factory: AnyRef) {
+  class Util[C <: Context](val ctx: C) {
     import ctx.mirror._
     import reflect.api.Modifier._
     
@@ -99,6 +117,8 @@ object MockImpl {
     
     def paramTypes(methodType: Type): List[Type] =
       paramss(methodType).flatten map { _.asTypeIn(methodType) }
+    
+    def membersNotInObject(t: Type) = (t.members filterNot (m => isMemberOfObject(m))).toList
     
     def buildParams(methodType: Type) =
       paramss(methodType) map { params =>
@@ -176,7 +196,7 @@ object MockImpl {
         sym
     }  
     
-    def mockFunction(m: Symbol, t: Type) = {
+    def mockFunction(m: Symbol, t: Type, factory: Tree) = {
       val clazz = mockFunctionClass(paramCount(t))
       val types = (paramTypes(t) map { pt => Ident(mockParamType(pt)) }) :+ Ident(mockParamType(finalResultType(t)))
       Apply(
@@ -187,19 +207,19 @@ object MockImpl {
               types)),
           newTermName("<init>")),
         List(
-          factory.asInstanceOf[ctx.Expr[MockFactoryBase]].tree, 
+          factory, 
           Apply(
             Select(Select(Ident(newTermName("scala")), newTermName("Symbol")), newTermName("apply")),
             List(Literal(Constant(m.name.toString))))))
     }
     
     // val <|mockname|> = new MockFunctionN[T1, T2, ..., R](factory, '<|name|>)
-    def mockMethod(m: Symbol, t: Type): ValDef = {
+    def mockMethod(m: Symbol, t: Type, factory: Tree): ValDef = {
       val mt = m.asTypeIn(t)
       ValDef(Modifiers(),
         mockFunctionName(m, t), 
         TypeTree(), 
-        mockFunction(m, mt))
+        mockFunction(m, mt, factory))
     }
     
     // def <init>() = super.<init>()
