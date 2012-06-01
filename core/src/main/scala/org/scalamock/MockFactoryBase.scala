@@ -1,4 +1,3 @@
-// Copyright (c) 2011-2012 Paul Butcher
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -130,14 +129,14 @@ trait MockFactoryBase extends Mock {
     e
   }
   
-  private[scalamock] def reportUnexpectedCall(call: Call) = {
-    val context = s"Expected:\n${expectationContext}\n\nActual:\n${callLog}" 
-    throw new ExpectationException(s"Unexpected call: ${call}\n\n${context}")
-  }
+  private[scalamock] def reportUnexpectedCall(call: Call) =
+    throw new ExpectationException(s"Unexpected call: ${call}\n\n${errorContext}")
   
-  private[scalamock] def reportUnsatisfiedExpectation() = {
-    throw new ExpectationException("Unsatisfied expectation")
-  }
+  private def reportUnsatisfiedExpectation() =
+    throw new ExpectationException(s"Unsatisfied expectation:\n\n${errorContext}")
+  
+  private def errorContext =
+    s"Expected:\n${expectationContext}\n\nActual:\n${callLog}"
   
   private def inContext(context: Handlers)(what: => Unit) {
     expectationContext.add(context)
