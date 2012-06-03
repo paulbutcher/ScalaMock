@@ -298,5 +298,17 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       m("2.2.3")
       intercept[ExpectationException] { m("2.2.2.2") }
     }
+    
+    "treat stubs as syntactic sugar for anyNumberOfTimes" in {
+      val m = mockFunction[Int, String]
+      
+      m.stubs(*).returning("a return value")
+      
+      expect("a return value") { m(1) }
+      expect("a return value") { m(2) }
+      expect("a return value") { m(3) }
+      
+      verifyExpectations
+    }
   }
 }

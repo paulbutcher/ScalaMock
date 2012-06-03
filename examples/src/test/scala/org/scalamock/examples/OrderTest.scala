@@ -33,7 +33,7 @@ class OrderTest extends WordSpec with MockFactory {
       "remove inventory" in {
         val mockWarehouse = mock[Warehouse]
         inSequence {
-          (mockWarehouse.hasInventory _) expects ("Talisker", 50) returning true once;
+          (mockWarehouse.hasInventory _) expects ("Talisker", 50) returning true
           (mockWarehouse.remove _) expects ("Talisker", 50) once
         }
         
@@ -47,7 +47,7 @@ class OrderTest extends WordSpec with MockFactory {
     "out of stock" should {
       "remove nothing" in {
         val mockWarehouse = mock[Warehouse]
-        (mockWarehouse.hasInventory _) expects (*, *) returning false once
+        (mockWarehouse.hasInventory _) stubs (*, *) returning false
         
         val order = new Order("Talisker", 50)
         order.fill(mockWarehouse)
