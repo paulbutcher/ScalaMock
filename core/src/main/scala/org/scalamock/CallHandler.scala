@@ -21,6 +21,7 @@
 package org.scalamock
 
 abstract class CallHandler[R](private[scalamock] val target: FakeFunction, private[scalamock] val argumentMatcher: Product => Boolean) extends Handler {
+  import CallHandler._
   
   type Derived <: CallHandler[R]
   
@@ -91,6 +92,9 @@ abstract class CallHandler[R](private[scalamock] val target: FakeFunction, priva
   private[scalamock] var expectedCalls: Range = 1 to 1
   private[scalamock] var actualCalls: Int = 0
   private[scalamock] var onCallHandler: Product => R = {_ => null.asInstanceOf[R]}
+}
+
+object CallHandler {
 
   private[scalamock] val NEVER = 0 to 0
   private[scalamock] val ONCE = 1 to 1
