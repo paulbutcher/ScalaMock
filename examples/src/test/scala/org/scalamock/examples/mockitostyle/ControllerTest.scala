@@ -18,7 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock.examples
+package org.scalamock.examples.mockitostyle
+
+import org.scalamock.examples.{Controller, Turtle}
 
 import org.scalatest.FunSuite
 import org.scalamock.scalatest.MockFactory
@@ -26,24 +28,26 @@ import scala.math.{Pi, sqrt}
  
 class ControllerTest extends FunSuite with MockFactory {
  
-  test("draw line") {
-    val mockTurtle = mock[Turtle]
+  ignore("draw line") {
+    val mockTurtle = stub[Turtle]
     val controller = new Controller(mockTurtle)
- 
+
     inSequence {
       inAnyOrder {
-        (mockTurtle.penUp _) expects ()
-        (mockTurtle.getPosition _) expects () returning (0.0, 0.0)
-        (mockTurtle.getAngle _) expects () returning 0.0
+        (mockTurtle.getPosition _) when () returns (0.0, 0.0)
+        (mockTurtle.getAngle _) when () returns 0.0
       }
-      (mockTurtle.turn _) expects ~(Pi / 4)
-      (mockTurtle.forward _) expects ~sqrt(2.0)
-      (mockTurtle.getAngle _) expects () returning Pi / 4
-      (mockTurtle.turn _) expects ~(-Pi / 4)
-      (mockTurtle.penDown _) expects ()
-      (mockTurtle.forward _) expects 1.0
+      (mockTurtle.getAngle _) when () returns Pi / 4
     }
  
     controller.drawLine((1.0, 1.0), (2.0, 1.0))
+    
+    inSequence {
+      (mockTurtle.turn _) verify ~(Pi / 4)
+      (mockTurtle.forward _) verify ~sqrt(2.0)
+      (mockTurtle.turn _) verify ~(-Pi / 4)
+      (mockTurtle.penDown _) verify ()
+      (mockTurtle.forward _) verify 1.0
+    }
   }
 }
