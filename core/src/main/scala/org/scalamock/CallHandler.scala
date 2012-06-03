@@ -71,7 +71,14 @@ abstract class CallHandler[R](private[scalamock] val target: FakeFunction, priva
       case r if r.size == 1 => s"${r.start} times"
       case r => s"between ${r.start} and ${r.end} times"
     }
-    s"${target}${argumentMatcher} ${expected}"
+    val actual = actualCalls match {
+      case 0 => "never called"
+      case 1 => "called once"
+      case 2 => "called twice"
+      case n => s"called $n times" 
+    }
+    val satisfied = if (isSatisfied) "" else " - UNSATISFIED"
+    s"$target$argumentMatcher $expected ($actual$satisfied)"
   }
 
   private[scalamock] def handle(call: Call) = {

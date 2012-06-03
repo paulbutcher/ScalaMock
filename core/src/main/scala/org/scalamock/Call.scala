@@ -23,6 +23,6 @@ package org.scalamock
 case class Call(target: FakeFunction, arguments: Product) {
   
   override def toString = {
-    s"${target}${arguments.productIterator.mkString("(", ", ", ")")}"
+    s"$target${arguments.productIterator.mkString("(", ", ", ")")}"
   }
 }

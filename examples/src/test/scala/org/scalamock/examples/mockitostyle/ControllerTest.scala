@@ -27,6 +27,7 @@ import org.scalamock.scalatest.MockFactory
 import scala.math.{Pi, sqrt}
  
 class ControllerTest extends FunSuite with MockFactory {
+  import scala.language.postfixOps
  
   test("draw line") {
     val mockTurtle = stub[Turtle]

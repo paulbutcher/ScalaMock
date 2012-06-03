@@ -130,13 +130,13 @@ trait MockFactoryBase extends Mock {
   }
   
   private[scalamock] def reportUnexpectedCall(call: Call) =
-    throw new ExpectationException(s"Unexpected call: ${call}\n\n${errorContext}")
+    throw new ExpectationException(s"Unexpected call: $call\n\n$errorContext")
   
   private def reportUnsatisfiedExpectation() =
-    throw new ExpectationException(s"Unsatisfied expectation:\n\n${errorContext}")
+    throw new ExpectationException(s"Unsatisfied expectation:\n\n$errorContext")
   
   private def errorContext =
-    s"Expected:\n${expectationContext}\n\nActual:\n${callLog}"
+    s"Expected:\n$expectationContext\n\nActual:\n$callLog"
   
   private def inContext(context: Handlers)(what: => Unit) {
     expectationContext.add(context)
