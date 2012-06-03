@@ -24,5 +24,5 @@ class ArgumentMatcher(template: Product) extends Function1[Product, Boolean] {
   
   def apply(args: Product) = template == args
   
-  override def toString = template.toString
+  override def toString = template.productIterator.mkString("(", ", ", ")")
 }
