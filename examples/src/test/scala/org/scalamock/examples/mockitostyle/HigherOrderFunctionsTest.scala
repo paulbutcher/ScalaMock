@@ -18,40 +18,58 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock.examples
+package org.scalamock.examples.mockitostyle
 
-import org.scalatest.WordSpec
+import org.scalatest.Suite
 import org.scalamock.scalatest.MockFactory
 
-// This is a reworked version of the example from Martin Fowler's article
-// Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
-class OrderTestMockitoStyle extends WordSpec with MockFactory {
+class HigherOrderFunctionsTest extends Suite with MockFactory {
   import language.postfixOps
   
-  "An order" when {
-    "in stock" should {
-      "remove inventory" in {
-        val mockWarehouse = stub[Warehouse]
-        
-        (mockWarehouse.hasInventory _) when ("Talisker", 50) returns true
-        
-        val order = new Order("Talisker", 50)
-        order.fill(mockWarehouse)
-        
-        assert(order.isFilled)
-        (mockWarehouse.remove _) verify ("Talisker", 50) once
-      }
+  def testMap {
+    val f = stubFunction[Int, String]
+    
+    f when (1) returns "one"
+    f when (2) returns "two"
+    f when (3) returns "three"
+    
+    expect(Seq("one", "two", "three")) { Seq(1, 2, 3) map f }
+
+    inSequence {
+      f verify (1) once;
+      f verify (2) once;
+      f verify (3) once;
+    }
+  }
+  
+  def testRepeat {
+    def repeat(n: Int)(what: => Unit) {
+      for (i <- 0 until n)
+        what
     }
     
-    "out of stock" should {
-      "remove nothing" in {
-        val mockWarehouse = stub[Warehouse]
-        
-        val order = new Order("Talisker", 50)
-        order.fill(mockWarehouse)
-        
-        assert(!order.isFilled)
-      }
+    val f = stubFunction[Unit]
+    
+    repeat(4) { f() }
+
+    f verify () repeated 4 times
+  }
+  
+  def testFoldLeft {
+    val f = stubFunction[String, Int, String]
+    
+    f when ("initial", 0) returns "intermediate one"
+    f when ("intermediate one", 1) returns "intermediate two"
+    f when ("intermediate two", 2) returns "intermediate three"
+    f when ("intermediate three", 3) returns "final"
+
+    expect("final") { Seq(0, 1, 2, 3).foldLeft("initial")(f) }
+    
+    inSequence {
+      f verify ("initial", 0) once;
+      f verify ("intermediate one", 1) once;
+      f verify ("intermediate two", 2) once;
+      f verify ("intermediate three", 3) once;
     }
   }
 }
