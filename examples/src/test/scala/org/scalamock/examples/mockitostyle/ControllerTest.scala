@@ -28,14 +28,14 @@ import scala.math.{Pi, sqrt}
  
 class ControllerTest extends FunSuite with MockFactory {
  
-  ignore("draw line") {
+  test("draw line") {
     val mockTurtle = stub[Turtle]
     val controller = new Controller(mockTurtle)
 
     inSequence {
       inAnyOrder {
         (mockTurtle.getPosition _) when () returns (0.0, 0.0)
-        (mockTurtle.getAngle _) when () returns 0.0
+        (mockTurtle.getAngle _) when () returns 0.0 once
       }
       (mockTurtle.getAngle _) when () returns Pi / 4
     }
