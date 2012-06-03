@@ -92,17 +92,25 @@ object MockImpl {
     def paramTypes(methodType: Type): List[Type] =
       paramss(methodType).flatten map { _.asTypeIn(methodType) }
     
+    def paramType(t: Type): Tree = {
+      if (t.typeArguments.isEmpty)
+        Ident(t.typeSymbol)
+      else
+        AppliedTypeTree(Ident(t.typeSymbol), t.typeArguments map mockParamType _)
+    }
+
     def membersNotInObject(t: Type) = (t.members filterNot (m => isMemberOfObject(m))).toList
     
     def buildParams(methodType: Type) =
       paramss(methodType) map { params =>
         params map { p =>
-          val paramType = p.asTypeIn(methodType).typeSymbol
+          val pt = p.asTypeIn(methodType)
+          val sym = pt.typeSymbol
           val paramTypeTree = 
-            if (paramType.modifiers contains parameter)
-              Ident(newTypeName(paramType.name.toString))
+            if (sym.modifiers contains parameter)
+              Ident(newTypeName(sym.name.toString))
             else
-              Ident(paramType)
+              paramType(pt)
               
           ValDef(
             Modifiers(Set(parameter)),
@@ -169,19 +177,18 @@ object MockImpl {
       newTermName("mock$"+ m.name +"$"+ method.alternatives.indexOf(m))
     }
     
-    def mockParamType(t: Type) = {
-      val sym = t.typeSymbol
-      if (sym.modifiers contains parameter)
-        staticClass("scala.Any")
+    def mockParamType(t: Type): Tree = {
+      if (t.typeSymbol.modifiers contains parameter)
+        Ident(staticClass("scala.Any"))
       else
-        sym
+        paramType(t)
     }  
     
     // val <|mockname|> = new MockFunctionN[T1, T2, ..., R](factory, '<|name|>)
     def mockMethod(m: Symbol, t: Type, factory: Tree, classTag: (Int) => TypeTag[_]): ValDef = {
       val mt = m.asTypeIn(t)
       val clazz = classTag(paramCount(mt))
-      val types = (paramTypes(mt) map { pt => Ident(mockParamType(pt)) }) :+ Ident(mockParamType(finalResultType(mt)))
+      val types = (paramTypes(mt) map mockParamType _) :+ mockParamType(finalResultType(mt))
       ValDef(Modifiers(),
         mockFunctionName(m, t), 
         TypeTree(), 
@@ -247,11 +254,11 @@ object MockImpl {
       
       val result = castTo(anonClass(List(TypeTree(tpe)), members), tpe)
       
-  //    println("------------")
-  //    println(showRaw(result))
-  //    println("------------")
-  //    println(show(result))
-  //    println("------------")
+//      println("------------")
+//      println(showRaw(result))
+//      println("------------")
+//      println(show(result))
+//      println("------------")
   
       ctx.Expr(result)
     }
