@@ -31,16 +31,16 @@ abstract class CallHandler[R](private[scalamock] val target: FakeFunction, priva
   
   def repeat(count: Int): CallHandler[R] = repeat(count to count)
   
-  def never() = repeat(0)
-  def once() = repeat(1)
-  def twice() = repeat(2)
+  def never() = repeat(NEVER)
+  def once() = repeat(ONCE)
+  def twice() = repeat(TWICE)
   
-  def anyNumberOfTimes() = repeat(0 to scala.Int.MaxValue - 1)
-  def atLeastOnce() = repeat(1 to scala.Int.MaxValue - 1)
-  def atLeastTwice() = repeat(2 to scala.Int.MaxValue - 1)
+  def anyNumberOfTimes() = repeat(ANY_NUMBER_OF_TIMES)
+  def atLeastOnce() = repeat(AT_LEAST_ONCE)
+  def atLeastTwice() = repeat(AT_LEAST_TWICE)
 
-  def noMoreThanOnce() = repeat(0 to 1)
-  def noMoreThanTwice() = repeat(0 to 2)
+  def noMoreThanOnce() = repeat(NO_MORE_THAN_ONCE)
+  def noMoreThanTwice() = repeat(NO_MORE_THAN_TWICE)
   
   def repeated(range: Range) = repeat(range)
   def repeated(count: Int) = repeat(count)
@@ -57,7 +57,21 @@ abstract class CallHandler[R](private[scalamock] val target: FakeFunction, priva
     this.asInstanceOf[Derived]
   }
   
-  override def toString = s"${target}${argumentMatcher}"
+  override def toString = {
+    val expected = expectedCalls match {
+      case NEVER => "never"
+      case ONCE => "once"
+      case TWICE => "twice"
+      case ANY_NUMBER_OF_TIMES => "any number of times"
+      case AT_LEAST_ONCE => "at least once"
+      case AT_LEAST_TWICE => "at least twice"
+      case NO_MORE_THAN_ONCE => "no more than once"
+      case NO_MORE_THAN_TWICE => "no more than twice"
+      case r if r.size == 1 => s"${r.start} times"
+      case r => s"between ${r.start} and ${r.end} times"
+    }
+    s"${target}${argumentMatcher} ${expected}"
+  }
 
   private[scalamock] def handle(call: Call) = {
     if (target == call.target && !isExhausted && argumentMatcher(call.arguments)) {
@@ -77,6 +91,17 @@ abstract class CallHandler[R](private[scalamock] val target: FakeFunction, priva
   private[scalamock] var expectedCalls: Range = 1 to 1
   private[scalamock] var actualCalls: Int = 0
   private[scalamock] var onCallHandler: Product => R = {_ => null.asInstanceOf[R]}
+
+  private[scalamock] val NEVER = 0 to 0
+  private[scalamock] val ONCE = 1 to 1
+  private[scalamock] val TWICE = 2 to 2
+  
+  private[scalamock] val ANY_NUMBER_OF_TIMES = 0 to scala.Int.MaxValue - 1
+  private[scalamock] val AT_LEAST_ONCE = 1 to scala.Int.MaxValue - 1
+  private[scalamock] val AT_LEAST_TWICE = 2 to scala.Int.MaxValue - 1
+
+  private[scalamock] val NO_MORE_THAN_ONCE = 0 to 1
+  private[scalamock] val NO_MORE_THAN_TWICE = 0 to 2
 }
 
 trait Verify { self: CallHandler[_] =>
