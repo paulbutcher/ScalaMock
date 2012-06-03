@@ -30,7 +30,7 @@ class OrderTestMockitoStyle extends WordSpec with MockFactory {
   
   "An order" when {
     "in stock" should {
-      "remove inventory" ignore {
+      "remove inventory" in {
         val mockWarehouse = stub[Warehouse]
         
         (mockWarehouse.hasInventory _) when ("Talisker", 50) returns true

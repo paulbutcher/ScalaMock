@@ -20,7 +20,7 @@
 
 package org.scalamock
 
-abstract class CallHandler[R](target: FakeFunction, private[scalamock] val argumentMatcher: Product => Boolean) extends Handler {
+abstract class CallHandler[R](private[scalamock] val target: FakeFunction, private[scalamock] val argumentMatcher: Product => Boolean) extends Handler {
   
   type Derived <: CallHandler[R]
   
@@ -60,7 +60,7 @@ abstract class CallHandler[R](target: FakeFunction, private[scalamock] val argum
   override def toString = s"${target}${argumentMatcher}"
 
   private[scalamock] def handle(call: Call) = {
-    if (!isExhausted && argumentMatcher(call.arguments)) {
+    if (target == call.target && !isExhausted && argumentMatcher(call.arguments)) {
       actualCalls += 1
       Some(onCallHandler(call.arguments))
     } else {
@@ -84,7 +84,7 @@ trait Verify { self: CallHandler[_] =>
   private[scalamock] override def handle(call: Call) = sys.error("verify should appear after all code under test has been exercised")
   
   private[scalamock] override def verify(call: Call) = {
-    if (argumentMatcher(call.arguments)) {
+    if (self.target == call.target && argumentMatcher(call.arguments)) {
       actualCalls += 1
       true
     } else {
