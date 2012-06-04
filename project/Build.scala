@@ -89,8 +89,13 @@ object ShellPrompt {
   }
 }
 
+object Dependencies {
+  val scalatest = "org.scalatest" %% "scalatest" % "1.8-SNAPSHOT"
+}
+
 object ScalaMockBuild extends Build {
   import BuildSettings._
+  import Dependencies._
 
   lazy val scalamock = Project(
     "ScalaMock", 
@@ -99,7 +104,8 @@ object ScalaMockBuild extends Build {
       compile in Compile := Analysis.Empty,
       publishArtifact in (Compile, packageBin) := false,
       publishArtifact in (Compile, packageSrc) := false,
-      sources in Compile <<= (Seq(core, scalatest).map(sources in Compile in _).join).map(_.flatten)
+      sources in Compile <<= (Seq(core, scalatest).map(sources in Compile in _).join).map(_.flatten),
+      libraryDependencies += scalatest
     )) aggregate(core, core_tests, scalatest, examples)
 
   lazy val core = Project(
@@ -114,7 +120,7 @@ object ScalaMockBuild extends Build {
     file("frameworks/scalatest"),
     settings = buildSettings ++ Seq(
       name := "ScalaMock ScalaTest Support",
-      libraryDependencies += "org.scalatest" %% "scalatest" % "1.8-SNAPSHOT"
+      libraryDependencies += scalatest
     )) dependsOn(core)
 
   lazy val core_tests = Project(
