@@ -2,6 +2,8 @@
 
 Native Scala mocking.
 
+For a preview of ScalaMock 3, see http://www.paulbutcher.com/2012/06/scalamock-3-0-preview-release/
+
 ## Examples
 
 ### Mocking objects
