@@ -116,12 +116,13 @@ class MockTest extends FreeSpec with MockFactory {
       expect("it works") { m.polymorphicParam((42, 1.23)) }
       verifyExpectations
     }
-    
-    "cope with methods with repeated parameters" in {
-      val m = mock[TestTrait]
-      val f: Function2[Int, Seq[String], String] = m.repeatedParam _
-      toMockFunction2(m.repeatedParam _).expects(42, "foo")
-    }
+
+    //! TODO - https://groups.google.com/d/topic/scala-user/p_YxP_RiC7s/discussion
+//    "cope with methods with repeated parameters" ignore {
+//      val m = mock[TestTrait]
+//      val f: Function2[Int, Seq[String], String] = m.repeatedParam _
+//      toMockFunction2(m.repeatedParam _).expects(42, "foo")
+//    }
   }
   
   "Stubs should" - {
