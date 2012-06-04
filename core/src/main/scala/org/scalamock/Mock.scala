@@ -31,12 +31,26 @@ trait Mock {
   implicit def toMockFunction0[R](f: Function0[R]) = macro MockImpl.toMockFunction0[R]
   implicit def toMockFunction1[T1,  R](f: Function1[T1, R]) = macro MockImpl.toMockFunction1[T1, R]
   implicit def toMockFunction2[T1, T2, R](f: Function2[T1, T2, R]) = macro MockImpl.toMockFunction2[T1, T2, R]
+  implicit def toMockFunction3[T1, T2, T3, R](f: Function3[T1, T2, T3, R]) = macro MockImpl.toMockFunction3[T1, T2, T3, R]
+  implicit def toMockFunction4[T1, T2, T3, T4, R](f: Function4[T1, T2, T3, T4, R]) = macro MockImpl.toMockFunction4[T1, T2, T3, T4, R]
+  implicit def toMockFunction5[T1, T2, T3, T4, T5, R](f: Function5[T1, T2, T3, T4, T5, R]) = macro MockImpl.toMockFunction5[T1, T2, T3, T4, T5, R]
+  implicit def toMockFunction6[T1, T2, T3, T4, T5, T6, R](f: Function6[T1, T2, T3, T4, T5, T6, R]) = macro MockImpl.toMockFunction6[T1, T2, T3, T4, T5, T6, R]
+  implicit def toMockFunction7[T1, T2, T3, T4, T5, T6, T7, R](f: Function7[T1, T2, T3, T4, T5, T6, T7, R]) = macro MockImpl.toMockFunction7[T1, T2, T3, T4, T5, T6, T7, R]
+  implicit def toMockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R](f: Function8[T1, T2, T3, T4, T5, T6, T7, T8, R]) = macro MockImpl.toMockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R]
+  implicit def toMockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](f: Function9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]) = macro MockImpl.toMockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]
   
   def stub[T](implicit factory: MockFactoryBase) = macro MockImpl.stub[T]
 
   implicit def toStubFunction0[R](f: Function0[R]) = macro MockImpl.toStubFunction0[R]
   implicit def toStubFunction1[T1,  R](f: Function1[T1, R]) = macro MockImpl.toStubFunction1[T1, R]
   implicit def toStubFunction2[T1, T2, R](f: Function2[T1, T2, R]) = macro MockImpl.toStubFunction2[T1, T2, R]
+  implicit def toStubFunction3[T1, T2, T3, R](f: Function3[T1, T2, T3, R]) = macro MockImpl.toStubFunction3[T1, T2, T3, R]
+  implicit def toStubFunction4[T1, T2, T3, T4, R](f: Function4[T1, T2, T3, T4, R]) = macro MockImpl.toStubFunction4[T1, T2, T3, T4, R]
+  implicit def toStubFunction5[T1, T2, T3, T4, T5, R](f: Function5[T1, T2, T3, T4, T5, R]) = macro MockImpl.toStubFunction5[T1, T2, T3, T4, T5, R]
+  implicit def toStubFunction6[T1, T2, T3, T4, T5, T6, R](f: Function6[T1, T2, T3, T4, T5, T6, R]) = macro MockImpl.toStubFunction6[T1, T2, T3, T4, T5, T6, R]
+  implicit def toStubFunction7[T1, T2, T3, T4, T5, T6, T7, R](f: Function7[T1, T2, T3, T4, T5, T6, T7, R]) = macro MockImpl.toStubFunction7[T1, T2, T3, T4, T5, T6, T7, R]
+  implicit def toStubFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R](f: Function8[T1, T2, T3, T4, T5, T6, T7, T8, R]) = macro MockImpl.toStubFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R]
+  implicit def toStubFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](f: Function9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]) = macro MockImpl.toStubFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]
 }
 
 object MockImpl {
@@ -162,14 +176,28 @@ object MockImpl {
       case 0 => implicitly[TypeTag[MockFunction0[_]]]
       case 1 => implicitly[TypeTag[MockFunction1[_, _]]]
       case 2 => implicitly[TypeTag[MockFunction2[_, _, _]]]
-      case _ => sys.error("Can't handle methods with more than 2 parameters (yet)")
+      case 3 => implicitly[TypeTag[MockFunction3[_, _, _, _]]]
+      case 4 => implicitly[TypeTag[MockFunction4[_, _, _, _, _]]]
+      case 5 => implicitly[TypeTag[MockFunction5[_, _, _, _, _, _]]]
+      case 6 => implicitly[TypeTag[MockFunction6[_, _, _, _, _, _, _]]]
+      case 7 => implicitly[TypeTag[MockFunction7[_, _, _, _, _, _, _, _]]]
+      case 8 => implicitly[TypeTag[MockFunction8[_, _, _, _, _, _, _, _, _]]]
+      case 9 => implicitly[TypeTag[MockFunction9[_, _, _, _, _, _, _, _, _, _]]]
+      case _ => sys.error("Can't handle methods with more than 9 parameters (yet)")
     }
     
     def stubFunctionClass(paramCount: Int): TypeTag[_] = paramCount match {
       case 0 => implicitly[TypeTag[StubFunction0[_]]]
       case 1 => implicitly[TypeTag[StubFunction1[_, _]]]
       case 2 => implicitly[TypeTag[StubFunction2[_, _, _]]]
-      case _ => sys.error("Can't handle methods with more than 2 parameters (yet)")
+      case 3 => implicitly[TypeTag[StubFunction3[_, _, _, _]]]
+      case 4 => implicitly[TypeTag[StubFunction4[_, _, _, _, _]]]
+      case 5 => implicitly[TypeTag[StubFunction5[_, _, _, _, _, _]]]
+      case 6 => implicitly[TypeTag[StubFunction6[_, _, _, _, _, _, _]]]
+      case 7 => implicitly[TypeTag[StubFunction7[_, _, _, _, _, _, _, _]]]
+      case 8 => implicitly[TypeTag[StubFunction8[_, _, _, _, _, _, _, _, _]]]
+      case 9 => implicitly[TypeTag[StubFunction9[_, _, _, _, _, _, _, _, _, _]]]
+      case _ => sys.error("Can't handle methods with more than 9 parameters (yet)")
     }
 
     def mockFunctionName(m: Symbol, t: Type) = {
@@ -317,6 +345,27 @@ object MockImpl {
   def toMockFunction2[T1: c.TypeTag, T2: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function2[T1, T2, R]]) =
     findMockFunction[Function2[T1, T2, R], MockFunction2[T1, T2, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe))
 
+  def toMockFunction3[T1: c.TypeTag, T2: c.TypeTag, T3: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function3[T1, T2, T3, R]]) =
+    findMockFunction[Function3[T1, T2, T3, R], MockFunction3[T1, T2, T3, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe, c.tag[T3].tpe))
+
+  def toMockFunction4[T1: c.TypeTag, T2: c.TypeTag, T3: c.TypeTag, T4: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function4[T1, T2, T3, T4, R]]) =
+    findMockFunction[Function4[T1, T2, T3, T4, R], MockFunction4[T1, T2, T3, T4, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe, c.tag[T3].tpe, c.tag[T4].tpe))
+
+  def toMockFunction5[T1: c.TypeTag, T2: c.TypeTag, T3: c.TypeTag, T4: c.TypeTag, T5: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function5[T1, T2, T3, T4, T5, R]]) =
+    findMockFunction[Function5[T1, T2, T3, T4, T5, R], MockFunction5[T1, T2, T3, T4, T5, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe, c.tag[T3].tpe, c.tag[T4].tpe, c.tag[T5].tpe))
+
+  def toMockFunction6[T1: c.TypeTag, T2: c.TypeTag, T3: c.TypeTag, T4: c.TypeTag, T5: c.TypeTag, T6: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function6[T1, T2, T3, T4, T5, T6, R]]) =
+    findMockFunction[Function6[T1, T2, T3, T4, T5, T6, R], MockFunction6[T1, T2, T3, T4, T5, T6, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe, c.tag[T3].tpe, c.tag[T4].tpe, c.tag[T5].tpe, c.tag[T6].tpe))
+
+  def toMockFunction7[T1: c.TypeTag, T2: c.TypeTag, T3: c.TypeTag, T4: c.TypeTag, T5: c.TypeTag, T6: c.TypeTag, T7: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function7[T1, T2, T3, T4, T5, T6, T7, R]]) =
+    findMockFunction[Function7[T1, T2, T3, T4, T5, T6, T7, R], MockFunction7[T1, T2, T3, T4, T5, T6, T7, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe, c.tag[T3].tpe, c.tag[T4].tpe, c.tag[T5].tpe, c.tag[T6].tpe, c.tag[T7].tpe))
+
+  def toMockFunction8[T1: c.TypeTag, T2: c.TypeTag, T3: c.TypeTag, T4: c.TypeTag, T5: c.TypeTag, T6: c.TypeTag, T7: c.TypeTag, T8: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function8[T1, T2, T3, T4, T5, T6, T7, T8, R]]) =
+    findMockFunction[Function8[T1, T2, T3, T4, T5, T6, T7, T8, R], MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe, c.tag[T3].tpe, c.tag[T4].tpe, c.tag[T5].tpe, c.tag[T6].tpe, c.tag[T7].tpe, c.tag[T8].tpe))
+
+  def toMockFunction9[T1: c.TypeTag, T2: c.TypeTag, T3: c.TypeTag, T4: c.TypeTag, T5: c.TypeTag, T6: c.TypeTag, T7: c.TypeTag, T8: c.TypeTag, T9: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]]) =
+    findMockFunction[Function9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R], MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe, c.tag[T3].tpe, c.tag[T4].tpe, c.tag[T5].tpe, c.tag[T6].tpe, c.tag[T7].tpe, c.tag[T8].tpe, c.tag[T9].tpe))
+
   def toStubFunction0[R: c.TypeTag](c: Context)(f: c.Expr[Function0[R]]) =
     findMockFunction[Function0[R], StubFunction0[R]](c)(f, List())
 
@@ -325,4 +374,25 @@ object MockImpl {
 
   def toStubFunction2[T1: c.TypeTag, T2: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function2[T1, T2, R]]) =
     findMockFunction[Function2[T1, T2, R], StubFunction2[T1, T2, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe))
+
+  def toStubFunction3[T1: c.TypeTag, T2: c.TypeTag, T3: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function3[T1, T2, T3, R]]) =
+    findMockFunction[Function3[T1, T2, T3, R], MockFunction3[T1, T2, T3, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe, c.tag[T3].tpe))
+
+  def toStubFunction4[T1: c.TypeTag, T2: c.TypeTag, T3: c.TypeTag, T4: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function4[T1, T2, T3, T4, R]]) =
+    findMockFunction[Function4[T1, T2, T3, T4, R], MockFunction4[T1, T2, T3, T4, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe, c.tag[T3].tpe, c.tag[T4].tpe))
+
+  def toStubFunction5[T1: c.TypeTag, T2: c.TypeTag, T3: c.TypeTag, T4: c.TypeTag, T5: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function5[T1, T2, T3, T4, T5, R]]) =
+    findMockFunction[Function5[T1, T2, T3, T4, T5, R], MockFunction5[T1, T2, T3, T4, T5, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe, c.tag[T3].tpe, c.tag[T4].tpe, c.tag[T5].tpe))
+
+  def toStubFunction6[T1: c.TypeTag, T2: c.TypeTag, T3: c.TypeTag, T4: c.TypeTag, T5: c.TypeTag, T6: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function6[T1, T2, T3, T4, T5, T6, R]]) =
+    findMockFunction[Function6[T1, T2, T3, T4, T5, T6, R], MockFunction6[T1, T2, T3, T4, T5, T6, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe, c.tag[T3].tpe, c.tag[T4].tpe, c.tag[T5].tpe, c.tag[T6].tpe))
+
+  def toStubFunction7[T1: c.TypeTag, T2: c.TypeTag, T3: c.TypeTag, T4: c.TypeTag, T5: c.TypeTag, T6: c.TypeTag, T7: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function7[T1, T2, T3, T4, T5, T6, T7, R]]) =
+    findMockFunction[Function7[T1, T2, T3, T4, T5, T6, T7, R], MockFunction7[T1, T2, T3, T4, T5, T6, T7, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe, c.tag[T3].tpe, c.tag[T4].tpe, c.tag[T5].tpe, c.tag[T6].tpe, c.tag[T7].tpe))
+
+  def toStubFunction8[T1: c.TypeTag, T2: c.TypeTag, T3: c.TypeTag, T4: c.TypeTag, T5: c.TypeTag, T6: c.TypeTag, T7: c.TypeTag, T8: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function8[T1, T2, T3, T4, T5, T6, T7, T8, R]]) =
+    findMockFunction[Function8[T1, T2, T3, T4, T5, T6, T7, T8, R], MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe, c.tag[T3].tpe, c.tag[T4].tpe, c.tag[T5].tpe, c.tag[T6].tpe, c.tag[T7].tpe, c.tag[T8].tpe))
+
+  def toStubFunction9[T1: c.TypeTag, T2: c.TypeTag, T3: c.TypeTag, T4: c.TypeTag, T5: c.TypeTag, T6: c.TypeTag, T7: c.TypeTag, T8: c.TypeTag, T9: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]]) =
+    findMockFunction[Function9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R], MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe, c.tag[T3].tpe, c.tag[T4].tpe, c.tag[T5].tpe, c.tag[T6].tpe, c.tag[T7].tpe, c.tag[T8].tpe, c.tag[T9].tpe))
 }
