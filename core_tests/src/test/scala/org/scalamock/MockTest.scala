@@ -43,6 +43,8 @@ class MockTest extends FreeSpec with MockFactory {
     def polymorphic[T](x: T): String
     def polycurried[T1, T2](x: T1)(y: T2): String
     def polymorphicParam(x: (Int, Double)): String
+    
+    def repeatedParam(x: Int, ys: String*): String
   }
   
   "Mocks should" - {
@@ -113,6 +115,12 @@ class MockTest extends FreeSpec with MockFactory {
       (m.polymorphicParam _).expects((42, 1.23)).returning("it works")
       expect("it works") { m.polymorphicParam((42, 1.23)) }
       verifyExpectations
+    }
+    
+    "cope with methods with repeated parameters" in {
+      val m = mock[TestTrait]
+      val f: Function2[Int, Seq[String], String] = m.repeatedParam _
+      toMockFunction2(m.repeatedParam _).expects(42, "foo")
     }
   }
   
