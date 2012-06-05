@@ -122,12 +122,12 @@ class MockTest extends FreeSpec with MockFactory {
 //    "cope with methods with repeated parameters" ignore {
 //      val m = mock[TestTrait]
 //      val f: Function2[Int, Seq[String], String] = m.repeatedParam _
-//      toMockFunction2(m.repeatedParam _).expects(42, "foo")
+//      (m.repeatedParam _).expects(42, "foo")
 //    }
     
     "cope with methods with by name parameters" in {
       val m = mock[TestTrait]
-      toMockFunction1(m.byNameParam _).expects(*).returning("it worked")
+      (m.byNameParam _).expects(*).returning("it worked")
       expect("it worked") { m.byNameParam(42) }
       verifyExpectations
     }
