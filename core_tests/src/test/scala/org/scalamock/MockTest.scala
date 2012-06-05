@@ -43,8 +43,9 @@ class MockTest extends FreeSpec with MockFactory {
     def polymorphic[T](x: T): String
     def polycurried[T1, T2](x: T1)(y: T2): String
     def polymorphicParam(x: (Int, Double)): String
-    
     def repeatedParam(x: Int, ys: String*): String
+
+    def byNameParam(x: => Int): String
   }
   
   "Mocks should" - {
@@ -123,6 +124,23 @@ class MockTest extends FreeSpec with MockFactory {
 //      val f: Function2[Int, Seq[String], String] = m.repeatedParam _
 //      toMockFunction2(m.repeatedParam _).expects(42, "foo")
 //    }
+    
+    "cope with methods with by name parameters" in {
+      val m = mock[TestTrait]
+      toMockFunction1(m.byNameParam _).expects(*).returning("it worked")
+      expect("it worked") { m.byNameParam(42) }
+      verifyExpectations
+    }
+    
+    //! TODO - find a way to make this less ugly
+    "match methods with by name parameters" in {
+      val m = mock[TestTrait]
+      val f: (=> Int) => Boolean = { x => x == 1 && x == 2  }
+      ((m.byNameParam _): (=> Int) => String).expects(new FunctionAdapter1(f)).returning("it works")
+      var y = 0
+      expect("it works") { m.byNameParam { y += 1; y } }
+      verifyExpectations
+    }
   }
   
   "Stubs should" - {

@@ -309,6 +309,7 @@ object MockImpl {
 
     val (obj, name) = f.tree match {
       case Block(_, Function(_, Apply(Select(o, n), _))) => (o, n)
+      case Typed(Block(_, Function(_, Apply(Select(o, n), _))), _) => (o, n)
       case Function(_, Select(o, n)) => (o, n)
       case Function(_, Apply(Select(o, n), _)) => (o, n)
       case Function(_, Apply(Apply(Select(o, n), _), _)) => (o, n)
