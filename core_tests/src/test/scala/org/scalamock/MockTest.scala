@@ -119,11 +119,13 @@ class MockTest extends FreeSpec with MockFactory {
     }
 
     //! TODO - https://groups.google.com/d/topic/scala-user/p_YxP_RiC7s/discussion
-//    "cope with methods with repeated parameters" ignore {
-//      val m = mock[TestTrait]
-//      val f: Function2[Int, Seq[String], String] = m.repeatedParam _
-//      (m.repeatedParam _).expects(42, "foo")
-//    }
+    "cope with methods with repeated parameters" in {
+      val m = mock[TestTrait]
+      val f: (Int, String*) => String = m.repeatedParam _
+      (m.repeatedParam _).expects(42, Seq("foo", "bar"))
+      m.repeatedParam(42, "foo", "bar")
+      verifyExpectations
+    }
     
     "cope with methods with by name parameters" in {
       val m = mock[TestTrait]

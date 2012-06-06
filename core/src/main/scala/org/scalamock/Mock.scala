@@ -30,7 +30,9 @@ trait Mock {
   
   implicit def toMockFunction0[R](f: Function0[R]) = macro MockImpl.toMockFunction0[R]
   implicit def toMockFunction1[T1,  R](f: Function1[T1, R]) = macro MockImpl.toMockFunction1[T1, R]
-  implicit def toMockFunction2[T1, T2, R](f: Function2[T1, T2, R]) = macro MockImpl.toMockFunction2[T1, T2, R]
+  implicit def toMockFunction2[T1, T2, R](f: (T1, T2) => R) = macro MockImpl.toMockFunction2[T1, T2, R]
+  implicit def toMockFunction2R[T1, T2, R](f: (T1, T2*) => R) = macro MockImpl.toMockFunction2R[T1, T2, R]
+//  implicit def toMockFunction2[T1, T2, R](f: Function2[T1, T2, R]) = macro MockImpl.toMockFunction2[T1, T2, R]
   implicit def toMockFunction3[T1, T2, T3, R](f: Function3[T1, T2, T3, R]) = macro MockImpl.toMockFunction3[T1, T2, T3, R]
   implicit def toMockFunction4[T1, T2, T3, T4, R](f: Function4[T1, T2, T3, T4, R]) = macro MockImpl.toMockFunction4[T1, T2, T3, T4, R]
   implicit def toMockFunction5[T1, T2, T3, T4, T5, R](f: Function5[T1, T2, T3, T4, T5, R]) = macro MockImpl.toMockFunction5[T1, T2, T3, T4, T5, R]
@@ -345,6 +347,9 @@ object MockImpl {
 
   def toMockFunction2[T1: c.TypeTag, T2: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function2[T1, T2, R]]) =
     findMockFunction[Function2[T1, T2, R], MockFunction2[T1, T2, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe))
+
+  def toMockFunction2R[T1: c.TypeTag, T2: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[(T1, T2*) => R]) =
+    findMockFunction[(T1, T2*) => R, MockFunction2[T1, Seq[T2], R]](c)(f, List(c.tag[T1].tpe, c.tag[Seq[T2]].tpe))
 
   def toMockFunction3[T1: c.TypeTag, T2: c.TypeTag, T3: c.TypeTag, R: c.TypeTag](c: Context)(f: c.Expr[Function3[T1, T2, T3, R]]) =
     findMockFunction[Function3[T1, T2, T3, R], MockFunction3[T1, T2, T3, R]](c)(f, List(c.tag[T1].tpe, c.tag[T2].tpe, c.tag[T3].tpe))
