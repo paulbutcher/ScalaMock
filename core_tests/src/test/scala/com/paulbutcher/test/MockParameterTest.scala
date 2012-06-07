@@ -18,32 +18,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock.examples
+package com.paulbutcher.test
 
-import org.scalatest.FunSuite
-import org.scalamock.scalatest.MockFactory
-import scala.math.{Pi, sqrt}
- 
-class ControllerTest extends FunSuite with MockFactory {
- 
-  test("draw line") {
-    val mockTurtle = mock[Turtle]
-    val controller = new Controller(mockTurtle)
- 
-    inSequence {
-      inAnyOrder {
-        (mockTurtle.penUp _) expects ()
-        (mockTurtle.getPosition _) expects () returning (0.0, 0.0)
-        (mockTurtle.getAngle _) expects () returning 0.0
+import org.scalatest.FreeSpec
+import org.scalamock._
+
+class MockParameterTest extends FreeSpec {
+  
+  "A mock parameter should" - {
+    "be equal" - {
+      "if its value is equal" in {
+        assert(new MockParameter(42) == 42)
       }
-      (mockTurtle.turn _) expects ~(Pi / 4)
-      (mockTurtle.forward _) expects ~sqrt(2.0)
-      (mockTurtle.getAngle _) expects () returning Pi / 4
-      (mockTurtle.turn _) expects ~(-Pi / 4)
-      (mockTurtle.penDown _) expects ()
-      (mockTurtle.forward _) expects 1.0
+    
+      "with a wildcard" in {
+        assert(new MockParameter[Int](new MatchAny) == 123)
+      }
+    
+      "with an epsilon" in {
+        assert(new MockParameter(new MatchEpsilon(1.0)) == 1.0001)
+      }
     }
- 
-    controller.drawLine((1.0, 1.0), (2.0, 1.0))
+    
+    "not be equal" - {
+      "with different values" in {
+        assert(!(new MockParameter(42) == 43))
+      }
+      
+      "with different types" in {
+        assert(!(new MockParameter(42) == "forty two"))
+      }
+    }
+  }
+  
+  "A product of mock parameters should" - {
+    "compare correctly to a product of non mock parameters" in {
+      val p1 = (new MockParameter(42), new MockParameter[String](new MatchAny), new MockParameter(new MatchEpsilon(1.0)))
+      val p2 = (42, "foo", 1.0001)
+      assert(p1 == p2)
+    }
   }
 }

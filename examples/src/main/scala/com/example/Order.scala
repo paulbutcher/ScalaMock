@@ -18,16 +18,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock
+package com.example
 
-import org.scalatest.FreeSpec
-
-class MatchAnyTest extends FreeSpec {
-
-  "MatchAny should match anything" in {
-    assert(new MatchAny == 1.0)
-    assert(new MatchAny == "")
-    assert(new MatchAny == (0, 42))
-    assert(new MatchAny == List(1, 2, 3))
+class Order(product: String, quantity: Int) {
+  
+  def fill(warehouse: Warehouse) {
+    if (warehouse.hasInventory(product, quantity)) {
+      warehouse.remove(product, quantity)
+      filled = true
+    }
   }
+  
+  def isFilled = filled
+  
+  private var filled = false
 }

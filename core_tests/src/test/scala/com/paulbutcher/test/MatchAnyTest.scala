@@ -18,9 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock.examples
+package com.paulbutcher.test
 
-trait Warehouse {
-  def hasInventory(product: String, quantity: Int): Boolean
-  def remove(product: String, quantity: Int)
+import org.scalatest.FreeSpec
+import org.scalamock._
+
+class MatchAnyTest extends FreeSpec {
+
+  "MatchAny should match anything" in {
+    assert(new MatchAny == 1.0)
+    assert(new MatchAny == "")
+    assert(new MatchAny == (0, 42))
+    assert(new MatchAny == List(1, 2, 3))
+  }
 }

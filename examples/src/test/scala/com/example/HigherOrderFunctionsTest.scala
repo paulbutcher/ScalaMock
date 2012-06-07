@@ -18,40 +18,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock.examples
+package com.example
 
-import scala.math.{atan2, sqrt}
- 
-class Controller(turtle: Turtle) {
- 
-  def drawLine(start: (Double, Double), end: (Double, Double)) {
-    moveTo(start)
- 
-    val initialAngle = turtle.getAngle
-    val deltaPos = delta(start, end)
- 
-    turtle.turn(angle(deltaPos) - initialAngle)
-    turtle.penDown
-    turtle.forward(distance(deltaPos))
+import org.scalatest.Suite
+import org.scalamock.scalatest.MockFactory
+
+class HigherOrderFunctionsTest extends Suite with MockFactory {
+  import language.postfixOps
+  
+  def testMap {
+    val f = mockFunction[Int, String]
+    
+    inSequence {
+      f expects (1) returning "one" once;
+      f expects (2) returning "two" once;
+      f expects (3) returning "three" once;
+    }
+    
+    expect(Seq("one", "two", "three")) { Seq(1, 2, 3) map f }
   }
- 
-  def delta(pos1: (Double, Double), pos2: (Double, Double)) = 
-    (pos2._1 - pos1._1, pos2._2 - pos1._2)
- 
-  def distance(delta: (Double, Double)) = 
-    sqrt(delta._1 * delta._1 + delta._2 * delta._2)
- 
-  def angle(delta: (Double, Double)) = 
-    atan2(delta._2, delta._1)
- 
-  def moveTo(pos: (Double, Double)) {
-    val initialPos = turtle.getPosition
-    val initialAngle = turtle.getAngle
- 
-    val deltaPos = delta(initialPos, pos)
- 
-    turtle.penUp
-    turtle.turn(angle(deltaPos) - initialAngle)
-    turtle.forward(distance(deltaPos))
+  
+  def testRepeat {
+    def repeat(n: Int)(what: => Unit) {
+      for (i <- 0 until n)
+        what
+    }
+    
+    val f = mockFunction[Unit]
+    f expects () repeated 4 times
+    
+    repeat(4) { f() }
+  }
+  
+  def testFoldLeft {
+    val f = mockFunction[String, Int, String]
+    
+    inSequence {
+      f expects ("initial", 0) returning "intermediate one" once;
+      f expects ("intermediate one", 1) returning "intermediate two" once;
+      f expects ("intermediate two", 2) returning "intermediate three" once;
+      f expects ("intermediate three", 3) returning "final" once;
+    }
+
+    expect("final") { Seq(0, 1, 2, 3).foldLeft("initial")(f) }
   }
 }

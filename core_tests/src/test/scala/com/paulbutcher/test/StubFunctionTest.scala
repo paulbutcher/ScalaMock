@@ -18,10 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock
+package com.paulbutcher.test
 
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.FreeSpec
+import org.scalamock._
 
 class StubFunctionTest extends FreeSpec with MockFactory {
   
