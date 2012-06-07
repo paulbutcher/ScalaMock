@@ -33,39 +33,12 @@ trait MockFactory extends AbstractSuite with MockFactoryBase { this: Suite =>
   
   type ExpectationException = RuntimeException
   
-  // Copied from BeforeAndAfterEach:
-  // On advice from Bill Venners, we shouldn't use BeforeAndAfterEach here to 
-  // ensure that it's properly stackable
-  abstract protected override def runTest(testName: String, reporter: Reporter, stopper: Stopper, 
-    configMap: Map[String, Any], tracker: Tracker) {
+  override def withFixture(test: NoArgTest) {
 
-    var thrownException: Option[Throwable] = None
-
-    resetExpectations
-    try {
-      super.runTest(testName, reporter, stopper, configMap, tracker)
-    }
-    catch {
-      case e: Exception => thrownException = Some(e)
-    }
-    finally {
-      try {
-        if (autoVerify)
-          verifyExpectations
-
-        thrownException match {
-          case Some(e) => throw e
-          case None =>
-        }
-      }
-      catch {
-        case laterException: Exception =>
-          thrownException match { // If both run and afterAll throw an exception, report the test exception
-            case Some(earlierException) => throw earlierException
-            case None => throw laterException
-          }
-      }
-    }
+    if (autoVerify)
+      withExpectations { test() }
+    else
+      test()
   }
   
   protected def newExpectationException(message: String, stackDepth: Int) = 

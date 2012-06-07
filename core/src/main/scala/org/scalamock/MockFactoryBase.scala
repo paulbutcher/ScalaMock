@@ -39,6 +39,12 @@ trait MockFactoryBase extends Mock {
     expectationContext = null
   }
   
+  protected def withExpectations(what: => Unit) {
+    resetExpectations
+    what
+    verifyExpectations
+  }
+  
   protected def inAnyOrder(what: => Unit) {
     inContext(new UnorderedHandlers)(what)
   }

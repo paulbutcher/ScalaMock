@@ -65,272 +65,291 @@ class StubFunctionTest extends FreeSpec with MockFactory {
     }
 
     "return null by default" in {
-      val m = stubFunction[String]
-      expect(null) { m() }
-      verifyExpectations
+      withExpectations {
+        val m = stubFunction[String]
+        expect(null) { m() }
+      }
     }
     
     //! TODO - why is this failing?
     "return a null-like default value for non reference types" ignore {
-      val m = stubFunction[Int]
-      expect(0) { m() }
-      verifyExpectations
+      withExpectations {
+        val m = stubFunction[Int]
+        expect(0) { m() }
+      }
     }
     
     "return what they're told to" in {
-      val m = stubFunction[String]
-      m.when().returns("a return value")
-      expect("a return value") { m() }
-      verifyExpectations
+      withExpectations {
+        val m = stubFunction[String]
+        m.when().returns("a return value")
+        expect("a return value") { m() }
+      }
     }
     
     "throw what they're told to" in {
-      val m = stubFunction[String]
-      m.when().throws(new TestException)
-      intercept[TestException]{ m() }
-      verifyExpectations
+      withExpectations {
+        val m = stubFunction[String]
+        m.when().throws(new TestException)
+        intercept[TestException]{ m() }
+      }
     }
     
     "default to anyNumberOfTimes" in {
-      val m = stubFunction[String]
-      m.when().returns("a return value")
-      expect("a return value") { m() }
-      expect("a return value") { m() }
-      expect("a return value") { m() }
-      verifyExpectations
+      withExpectations {
+        val m = stubFunction[String]
+        m.when().returns("a return value")
+        expect("a return value") { m() }
+        expect("a return value") { m() }
+        expect("a return value") { m() }
+      }
     }
     
     "unless told otherwise" in {
-      val m = stubFunction[String]
-      m.when().returns("a return value").twice
-      expect("a return value") { m() }
-      expect("a return value") { m() }
-      expect(null) { m() }
-      verifyExpectations
+      withExpectations {
+        val m = stubFunction[String]
+        m.when().returns("a return value").twice
+        expect("a return value") { m() }
+        expect("a return value") { m() }
+        expect(null) { m() }
+      }
     }
     
     "match literal arguments" in {
-      val m = stubFunction[String, Int, Int]
-      m("foo", 42)
-      m.verify("foo", 42)
-      verifyExpectations
+      withExpectations {
+        val m = stubFunction[String, Int, Int]
+        m("foo", 42)
+        m.verify("foo", 42)
+      }
     }
     
     "match wildcard arguments" in {
-      val m = stubFunction[String, Int, Int]
-      m("foo", 42)
-      m.verify(*, 42)
-      verifyExpectations
+      withExpectations {
+        val m = stubFunction[String, Int, Int]
+        m("foo", 42)
+        m.verify(*, 42)
+      }
     }
     
     "match epsilon arguments" in {
-      val m = stubFunction[String, Double, Int]
-      m("foo", 1.0001)
-      m.verify("foo", ~1.0)
-      verifyExpectations
+      withExpectations {
+        val m = stubFunction[String, Double, Int]
+        m("foo", 1.0001)
+        m.verify("foo", ~1.0)
+      }
     }
 
     "fail if an expectation is not met" in {
-      val m = stubFunction[String, Int, Int]
-      m.verify("foo", 42)
-      intercept[ExpectationException] { verifyExpectations }
+      intercept[ExpectationException](withExpectations {
+        val m = stubFunction[String, Int, Int]
+        m.verify("foo", 42)
+      })
     }
 
     "fail if a method isn't called often enough" in {
-      val m = stubFunction[String, Int, Int]
-      m("foo", 42)
-      m.verify("foo", 42).twice
-      intercept[ExpectationException] { verifyExpectations }
+      intercept[ExpectationException](withExpectations {
+        val m = stubFunction[String, Int, Int]
+        m("foo", 42)
+        m.verify("foo", 42).twice
+      })
     }
       
     "fail if a method is called too often" in {
-      val m = stubFunction[String, Int, Int]
-      m("foo", 42)
-      m("foo", 42)
-      m("foo", 42)
-      m.verify("foo", 42).twice
-      intercept[ExpectationException] { verifyExpectations }
+      intercept[ExpectationException](withExpectations {
+        val m = stubFunction[String, Int, Int]
+        m("foo", 42)
+        m("foo", 42)
+        m("foo", 42)
+        m.verify("foo", 42).twice
+      })
     }
     
     "match arguments" - {
       "when stubbing" in {
-        val m = stubFunction[Int, Int, String]
-        m.when(where { _ < _ }).returns("lower")
-        m.when(where { _ > _ }).returns("higher")
-        expect("lower"){ m(1, 2) }
-        expect("higher"){ m(2, 1) }
-        verifyExpectations
+        withExpectations {
+          val m = stubFunction[Int, Int, String]
+          m.when(where { _ < _ }).returns("lower")
+          m.when(where { _ > _ }).returns("higher")
+          expect("lower"){ m(1, 2) }
+          expect("higher"){ m(2, 1) }
+        }
       }
       
       "when verifying" in {
-        val m = stubFunction[Int, Int, String]
-        m(1, 2)
-        m(2, 1)
-        m(2, 1)
-        m.verify(where { _ < _}).once
-        m.verify(where { _ > _}).twice
-        verifyExpectations
+        withExpectations {
+          val m = stubFunction[Int, Int, String]
+          m(1, 2)
+          m(2, 1)
+          m(2, 1)
+          m.verify(where { _ < _}).once
+          m.verify(where { _ > _}).twice
+        }
       }
     }
     
     "handle a degenerate sequence" in {
-      val m = stubFunction[Int, Int]
-      m(42)
-      inSequence {
-        m.verify(42)
+      withExpectations {
+        val m = stubFunction[Int, Int]
+        m(42)
+        inSequence {
+          m.verify(42)
+        }
       }
-      verifyExpectations
     }
     
     "handle a sequence of calls" in {
-      val m = stubFunction[Int, Int]
-      repeat(5) { m(42) }
-      repeat(1) { m(43) }
-      repeat(2) { m(44) }
-      inSequence {
-        m.verify(42).repeated(3 to 7)
-        m.verify(43).once
-        m.verify(44).twice
+      withExpectations {
+        val m = stubFunction[Int, Int]
+        repeat(5) { m(42) }
+        repeat(1) { m(43) }
+        repeat(2) { m(44) }
+        inSequence {
+          m.verify(42).repeated(3 to 7)
+          m.verify(43).once
+          m.verify(44).twice
+        }
       }
-      verifyExpectations
     }
     
     "fail if functions are called out of sequence" in {
-      val m = stubFunction[Int, Int]
-      repeat(5) { m(42) }
-      m(44)
-      inSequence {
-        m.verify(42).repeated(3 to 7)
-        m.verify(43).once
-        m.verify(44).twice
-      }
-      intercept[ExpectationException] { verifyExpectations }
+      intercept[ExpectationException](withExpectations {
+        val m = stubFunction[Int, Int]
+        repeat(5) { m(42) }
+        m(44)
+        inSequence {
+          m.verify(42).repeated(3 to 7)
+          m.verify(43).once
+          m.verify(44).twice
+        }
+      })
     }
     
     "fail if the entire sequence isn't called" in {
-      val m = stubFunction[Int, Int]
-      repeat(5) { m(42) }
-      repeat(1) { m(43) }
-      inSequence {
-        m.verify(42).repeated(3 to 7)
-        m.verify(43).once
-        m.verify(44).twice
-      }
-      intercept[ExpectationException] { verifyExpectations }
+      intercept[ExpectationException](withExpectations {
+        val m = stubFunction[Int, Int]
+        repeat(5) { m(42) }
+        repeat(1) { m(43) }
+        inSequence {
+          m.verify(42).repeated(3 to 7)
+          m.verify(43).once
+          m.verify(44).twice
+        }
+      })
     }
 
     "handle a combination of ordered and unordered expectations" in {
-      val m = stubFunction[Int, Unit]
-      
-      m(21)
-      m(31)
-      m(11)
-      m(12)
-      m(1)
-      m(32)
-      m(41)
-      m(13)
-
-      m.verify(1)
-      inSequence {
-        m.verify(11)
-        m.verify(12)
-        m.verify(13)
-      }
-      m.verify(21)
-      inSequence {
-        m.verify(31)
-        m.verify(32)
-      }
-      m.verify(41)
-      
-      verifyExpectations
+      withExpectations {
+        val m = stubFunction[Int, Unit]
+        
+        m(21)
+        m(31)
+        m(11)
+        m(12)
+        m(1)
+        m(32)
+        m(41)
+        m(13)
+  
+        m.verify(1)
+        inSequence {
+          m.verify(11)
+          m.verify(12)
+          m.verify(13)
+        }
+        m.verify(21)
+        inSequence {
+          m.verify(31)
+          m.verify(32)
+        }
+        m.verify(41)
+      }      
     }
 
     "handle a sequence in which functions are called zero times" in {
-      val m = stubFunction[Int, Unit]
-      m(1)
-      m(4)
-      inSequence {
-        m.verify(1).once
-        m.verify(2).never
-        m.verify(3).anyNumberOfTimes
-        m.verify(4).once
+      withExpectations {
+        val m = stubFunction[Int, Unit]
+        m(1)
+        m(4)
+        inSequence {
+          m.verify(1).once
+          m.verify(2).never
+          m.verify(3).anyNumberOfTimes
+          m.verify(4).once
+        }
       }
-      verifyExpectations
     }
 
     "handle valid deeply nested expectation contexts" in {
-      val m = stubFunction[String, Unit]
-      
-      m("2.1")
-      m("1")
-      m("2.2.3")
-      m("2.2.2.1")
-      m("2.2.2.2")
-      m("2.2.1")
-      m("3")
-      m("2.2.3")
-      m("2.3")
-      
-      m.verify("1")
-      inSequence {
-        m.verify("2.1")
-        inAnyOrder {
-          m.verify("2.2.1")
-          inSequence {
-            m.verify("2.2.2.1")
-            m.verify("2.2.2.2")
+      withExpectations {
+        val m = stubFunction[String, Unit]
+        
+        m("2.1")
+        m("1")
+        m("2.2.3")
+        m("2.2.2.1")
+        m("2.2.2.2")
+        m("2.2.1")
+        m("3")
+        m("2.2.3")
+        m("2.3")
+        
+        m.verify("1")
+        inSequence {
+          m.verify("2.1")
+          inAnyOrder {
+            m.verify("2.2.1")
+            inSequence {
+              m.verify("2.2.2.1")
+              m.verify("2.2.2.2")
+            }
+            m.verify("2.2.3").anyNumberOfTimes
           }
-          m.verify("2.2.3").anyNumberOfTimes
+          m.verify("2.3")
         }
-        m.verify("2.3")
-      }
-      m.verify("3")
-      
-      verifyExpectations
+        m.verify("3")
+      }      
     }
 
     "handle invalid deeply nested expectation contexts" in {
-      val m = stubFunction[String, Unit]
-      
-      m("2.1")
-      m("1")
-      m("2.2.3")
-      m("2.2.2.2")
-
-      m.verify("1")
-      inSequence {
-        m.verify("2.1")
-        inAnyOrder {
-          m.verify("2.2.1")
-          inSequence {
-            m.verify("2.2.2.1")
-            m.verify("2.2.2.2")
+      intercept[ExpectationException](withExpectations {
+        val m = stubFunction[String, Unit]
+        
+        m("2.1")
+        m("1")
+        m("2.2.3")
+        m("2.2.2.2")
+  
+        m.verify("1")
+        inSequence {
+          m.verify("2.1")
+          inAnyOrder {
+            m.verify("2.2.1")
+            inSequence {
+              m.verify("2.2.2.1")
+              m.verify("2.2.2.2")
+            }
+            m.verify("2.2.3")
           }
-          m.verify("2.2.3")
+          m.verify("2.3")
         }
-        m.verify("2.3")
-      }
-      m.verify("3")
-    
-      intercept[ExpectationException] { verifyExpectations }
+        m.verify("3")
+      })    
     }
     
     "cope with multiple stubs" in {
-      val m1 = stubFunction[Int, String]
-      val m2 = stubFunction[Int, String]
-      
-      m1.when(42).returns("m1")
-      m2.when(42).returns("m2")
-      
-      expect("m1") { m1(42) }
-      expect("m2") { m2(42) }
-      
-      m1.verify(42).once
-      m2.verify(42).once
-      
-      verifyExpectations
+      withExpectations {
+        val m1 = stubFunction[Int, String]
+        val m2 = stubFunction[Int, String]
+        
+        m1.when(42).returns("m1")
+        m2.when(42).returns("m2")
+        
+        expect("m1") { m1(42) }
+        expect("m2") { m2(42) }
+        
+        m1.verify(42).once
+        m2.verify(42).once
+      }      
     }
   }
 }

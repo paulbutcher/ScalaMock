@@ -50,127 +50,144 @@ class MockTest extends FreeSpec with MockFactory {
   
   "Mocks should" - {
     "fail if an unexpected method call is made" in {
-      val m = mock[TestTrait]
-      intercept[ExpectationException] { m.oneParam(42) }
+      withExpectations {
+        val m = mock[TestTrait]
+        intercept[ExpectationException] { m.oneParam(42) }
+      }
     }
     
     "allow expectations to be set" in {
-      val m = mock[TestTrait]
-      (m.twoParams _).expects(42, 1.23).returning("a return value")
-      expect("a return value") { m.twoParams(42, 1.23) }
-      verifyExpectations
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.twoParams _).expects(42, 1.23).returning("a return value")
+        expect("a return value") { m.twoParams(42, 1.23) }
+      }
     }
     
     "cope with nullary methods" in {
-      val m = mock[TestTrait]
-      (m.nullary _).expects().returning("a return value")
-      expect("a return value") { m.nullary }
-      verifyExpectations
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.nullary _).expects().returning("a return value")
+        expect("a return value") { m.nullary }
+      }
     }
     
     "cope with overloaded methods" in {
-      val m = mock[TestTrait]
-      (m.overloaded(_: Int)).expects(10).returning("got an integer")
-      (m.overloaded(_: Int, _: Double)).expects(10, 1.23).returning("got two parameters")
-      expect("got an integer") { m.overloaded(10) }
-      expect("got two parameters") { m.overloaded(10, 1.23) }
-      verifyExpectations
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.overloaded(_: Int)).expects(10).returning("got an integer")
+        (m.overloaded(_: Int, _: Double)).expects(10, 1.23).returning("got two parameters")
+        expect("got an integer") { m.overloaded(10) }
+        expect("got two parameters") { m.overloaded(10, 1.23) }
+      }
     }
     
     "cope with infix operators" in {
-      val m1 = mock[TestTrait]
-      val m2 = mock[TestTrait]
-      val m3 = mock[TestTrait]
-      (m1.+ _).expects(m2).returning(m3)
-      expect(m3) { m1 + m2 }
-      verifyExpectations
+      withExpectations {
+        val m1 = mock[TestTrait]
+        val m2 = mock[TestTrait]
+        val m3 = mock[TestTrait]
+        (m1.+ _).expects(m2).returning(m3)
+        expect(m3) { m1 + m2 }
+      }
     }
     
     "cope with curried methods" in {
-      val m = mock[TestTrait]
-      (m.curried(_: Int)(_: Double)).expects(10, 1.23).returning("curried method called")
-      val partial = m.curried(10) _
-      expect("curried method called") { partial(1.23) }
-      verifyExpectations
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.curried(_: Int)(_: Double)).expects(10, 1.23).returning("curried method called")
+        val partial = m.curried(10) _
+        expect("curried method called") { partial(1.23) }
+      }
     }
     
     "cope with polymorphic methods" in {
-      val m = mock[TestTrait]
-      (m.polymorphic(_: Int)).expects(42).returning("called with integer")
-      (m.polymorphic(_: String)).expects("foo").returning("called with string")
-      expect("called with integer") { m.polymorphic(42) }
-      expect("called with string") { m.polymorphic("foo") }
-      verifyExpectations
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.polymorphic(_: Int)).expects(42).returning("called with integer")
+        (m.polymorphic(_: String)).expects("foo").returning("called with string")
+        expect("called with integer") { m.polymorphic(42) }
+        expect("called with string") { m.polymorphic("foo") }
+      }
     }
     
     "cope with curried polymorphic methods" in {
-      val m = mock[TestTrait]
-      (m.polycurried(_: Int)(_: String)).expects(42, "foo").returning("it works")
-      val partial = m.polycurried(42) _
-      expect("it works") { partial("foo") }
-      verifyExpectations
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.polycurried(_: Int)(_: String)).expects(42, "foo").returning("it works")
+        val partial = m.polycurried(42) _
+        expect("it works") { partial("foo") }
+      }
     }
     
     "cope with parameters of polymorphic type" in {
-      val m = mock[TestTrait]
-      (m.polymorphicParam _).expects((42, 1.23)).returning("it works")
-      expect("it works") { m.polymorphicParam((42, 1.23)) }
-      verifyExpectations
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.polymorphicParam _).expects((42, 1.23)).returning("it works")
+        expect("it works") { m.polymorphicParam((42, 1.23)) }
+      }
     }
 
     "cope with methods with repeated parameters" in {
-      val m = mock[TestTrait]
-      val f: (Int, String*) => String = m.repeatedParam _
-      (m.repeatedParam _).expects(42, Seq("foo", "bar"))
-      m.repeatedParam(42, "foo", "bar")
-      verifyExpectations
+      withExpectations {
+        val m = mock[TestTrait]
+        val f: (Int, String*) => String = m.repeatedParam _
+        (m.repeatedParam _).expects(42, Seq("foo", "bar"))
+        m.repeatedParam(42, "foo", "bar")
+      }
     }
     
     "cope with methods with by name parameters" in {
-      val m = mock[TestTrait]
-      (m.byNameParam _).expects(*).returning("it worked")
-      expect("it worked") { m.byNameParam(42) }
-      verifyExpectations
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.byNameParam _).expects(*).returning("it worked")
+        expect("it worked") { m.byNameParam(42) }
+      }
     }
     
     //! TODO - find a way to make this less ugly
     "match methods with by name parameters" in {
-      val m = mock[TestTrait]
-      val f: (=> Int) => Boolean = { x => x == 1 && x == 2  }
-      ((m.byNameParam _): (=> Int) => String).expects(new FunctionAdapter1(f)).returning("it works")
-      var y = 0
-      expect("it works") { m.byNameParam { y += 1; y } }
-      verifyExpectations
+      withExpectations {
+        val m = mock[TestTrait]
+        val f: (=> Int) => Boolean = { x => x == 1 && x == 2  }
+        ((m.byNameParam _): (=> Int) => String).expects(new FunctionAdapter1(f)).returning("it works")
+        var y = 0
+        expect("it works") { m.byNameParam { y += 1; y } }
+      }
     }
   }
   
   "Stubs should" - {
     "return null unless told otherwise" in {
-      val m = stub[TestTrait]
-      expect(null) { m.oneParam(42) }
-      verifyExpectations
+      withExpectations {
+        val m = stub[TestTrait]
+        expect(null) { m.oneParam(42) }
+      }
     }
     
     "return what they're told to" in {
-      val m = stub[TestTrait]
-      (m.twoParams _).when(42, 1.23).returns("a return value")
-      expect("a return value") { m.twoParams(42, 1.23) }
-      verifyExpectations
+      withExpectations {
+        val m = stub[TestTrait]
+        (m.twoParams _).when(42, 1.23).returns("a return value")
+        expect("a return value") { m.twoParams(42, 1.23) }
+      }
     }
     
     "verify calls" in {
-      val m = stub[TestTrait]
-      m.twoParams(42, 1.23)
-      m.twoParams(42, 1.23)
-      (m.twoParams _).verify(42, 1.23).twice
-      verifyExpectations
+      withExpectations {
+        val m = stub[TestTrait]
+        m.twoParams(42, 1.23)
+        m.twoParams(42, 1.23)
+        (m.twoParams _).verify(42, 1.23).twice
+      }
     }
     
     "fail when verification fails" in {
-      val m = stub[TestTrait]
-      m.twoParams(42, 1.00)
-      (m.twoParams _).verify(42, 1.23).once
-      intercept[ExpectationException] { verifyExpectations }
+      intercept[ExpectationException](withExpectations {
+        val m = stub[TestTrait]
+        m.twoParams(42, 1.00)
+        (m.twoParams _).verify(42, 1.23).once
+      })
     }
   }
 }
