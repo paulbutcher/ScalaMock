@@ -26,19 +26,6 @@ trait MockFactoryBase extends Mock {
   
   type ExpectationException <: Exception
   
-  protected def resetExpectations() {
-    callLog.clear
-    expectationContext = new UnorderedHandlers
-  }
-  
-  protected def verifyExpectations() {
-    callLog foreach expectationContext.verify _
-    if (!expectationContext.isSatisfied)
-      reportUnsatisfiedExpectation
-    
-    expectationContext = null
-  }
-  
   protected def withExpectations(what: => Unit) {
     resetExpectations
     what
@@ -144,6 +131,19 @@ trait MockFactoryBase extends Mock {
     throw newExpectationException(s"Unsatisfied expectation:\n\n$errorContext", 0)
   
   protected def newExpectationException(message: String, stackDepth: Int): ExpectationException
+  
+  private def resetExpectations() {
+    callLog.clear
+    expectationContext = new UnorderedHandlers
+  }
+  
+  private def verifyExpectations() {
+    callLog foreach expectationContext.verify _
+    if (!expectationContext.isSatisfied)
+      reportUnsatisfiedExpectation
+    
+    expectationContext = null
+  }
   
   private def errorContext =
     s"Expected:\n$expectationContext\n\nActual:\n$callLog"
