@@ -22,6 +22,7 @@ package org.scalamock.scalatest
 
 import org.scalamock.MockFactoryBase
 import org.scalatest.{AbstractSuite, Reporter, Stopper, Suite, Tracker}
+import org.scalatest.exceptions.TestFailedException
 
 /** Trait that can be mixed into a [[http://www.scalatest.org/ ScalaTest]] suite to provide
   * mocking support.
@@ -29,6 +30,8 @@ import org.scalatest.{AbstractSuite, Reporter, Stopper, Suite, Tracker}
   * See [[org.scalamock]] for overview documentation.
   */
 trait MockFactory extends AbstractSuite with MockFactoryBase { this: Suite =>
+  
+  type ExpectationException = RuntimeException
   
   // Copied from BeforeAndAfterEach:
   // On advice from Bill Venners, we shouldn't use BeforeAndAfterEach here to 
@@ -64,6 +67,9 @@ trait MockFactory extends AbstractSuite with MockFactoryBase { this: Suite =>
       }
     }
   }
+  
+  protected def newExpectationException(message: String, stackDepth: Int) = 
+    new RuntimeException(message)
 
   protected var autoVerify = true
 }

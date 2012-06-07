@@ -24,6 +24,8 @@ import collection.mutable.ListBuffer
 trait MockFactoryBase extends Mock {
   import language.implicitConversions
   
+  type ExpectationException <: Exception
+  
   protected def resetExpectations() {
     callLog.clear
     expectationContext = new UnorderedHandlers
@@ -130,10 +132,12 @@ trait MockFactoryBase extends Mock {
   }
   
   private[scalamock] def reportUnexpectedCall(call: Call) =
-    throw new ExpectationException(s"Unexpected call: $call\n\n$errorContext")
+    throw newExpectationException(s"Unexpected call: $call\n\n$errorContext", 0)
   
   private def reportUnsatisfiedExpectation() =
-    throw new ExpectationException(s"Unsatisfied expectation:\n\n$errorContext")
+    throw newExpectationException(s"Unsatisfied expectation:\n\n$errorContext", 0)
+  
+  protected def newExpectationException(message: String, stackDepth: Int): ExpectationException
   
   private def errorContext =
     s"Expected:\n$expectationContext\n\nActual:\n$callLog"
