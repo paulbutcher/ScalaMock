@@ -32,7 +32,8 @@ package org
  *   - Generated (type-safe) mocks.
  *
  * In all cases, mix the relevant `MockFactory` trait into your test class. For ScalaTest use
- * [[org.scalamock.scalatest.MockFactory]], and for JUnit3 use [[org.scalamock.junit3.MockFactory]].
+ * [[org.scalamock.scalatest.MockFactory]], for JUnit3 use [[org.scalamock.junit3.MockFactory]],
+ * and for Specs2 use [[org.scalamock.specs2.MockFactory]].
  *
  * ==Function mocks==
  *
