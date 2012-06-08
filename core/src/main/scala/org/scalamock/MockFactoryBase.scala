@@ -125,12 +125,12 @@ trait MockFactoryBase extends Mock {
   }
   
   private[scalamock] def reportUnexpectedCall(call: Call) =
-    throw newExpectationException(s"Unexpected call: $call\n\n$errorContext", 0)
+    throw newExpectationException(s"Unexpected call: $call\n\n$errorContext", Some(call.target.name))
   
   private def reportUnsatisfiedExpectation() =
-    throw newExpectationException(s"Unsatisfied expectation:\n\n$errorContext", 0)
+    throw newExpectationException(s"Unsatisfied expectation:\n\n$errorContext")
   
-  protected def newExpectationException(message: String, stackDepth: Int): ExpectationException
+  protected def newExpectationException(message: String, methodName: Option[Symbol] = None): ExpectationException
   
   private def resetExpectations() {
     callLog.clear

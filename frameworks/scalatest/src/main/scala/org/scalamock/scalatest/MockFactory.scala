@@ -31,7 +31,7 @@ import org.scalatest.exceptions.TestFailedException
   */
 trait MockFactory extends AbstractSuite with MockFactoryBase { this: Suite =>
   
-  type ExpectationException = RuntimeException
+  type ExpectationException = TestFailedException
   
   override def withFixture(test: NoArgTest) {
 
@@ -41,8 +41,14 @@ trait MockFactory extends AbstractSuite with MockFactoryBase { this: Suite =>
       test()
   }
   
-  protected def newExpectationException(message: String, stackDepth: Int) = 
-    new RuntimeException(message)
+  protected def newExpectationException(message: String, methodName: Option[Symbol]) = 
+    new TestFailedException(_ => Some(message), None, {e =>
+        e.getStackTrace indexWhere { s =>
+          !s.getClassName.startsWith("org.scalamock") && !s.getClassName.startsWith("org.scalatest") &&
+          !(s.getMethodName == "newExpectationException") && !(s.getMethodName == "reportUnexpectedCall") &&
+          !(methodName.isDefined && s.getMethodName == methodName.get.name)
+        }
+      })
 
   protected var autoVerify = true
 }

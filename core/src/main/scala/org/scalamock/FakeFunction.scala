@@ -27,7 +27,7 @@ trait NiceToString { self: FakeFunction =>
   override def toString = name.name.toString
 }
 
-abstract class FakeFunction(protected val factory: MockFactoryBase, protected val name: Symbol) {
+abstract class FakeFunction(protected val factory: MockFactoryBase, private[scalamock] val name: Symbol) {
   
   def handle(arguments: Product): Any = {
     val call = new Call(this, arguments)
