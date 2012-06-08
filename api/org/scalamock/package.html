@@ -29,7 +29,8 @@
       </h4>
       
           <div class="fullcommenttop" id="comment"><div class="comment cmt"><h3>ScalaMock: Native Scala mocking</h3><p>ScalaMock supports three different mocking styles:</p><ul><li>Function mocks.</li><li>Proxy (type-unsafe) mocks.</li><li>Generated (type-safe) mocks.</li></ul><p>In all cases, mix the relevant <code>MockFactory</code> trait into your test class. For ScalaTest use
-<a name="org.scalamock.scalatest.MockFactory" class="extype" href="scalatest/MockFactory.html">MockFactory</a>, and for JUnit3 use <a name="org.scalamock.junit3.MockFactory" class="extype" href="junit3/MockFactory.html">MockFactory</a>.</p><h4>Function mocks</h4><p>Function mocks are created with <code>mockFunction</code>. The following, for example, creates a mock
+<a name="org.scalamock.scalatest.MockFactory" class="extype" href="scalatest/MockFactory.html">MockFactory</a>, for JUnit3 use <a name="org.scalamock.junit3.MockFactory" class="extype" href="junit3/MockFactory.html">MockFactory</a>,
+and for Specs2 use <a name="org.scalamock.specs2.MockFactory" class="extype" href="specs2/MockFactory.html">MockFactory</a>.</p><h4>Function mocks</h4><p>Function mocks are created with <code>mockFunction</code>. The following, for example, creates a mock
 function taking a single <code>Int</code> argument and returning a <code>String</code>:</p><pre>
 val m = mockFunction[Int, String]
 </pre><p>Expectations then can be set on a mock function. The following, for example, says that we expect our
@@ -805,7 +806,18 @@ verbose error messages.</p>
 
         <div class="values members" id="values">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="org.scalamock.MatchEpsilon" data-isabs="false">
+              <ol><li visbl="pub" name="org.scalamock.ClassLoaderStrategy" data-isabs="false">
+      <a id="ClassLoaderStrategy:ClassLoaderStrategy"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="ClassLoaderStrategy$.html"><span class="name">ClassLoaderStrategy</span></a>
+        
+        <span class="result"> extends AnyRef</span>
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.scalamock.MatchEpsilon" data-isabs="false">
       <a id="MatchEpsilon:MatchEpsilon"></a>
       <h4 class="signature">
       <span class="kind">object</span>
@@ -838,6 +850,17 @@ verbose error messages.</p>
       </span>
       </h4>
       
+    </li><li visbl="pub" name="org.scalamock.classClassLoaderStrategy" data-isabs="false">
+      <a id="classClassLoaderStrategy:classClassLoaderStrategy"></a>
+      <h4 class="signature">
+      <span class="kind">object</span>
+      <span class="symbol"> 
+        <a href="classClassLoaderStrategy$.html"><span class="name">classClassLoaderStrategy</span></a>
+        
+        <span class="result"> extends ClassLoaderStrategy</span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="org.scalamock.junit3" data-isabs="false">
       <a id="junit3:junit3"></a>
       <h4 class="signature">
@@ -855,6 +878,17 @@ verbose error messages.</p>
       <span class="kind">package</span>
       <span class="symbol"> 
         <a href="scalatest/package.html"><span class="name">scalatest</span></a>
+        
+        
+      </span>
+      </h4>
+      
+    </li><li visbl="pub" name="org.scalamock.specs2" data-isabs="false">
+      <a id="specs2:specs2"></a>
+      <h4 class="signature">
+      <span class="kind">package</span>
+      <span class="symbol"> 
+        <a href="specs2/package.html"><span class="name">specs2</span></a>
         
         
       </span>
