@@ -32,8 +32,7 @@ object ScalaMockBuild extends Build {
     version := "2.4",
     crossScalaVersions := Seq("2.8.1", "2.8.2", "2.9.0", "2.9.0-1", "2.9.1", "2.9.2"),
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings"),
-    resolvers ++= Seq("snapshots" at "http://oss.sonatype.org/content/repositories/snapshots",
-                      "releases"  at "http://oss.sonatype.org/content/repositories/releases"),
+    resolvers += "snapshots" at "http://oss.sonatype.org/content/repositories/snapshots",
 
     publishTo <<= version { v =>
       val nexus = "https://oss.sonatype.org/"
