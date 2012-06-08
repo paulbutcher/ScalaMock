@@ -36,12 +36,10 @@ trait MockFactory extends MockFactoryBase with AroundExample { self: ArgumentsSh
   type ExpectationException = RuntimeException
 
   protected def around[T <% Result](body: => T) = {
-    var r: Result = null
     if (autoVerify)
-      withExpectations { r = body }
+      withExpectations { body }
     else
-      r = body
-    r
+      body
   }
 
   protected def newExpectationException(message: String, methodName: Option[Symbol]) =

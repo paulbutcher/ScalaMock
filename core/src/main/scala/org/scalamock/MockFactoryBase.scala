@@ -26,10 +26,11 @@ trait MockFactoryBase extends Mock {
   
   type ExpectationException <: Exception
   
-  protected def withExpectations(what: => Unit) {
+  protected def withExpectations[T](what: => T): T = {
     resetExpectations
-    what
+    val r = what
     verifyExpectations
+    r
   }
   
   protected def inAnyOrder(what: => Unit) {
