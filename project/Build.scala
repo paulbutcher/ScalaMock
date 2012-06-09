@@ -24,7 +24,7 @@ import sbt.inc.Analysis
 
 object BuildSettings {
   val buildVersion = "3.0-SNAPSHOT"
-  val buildScalaVersion = "2.10.0-M3"
+  val buildScalaVersion = "2.10.0-SNAPSHOT"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
     organization := "org.scalamock",
@@ -90,8 +90,9 @@ object ShellPrompt {
 }
 
 object Dependencies {
-  val scalatest = "org.scalatest" %% "scalatest" % "1.8-SNAPSHOT"
-  val specs2 = "org.specs2" %% "specs2" % "1.9"
+  val scalatest = "org.scalatest" % "scalatest_2.10.0-M3" % "1.8-SNAPSHOT"
+  val specs2 = "org.specs2" % "specs2_2.10.0-M3" % "1.9"
+  val reflect = "org.scala-lang" % "scala-reflect" % "2.10.0-SNAPSHOT"
 }
 
 object ScalaMockBuild extends Build {
@@ -113,7 +114,8 @@ object ScalaMockBuild extends Build {
     "core", 
     file("core"),
     settings = buildSettings ++ Seq(
-      name := "ScalaMock Core"
+      name := "ScalaMock Core",
+	  libraryDependencies += reflect
     ))
 
   lazy val scalatestSupport = Project(
