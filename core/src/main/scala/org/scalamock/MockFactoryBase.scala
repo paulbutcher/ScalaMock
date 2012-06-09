@@ -121,6 +121,7 @@ trait MockFactoryBase extends Mock {
   }
   
   private[scalamock] def add[E <: CallHandler[_]](e: E) = {
+    assert(expectationContext != null, "Null expectationContext - missing withExpectations?")
     expectationContext.add(e)
     e
   }
