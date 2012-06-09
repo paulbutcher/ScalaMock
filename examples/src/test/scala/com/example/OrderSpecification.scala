@@ -29,20 +29,14 @@ import org.scalamock.specs2.MockFactory
  */
 class OrderSpecification extends Specification with MockFactory {
   import language.postfixOps
-
-  val hasInventoryMock = mockFunction[String, Int, Boolean]
-  val removeMock = mockFunction[String, Int, Unit]
-
-  val mockWarehouse = new Warehouse {
-    def hasInventory(product: String, quantity: Int) = hasInventoryMock(product, quantity)
-    def remove(product: String, quantity: Int) = removeMock(product, quantity)
-  }
+  
+  val mockWarehouse = mock[Warehouse]
 
   "An order" should  {
     "remove inventory when in stock" in {
       inSequence {
-        hasInventoryMock expects ("Talisker", 50) returning true once;
-        removeMock expects ("Talisker", 50) once
+        (mockWarehouse.hasInventory _) expects ("Talisker", 50) returning true once;
+        (mockWarehouse.remove _) expects ("Talisker", 50) once
       }
       val order = new Order("Talisker", 50)
       order.fill(mockWarehouse)
@@ -50,7 +44,7 @@ class OrderSpecification extends Specification with MockFactory {
     }
 
     "remove nothing when out of stock" in {
-      hasInventoryMock expects (*, *) returns false once
+      (mockWarehouse.hasInventory _) expects (*, *) returns false once
       val order = new Order("Talisker", 50)
       order.fill(mockWarehouse)
       order.isFilled must beFalse
