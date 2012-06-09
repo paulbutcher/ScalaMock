@@ -26,7 +26,7 @@ import org.scalamock.scalatest.MockFactory
 // This is a reworked version of the example from Martin Fowler's article
 // Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
 class OrderTest extends WordSpec with MockFactory {
-import language.postfixOps
+  import language.postfixOps
   
   "An order" when {
     "in stock" should {

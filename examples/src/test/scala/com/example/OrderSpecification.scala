@@ -28,6 +28,8 @@ import org.scalamock.specs2.MockFactory
  * Martin Fowler's article Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
  */
 class OrderSpecification extends Specification with MockFactory {
+  import language.postfixOps
+
   val hasInventoryMock = mockFunction[String, Int, Boolean]
   val removeMock = mockFunction[String, Int, Unit]
 
