@@ -28,27 +28,6 @@ class MockTest extends FreeSpec with MockFactory {
   
   autoVerify = false
   
-  trait TestTrait {
-    def nullary: String
-    def noParams(): String
-    def oneParam(x: Int): String
-    def twoParams(x: Int, y: Double): String
-    
-    def overloaded(x: Int): String
-    def overloaded(x: String): String
-    def overloaded(x: Int, y: Double): String
-    
-    def +(x: TestTrait): TestTrait
-    
-    def curried(x: Int)(y: Double): String
-    def polymorphic[T](x: T): String
-    def polycurried[T1, T2](x: T1)(y: T2): String
-    def polymorphicParam(x: (Int, Double)): String
-    def repeatedParam(x: Int, ys: String*): String
-
-    def byNameParam(x: => Int): String
-  }
-  
   "Mocks should" - {
     "fail if an unexpected method call is made" in {
       withExpectations {
