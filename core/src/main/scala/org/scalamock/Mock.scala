@@ -332,22 +332,18 @@ object MockImpl {
         "mock$"+ name +"$0"
       }    
     }
-
-    val (obj, name) = f.tree match {
-      case Block(_, Function(_, Apply(Select(o, n), _))) => (o, n)
-      case Block(_, Function(_, Apply(TypeApply(Select(o, n), _), _))) => (o, n)
-      case Typed(Block(_, Function(_, Apply(Select(o, n), _))), _) => (o, n)
-      case Function(_, Select(o, n)) => (o, n)
-      case Function(_, Apply(Select(o, n), _)) => (o, n)
-      case Function(_, Apply(Apply(Select(o, n), _), _)) => (o, n)
-      case Function(_, Apply(Apply(Apply(Select(o, n), _), _), _)) => (o, n)
-      case Function(_, Apply(Apply(Apply(Apply(Select(o, n), _), _), _), _)) => (o, n)
-      case Function(_, Apply(TypeApply(Select(o, n), _), _)) => (o, n)
-      case Function(_, Apply(Apply(TypeApply(Select(o, n), _), _), _)) => (o, n)
-      case Function(_, Apply(Apply(Apply(TypeApply(Select(o, n), _), _), _), _)) => (o, n)
-      case Function(_, Apply(Apply(Apply(Apply(TypeApply(Select(o, n), _), _), _), _), _)) => (o, n)
-      case _ => c.abort(c.enclosingPosition, "Unrecognised structure: "+ showRaw(f.tree))
+    
+    def findApplication(tree: Tree): (Tree, Name) = tree match {
+      case Select(o, n) => (o, n)
+      case Block(_, t) => findApplication(t)
+      case Typed(t, _) => findApplication(t)
+      case Function(_, t) => findApplication(t)
+      case Apply(t, _) => findApplication(t)
+      case TypeApply(t, _) => findApplication(t)
+      case _ => c.abort(c.enclosingPosition, "Unrecognised structure: "+ showRaw(tree))
     }
+
+    val (obj, name) = findApplication(f.tree)
     c.Expr(
       TypeApply(
         Select(
