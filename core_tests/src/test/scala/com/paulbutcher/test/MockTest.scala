@@ -153,6 +153,14 @@ class MockTest extends FreeSpec with MockFactory {
         expect(1234) { m.withImplementation(42) }
       }
     }
+    
+    "mock a polymorphic trait" in {
+      withExpectations {
+        val m = mock[PolymorphicTrait[String]]
+        (m.method[Double] _).expects(42, "foo", 1.23).returning("a return value")
+        expect("a return value") { m.method(42, "foo", 1.23) }
+      }
+    }
   }
   
   "Stubs should" - {
