@@ -164,7 +164,7 @@ object MockImpl {
       }
     
     def overrideIfNecessary(m: Symbol) =
-      if (Set("<init>", "$init$").contains(m.name.toString) || m.hasModifier(deferred))
+      if (nme.isConstructorName(m.name) || m.hasModifier(deferred))
         Modifiers()
       else
         Modifiers(Set(`override`))
