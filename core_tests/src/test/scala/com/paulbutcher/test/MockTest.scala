@@ -135,6 +135,16 @@ class MockTest extends FreeSpec with MockFactory {
         expect("it works") { m.byNameParam { y += 1; y } }
       }
     }
+    
+    "cope with a var" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.aVar_= _).expects("foo")
+        (m.aVar _).expects().returning("bar")
+        m.aVar = "foo"
+        expect("bar") { m.aVar }
+      }
+    }
   }
   
   "Stubs should" - {
