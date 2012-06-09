@@ -125,7 +125,7 @@ object MockImpl {
     }
     
     def paramTypes(methodType: Type): List[Type] =
-      paramss(methodType).flatten map { _.asTypeSymbol.asTypeIn(methodType) }
+      paramss(methodType).flatten map { _.typeSignatureIn(methodType) }
     
     def paramType(t: Type): Tree = {
       if (t.typeArguments.isEmpty)
@@ -139,7 +139,7 @@ object MockImpl {
     def buildParams(methodType: Type) =
       paramss(methodType) map { params =>
         params map { p =>
-          val pt = p.asTypeSymbol.asTypeIn(methodType)
+          val pt = p.typeSignatureIn(methodType)
           val sym = pt.typeSymbol
           val paramTypeTree = 
             if (sym hasFlag PARAM)
@@ -192,7 +192,7 @@ object MockImpl {
     }
     
     def forwarderImpl(m: Symbol, t: Type): DefDef = {
-      val mt = m.asTypeSymbol.asTypeIn(t)
+      val mt = m.typeSignatureIn(t)
       val body = Apply(
                    Select(Select(This(anon), mockFunctionName(m, t)), newTermName("apply")),
                    paramss(mt).flatten map { p => Ident(newTermName(p.name.toString)) })
@@ -241,7 +241,7 @@ object MockImpl {
     
     // val <|mockname|> = new MockFunctionN[T1, T2, ..., R](factory, '<|name|>)
     def mockMethod(m: Symbol, t: Type, factory: Tree, classTag: (Int) => TypeTag[_]): ValDef = {
-      val mt = m.asTypeSymbol.asTypeIn(t)
+      val mt = m.typeSignatureIn(t)
       val clazz = classTag(paramCount(mt))
       val types = (paramTypes(mt) map mockParamType _) :+ mockParamType(finalResultType(mt))
       ValDef(Modifiers(),
