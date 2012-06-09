@@ -145,6 +145,14 @@ class MockTest extends FreeSpec with MockFactory {
         expect("bar") { m.aVar }
       }
     }
+    
+    "cope with non-abstract methods" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.withImplementation _).expects(42).returning(1234)
+        expect(1234) { m.withImplementation(42) }
+      }
+    }
   }
   
   "Stubs should" - {

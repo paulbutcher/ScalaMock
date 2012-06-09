@@ -163,11 +163,17 @@ object MockImpl {
           TypeBoundsTree(Ident(staticClass("scala.Nothing")), Ident(staticClass("scala.Any"))))
       }
     
+    def overrideIfNecessary(m: Symbol) =
+      if (Set("<init>", "$init$").contains(m.name.toString) || m.hasModifier(deferred))
+        Modifiers()
+      else
+        Modifiers(Set(`override`))
+    
     // def <|name|>(p1: T1, p2: T2, ...): T = <|mockname|>(p1, p2, ...)
     def methodDef(m: Symbol, methodType: Type, body: Tree): DefDef = {
       val params = buildParams(methodType)
       DefDef(
-        Modifiers(),
+        overrideIfNecessary(m),
         m.name, 
         buildTypeParams(methodType), 
         params,
@@ -185,7 +191,7 @@ object MockImpl {
     }
     
     def forwarderImpl(m: Symbol, t: Type): DefDef = {
-      val mt = m.asTypeIn(t) 
+      val mt = m.asTypeIn(t)
       val body = Apply(
                    Select(Select(This(anon), mockFunctionName(m, t)), newTermName("apply")),
                    paramss(mt).flatten map { p => Ident(newTermName(p.name.toString)) })
