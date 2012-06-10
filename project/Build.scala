@@ -90,9 +90,10 @@ object ShellPrompt {
 }
 
 object Dependencies {
-  val scalatest = "org.scalatest" % "scalatest_2.10.0-M3" % "1.8-SNAPSHOT"
-  val specs2 = "org.specs2" % "specs2_2.10.0-M3" % "1.9"
+  // val scalatest = "org.scalatest" % "scalatest_2.10.0-M3" % "1.8-SNAPSHOT"
+  // val specs2 = "org.specs2" % "specs2_2.10.0-M3" % "1.9"
   val reflect = "org.scala-lang" % "scala-reflect" % "2.10.0-SNAPSHOT"
+  val actors = "org.scala-lang" % "scala-actors" % "2.10.0-SNAPSHOT"
 }
 
 object ScalaMockBuild extends Build {
@@ -103,12 +104,12 @@ object ScalaMockBuild extends Build {
     "ScalaMock", 
     file("."),
     settings = buildSettings ++ Seq(
-      compile in Compile := Analysis.Empty,
-      publishArtifact in (Compile, packageBin) := false,
-      publishArtifact in (Compile, packageSrc) := false,
-      sources in Compile <<= (Seq(core, scalatestSupport, specs2Support).map(sources in Compile in _).join).map(_.flatten),
-      libraryDependencies ++= Seq(scalatest, specs2)
-    )) aggregate(core, core_tests, scalatestSupport, specs2Support, examples)
+      compile in Compile := Analysis.Empty
+      // publishArtifact in (Compile, packageBin) := false,
+      // publishArtifact in (Compile, packageSrc) := false,
+      // sources in Compile <<= (Seq(core, scalatestSupport, specs2Support).map(sources in Compile in _).join).map(_.flatten),
+      // libraryDependencies ++= Seq(scalatest, specs2)
+    )) aggregate(core, core_tests, scalatestSupport, examples)
 
   lazy val core = Project(
     "core", 
@@ -123,16 +124,16 @@ object ScalaMockBuild extends Build {
     file("frameworks/scalatest"),
     settings = buildSettings ++ Seq(
       name := "ScalaMock ScalaTest Support",
-      libraryDependencies += scalatest
+      libraryDependencies += actors
     )) dependsOn(core)
 
-  lazy val specs2Support = Project(
-    "specs2", 
-    file("frameworks/specs2"),
-    settings = buildSettings ++ Seq(
-      name := "ScalaMock Specs2 Support",
-      libraryDependencies += specs2
-    )) dependsOn(core)
+  // lazy val specs2Support = Project(
+  //   "specs2", 
+  //   file("frameworks/specs2"),
+  //   settings = buildSettings ++ Seq(
+  //     name := "ScalaMock Specs2 Support",
+  //     libraryDependencies += specs2
+  //   )) dependsOn(core)
 
   lazy val core_tests = Project(
     "core_tests", 
@@ -150,5 +151,5 @@ object ScalaMockBuild extends Build {
       name := "ScalaMock Examples",
       publish := (),
       publishLocal := ()
-    )) dependsOn(scalatestSupport, specs2Support)
+    )) dependsOn(scalatestSupport)
 }
