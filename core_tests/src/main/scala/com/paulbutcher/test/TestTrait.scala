@@ -40,6 +40,8 @@ trait TestTrait {
   def byNameParam(x: => Int): String
   
   var aVar: String
+  var concreteVar = "foo"
+
   val aVal: String
   val concreteVal = "foo"
   

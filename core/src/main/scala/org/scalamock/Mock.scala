@@ -95,7 +95,7 @@ object MockImpl {
     import ctx.mirror._
     import ctx.universe._
     import Flag._
-    import language.reflectiveCalls    
+    import language.reflectiveCalls
     
     val anon = newTypeName("$anon") 
 
@@ -121,6 +121,9 @@ object MockImpl {
 
     //! TODO - remove this when isStable becomes part of macro API
     def isStable(s: Symbol) = s.asInstanceOf[{ def isStable: Boolean }].isStable
+    
+    //! TODO - remove this when isAccessor becomes part of the macro API
+    def isAccessor(s: Symbol) = s.asInstanceOf[{ def isAccessor: Boolean }].isAccessor
     
     def paramCount(methodType: Type): Int = methodType match {
       case MethodType(params, result) => params.length + paramCount(result)
@@ -319,7 +322,7 @@ object MockImpl {
     def mkMock[T: ctx.TypeTag](factory: ctx.Expr[MockFactoryBase], classTag: (Int) => TypeTag[_]) = {
       val tpe = typeTag[T].tpe
       val methodsToMock = membersNotInObject(tpe) filter { m => 
-        m.isMethod && (!isStable(m) || m.hasFlag(DEFERRED))
+        m.isMethod && (!(isStable(m) || isAccessor(m)) || m.hasFlag(DEFERRED))
       }
       val forwarders = (methodsToMock map (m => forwarderImpl(m, tpe)))
       val mocks = (methodsToMock map (m => mockMethod(m, tpe, factory.tree, classTag)))
