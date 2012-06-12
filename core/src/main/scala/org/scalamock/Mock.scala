@@ -318,7 +318,9 @@ object MockImpl {
 
     def mkMock[T: ctx.TypeTag](factory: ctx.Expr[MockFactoryBase], classTag: (Int) => TypeTag[_]) = {
       val tpe = typeTag[T].tpe
-      val methodsToMock = membersNotInObject(tpe)
+      val methodsToMock = membersNotInObject(tpe) filter { m => 
+        m.isMethod && (!isStable(m) || m.hasFlag(DEFERRED))
+      }
       val forwarders = (methodsToMock map (m => forwarderImpl(m, tpe)))
       val mocks = (methodsToMock map (m => mockMethod(m, tpe, factory.tree, classTag)))
       val members = forwarders ++ mocks

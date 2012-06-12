@@ -41,6 +41,7 @@ trait TestTrait {
   
   var aVar: String
   val aVal: String
+  val concreteVal = "foo"
   
   def withImplementation(x: Int) = x * x
 }
