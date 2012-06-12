@@ -146,6 +146,13 @@ class MockTest extends FreeSpec with MockFactory {
       }
     }
     
+    "cope with a val" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        expect(null) { m.aVal }
+      }
+    }
+    
     "cope with non-abstract methods" in {
       withExpectations {
         val m = mock[TestTrait]

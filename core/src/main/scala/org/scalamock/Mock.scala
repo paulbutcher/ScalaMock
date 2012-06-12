@@ -95,6 +95,7 @@ object MockImpl {
     import ctx.mirror._
     import ctx.universe._
     import Flag._
+    import language.reflectiveCalls    
     
     val anon = newTypeName("$anon") 
 
@@ -117,6 +118,9 @@ object MockImpl {
       case PolyType(_, result) => paramss(result)
       case _ => Nil
     }
+
+    //! TODO - remove this when isStable becomes part of macro API
+    def isStable(s: Symbol) = s.asInstanceOf[{ def isStable: Boolean }].isStable
     
     def paramCount(methodType: Type): Int = methodType match {
       case MethodType(params, result) => params.length + paramCount(result)
@@ -191,12 +195,24 @@ object MockImpl {
       }
     }
     
-    def forwarderImpl(m: Symbol, t: Type): DefDef = {
+    def forwarderImpl(m: Symbol, t: Type) = {
       val mt = m.typeSignatureIn(t)
-      val body = Apply(
-                   Select(Select(This(anon), mockFunctionName(m, t)), newTermName("apply")),
-                   paramss(mt).flatten map { p => Ident(newTermName(p.name.toString)) })
-      methodImpl(m, mt, body)
+      if (isStable(m)) {
+        ValDef(
+          Modifiers(), 
+          newTermName(m.name.toString), 
+          TypeTree(mt), 
+          TypeApply(
+            Select(
+              Literal(Constant(null)), 
+              newTermName("asInstanceOf")),
+            List(Ident(mt.typeSymbol))))
+      } else {
+        val body = Apply(
+                     Select(Select(This(anon), mockFunctionName(m, t)), newTermName("apply")),
+                     paramss(mt).flatten map { p => Ident(newTermName(p.name.toString)) })
+        methodImpl(m, mt, body)
+      }
     }
     
     def mockFunctionClass(paramCount: Int): TypeTag[_] = paramCount match {

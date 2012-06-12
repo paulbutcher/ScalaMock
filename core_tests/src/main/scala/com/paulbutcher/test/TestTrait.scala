@@ -40,6 +40,7 @@ trait TestTrait {
   def byNameParam(x: => Int): String
   
   var aVar: String
+  val aVal: String
   
   def withImplementation(x: Int) = x * x
 }
