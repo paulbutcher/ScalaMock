@@ -322,7 +322,6 @@ object MockImpl {
   // Given something of the structure <|o.m _|> where o is a mock object
   // and m is a method, find the corresponding MockFunction instance
   def findMockFunction[F: c.TypeTag, M: c.TypeTag](c: Context)(f: c.Expr[F], actuals: List[c.universe.Type]): c.Expr[M] = {
-    import c.mirror._
     import c.universe._
     
     def mockFunctionName(name: Name, t: Type) = {
