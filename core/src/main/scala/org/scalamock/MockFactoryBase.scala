@@ -121,7 +121,7 @@ trait MockFactoryBase extends Mock {
   }
   
   private[scalamock] def add[E <: CallHandler[_]](e: E) = {
-    assert(expectationContext != null, "Null expectationContext - missing withExpectations?")
+    assert(expectationContext.get != null, "Null expectationContext - missing withExpectations?")
     expectationContext.get.add(e)
     e
   }
@@ -148,7 +148,7 @@ trait MockFactoryBase extends Mock {
   }
   
   private def errorContext =
-    s"Expected:\n$expectationContext\n\nActual:\n${callLog.get}"
+    s"Expected:\n${expectationContext.get}\n\nActual:\n${callLog.get}"
   
   private def inContext(context: Handlers)(what: => Unit) {
     expectationContext.get.add(context)
