@@ -31,8 +31,6 @@ import org.specs2.specification.{AroundExample, Fragments, SpecificationStructur
  */
 trait MockFactory extends MockFactoryBase with AroundExample { self: ArgumentsShortcuts =>
   
-  sequential
-  
   type ExpectationException = RuntimeException
 
   protected def around[T <% Result](body: => T) = {

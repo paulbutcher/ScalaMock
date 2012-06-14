@@ -116,13 +116,13 @@ trait MockFactoryBase extends Mock {
   protected implicit def MatchEpsilonToMockParameter[T](m: MatchEpsilon) = new EpsilonMockParameter(m)
   
   private[scalamock] def handle(call: Call) = {
-    callLog += call
-    expectationContext.handle(call)
+    callLog.get += call
+    expectationContext.get.handle(call)
   }
   
   private[scalamock] def add[E <: CallHandler[_]](e: E) = {
     assert(expectationContext != null, "Null expectationContext - missing withExpectations?")
-    expectationContext.add(e)
+    expectationContext.get.add(e)
     e
   }
   
@@ -135,34 +135,32 @@ trait MockFactoryBase extends Mock {
   protected def newExpectationException(message: String, methodName: Option[Symbol] = None): ExpectationException
   
   private def resetExpectations() {
-    callLog.clear
-    expectationContext = new UnorderedHandlers
+    callLog set new CallLog
+    expectationContext set new UnorderedHandlers
   }
   
   private def verifyExpectations() {
-    callLog foreach expectationContext.verify _
-    if (!expectationContext.isSatisfied)
+    callLog.get foreach expectationContext.get.verify _
+    if (!expectationContext.get.isSatisfied)
       reportUnsatisfiedExpectation
     
-    expectationContext = null
+    expectationContext set null
   }
   
   private def errorContext =
-    s"Expected:\n$expectationContext\n\nActual:\n$callLog"
+    s"Expected:\n$expectationContext\n\nActual:\n${callLog.get}"
   
   private def inContext(context: Handlers)(what: => Unit) {
-    expectationContext.add(context)
-    val prevContext = expectationContext
-    expectationContext = context
+    expectationContext.get.add(context)
+    val prevContext = expectationContext.get
+    expectationContext set context
     what
-    expectationContext = prevContext
+    expectationContext set prevContext
   }
   
-  private object callLog {
+  private class CallLog {
 
     def +=(call: Call) = log += call
-    
-    def clear() = log.clear
     
     def foreach(f: Call => Unit) = log foreach f
     
@@ -171,5 +169,7 @@ trait MockFactoryBase extends Mock {
     private val log = new ListBuffer[Call]
   }
   
-  private var expectationContext: Handlers = _
+  private val callLog = new InheritableThreadLocal[CallLog]
+  
+  private val expectationContext = new InheritableThreadLocal[Handlers]
 }
