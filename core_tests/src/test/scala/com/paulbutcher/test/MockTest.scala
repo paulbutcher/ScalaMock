@@ -186,6 +186,13 @@ class MockTest extends FreeSpec with MockFactory {
         expect("a return value") { m.method(42, "foo", 1.23) }
       }
     }
+    
+    "mock an embeddded trait" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        val e = mock[m.Embedded]
+      }
+    }
   }
   
   "Stubs should" - {

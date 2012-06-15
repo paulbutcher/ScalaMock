@@ -39,11 +39,15 @@ trait TestTrait {
   def repeatedParam(x: Int, ys: String*): String
   def byNameParam(x: => Int): String
   
+  def withImplementation(x: Int) = x * x
+  
   var aVar: String
   var concreteVar = "foo"
 
   val aVal: String
   val concreteVal = "foo"
   
-  def withImplementation(x: Int) = x * x
+  trait Embedded {
+    def m(x: Int, y: Double): String
+  }
 }
