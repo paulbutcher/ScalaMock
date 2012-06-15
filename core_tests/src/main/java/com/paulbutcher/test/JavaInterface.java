@@ -20,6 +20,7 @@
 
 package com.paulbutcher.test;
 
-interface JavaInterface {
+public interface JavaInterface {
     public String m(int x, String y);
+    public String repeatedParam(int x, double... ys);
 }

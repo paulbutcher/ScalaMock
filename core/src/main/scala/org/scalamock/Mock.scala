@@ -95,6 +95,7 @@ object MockImpl {
     import ctx.mirror._
     import ctx.universe._
     import Flag._
+    import definitions._
     import language.reflectiveCalls
     
     val anon = newTypeName("$anon") 
@@ -137,6 +138,8 @@ object MockImpl {
     def paramType(t: Type): Tree = {
       if (t.typeArguments.isEmpty)
         Ident(t.typeSymbol)
+      else if (t.typeSymbol == JavaRepeatedParamClass)
+        AppliedTypeTree(Ident(RepeatedParamClass), t.typeArguments map mockParamType _)
       else
         AppliedTypeTree(Ident(t.typeSymbol), t.typeArguments map mockParamType _)
     }

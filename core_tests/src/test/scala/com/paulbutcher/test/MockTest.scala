@@ -111,7 +111,6 @@ class MockTest extends FreeSpec with MockFactory {
     "cope with methods with repeated parameters" in {
       withExpectations {
         val m = mock[TestTrait]
-        val f: (Int, String*) => String = m.repeatedParam _
         (m.repeatedParam _).expects(42, Seq("foo", "bar"))
         m.repeatedParam(42, "foo", "bar")
       }
@@ -202,7 +201,16 @@ class MockTest extends FreeSpec with MockFactory {
         expect("a return value") { m.m(42, "foo") }
       }
     }
-    
+
+    //! TODO - this is going to have to wait for macro types for a proper solution
+//    "cope with Java methods with repeated parameters" in {
+//      withExpectations {
+//        val m = mock[JavaInterface]
+//        (m.repeatedParam _).expects(42, Seq(1.23, 4.56))
+//        m.repeatedParam(42, 1.23, 4.56)
+//      }
+//    }
+
     "mock a class" in {
       withExpectations {
         val m = mock[TestClass]
