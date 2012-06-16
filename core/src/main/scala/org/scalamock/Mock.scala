@@ -201,7 +201,8 @@ object MockImpl {
         case NullaryMethodType(_) => methodDef(m, methodType, body)
         case MethodType(_, _) => methodDef(m, methodType, body)
         case PolyType(_, _) => methodDef(m, methodType, body)
-        case _ => ctx.abort(ctx.enclosingPosition, "Don't know how to handle "+ methodType.getClass)
+        case _ => ctx.abort(ctx.enclosingPosition, 
+            s"ScalaMock: Don't know how to handle ${methodType.getClass}. Please open a ticket at https://github.com/paulbutcher/ScalaMock/issues")
       }
     }
     
@@ -236,7 +237,7 @@ object MockImpl {
       case 7 => implicitly[TypeTag[MockFunction7[_, _, _, _, _, _, _, _]]]
       case 8 => implicitly[TypeTag[MockFunction8[_, _, _, _, _, _, _, _, _]]]
       case 9 => implicitly[TypeTag[MockFunction9[_, _, _, _, _, _, _, _, _, _]]]
-      case _ => ctx.abort(ctx.enclosingPosition, "Can't handle methods with more than 9 parameters (yet)")
+      case _ => ctx.abort(ctx.enclosingPosition, "ScalaMock: Can't handle methods with more than 9 parameters (yet)")
     }
     
     def stubFunctionClass(paramCount: Int): TypeTag[_] = paramCount match {
@@ -250,7 +251,7 @@ object MockImpl {
       case 7 => implicitly[TypeTag[StubFunction7[_, _, _, _, _, _, _, _]]]
       case 8 => implicitly[TypeTag[StubFunction8[_, _, _, _, _, _, _, _, _]]]
       case 9 => implicitly[TypeTag[StubFunction9[_, _, _, _, _, _, _, _, _, _]]]
-      case _ => ctx.abort(ctx.enclosingPosition, "Can't handle methods with more than 9 parameters (yet)")
+      case _ => ctx.abort(ctx.enclosingPosition, "ScalaMock: Can't handle methods with more than 9 parameters (yet)")
     }
 
     def mockFunctionName(m: Symbol, t: Type) = {
@@ -370,7 +371,8 @@ object MockImpl {
       case Function(_, t) => findApplication(t)
       case Apply(t, _) => findApplication(t)
       case TypeApply(t, _) => findApplication(t)
-      case _ => c.abort(c.enclosingPosition, "Unrecognised structure: "+ showRaw(tree))
+      case _ => c.abort(c.enclosingPosition, 
+          s"ScalaMock: Unrecognised structure: ${showRaw(tree)}. Please open a ticket at https://github.com/paulbutcher/ScalaMock/issues")
     }
 
     val (obj, name) = findApplication(f.tree)
