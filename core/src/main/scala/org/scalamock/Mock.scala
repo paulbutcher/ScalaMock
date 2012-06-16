@@ -267,8 +267,8 @@ object MockImpl {
       }  
       
       // val <|mockname|> = new MockFunctionN[T1, T2, ..., R](factory, '<|name|>)
-      def mockMethod(m: Symbol, t: Type, factory: Tree, classTag: (Int) => TypeTag[_]): ValDef = {
-        val mt = m.typeSignatureIn(t)
+      def mockMethod(m: Symbol): ValDef = {
+        val mt = m.typeSignatureIn(typeToMock)
         val clazz = classTag(paramCount(mt))
         val types = (paramTypes(mt) map mockParamType _) :+ mockParamType(finalResultType(mt))
         ValDef(Modifiers(),
@@ -282,7 +282,7 @@ object MockImpl {
                   types)),
               newTermName("<init>")),
             List(
-              factory, 
+              factory.tree, 
               Apply(
                 Select(Select(Ident(newTermName("scala")), newTermName("Symbol")), newTermName("apply")),
                 List(Literal(Constant(m.name.toString)))))))
@@ -331,7 +331,7 @@ object MockImpl {
         m.isMethod && (!(isStable(m) || isAccessor(m)) || m.hasFlag(DEFERRED))
       }
       val forwarders = methodsToMock map forwarderImpl _
-      val mocks = (methodsToMock map (m => mockMethod(m, typeToMock, factory.tree, classTag)))
+      val mocks = methodsToMock map mockMethod _
       val members = forwarders ++ mocks
       
       val result = castTo(anonClass(List(TypeTree(typeToMock)), members), typeToMock)
