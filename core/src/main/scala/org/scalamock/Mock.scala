@@ -96,133 +96,6 @@ object MockImpl {
     import definitions._
     import language.reflectiveCalls
     
-    val anon = newTypeName("$anon") 
-
-    // Convert a methodType into its ultimate result type
-    // For nullary and normal methods, this is just the result type
-    // For curried methods, this is the final result type of the result type
-    def finalResultType(methodType: Type): Type = methodType match {
-      case NullaryMethodType(result) => result 
-      case MethodType(_, result) => finalResultType(result)
-      case PolyType(_, result) => finalResultType(result)
-      case _ => methodType
-    }
-    
-    // Convert a methodType into a list of lists of params:
-    // UnaryMethodType => Nil
-    // Normal method => List(List(p1, p2, ...))
-    // Curried method => List(List(p1, p2, ...), List(q1, q2, ...), ...)
-    def paramss(methodType: Type): List[List[Symbol]] = methodType match {
-      case MethodType(params, result) => params :: paramss(result)
-      case PolyType(_, result) => paramss(result)
-      case _ => Nil
-    }
-
-    //! TODO - remove this when isStable becomes part of macro API
-    def isStable(s: Symbol) = s.asInstanceOf[{ def isStable: Boolean }].isStable
-    
-    //! TODO - remove this when isAccessor becomes part of the macro API
-    def isAccessor(s: Symbol) = s.asInstanceOf[{ def isAccessor: Boolean }].isAccessor
-    
-    def paramCount(methodType: Type): Int = methodType match {
-      case MethodType(params, result) => params.length + paramCount(result)
-      case PolyType(_, result) => paramCount(result)
-      case _ => 0
-    }
-    
-    def paramTypes(methodType: Type): List[Type] =
-      paramss(methodType).flatten map { _.typeSignatureIn(methodType) }
-    
-    def paramType(t: Type): Tree = t match {
-      case TypeRef(TypeRef(_, this_sym, _), sym, args) =>
-        paramType(TypeRef(NoPrefix, sym, args))
-        Ident(newTypeName(sym.name.toString))
-      case TypeRef(_, sym, Nil) =>
-        Ident(sym)
-      case TypeRef(_, sym, args) if sym == JavaRepeatedParamClass => 
-        AppliedTypeTree(Ident(RepeatedParamClass), args map mockParamType _)
-      case TypeRef(_, sym, args) =>
-        AppliedTypeTree(Ident(sym), args map mockParamType _)
-    }
-
-    def membersNotInObject(t: Type) = (t.members filterNot (m => isMemberOfObject(m))).toList
-    
-    def buildParams(methodType: Type) =
-      paramss(methodType) map { params =>
-        params map { p =>
-          val pt = p.typeSignatureIn(methodType)
-          val sym = pt.typeSymbol
-          val paramTypeTree = 
-            if (sym hasFlag PARAM)
-              Ident(newTypeName(sym.name.toString))
-            else
-              paramType(pt)
-              
-          ValDef(
-            Modifiers(PARAM),
-            newTermName(p.name.toString),
-            paramTypeTree,
-            EmptyTree)
-        }
-      }
-    
-    def buildTypeParams(methodType: Type) =
-      methodType.typeParams map { t => 
-        TypeDef(
-          Modifiers(PARAM),
-          newTypeName(t.name.toString), 
-          List(), 
-          TypeBoundsTree(Ident(staticClass("scala.Nothing")), Ident(staticClass("scala.Any"))))
-      }
-    
-    def overrideIfNecessary(m: Symbol) =
-      if (nme.isConstructorName(m.name) || m.hasFlag(DEFERRED))
-        Modifiers()
-      else
-        Modifiers(OVERRIDE)
-    
-    // def <|name|>(p1: T1, p2: T2, ...): T = <|mockname|>(p1, p2, ...)
-    def methodDef(m: Symbol, methodType: Type, body: Tree): DefDef = {
-      val params = buildParams(methodType)
-      DefDef(
-        overrideIfNecessary(m),
-        m.name, 
-        buildTypeParams(methodType), 
-        params,
-        TypeTree(),
-        body)
-    }
-    
-    def methodImpl(m: Symbol, methodType: Type, body: Tree): DefDef = {
-      methodType match {
-        case NullaryMethodType(_) => methodDef(m, methodType, body)
-        case MethodType(_, _) => methodDef(m, methodType, body)
-        case PolyType(_, _) => methodDef(m, methodType, body)
-        case _ => ctx.abort(ctx.enclosingPosition, 
-            s"ScalaMock: Don't know how to handle ${methodType.getClass}. Please open a ticket at https://github.com/paulbutcher/ScalaMock/issues")
-      }
-    }
-    
-    def forwarderImpl(m: Symbol, t: Type) = {
-      val mt = m.typeSignatureIn(t)
-      if (isStable(m)) {
-        ValDef(
-          Modifiers(), 
-          newTermName(m.name.toString), 
-          TypeTree(mt), 
-          TypeApply(
-            Select(
-              Literal(Constant(null)), 
-              newTermName("asInstanceOf")),
-            List(Ident(mt.typeSymbol))))
-      } else {
-        val body = Apply(
-                     Select(Select(This(anon), mockFunctionName(m, t)), newTermName("apply")),
-                     paramss(mt).flatten map { p => Ident(newTermName(p.name.toString)) })
-        methodImpl(m, mt, body)
-      }
-    }
-    
     def mockFunctionClass(paramCount: Int): TypeTag[_] = paramCount match {
       case 0 => implicitly[TypeTag[MockFunction0[_]]]
       case 1 => implicitly[TypeTag[MockFunction1[_, _]]]
@@ -251,89 +124,217 @@ object MockImpl {
       case _ => ctx.abort(ctx.enclosingPosition, "ScalaMock: Can't handle methods with more than 9 parameters (yet)")
     }
 
-    def mockFunctionName(m: Symbol, t: Type) = {
-      val method = t.member(m.name)
-      newTermName("mock$"+ m.name +"$"+ method.asTermSymbol.alternatives.indexOf(m))
-    }
-    
-    def mockParamType(t: Type): Tree = {
-      if (t.typeSymbol hasFlag PARAM)
-        Ident(staticClass("scala.Any"))
-      else
-        paramType(t)
-    }  
-    
-    // val <|mockname|> = new MockFunctionN[T1, T2, ..., R](factory, '<|name|>)
-    def mockMethod(m: Symbol, t: Type, factory: Tree, classTag: (Int) => TypeTag[_]): ValDef = {
-      val mt = m.typeSignatureIn(t)
-      val clazz = classTag(paramCount(mt))
-      val types = (paramTypes(mt) map mockParamType _) :+ mockParamType(finalResultType(mt))
-      ValDef(Modifiers(),
-        mockFunctionName(m, t), 
-        TypeTree(), 
-        Apply(
-          Select(
-            New(
-              AppliedTypeTree(
-                Ident(clazz.tpe.typeSymbol),
-                types)),
-            newTermName("<init>")),
-          List(
-            factory, 
-            Apply(
-              Select(Select(Ident(newTermName("scala")), newTermName("Symbol")), newTermName("apply")),
-              List(Literal(Constant(m.name.toString)))))))
-    }
-    
-    // def <init>() = super.<init>()
-    def initDef = 
-      DefDef(
-        Modifiers(), 
-        newTermName("<init>"), 
-        List(), 
-        List(List()), 
-        TypeTree(),
-        Block(
-          Apply(
-            Select(Super(This(newTypeName("")), newTypeName("")), newTermName("<init>")), 
-            List())))
-      
-    def isMemberOfObject(m: Symbol) = TypeTag.Object.tpe.member(m.name) != NoSymbol
-
-    // new { <|members|> }
-    def anonClass(parents: List[TypeTree], members: List[Tree]) =
-      Block(
-        List(
-          ClassDef(
-            Modifiers(FINAL), 
-            anon,
-            List(),
-            Template(
-              parents, 
-              emptyValDef,
-              initDef +: members))),
-        Apply(
-          Select(
-            New(Ident(anon)), 
-            newTermName("<init>")), 
-          List()))
-    
-    // <|expr|>.asInstanceOf[<|t|>]
-    def castTo(expr: Tree, t: Type) =
-      TypeApply(
-        Select(expr, newTermName("asInstanceOf")),
-        List(TypeTree(t)))
-
     def make[T: ctx.TypeTag](factory: ctx.Expr[MockFactoryBase], classTag: (Int) => TypeTag[_]) = {
-      val tpe = typeTag[T].tpe
-      val methodsToMock = membersNotInObject(tpe) filter { m => 
+      val typeToMock = typeTag[T].tpe
+    
+      val anon = newTypeName("$anon") 
+  
+      // Convert a methodType into its ultimate result type
+      // For nullary and normal methods, this is just the result type
+      // For curried methods, this is the final result type of the result type
+      def finalResultType(methodType: Type): Type = methodType match {
+        case NullaryMethodType(result) => result 
+        case MethodType(_, result) => finalResultType(result)
+        case PolyType(_, result) => finalResultType(result)
+        case _ => methodType
+      }
+      
+      // Convert a methodType into a list of lists of params:
+      // UnaryMethodType => Nil
+      // Normal method => List(List(p1, p2, ...))
+      // Curried method => List(List(p1, p2, ...), List(q1, q2, ...), ...)
+      def paramss(methodType: Type): List[List[Symbol]] = methodType match {
+        case MethodType(params, result) => params :: paramss(result)
+        case PolyType(_, result) => paramss(result)
+        case _ => Nil
+      }
+  
+      //! TODO - remove this when isStable becomes part of macro API
+      def isStable(s: Symbol) = s.asInstanceOf[{ def isStable: Boolean }].isStable
+      
+      //! TODO - remove this when isAccessor becomes part of the macro API
+      def isAccessor(s: Symbol) = s.asInstanceOf[{ def isAccessor: Boolean }].isAccessor
+      
+      def paramCount(methodType: Type): Int = methodType match {
+        case MethodType(params, result) => params.length + paramCount(result)
+        case PolyType(_, result) => paramCount(result)
+        case _ => 0
+      }
+      
+      def paramTypes(methodType: Type): List[Type] =
+        paramss(methodType).flatten map { _.typeSignatureIn(methodType) }
+      
+      def paramType(t: Type): Tree = t match {
+        case TypeRef(TypeRef(_, this_sym, _), sym, args) =>
+          paramType(TypeRef(NoPrefix, sym, args))
+          Ident(newTypeName(sym.name.toString))
+        case TypeRef(_, sym, Nil) =>
+          Ident(sym)
+        case TypeRef(_, sym, args) if sym == JavaRepeatedParamClass => 
+          AppliedTypeTree(Ident(RepeatedParamClass), args map mockParamType _)
+        case TypeRef(_, sym, args) =>
+          AppliedTypeTree(Ident(sym), args map mockParamType _)
+      }
+  
+      def membersNotInObject(t: Type) = (t.members filterNot (m => isMemberOfObject(m))).toList
+      
+      def buildParams(methodType: Type) =
+        paramss(methodType) map { params =>
+          params map { p =>
+            val pt = p.typeSignatureIn(methodType)
+            val sym = pt.typeSymbol
+            val paramTypeTree = 
+              if (sym hasFlag PARAM)
+                Ident(newTypeName(sym.name.toString))
+              else
+                paramType(pt)
+                
+            ValDef(
+              Modifiers(PARAM),
+              newTermName(p.name.toString),
+              paramTypeTree,
+              EmptyTree)
+          }
+        }
+      
+      def buildTypeParams(methodType: Type) =
+        methodType.typeParams map { t => 
+          TypeDef(
+            Modifiers(PARAM),
+            newTypeName(t.name.toString), 
+            List(), 
+            TypeBoundsTree(Ident(staticClass("scala.Nothing")), Ident(staticClass("scala.Any"))))
+        }
+      
+      def overrideIfNecessary(m: Symbol) =
+        if (nme.isConstructorName(m.name) || m.hasFlag(DEFERRED))
+          Modifiers()
+        else
+          Modifiers(OVERRIDE)
+      
+      // def <|name|>(p1: T1, p2: T2, ...): T = <|mockname|>(p1, p2, ...)
+      def methodDef(m: Symbol, methodType: Type, body: Tree): DefDef = {
+        val params = buildParams(methodType)
+        DefDef(
+          overrideIfNecessary(m),
+          m.name, 
+          buildTypeParams(methodType), 
+          params,
+          TypeTree(),
+          body)
+      }
+      
+      def methodImpl(m: Symbol, methodType: Type, body: Tree): DefDef = {
+        methodType match {
+          case NullaryMethodType(_) => methodDef(m, methodType, body)
+          case MethodType(_, _) => methodDef(m, methodType, body)
+          case PolyType(_, _) => methodDef(m, methodType, body)
+          case _ => ctx.abort(ctx.enclosingPosition, 
+              s"ScalaMock: Don't know how to handle ${methodType.getClass}. Please open a ticket at https://github.com/paulbutcher/ScalaMock/issues")
+        }
+      }
+      
+      def forwarderImpl(m: Symbol, t: Type) = {
+        val mt = m.typeSignatureIn(t)
+        if (isStable(m)) {
+          ValDef(
+            Modifiers(), 
+            newTermName(m.name.toString), 
+            TypeTree(mt), 
+            TypeApply(
+              Select(
+                Literal(Constant(null)), 
+                newTermName("asInstanceOf")),
+              List(Ident(mt.typeSymbol))))
+        } else {
+          val body = Apply(
+                       Select(Select(This(anon), mockFunctionName(m, t)), newTermName("apply")),
+                       paramss(mt).flatten map { p => Ident(newTermName(p.name.toString)) })
+          methodImpl(m, mt, body)
+        }
+      }
+
+      def mockFunctionName(m: Symbol, t: Type) = {
+        val method = t.member(m.name)
+        newTermName("mock$"+ m.name +"$"+ method.asTermSymbol.alternatives.indexOf(m))
+      }
+      
+      def mockParamType(t: Type): Tree = {
+        if (t.typeSymbol hasFlag PARAM)
+          Ident(staticClass("scala.Any"))
+        else
+          paramType(t)
+      }  
+      
+      // val <|mockname|> = new MockFunctionN[T1, T2, ..., R](factory, '<|name|>)
+      def mockMethod(m: Symbol, t: Type, factory: Tree, classTag: (Int) => TypeTag[_]): ValDef = {
+        val mt = m.typeSignatureIn(t)
+        val clazz = classTag(paramCount(mt))
+        val types = (paramTypes(mt) map mockParamType _) :+ mockParamType(finalResultType(mt))
+        ValDef(Modifiers(),
+          mockFunctionName(m, t), 
+          TypeTree(), 
+          Apply(
+            Select(
+              New(
+                AppliedTypeTree(
+                  Ident(clazz.tpe.typeSymbol),
+                  types)),
+              newTermName("<init>")),
+            List(
+              factory, 
+              Apply(
+                Select(Select(Ident(newTermName("scala")), newTermName("Symbol")), newTermName("apply")),
+                List(Literal(Constant(m.name.toString)))))))
+      }
+      
+      // def <init>() = super.<init>()
+      def initDef = 
+        DefDef(
+          Modifiers(), 
+          newTermName("<init>"), 
+          List(), 
+          List(List()), 
+          TypeTree(),
+          Block(
+            Apply(
+              Select(Super(This(newTypeName("")), newTypeName("")), newTermName("<init>")), 
+              List())))
+        
+      def isMemberOfObject(m: Symbol) = TypeTag.Object.tpe.member(m.name) != NoSymbol
+  
+      // new { <|members|> }
+      def anonClass(parents: List[TypeTree], members: List[Tree]) =
+        Block(
+          List(
+            ClassDef(
+              Modifiers(FINAL), 
+              anon,
+              List(),
+              Template(
+                parents, 
+                emptyValDef,
+                initDef +: members))),
+          Apply(
+            Select(
+              New(Ident(anon)), 
+              newTermName("<init>")), 
+            List()))
+      
+      // <|expr|>.asInstanceOf[<|t|>]
+      def castTo(expr: Tree, t: Type) =
+        TypeApply(
+          Select(expr, newTermName("asInstanceOf")),
+          List(TypeTree(t)))
+
+      val methodsToMock = membersNotInObject(typeToMock) filter { m => 
         m.isMethod && (!(isStable(m) || isAccessor(m)) || m.hasFlag(DEFERRED))
       }
-      val forwarders = (methodsToMock map (m => forwarderImpl(m, tpe)))
-      val mocks = (methodsToMock map (m => mockMethod(m, tpe, factory.tree, classTag)))
+      val forwarders = (methodsToMock map (m => forwarderImpl(m, typeToMock)))
+      val mocks = (methodsToMock map (m => mockMethod(m, typeToMock, factory.tree, classTag)))
       val members = forwarders ++ mocks
       
-      val result = castTo(anonClass(List(TypeTree(tpe)), members), tpe)
+      val result = castTo(anonClass(List(TypeTree(typeToMock)), members), typeToMock)
       
 //      println("------------")
 //      println(showRaw(result))
