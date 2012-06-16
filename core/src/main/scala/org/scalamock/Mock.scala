@@ -136,10 +136,9 @@ object MockImpl {
       paramss(methodType).flatten map { _.typeSignatureIn(methodType) }
     
     def paramType(t: Type): Tree = t match {
-//      case TypeRef(TypeRef(_, this_sym, _), sym, args) =>
-//        println(s"stripping this: $this_sym # $sym (${t.typeSymbol})")
-//        paramType(TypeRef(NoPrefix, sym, args))
-//        Ident(newTypeName(sym.name.toString))
+      case TypeRef(TypeRef(_, this_sym, _), sym, args) =>
+        paramType(TypeRef(NoPrefix, sym, args))
+        Ident(newTypeName(sym.name.toString))
       case TypeRef(_, sym, Nil) =>
         Ident(sym)
       case TypeRef(_, sym, args) if sym == JavaRepeatedParamClass => 

@@ -50,6 +50,6 @@ trait TestTrait {
   trait Embedded {
     def m(x: Int, y: Double): String
   }
-//  
-//  def referencesEmbedded(x: Int, y: Embedded): Embedded
+  
+  def referencesEmbedded(): Embedded
 }

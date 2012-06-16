@@ -191,8 +191,8 @@ class MockTest extends FreeSpec with MockFactory {
       withExpectations {
         val m = mock[TestTrait]
         val e = mock[m.Embedded]
-//        (m.referencesEmbedded _).expects().returning(e)
-//        expect(e) { m.referencesEmbedded }
+        (m.referencesEmbedded _).expects().returning(e)
+        expect(e) { m.referencesEmbedded }
       }
     }
     
