@@ -77,16 +77,14 @@ object MockImpl {
   
   def mock[T: c.TypeTag](c: Context)(factory: c.Expr[MockFactoryBase]): c.Expr[T] = {
     val maker = MockMaker(c)
-    import maker._
 
-    mkMock[T](factory, mockFunctionClass _)
+    maker.make[T](factory, maker.mockFunctionClass _)
   }
   
   def stub[T: c.TypeTag](c: Context)(factory: c.Expr[MockFactoryBase]): c.Expr[T] = {
     val maker = MockMaker(c)
-    import maker._
 
-    mkMock[T](factory, stubFunctionClass _)
+    maker.make[T](factory, maker.stubFunctionClass _)
   }
   
   def MockMaker(c: Context) = new MockMaker[c.type](c)
@@ -326,7 +324,7 @@ object MockImpl {
         Select(expr, newTermName("asInstanceOf")),
         List(TypeTree(t)))
 
-    def mkMock[T: ctx.TypeTag](factory: ctx.Expr[MockFactoryBase], classTag: (Int) => TypeTag[_]) = {
+    def make[T: ctx.TypeTag](factory: ctx.Expr[MockFactoryBase], classTag: (Int) => TypeTag[_]) = {
       val tpe = typeTag[T].tpe
       val methodsToMock = membersNotInObject(tpe) filter { m => 
         m.isMethod && (!(isStable(m) || isAccessor(m)) || m.hasFlag(DEFERRED))
