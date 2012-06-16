@@ -76,22 +76,22 @@ trait Mock {
 object MockImpl {
   
   def mock[T: c.TypeTag](c: Context)(factory: c.Expr[MockFactoryBase]): c.Expr[T] = {
-    val util = Util(c)
-    import util._
+    val maker = MockMaker(c)
+    import maker._
 
     mkMock[T](factory, mockFunctionClass _)
   }
   
   def stub[T: c.TypeTag](c: Context)(factory: c.Expr[MockFactoryBase]): c.Expr[T] = {
-    val util = Util(c)
-    import util._
+    val maker = MockMaker(c)
+    import maker._
 
     mkMock[T](factory, stubFunctionClass _)
   }
   
-  def Util(c: Context) = new Util[c.type](c)
+  def MockMaker(c: Context) = new MockMaker[c.type](c)
   
-  class Util[C <: Context](val ctx: C) {
+  class MockMaker[C <: Context](val ctx: C) {
     import ctx.mirror._
     import ctx.universe._
     import Flag._
@@ -337,11 +337,11 @@ object MockImpl {
       
       val result = castTo(anonClass(List(TypeTree(tpe)), members), tpe)
       
-      println("------------")
-      println(showRaw(result))
-      println("------------")
-      println(show(result))
-      println("------------")
+//      println("------------")
+//      println(showRaw(result))
+//      println("------------")
+//      println(show(result))
+//      println("------------")
   
       ctx.Expr(result)
     }
