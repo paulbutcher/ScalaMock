@@ -176,7 +176,7 @@ object MockImpl {
           AppliedTypeTree(Ident(sym), args map mockParamType _)
       }
   
-      def membersNotInObject(t: Type) = (t.members filterNot (m => isMemberOfObject(m))).toList
+      def membersNotInObject = (typeToMock.members filterNot (m => isMemberOfObject(m))).toList
       
       def buildParams(methodType: Type) =
         paramss(methodType) map { params =>
@@ -234,8 +234,8 @@ object MockImpl {
         }
       }
       
-      def forwarderImpl(m: Symbol, t: Type) = {
-        val mt = m.typeSignatureIn(t)
+      def forwarderImpl(m: Symbol) = {
+        val mt = m.typeSignatureIn(typeToMock)
         if (isStable(m)) {
           ValDef(
             Modifiers(), 
@@ -248,14 +248,14 @@ object MockImpl {
               List(Ident(mt.typeSymbol))))
         } else {
           val body = Apply(
-                       Select(Select(This(anon), mockFunctionName(m, t)), newTermName("apply")),
+                       Select(Select(This(anon), mockFunctionName(m)), newTermName("apply")),
                        paramss(mt).flatten map { p => Ident(newTermName(p.name.toString)) })
           methodImpl(m, mt, body)
         }
       }
 
-      def mockFunctionName(m: Symbol, t: Type) = {
-        val method = t.member(m.name)
+      def mockFunctionName(m: Symbol) = {
+        val method = typeToMock.member(m.name)
         newTermName("mock$"+ m.name +"$"+ method.asTermSymbol.alternatives.indexOf(m))
       }
       
@@ -272,7 +272,7 @@ object MockImpl {
         val clazz = classTag(paramCount(mt))
         val types = (paramTypes(mt) map mockParamType _) :+ mockParamType(finalResultType(mt))
         ValDef(Modifiers(),
-          mockFunctionName(m, t), 
+          mockFunctionName(m), 
           TypeTree(), 
           Apply(
             Select(
@@ -327,10 +327,10 @@ object MockImpl {
           Select(expr, newTermName("asInstanceOf")),
           List(TypeTree(t)))
 
-      val methodsToMock = membersNotInObject(typeToMock) filter { m => 
+      val methodsToMock = membersNotInObject filter { m => 
         m.isMethod && (!(isStable(m) || isAccessor(m)) || m.hasFlag(DEFERRED))
       }
-      val forwarders = (methodsToMock map (m => forwarderImpl(m, typeToMock)))
+      val forwarders = methodsToMock map forwarderImpl _
       val mocks = (methodsToMock map (m => mockMethod(m, typeToMock, factory.tree, classTag)))
       val members = forwarders ++ mocks
       
