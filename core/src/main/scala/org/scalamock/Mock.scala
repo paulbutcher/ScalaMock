@@ -135,13 +135,17 @@ object MockImpl {
     def paramTypes(methodType: Type): List[Type] =
       paramss(methodType).flatten map { _.typeSignatureIn(methodType) }
     
-    def paramType(t: Type): Tree = {
-      if (t.typeArguments.isEmpty)
-        Ident(t.typeSymbol)
-      else if (t.typeSymbol == JavaRepeatedParamClass)
-        AppliedTypeTree(Ident(RepeatedParamClass), t.typeArguments map mockParamType _)
-      else
-        AppliedTypeTree(Ident(t.typeSymbol), t.typeArguments map mockParamType _)
+    def paramType(t: Type): Tree = t match {
+//      case TypeRef(TypeRef(_, this_sym, _), sym, args) =>
+//        println(s"stripping this: $this_sym # $sym (${t.typeSymbol})")
+//        paramType(TypeRef(NoPrefix, sym, args))
+//        Ident(newTypeName(sym.name.toString))
+      case TypeRef(_, sym, Nil) =>
+        Ident(sym)
+      case TypeRef(_, sym, args) if sym == JavaRepeatedParamClass => 
+        AppliedTypeTree(Ident(RepeatedParamClass), args map mockParamType _)
+      case TypeRef(_, sym, args) =>
+        AppliedTypeTree(Ident(sym), args map mockParamType _)
     }
 
     def membersNotInObject(t: Type) = (t.members filterNot (m => isMemberOfObject(m))).toList
@@ -333,11 +337,11 @@ object MockImpl {
       
       val result = castTo(anonClass(List(TypeTree(tpe)), members), tpe)
       
-//      println("------------")
-//      println(showRaw(result))
-//      println("------------")
-//      println(show(result))
-//      println("------------")
+      println("------------")
+      println(showRaw(result))
+      println("------------")
+      println(show(result))
+      println("------------")
   
       ctx.Expr(result)
     }
