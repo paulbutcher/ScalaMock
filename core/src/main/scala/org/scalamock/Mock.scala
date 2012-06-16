@@ -303,8 +303,8 @@ object MockImpl {
         
       def isMemberOfObject(m: Symbol) = TypeTag.Object.tpe.member(m.name) != NoSymbol
   
-      // new { <|members|> }
-      def anonClass(parents: List[TypeTree], members: List[Tree]) =
+      // new <|typeToMock|> { <|members|> }
+      def anonClass(members: List[Tree]) =
         Block(
           List(
             ClassDef(
@@ -312,7 +312,7 @@ object MockImpl {
               anon,
               List(),
               Template(
-                parents, 
+                List(TypeTree(typeToMock)), 
                 emptyValDef,
                 initDef +: members))),
           Apply(
@@ -334,7 +334,7 @@ object MockImpl {
       val mocks = methodsToMock map mockMethod _
       val members = forwarders ++ mocks
       
-      val result = castTo(anonClass(List(TypeTree(typeToMock)), members), typeToMock)
+      val result = castTo(anonClass(members), typeToMock)
       
 //      println("------------")
 //      println(showRaw(result))
