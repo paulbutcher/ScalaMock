@@ -49,7 +49,13 @@ trait TestTrait {
   
   trait Embedded {
     def m(x: Int, y: Double): String
+
+    trait ATrait
+    def innerTraitProjected(): TestTrait#Embedded#ATrait
+    def outerTraitProjected(): TestTrait#ATrait
   }
   
-  def referencesEmbedded(): Embedded
+  trait ATrait
+  
+  def referencesEmbedded(): TestTrait#Embedded
 }

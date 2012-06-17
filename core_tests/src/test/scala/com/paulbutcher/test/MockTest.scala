@@ -186,13 +186,25 @@ class MockTest extends FreeSpec with MockFactory {
       }
     }
     
-    //! TODO - not yet complete
     "mock an embeddded trait" in {
       withExpectations {
         val m = mock[TestTrait]
         val e = mock[m.Embedded]
         (m.referencesEmbedded _).expects().returning(e)
         expect(e) { m.referencesEmbedded }
+      }
+    }
+    
+    "handle projected types correctly" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        val e = mock[m.Embedded]
+        val o = mock[m.ATrait]
+        val i = mock[e.ATrait]
+        (e.innerTraitProjected _).expects().returning(i)
+        (e.outerTraitProjected _).expects().returning(o)
+        expect(o) { e.outerTraitProjected }
+        expect(i) { e.innerTraitProjected }
       }
     }
     
