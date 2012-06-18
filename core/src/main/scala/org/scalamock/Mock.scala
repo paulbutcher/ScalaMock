@@ -162,7 +162,7 @@ object MockImpl {
       }
       
       def paramTypes(methodType: Type): List[Type] =
-        paramss(methodType).flatten map { _.typeSignatureIn(methodType) }
+        paramss(methodType).flatten map { _.typeSignature }
       
       def paramType(t: Type): Tree = t match {
         case TypeRef(_, sym, Nil) =>
@@ -175,10 +175,13 @@ object MockImpl {
   
       def membersNotInObject = (typeToMock.members filterNot (m => isMemberOfObject(m))).toList
       
+      def resolvedType(m: Symbol) =
+        m.typeSignatureIn(SuperType(ThisType(typeToMock.typeSymbol), typeToMock))
+      
       def buildParams(methodType: Type) =
         paramss(methodType) map { params =>
           params map { p =>
-            val pt = p.typeSignatureIn(methodType)
+            val pt = p.typeSignature
             val sym = pt.typeSymbol
             val paramTypeTree = 
               if (sym hasFlag PARAM)
@@ -232,7 +235,7 @@ object MockImpl {
       }
       
       def forwarderImpl(m: Symbol) = {
-        val mt = m.typeSignatureIn(typeToMock)
+        val mt = resolvedType(m)
         if (isStable(m)) {
           ValDef(
             Modifiers(), 
@@ -265,7 +268,7 @@ object MockImpl {
       
       // val <|mockname|> = new MockFunctionN[T1, T2, ..., R](factory, '<|name|>)
       def mockMethod(m: Symbol): ValDef = {
-        val mt = m.typeSignatureIn(typeToMock)
+        val mt = resolvedType(m)
         val clazz = classType(paramCount(mt))
         val types = (paramTypes(mt) map mockParamType _) :+ mockParamType(finalResultType(mt))
         ValDef(Modifiers(),
