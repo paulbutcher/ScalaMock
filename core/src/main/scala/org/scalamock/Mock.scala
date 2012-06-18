@@ -165,12 +165,10 @@ object MockImpl {
         paramss(methodType).flatten map { _.typeSignature }
       
       def paramType(t: Type): Tree = t match {
-        case TypeRef(_, sym, Nil) =>
-          Ident(sym)
-        case TypeRef(_, sym, args) if sym == JavaRepeatedParamClass => 
-          AppliedTypeTree(Ident(RepeatedParamClass), args map mockParamType _)
-        case TypeRef(_, sym, args) =>
-          AppliedTypeTree(Ident(sym), args map mockParamType _)
+        case TypeRef(pre, sym, args) if sym == JavaRepeatedParamClass =>
+          TypeTree(TypeRef(pre, RepeatedParamClass, args))
+        case _ =>
+          TypeTree(t)
       }
   
       def membersNotInObject = (typeToMock.members filterNot (m => isMemberOfObject(m))).toList
