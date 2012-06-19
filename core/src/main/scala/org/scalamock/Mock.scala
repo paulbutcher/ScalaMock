@@ -164,9 +164,17 @@ object MockImpl {
       def paramTypes(methodType: Type): List[Type] =
         paramss(methodType).flatten map { _.typeSignature }
       
-      def paramType(t: Type): Tree = t match {
+      def isPathDependentThis(t: Type): Boolean = t match {
+        case TypeRef(pre, _, _) => isPathDependentThis(pre)
+        case ThisType(tpe) => tpe == typeToMock.typeSymbol
+        case _ => false
+      }
+      
+      def paramType(t: Type) = t match {
         case TypeRef(pre, sym, args) if sym == JavaRepeatedParamClass =>
           TypeTree(TypeRef(pre, RepeatedParamClass, args))
+        case TypeRef(pre, sym, args) if isPathDependentThis(t) =>
+          Ident(newTypeName(sym.name.toString))
         case _ =>
           TypeTree(t)
       }
@@ -333,7 +341,7 @@ object MockImpl {
       val members = forwarders ++ mocks
       
       val result = castTo(anonClass(members), typeToMock)
-      
+
 //      println("------------")
 //      println(showRaw(result))
 //      println("------------")

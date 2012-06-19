@@ -208,6 +208,19 @@ class MockTest extends FreeSpec with MockFactory {
       }
     }
     
+    "handle path-dependent types correctly" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        val e = mock[m.Embedded]
+        val o = mock[m.ATrait]
+        val i = mock[e.ATrait]
+        (e.innerTrait _).expects().returning(i)
+        (e.outerTrait _).expects().returning(o)
+        expect(o) { e.outerTrait }
+        expect(i) { e.innerTrait }
+      }
+    }
+    
     "mock a Java interface" in {
       withExpectations {
         val m = mock[JavaInterface]
