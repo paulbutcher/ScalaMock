@@ -22,4 +22,13 @@ package com.paulbutcher.test
 
 trait PolymorphicTrait[T] {
   def method[U](x: Int, y: T, z: U): T
+  
+  trait Embedded[V] {
+    trait ATrait[A, B, C]
+    
+    def innerTrait[W](t: T, v: V, w: W): ATrait[T, V, W]
+    def outerTrait[W](t: T, v: V, w: W): PolymorphicTrait.this.ATrait[T, V, W]
+  }
+  
+  trait ATrait[A, B, C]
 }
