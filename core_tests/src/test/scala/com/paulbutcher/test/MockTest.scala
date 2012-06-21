@@ -221,18 +221,18 @@ class MockTest extends FreeSpec with MockFactory {
       }
     }
     
-//    "mock an embedded polymorphic trait" in {
-//      withExpectations {
-//        val m = mock[PolymorphicTrait[String]]
-//        val e = mock[m.Embedded[Double]]
-//        val o = mock[m.ATrait[String, Double, (String, String)]]
-//        val i = mock[e.ATrait[String, Double, Int]]
-//        (e.innerTrait _).expects("foo", 1.23, 42).returning(i)
-//        (e.outerTrait _).expects("bar", 4.56, 666).returning(outer)
-//        expect(o) { e.outerTrait("bar", 4.56, 666) }
-//        expect(i) { e.innerTrait("foo", 1.23, 42) }
-//      }
-//    }
+    "handle path-dependent polymorphic types correctly" in {
+      withExpectations {
+        val m = mock[PolymorphicTrait[String]]
+        val e = mock[m.Embedded[Double]]
+        val o = mock[m.ATrait[String, Double]]
+        val i = mock[e.ATrait[String, Double]]
+        (e.innerTrait _).expects("foo", 1.23).returning(i)
+        (e.outerTrait _).expects("bar", 4.56).returning(o)
+        expect(o) { e.outerTrait("bar", 4.56) }
+        expect(i) { e.innerTrait("foo", 1.23) }
+      }
+    }
     
     "mock a Java interface" in {
       withExpectations {

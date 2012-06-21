@@ -174,7 +174,7 @@ object MockImpl {
         case TypeRef(pre, sym, args) if sym == JavaRepeatedParamClass =>
           TypeTree(TypeRef(pre, RepeatedParamClass, args))
         case TypeRef(pre, sym, args) if isPathDependentThis(t) =>
-          Ident(newTypeName(sym.name.toString))
+          AppliedTypeTree(Ident(newTypeName(sym.name.toString)), args map TypeTree _)
         case _ =>
           TypeTree(t)
       }
