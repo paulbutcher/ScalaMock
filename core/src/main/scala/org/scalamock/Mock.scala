@@ -149,7 +149,7 @@ object MockImpl {
         case _ => Nil
       }
   
-      //! TODO - remove this when isStable becomes part of macro API
+      //! TODO - remove this when isStable becomes part of the macro API
       def isStable(s: Symbol) = s.asInstanceOf[{ def isStable: Boolean }].isStable
       
       //! TODO - remove this when isAccessor becomes part of the macro API
@@ -181,6 +181,7 @@ object MockImpl {
   
       def membersNotInObject = (typeToMock.members filterNot (m => isMemberOfObject(m))).toList
       
+      //! TODO - switch to using narrow when it becomes part of the macro API
       def resolvedType(m: Symbol) =
         m.typeSignatureIn(SuperType(ThisType(typeToMock.typeSymbol), typeToMock))
       
