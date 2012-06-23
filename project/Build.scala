@@ -24,14 +24,13 @@ import sbt.inc.Analysis
 
 object BuildSettings {
   val buildVersion = "3.0-SNAPSHOT"
-  val buildScalaVersion = "2.10.0-M4"
+  val buildScalaVersion = "2.10.0-SNAPSHOT"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
     organization := "org.scalamock",
     version := buildVersion,
     scalaVersion := buildScalaVersion,
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"),
-    scalacOptions in (Compile, console) += "-Yreify-copypaste",
     resolvers += "Sonatype OSS Snapshots" at "http://oss.sonatype.org/content/repositories/snapshots/",
 
     publishTo <<= version { v =>
@@ -92,8 +91,7 @@ object ShellPrompt {
 object Dependencies {
   val scalatest = "org.scalatest" % "scalatest_2.10.0-M4" % "1.8-SNAPSHOT"
   val specs2 = "org.specs2" % "specs2_2.10" % "1.12-SNAPSHOT"
-  val reflect = "org.scala-lang" % "scala-reflect" % "2.10.0-M4"
-  val actors = "org.scala-lang" % "scala-actors" % "2.10.0-M4"
+  val reflect = "org.scala-lang" % "scala-reflect" % BuildSettings.buildScalaVersion
 }
 
 object ScalaMockBuild extends Build {
@@ -124,7 +122,7 @@ object ScalaMockBuild extends Build {
     file("frameworks/scalatest"),
     settings = buildSettings ++ Seq(
       name := "ScalaMock ScalaTest Support",
-      libraryDependencies ++= Seq(scalatest, actors)
+      libraryDependencies ++= Seq(scalatest)
     )) dependsOn(core)
 
   lazy val specs2Support = Project(
