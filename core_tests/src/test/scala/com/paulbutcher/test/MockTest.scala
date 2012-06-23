@@ -84,19 +84,19 @@ class MockTest extends FreeSpec with MockFactory {
     "cope with polymorphic methods" in {
       withExpectations {
         val m = mock[TestTrait]
-        (m.polymorphic(_: Int)).expects(42).returning("called with integer")
-        (m.polymorphic(_: String)).expects("foo").returning("called with string")
-        expect("called with integer") { m.polymorphic(42) }
-        expect("called with string") { m.polymorphic("foo") }
+        (m.polymorphic(_: List[Int])).expects(List(1, 2)).returning("called with integers")
+        (m.polymorphic(_: List[String])).expects(List("foo", "bar")).returning("called with strings")
+        expect("called with integers") { m.polymorphic(List(1, 2)) }
+        expect("called with strings") { m.polymorphic(List("foo", "bar")) }
       }
     }
     
     "cope with curried polymorphic methods" in {
       withExpectations {
         val m = mock[TestTrait]
-        (m.polycurried(_: Int)(_: String)).expects(42, "foo").returning("it works")
-        val partial = m.polycurried(42) _
-        expect("it works") { partial("foo") }
+        (m.polycurried(_: Int)(_: String)).expects(42, "foo").returning((123, "bar"))
+        val partial = m.polycurried(42)(_: String)
+        expect((123, "bar")) { partial("foo") }
       }
     }
     

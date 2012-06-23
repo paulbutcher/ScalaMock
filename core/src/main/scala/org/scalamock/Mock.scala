@@ -209,7 +209,7 @@ object MockImpl {
           m.name, 
           methodType.typeParams map TypeDef _, 
           params,
-          TypeTree(),
+          paramType(finalResultType(methodType)),
           body)
       }
       
