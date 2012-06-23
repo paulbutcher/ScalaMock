@@ -188,7 +188,7 @@ object MockImpl {
         paramss(methodType) map { params =>
           params map { p =>
             ValDef(
-              Modifiers(PARAM),
+              Modifiers(p.flags),
               newTermName(p.name.toString),
               paramType(p.typeSignature),
               EmptyTree)

@@ -38,6 +38,7 @@ trait TestTrait {
   def polymorphicParam(x: (Int, Double)): String
   def repeatedParam(x: Int, ys: String*): String
   def byNameParam(x: => Int): String
+  def implicitParam(x: Int)(implicit y: Double): String
   
   def upperBound[T <: Product](x: T): Int
   def lowerBound[T >: U, U](x: T, y: List[U]): String
