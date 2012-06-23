@@ -248,18 +248,11 @@ object MockImpl {
         newTermName("mock$"+ m.name +"$"+ method.asTermSymbol.alternatives.indexOf(m))
       }
       
-      def mockParamType(t: Type): Tree = {
-        if (t.typeSymbol hasFlag PARAM)
-          Ident(staticClass("scala.Any"))
-        else
-          paramType(t)
-      }  
-      
       // val <|mockname|> = new MockFunctionN[T1, T2, ..., R](factory, '<|name|>)
       def mockMethod(m: Symbol): ValDef = {
         val mt = resolvedType(m)
         val clazz = classType(paramCount(mt))
-        val types = (paramTypes(mt) map mockParamType _) :+ mockParamType(finalResultType(mt))
+        val types = (paramTypes(mt) map paramType _) :+ paramType(finalResultType(mt))
         ValDef(Modifiers(),
           mockFunctionName(m), 
           TypeTree(), 
