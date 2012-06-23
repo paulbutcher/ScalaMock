@@ -39,6 +39,9 @@ trait TestTrait {
   def repeatedParam(x: Int, ys: String*): String
   def byNameParam(x: => Int): String
   
+  def upperBound[T <: Product](x: T): Int
+  def lowerBound[T >: U, U](x: T, y: List[U]): String
+  
   def withImplementation(x: Int) = x * x
   
   var aVar: String

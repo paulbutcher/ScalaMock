@@ -213,6 +213,22 @@ class MockTest extends FreeSpec with MockFactory {
       }
     }
     
+    "cope with upper bounds" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.upperBound _).expects((42, "foo")).returning(2)
+        expect(2) { m.upperBound((42, "foo")) }
+      }
+    }
+    
+    "cope with lower bounds" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.lowerBound _).expects((1, 2), List[Product]()).returning("it works")
+        expect("it works") { m.lowerBound((1, 2), List[Product]()) }
+      }
+    }
+    
     "mock a polymorphic trait" in {
       withExpectations {
         val m = mock[PolymorphicTrait[String]]
