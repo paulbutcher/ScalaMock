@@ -20,6 +20,7 @@
 
 package com.paulbutcher.test
 
+import reflect.runtime.universe.TypeTag
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.FreeSpec
 import org.scalamock._
@@ -235,6 +236,14 @@ class MockTest extends FreeSpec with MockFactory {
         val m = mock[TestTrait]
         (m.lowerBound _).expects((1, 2), List[Product]()).returning("it works")
         expect("it works") { m.lowerBound((1, 2), List[Product]()) }
+      }
+    }
+    
+    "cope with context bounds" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.contextBound(_: String)(_: TypeTag[String])).expects("foo", *).returning("it works")
+        expect("it works") { m.contextBound("foo") }
       }
     }
     
