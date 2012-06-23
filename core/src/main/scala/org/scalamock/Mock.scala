@@ -187,29 +187,12 @@ object MockImpl {
       def buildParams(methodType: Type) =
         paramss(methodType) map { params =>
           params map { p =>
-            val pt = p.typeSignature
-            val sym = pt.typeSymbol
-            val paramTypeTree = 
-              if (sym hasFlag PARAM)
-                Ident(newTypeName(sym.name.toString))
-              else
-                paramType(pt)
-                
             ValDef(
               Modifiers(PARAM),
               newTermName(p.name.toString),
-              paramTypeTree,
+              paramType(p.typeSignature),
               EmptyTree)
           }
-        }
-      
-      def buildTypeParams(methodType: Type) =
-        methodType.typeParams map { t => 
-          TypeDef(
-            Modifiers(PARAM),
-            newTypeName(t.name.toString), 
-            List(), 
-            TypeBoundsTree(Ident(staticClass("scala.Nothing")), Ident(staticClass("scala.Any"))))
         }
       
       def overrideIfNecessary(m: Symbol) =
@@ -224,7 +207,7 @@ object MockImpl {
         DefDef(
           overrideIfNecessary(m),
           m.name, 
-          buildTypeParams(methodType), 
+          methodType.typeParams map TypeDef _, 
           params,
           TypeTree(),
           body)
