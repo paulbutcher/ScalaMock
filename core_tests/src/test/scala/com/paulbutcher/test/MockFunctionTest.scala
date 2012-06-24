@@ -73,8 +73,7 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       }
     }
     
-    //! TODO - why is this failing?
-    "return a null-like default value for non reference types" ignore {
+    "return a null-like default value for non reference types" in {
       withExpectations {
         val m = mockFunction[Int]
         m.expects()

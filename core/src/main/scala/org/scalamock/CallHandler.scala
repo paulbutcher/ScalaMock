@@ -20,7 +20,7 @@
 
 package org.scalamock
 
-abstract class CallHandler[R](private[scalamock] val target: FakeFunction, private[scalamock] val argumentMatcher: Product => Boolean) extends Handler {
+abstract class CallHandler[R: Defaultable](private[scalamock] val target: FakeFunction, private[scalamock] val argumentMatcher: Product => Boolean) extends Handler {
   import CallHandler._
   
   type Derived <: CallHandler[R]
@@ -98,7 +98,7 @@ abstract class CallHandler[R](private[scalamock] val target: FakeFunction, priva
   
   private[scalamock] var expectedCalls: Range = 1 to 1
   private[scalamock] var actualCalls: Int = 0
-  private[scalamock] var onCallHandler: Product => R = {_ => null.asInstanceOf[R]}
+  private[scalamock] var onCallHandler: Product => R = {_ => implicitly[Defaultable[R]].default }
 }
 
 object CallHandler {
@@ -129,7 +129,7 @@ trait Verify { self: CallHandler[_] =>
   }
 }
 
-class CallHandler0[R](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+class CallHandler0[R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
 
   type Derived = CallHandler0[R]
   
@@ -138,7 +138,7 @@ class CallHandler0[R](target: FakeFunction, argumentMatcher: Product => Boolean)
   def onCall(handler: () => R): CallHandler0[R] = super.onCall(new FunctionAdapter0(handler))
 }
 
-class CallHandler1[T1, R](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+class CallHandler1[T1, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
   
   type Derived = CallHandler1[T1, R]
 
@@ -147,7 +147,7 @@ class CallHandler1[T1, R](target: FakeFunction, argumentMatcher: Product => Bool
   def onCall(handler: (T1) => R): CallHandler1[T1, R] = super.onCall(new FunctionAdapter1(handler))
 }
 
-class CallHandler2[T1, T2, R](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+class CallHandler2[T1, T2, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
   
   type Derived = CallHandler2[T1, T2, R]
 
@@ -156,7 +156,7 @@ class CallHandler2[T1, T2, R](target: FakeFunction, argumentMatcher: Product => 
   def onCall(handler: (T1, T2) => R): CallHandler2[T1, T2, R] = super.onCall(new FunctionAdapter2(handler))
 }
 
-class CallHandler3[T1, T2, T3, R](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+class CallHandler3[T1, T2, T3, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
   
   type Derived = CallHandler3[T1, T2, T3, R]
 
@@ -165,7 +165,7 @@ class CallHandler3[T1, T2, T3, R](target: FakeFunction, argumentMatcher: Product
   def onCall(handler: (T1, T2, T3) => R): CallHandler3[T1, T2, T3, R] = super.onCall(new FunctionAdapter3(handler))
 }
 
-class CallHandler4[T1, T2, T3, T4, R](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+class CallHandler4[T1, T2, T3, T4, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
   
   type Derived = CallHandler4[T1, T2, T3, T4, R]
 
@@ -174,7 +174,7 @@ class CallHandler4[T1, T2, T3, T4, R](target: FakeFunction, argumentMatcher: Pro
   def onCall(handler: (T1, T2, T3, T4) => R): CallHandler4[T1, T2, T3, T4, R] = super.onCall(new FunctionAdapter4(handler))
 }
 
-class CallHandler5[T1, T2, T3, T4, T5, R](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+class CallHandler5[T1, T2, T3, T4, T5, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
   
   type Derived = CallHandler5[T1, T2, T3, T4, T5, R]
 
@@ -183,7 +183,7 @@ class CallHandler5[T1, T2, T3, T4, T5, R](target: FakeFunction, argumentMatcher:
   def onCall(handler: (T1, T2, T3, T4, T5) => R): CallHandler5[T1, T2, T3, T4, T5, R] = super.onCall(new FunctionAdapter5(handler))
 }
 
-class CallHandler6[T1, T2, T3, T4, T5, T6, R](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+class CallHandler6[T1, T2, T3, T4, T5, T6, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
   
   type Derived = CallHandler6[T1, T2, T3, T4, T5, T6, R]
 
@@ -192,7 +192,7 @@ class CallHandler6[T1, T2, T3, T4, T5, T6, R](target: FakeFunction, argumentMatc
   def onCall(handler: (T1, T2, T3, T4, T5, T6) => R): CallHandler6[T1, T2, T3, T4, T5, T6, R] = super.onCall(new FunctionAdapter6(handler))
 }
 
-class CallHandler7[T1, T2, T3, T4, T5, T6, T7, R](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+class CallHandler7[T1, T2, T3, T4, T5, T6, T7, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
   
   type Derived = CallHandler7[T1, T2, T3, T4, T5, T6, T7, R]
 
@@ -201,7 +201,7 @@ class CallHandler7[T1, T2, T3, T4, T5, T6, T7, R](target: FakeFunction, argument
   def onCall(handler: (T1, T2, T3, T4, T5, T6, T7) => R): CallHandler7[T1, T2, T3, T4, T5, T6, T7, R] = super.onCall(new FunctionAdapter7(handler))
 }
 
-class CallHandler8[T1, T2, T3, T4, T5, T6, T7, T8, R](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+class CallHandler8[T1, T2, T3, T4, T5, T6, T7, T8, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
   
   type Derived = CallHandler8[T1, T2, T3, T4, T5, T6, T7, T8, R]
 
@@ -210,7 +210,7 @@ class CallHandler8[T1, T2, T3, T4, T5, T6, T7, T8, R](target: FakeFunction, argu
   def onCall(handler: (T1, T2, T3, T4, T5, T6, T7, T8) => R): CallHandler8[T1, T2, T3, T4, T5, T6, T7, T8, R] = super.onCall(new FunctionAdapter8(handler))
 }
 
-class CallHandler9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+class CallHandler9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
   
   type Derived = CallHandler9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]
 
