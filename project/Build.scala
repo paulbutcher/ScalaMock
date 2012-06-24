@@ -23,7 +23,7 @@ import Keys._
 import sbt.inc.Analysis
 
 object BuildSettings {
-  val buildVersion = "3.0-SNAPSHOT"
+  val buildVersion = "3.0-M1"
   val buildScalaVersion = "2.10.0-M4"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
@@ -107,7 +107,7 @@ object ScalaMockBuild extends Build {
       publishArtifact in (Compile, packageSrc) := false,
       sources in Compile <<= (Seq(core, scalatestSupport, specs2Support).map(sources in Compile in _).join).map(_.flatten),
       libraryDependencies ++= Seq(scalatest, specs2)
-    )) aggregate(core, core_tests, scalatestSupport, examples)
+    )) aggregate(core, core_tests, scalatestSupport, specs2Support, examples)
 
   lazy val core = Project(
     "core", 
