@@ -31,10 +31,7 @@ abstract class FakeFunction(protected val factory: MockFactoryBase, private[scal
   
   def handle(arguments: Product): Any = {
     val call = new Call(this, arguments)
-    factory.handle(call) match {
-      case Some(retVal) => retVal
-      case None => onUnexpected(call)
-    }
+    factory.handle(call) getOrElse onUnexpected(call)
   }
   
   protected def onUnexpected(call: Call): Any
