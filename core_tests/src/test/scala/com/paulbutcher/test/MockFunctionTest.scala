@@ -223,6 +223,19 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       })
     }
     
+    "not match a previous item in the sequence" in {
+      withExpectations {
+        val m = mockFunction[Int, Int]
+        inSequence {
+          m.expects(42).returning(10).anyNumberOfTimes
+          m.expects(43).returning(11).once
+        }
+        expect(10) { m(42) }
+        expect(11) { m(43) }
+        intercept[ExpectationException] { m(42) }
+      }
+    }
+    
     "handle a combination of ordered and unordered expectations" in {
       withExpectations {
         val m = mockFunction[Int, Unit]

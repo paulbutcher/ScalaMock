@@ -237,6 +237,20 @@ class StubFunctionTest extends FreeSpec with MockFactory {
         }
       })
     }
+    
+    "not match a previous item in the sequence" in {
+      withExpectations {
+        val m = stubFunction[Int, Int]
+        m(42)
+        m(43)
+        m(42)
+        inSequence {
+          m.verify(42).anyNumberOfTimes
+          m.verify(43)
+          m.verify(42)
+        }
+      }
+    }
 
     "handle a combination of ordered and unordered expectations" in {
       withExpectations {

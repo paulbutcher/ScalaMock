@@ -48,8 +48,10 @@ private[scalamock] class OrderedHandlers extends Handlers {
     def apply(call: Call): Boolean = {
       for (i <- currentIndex until handlers.length) {
         val handler = handlers(i)
-        if (handler.verify(call))
+        if (handler.verify(call)) {
+          currentIndex = i
           return true
+        }
       }
       false
     }
