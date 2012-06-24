@@ -171,7 +171,29 @@ package org
  * 
  * {{{
  * val mockIncrement = mockFunction[Int, Int]
- * m expects (*) onCall { x: Int => x + 1 }
+ * m expects (*) onCall { _ + 1 }
+ * }}}
+ * 
+ * ===Overloaded, curried and polymorphic methods===
+ * 
+ * Overloaded, curried and polymorphic methods can be mocked by specifying 
+ * argument types. For example:
+ * 
+ * {{{
+ * trait Foo {
+ *   def overloaded(x: Int): String
+ *   def overloaded(x: String): String
+ *   def curried(x: Int)(y: Double): String
+ *   def polymorphic[T](x: List[T]): String
+ * }
+ * }}}
+ * 
+ * {{{
+ * val m = mock[Foo]
+ * (m.overloaded(_: Int)).expects(10)
+ * (m.overloaded(_: String)).expects("foo")
+ * (m.curried(_: Int)(_: Double)).expects(10, 1.23)
+ * (m.polymorphic(_: List[Int])).expects(List(1, 2, 3))
  * }}}
  *
  * ===Exceptions===
