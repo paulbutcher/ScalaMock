@@ -1,0 +1,5 @@
+== ScalaMock ==
+
+This is the documentation for ScalaMock
+
+For an overview, see [[org.scalamock]].

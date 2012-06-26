@@ -21,7 +21,7 @@
 package org
 
 /**
- * =ScalaMock: Native Scala Mocking=
+ * ==ScalaMock: Native Scala Mocking==
  * 
  * To use ScalaMock, mix the relevant `MockFactory` trait into your test class.
  * For ScalaTest, use [[org.scalamock.scalatest.MockFactory]] and for Specs2
