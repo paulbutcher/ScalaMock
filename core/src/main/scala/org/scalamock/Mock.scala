@@ -20,8 +20,6 @@
 
 package org.scalamock
 
-import reflect.makro.Context
-
 trait Mock {
   import language.experimental.macros
   import language.implicitConversions
@@ -74,6 +72,7 @@ trait Mock {
 }
 
 object MockImpl {
+  import reflect.makro.Context
   
   def mock[T: c.TypeTag](c: Context)(factory: c.Expr[MockFactoryBase]): c.Expr[T] = {
     val maker = MockMaker(c)
