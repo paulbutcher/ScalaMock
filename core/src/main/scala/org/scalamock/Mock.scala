@@ -75,58 +75,60 @@ object MockImpl {
   import reflect.makro.Context
   
   def mock[T: c.TypeTag](c: Context)(factory: c.Expr[MockFactoryBase]): c.Expr[T] = {
-    val maker = MockMaker(c)
+    val maker = MockMaker[T](c)(factory, stub = false)
 
-    maker.make[T](factory, maker.mockFunctionClass _)
+    maker.make
   }
   
   def stub[T: c.TypeTag](c: Context)(factory: c.Expr[MockFactoryBase]): c.Expr[T] = {
-    val maker = MockMaker(c)
+    val maker = MockMaker[T](c)(factory, stub = true)
 
-    maker.make[T](factory, maker.stubFunctionClass _)
+    maker.make
   }
   
-  def MockMaker(c: Context) = new MockMaker[c.type](c)
+  def MockMaker[T: c.TypeTag](c: Context)(factory: c.Expr[MockFactoryBase], stub: Boolean) = {
+    val m = new MockMaker[c.type](c)
+    new m.MockMakerInner[T](factory, stub)
+  }
   
+  //! TODO - get rid of this nasty two-stage construction when https://issues.scala-lang.org/browse/SI-5521 is fixed
   class MockMaker[C <: Context](val ctx: C) {
-    import ctx.mirror._
-    import ctx.universe._
-    import Flag._
-    import definitions._
-    import language.reflectiveCalls
-    
-    def mockFunctionClass(paramCount: Int): Type = paramCount match {
-      case 0 => typeOf[MockFunction0[_]]
-      case 1 => typeOf[MockFunction1[_, _]]
-      case 2 => typeOf[MockFunction2[_, _, _]]
-      case 3 => typeOf[MockFunction3[_, _, _, _]]
-      case 4 => typeOf[MockFunction4[_, _, _, _, _]]
-      case 5 => typeOf[MockFunction5[_, _, _, _, _, _]]
-      case 6 => typeOf[MockFunction6[_, _, _, _, _, _, _]]
-      case 7 => typeOf[MockFunction7[_, _, _, _, _, _, _, _]]
-      case 8 => typeOf[MockFunction8[_, _, _, _, _, _, _, _, _]]
-      case 9 => typeOf[MockFunction9[_, _, _, _, _, _, _, _, _, _]]
-      case _ => ctx.abort(ctx.enclosingPosition, "ScalaMock: Can't handle methods with more than 9 parameters (yet)")
-    }
-    
-    def stubFunctionClass(paramCount: Int): Type = paramCount match {
-      case 0 => typeOf[StubFunction0[_]]
-      case 1 => typeOf[StubFunction1[_, _]]
-      case 2 => typeOf[StubFunction2[_, _, _]]
-      case 3 => typeOf[StubFunction3[_, _, _, _]]
-      case 4 => typeOf[StubFunction4[_, _, _, _, _]]
-      case 5 => typeOf[StubFunction5[_, _, _, _, _, _]]
-      case 6 => typeOf[StubFunction6[_, _, _, _, _, _, _]]
-      case 7 => typeOf[StubFunction7[_, _, _, _, _, _, _, _]]
-      case 8 => typeOf[StubFunction8[_, _, _, _, _, _, _, _, _]]
-      case 9 => typeOf[StubFunction9[_, _, _, _, _, _, _, _, _, _]]
-      case _ => ctx.abort(ctx.enclosingPosition, "ScalaMock: Can't handle methods with more than 9 parameters (yet)")
-    }
-
-    def make[T: ctx.TypeTag](factory: ctx.Expr[MockFactoryBase], classType: (Int) => Type) = {
-      val typeToMock = typeOf[T]
-    
-      val anon = newTypeName("$anon") 
+    class MockMakerInner[T: ctx.TypeTag](factory: ctx.Expr[MockFactoryBase], stub: Boolean) {
+      import ctx.mirror._
+      import ctx.universe._
+      import Flag._
+      import definitions._
+      import language.reflectiveCalls
+      
+      def mockFunctionClass(paramCount: Int): Type = paramCount match {
+        case 0 => typeOf[MockFunction0[_]]
+        case 1 => typeOf[MockFunction1[_, _]]
+        case 2 => typeOf[MockFunction2[_, _, _]]
+        case 3 => typeOf[MockFunction3[_, _, _, _]]
+        case 4 => typeOf[MockFunction4[_, _, _, _, _]]
+        case 5 => typeOf[MockFunction5[_, _, _, _, _, _]]
+        case 6 => typeOf[MockFunction6[_, _, _, _, _, _, _]]
+        case 7 => typeOf[MockFunction7[_, _, _, _, _, _, _, _]]
+        case 8 => typeOf[MockFunction8[_, _, _, _, _, _, _, _, _]]
+        case 9 => typeOf[MockFunction9[_, _, _, _, _, _, _, _, _, _]]
+        case _ => ctx.abort(ctx.enclosingPosition, "ScalaMock: Can't handle methods with more than 9 parameters (yet)")
+      }
+      
+      def stubFunctionClass(paramCount: Int): Type = paramCount match {
+        case 0 => typeOf[StubFunction0[_]]
+        case 1 => typeOf[StubFunction1[_, _]]
+        case 2 => typeOf[StubFunction2[_, _, _]]
+        case 3 => typeOf[StubFunction3[_, _, _, _]]
+        case 4 => typeOf[StubFunction4[_, _, _, _, _]]
+        case 5 => typeOf[StubFunction5[_, _, _, _, _, _]]
+        case 6 => typeOf[StubFunction6[_, _, _, _, _, _, _]]
+        case 7 => typeOf[StubFunction7[_, _, _, _, _, _, _, _]]
+        case 8 => typeOf[StubFunction8[_, _, _, _, _, _, _, _, _]]
+        case 9 => typeOf[StubFunction9[_, _, _, _, _, _, _, _, _, _]]
+        case _ => ctx.abort(ctx.enclosingPosition, "ScalaMock: Can't handle methods with more than 9 parameters (yet)")
+      }
+      
+      def classType(paramCount: Int) = if (stub) stubFunctionClass(paramCount) else mockFunctionClass(paramCount)
   
       // Convert a methodType into its ultimate result type
       // For nullary and normal methods, this is just the result type
@@ -308,7 +310,9 @@ object MockImpl {
         TypeApply(
           Select(expr, newTermName("asInstanceOf")),
           List(TypeTree(t)))
-
+  
+      val typeToMock = typeOf[T]
+      val anon = newTypeName("$anon") 
       val methodsToMock = membersNotInObject filter { m => 
         m.isMethod && (!(isStable(m) || isAccessor(m)) || m.hasFlag(DEFERRED))
       }
@@ -316,15 +320,17 @@ object MockImpl {
       val mocks = methodsToMock map mockMethod _
       val members = forwarders ++ mocks
       
-      val result = castTo(anonClass(members), typeToMock)
+      def make() = {
+        val result = castTo(anonClass(members), typeToMock)
 
-//      println("------------")
-//      println(showRaw(result))
-//      println("------------")
-//      println(show(result))
-//      println("------------")
-  
-      ctx.Expr(result)
+//        println("------------")
+//        println(showRaw(result))
+//        println("------------")
+//        println(show(result))
+//        println("------------")
+    
+        ctx.Expr(result)
+      }
     }
   }
   
