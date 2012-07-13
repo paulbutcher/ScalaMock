@@ -27,27 +27,28 @@ import org.scalamock.specs2.MockFactory
  * This is a demonstration and test of the Specs2 integration, using the example from
  * Martin Fowler's article Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
  */
-class OrderSpecification extends Specification with MockFactory {
-  import language.postfixOps
-  
-  val mockWarehouse = mock[Warehouse]
-
-  "An order" should  {
-    "remove inventory when in stock" in {
-      inSequence {
-        (mockWarehouse.hasInventory _) expects ("Talisker", 50) returning true once;
-        (mockWarehouse.remove _) expects ("Talisker", 50) once
-      }
-      val order = new Order("Talisker", 50)
-      order.fill(mockWarehouse)
-      order.isFilled must beTrue
-    }
-
-    "remove nothing when out of stock" in {
-      (mockWarehouse.hasInventory _) expects (*, *) returns false once
-      val order = new Order("Talisker", 50)
-      order.fill(mockWarehouse)
-      order.isFilled must beFalse
-    }
-  }
-}
+//! TODO - reenable when specs2 is release for 2.10.0-M5
+// class OrderSpecification extends Specification with MockFactory {
+//   import language.postfixOps
+//   
+//   val mockWarehouse = mock[Warehouse]
+// 
+//   "An order" should  {
+//     "remove inventory when in stock" in {
+//       inSequence {
+//         (mockWarehouse.hasInventory _) expects ("Talisker", 50) returning true once;
+//         (mockWarehouse.remove _) expects ("Talisker", 50) once
+//       }
+//       val order = new Order("Talisker", 50)
+//       order.fill(mockWarehouse)
+//       order.isFilled must beTrue
+//     }
+// 
+//     "remove nothing when out of stock" in {
+//       (mockWarehouse.hasInventory _) expects (*, *) returns false once
+//       val order = new Order("Talisker", 50)
+//       order.fill(mockWarehouse)
+//       order.isFilled must beFalse
+//     }
+//   }
+// }
