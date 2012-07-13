@@ -150,12 +150,6 @@ object MockImpl {
         case _ => Nil
       }
   
-      //! TODO - remove this when isStable becomes part of the macro API
-      def isStable(s: Symbol) = s.asInstanceOf[{ def isStable: Boolean }].isStable
-      
-      //! TODO - remove this when isAccessor becomes part of the macro API
-      def isAccessor(s: Symbol) = s.asInstanceOf[{ def isAccessor: Boolean }].isAccessor
-      
       def paramCount(methodType: Type): Int = methodType match {
         case MethodType(params, result) => params.length + paramCount(result)
         case PolyType(_, result) => paramCount(result)
@@ -227,7 +221,7 @@ object MockImpl {
       
       def forwarderImpl(m: Symbol) = {
         val mt = resolvedType(m)
-        if (isStable(m)) {
+        if (m.isStable) {
           ValDef(
             Modifiers(), 
             newTermName(m.name.toString), 
@@ -314,7 +308,7 @@ object MockImpl {
       val typeToMock = typeOf[T]
       val anon = newTypeName("$anon") 
       val methodsToMock = membersNotInObject filter { m => 
-        m.isMethod && (!(isStable(m) || isAccessor(m)) || m.hasFlag(DEFERRED))
+        m.isMethod && (!(m.isStable || m.isAccessor) || m.hasFlag(DEFERRED))
       }
       val forwarders = methodsToMock map forwarderImpl _
       val mocks = methodsToMock map mockMethod _
