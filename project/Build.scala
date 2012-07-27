@@ -24,7 +24,7 @@ import sbt.inc.Analysis
 
 object BuildSettings {
   val buildVersion = "3.0-SNAPSHOT"
-  val buildScalaVersion = "2.10.0-M5"
+  val buildScalaVersion = "2.10.0-M6"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
     organization := "org.scalamock",
@@ -32,7 +32,6 @@ object BuildSettings {
     scalaVersion := buildScalaVersion,
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"),
     scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++ Opts.doc.version(buildVersion) ++ Seq("-doc-root-content", "/Users/paul/scala/ScalaMock3/rootdoc.txt", "-version"),
-    resolvers += Resolver.sonatypeRepo("snapshots"),
     resolvers += Resolver.sonatypeRepo("releases"),
 
     publishTo <<= version { v =>
@@ -91,8 +90,8 @@ object ShellPrompt {
 }
 
 object Dependencies {
-  val scalatest = "org.scalatest" % "scalatest_2.10.0-M5" % "1.9-2.10.0-M5-B1"
-  val specs2 = "org.specs2" % "specs2_2.10" % "1.11"
+  val scalatest = "org.scalatest" % "scalatest_2.10.0-M6" % "1.9-2.10.0-M6-B2"
+  val specs2 = "org.specs2" % "specs2_2.10.0-M6" % "1.11"
   val reflect = "org.scala-lang" % "scala-reflect" % BuildSettings.buildScalaVersion
 }
 

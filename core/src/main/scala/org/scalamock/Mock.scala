@@ -179,6 +179,9 @@ object MockImpl {
       //! TODO - switch to using narrow when it becomes part of the macro API
       def resolvedType(m: Symbol) =
         m.typeSignatureIn(SuperType(ThisType(typeToMock.typeSymbol), typeToMock))
+        
+      //! TODO - replace "$init$" with nme.MIXIN_CONSTRUCTOR when it's re-instated
+      def isConstructorName(name: Name) = name == nme.CONSTRUCTOR || name.toString == "$init$"
       
       def buildParams(methodType: Type) =
         paramss(methodType) map { params =>
@@ -192,7 +195,7 @@ object MockImpl {
         }
       
       def overrideIfNecessary(m: Symbol) =
-        if (nme.isConstructorName(m.name) || m.hasFlag(DEFERRED))
+        if (isConstructorName(m.name) || m.hasFlag(DEFERRED))
           Modifiers()
         else
           Modifiers(OVERRIDE)
