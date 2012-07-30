@@ -194,17 +194,11 @@ object MockImpl {
           }
         }
       
-      def overrideIfNecessary(m: Symbol) =
-        if (isConstructorName(m.name) || m.hasFlag(DEFERRED))
-          Modifiers()
-        else
-          Modifiers(OVERRIDE)
-      
       // def <|name|>(p1: T1, p2: T2, ...): T = <|mockname|>(p1, p2, ...)
       def methodDef(m: Symbol, methodType: Type, body: Tree): DefDef = {
         val params = buildParams(methodType)
         DefDef(
-          overrideIfNecessary(m),
+          Modifiers(OVERRIDE),
           m.name, 
           methodType.typeParams map TypeDef _, 
           params,
@@ -311,7 +305,7 @@ object MockImpl {
       val typeToMock = typeOf[T]
       val anon = newTypeName("$anon") 
       val methodsToMock = membersNotInObject filter { m => 
-        m.isMethod && (!(m.isStable || m.isAccessor) || m.hasFlag(DEFERRED))
+        m.isMethod && !isConstructorName(m.name) && (!(m.isStable || m.isAccessor) || m.hasFlag(DEFERRED))
       }
       val forwarders = methodsToMock map forwarderImpl _
       val mocks = methodsToMock map mockMethod _
