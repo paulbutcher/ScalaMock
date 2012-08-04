@@ -300,6 +300,18 @@ class MockTest extends FreeSpec with MockFactory {
         expect((123, "bar")) { m.m(42, "foo") }
       }
     }
+    
+    "mock a specialized class" in {
+      withExpectations {
+        val m1 = mock[SpecializedClass[Int]]
+        (m1.identity _).expects(42).returning(43)
+        expect(43) { m1.identity(42) }
+        
+        val m2 = mock[SpecializedClass[List[String]]]
+        (m2.identity _).expects(List("one", "two", "three")).returning(List("four", "five", "six"))
+        expect(List("four", "five", "six")) { m2.identity(List("one", "two", "three")) }
+      }
+    }
   }
   
   "Stubs should" - {
