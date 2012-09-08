@@ -24,7 +24,7 @@ import sbt.inc.Analysis
 
 object BuildSettings {
   val buildVersion = "3.0-SNAPSHOT"
-  val buildScalaVersion = "2.10.0-M6"
+  val buildScalaVersion = "2.10.0-SNAPSHOT"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
     organization := "org.scalamock",
@@ -33,6 +33,7 @@ object BuildSettings {
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"),
     scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++ Opts.doc.version(buildVersion) ++ Seq("-doc-root-content", "/Users/paul/scala/ScalaMock3/rootdoc.txt", "-version"),
     resolvers += Resolver.sonatypeRepo("releases"),
+    resolvers += Resolver.sonatypeRepo("snapshots"),
 
     publishTo <<= version { v =>
       val nexus = "https://oss.sonatype.org/"
