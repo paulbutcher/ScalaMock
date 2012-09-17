@@ -72,7 +72,7 @@ trait Mock {
 }
 
 object MockImpl {
-  import reflect.makro.Context
+  import reflect.macros.Context
   
   def mock[T: c.TypeTag](c: Context)(factory: c.Expr[MockFactoryBase]): c.Expr[T] = {
     val maker = MockMaker[T](c)(factory, stub = false)
@@ -200,7 +200,7 @@ object MockImpl {
         DefDef(
           Modifiers(OVERRIDE),
           m.name, 
-          methodType.typeParams map TypeDef _, 
+          m.asMethod.typeParams map TypeDef _, 
           params,
           paramType(finalResultType(methodType)),
           body)
@@ -218,7 +218,7 @@ object MockImpl {
       
       def forwarderImpl(m: Symbol) = {
         val mt = resolvedType(m)
-        if (m.isStable) {
+        if (m.asTerm.isStable) {
           ValDef(
             Modifiers(), 
             newTermName(m.name.toString), 
@@ -238,7 +238,7 @@ object MockImpl {
 
       def mockFunctionName(m: Symbol) = {
         val method = typeToMock.member(m.name)
-        newTermName("mock$"+ m.name +"$"+ method.asTermSymbol.alternatives.indexOf(m))
+        newTermName("mock$"+ m.name +"$"+ method.asTerm.alternatives.indexOf(m))
       }
       
       // val <|mockname|> = new MockFunctionN[T1, T2, ..., R](factory, '<|name|>)
@@ -305,7 +305,7 @@ object MockImpl {
       val typeToMock = typeOf[T]
       val anon = newTypeName("$anon") 
       val methodsToMock = membersNotInObject filter { m => 
-        m.isMethod && !isConstructorName(m.name) && (!(m.isStable || m.isAccessor) || m.hasFlag(DEFERRED))
+        m.isMethod && !isConstructorName(m.name) && (!(m.asTerm.isStable || m.asTerm.isAccessor) || m.hasFlag(DEFERRED))
       }
       val forwarders = methodsToMock map forwarderImpl _
       val mocks = methodsToMock map mockMethod _
@@ -332,8 +332,8 @@ object MockImpl {
     
     def mockFunctionName(name: Name, t: Type) = {
       val method = t.member(name)
-      if (method.isOverloaded) {
-        val term = method.asTermSymbol 
+      if (method.asMethod.isOverloaded) {
+        val term = method.asTerm 
         val m = term.resolveOverloaded(NoPrefix, List(), actuals)
         "mock$"+ name +"$"+ term.alternatives.indexOf(m)
       } else {
