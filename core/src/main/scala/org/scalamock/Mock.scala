@@ -187,7 +187,7 @@ object MockImpl {
         paramss(methodType) map { params =>
           params map { p =>
             ValDef(
-              Modifiers(p.flags),
+              Modifiers(), //! TODO - not sure what to do here
               newTermName(p.name.toString),
               paramType(p.typeSignature),
               EmptyTree)
@@ -305,7 +305,8 @@ object MockImpl {
       val typeToMock = typeOf[T]
       val anon = newTypeName("$anon") 
       val methodsToMock = membersNotInObject filter { m => 
-        m.isMethod && !isConstructorName(m.name) && (!(m.asTerm.isStable || m.asTerm.isAccessor) || m.hasFlag(DEFERRED))
+        m.isMethod && !isConstructorName(m.name) && (!(m.asTerm.isStable || m.asTerm.isAccessor) ||
+          m.asInstanceOf[reflect.internal.HasFlags].isDeferred) //! TODO - stop using internal if/when this gets into the API
       }
       val forwarders = methodsToMock map forwarderImpl _
       val mocks = methodsToMock map mockMethod _
