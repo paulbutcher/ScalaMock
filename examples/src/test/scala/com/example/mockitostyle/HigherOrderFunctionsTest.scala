@@ -20,10 +20,10 @@
 
 package com.example.mockitostyle
 
-import org.scalatest.Suite
+import org.scalatest.Spec
 import org.scalamock.scalatest.MockFactory
 
-class HigherOrderFunctionsTest extends Suite with MockFactory {
+class HigherOrderFunctionsTest extends Spec with MockFactory {
   import language.postfixOps
   
   def testMap {
