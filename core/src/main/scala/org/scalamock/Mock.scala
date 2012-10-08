@@ -315,11 +315,11 @@ object MockImpl {
       def make() = {
         val result = castTo(anonClass(members), typeToMock)
 
-//        println("------------")
-//        println(showRaw(result))
-//        println("------------")
-//        println(show(result))
-//        println("------------")
+       // println("------------")
+       // println(showRaw(result))
+       // println("------------")
+       // println(show(result))
+       // println("------------")
     
         ctx.Expr(result)
       }
@@ -332,14 +332,15 @@ object MockImpl {
     import c.universe._
     
     def mockFunctionName(name: Name, t: Type) = {
-      val method = t.member(name)
-      if (method.asMethod.isOverloaded) {
-        val term = method.asTerm 
-        val m = term.resolveOverloaded(NoPrefix, List(), actuals)
-        "mock$"+ name +"$"+ term.alternatives.indexOf(m)
-      } else {
+      //! TODO - reinstate
+      // val method = t.member(name)
+      // if (method.asMethod.isOverloaded) {
+      //   val term = method.asTerm 
+      //   val m = term.resolveOverloaded(NoPrefix, List(), actuals)
+      //   "mock$"+ name +"$"+ term.alternatives.indexOf(m)
+      // } else {
         "mock$"+ name +"$0"
-      }    
+      // }    
     }
     
     def findApplication(tree: Tree): (Tree, Name) = tree match {
