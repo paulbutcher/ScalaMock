@@ -273,7 +273,7 @@ package org
  * m1.forward(10.0)
  * m2.forward(1.0)
  * m1.penUp
- * expect((2.0, 1.0)) { m2.getPosition }
+ * expectResult((2.0, 1.0)) { m2.getPosition }
  * }}}
  *
  * To specify that there is no constraint on ordering, use `inAnyOrder` (there is an implicit

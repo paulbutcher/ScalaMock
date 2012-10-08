@@ -38,44 +38,44 @@ class StubFunctionTest extends FreeSpec with MockFactory {
   "Stub functions should" - {
     "have a sensible default name" in {
       val m = stubFunction[String]
-      expect("unnamed StubFunction0"){ m.toString }
+      expectResult("unnamed StubFunction0"){ m.toString }
     }
     
     "have the name we gave them" - {
       "where we use a symbol" in {
         val m1 = stubFunction[String](Symbol("a stub function"))
-        expect("a stub function"){ m1.toString }
+        expectResult("a stub function"){ m1.toString }
       }
 
       "where we use a string" in {
         val m2 = stubFunction[String]("another stub function")
-        expect("another stub function"){ m2.toString }
+        expectResult("another stub function"){ m2.toString }
       }
     }
     
     "resolve ambiguity when taking a symbol argument" - {
       "with no name specified" in {
         val m1 = stubFunction[Symbol, String]
-        expect("unnamed StubFunction1"){ m1.toString }
+        expectResult("unnamed StubFunction1"){ m1.toString }
       }
 
       "with a name specified" in {
         val m2 = stubFunction[Symbol, String](functionName("a named stub"))
-        expect("a named stub"){ m2.toString }
+        expectResult("a named stub"){ m2.toString }
       }
     }
 
     "return null by default" in {
       withExpectations {
         val m = stubFunction[String]
-        expect(null) { m() }
+        expectResult(null) { m() }
       }
     }
     
     "return a null-like default value for non reference types" in {
       withExpectations {
         val m = stubFunction[Int]
-        expect(0) { m() }
+        expectResult(0) { m() }
       }
     }
     
@@ -83,7 +83,7 @@ class StubFunctionTest extends FreeSpec with MockFactory {
       withExpectations {
         val m = stubFunction[String]
         m.when().returns("a return value")
-        expect("a return value") { m() }
+        expectResult("a return value") { m() }
       }
     }
     
@@ -99,9 +99,9 @@ class StubFunctionTest extends FreeSpec with MockFactory {
       withExpectations {
         val m = stubFunction[String]
         m.when().returns("a return value")
-        expect("a return value") { m() }
-        expect("a return value") { m() }
-        expect("a return value") { m() }
+        expectResult("a return value") { m() }
+        expectResult("a return value") { m() }
+        expectResult("a return value") { m() }
       }
     }
     
@@ -109,9 +109,9 @@ class StubFunctionTest extends FreeSpec with MockFactory {
       withExpectations {
         val m = stubFunction[String]
         m.when().returns("a return value").twice
-        expect("a return value") { m() }
-        expect("a return value") { m() }
-        expect(null) { m() }
+        expectResult("a return value") { m() }
+        expectResult("a return value") { m() }
+        expectResult(null) { m() }
       }
     }
     
@@ -170,8 +170,8 @@ class StubFunctionTest extends FreeSpec with MockFactory {
           val m = stubFunction[Int, Int, String]
           m.when(where { _ < _ }).returns("lower")
           m.when(where { _ > _ }).returns("higher")
-          expect("lower"){ m(1, 2) }
-          expect("higher"){ m(2, 1) }
+          expectResult("lower"){ m(1, 2) }
+          expectResult("higher"){ m(2, 1) }
         }
       }
       
@@ -358,8 +358,8 @@ class StubFunctionTest extends FreeSpec with MockFactory {
         m1.when(42).returns("m1")
         m2.when(42).returns("m2")
         
-        expect("m1") { m1(42) }
-        expect("m2") { m2(42) }
+        expectResult("m1") { m1(42) }
+        expectResult("m2") { m2(42) }
         
         m1.verify(42).once
         m2.verify(42).once
