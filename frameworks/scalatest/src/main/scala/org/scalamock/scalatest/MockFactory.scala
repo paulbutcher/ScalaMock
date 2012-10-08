@@ -21,7 +21,7 @@
 package org.scalamock.scalatest
 
 import org.scalamock.MockFactoryBase
-import org.scalatest.{AbstractSuite, Reporter, Stopper, Suite, Tracker}
+import org.scalatest.{Reporter, Stopper, Suite, SuiteMixin, Tracker}
 import org.scalatest.exceptions.TestFailedException
 
 /** Trait that can be mixed into a [[http://www.scalatest.org/ ScalaTest]] suite to provide
@@ -29,7 +29,7 @@ import org.scalatest.exceptions.TestFailedException
   *
   * See [[org.scalamock]] for overview documentation.
   */
-trait MockFactory extends AbstractSuite with MockFactoryBase { this: Suite =>
+trait MockFactory extends SuiteMixin with MockFactoryBase { this: Suite =>
   
   type ExpectationException = TestFailedException
   
