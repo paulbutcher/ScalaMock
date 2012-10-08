@@ -182,12 +182,12 @@ object MockImpl {
         
       //! TODO - replace "$init$" with nme.MIXIN_CONSTRUCTOR when it's re-instated
       def isConstructorName(name: Name) = name == nme.CONSTRUCTOR || name.toString == "$init$"
-      
+
       def buildParams(methodType: Type) =
         paramss(methodType) map { params =>
           params map { p =>
             ValDef(
-              Modifiers(), //! TODO - not sure what to do here
+              Modifiers(PARAM | (if (p.isImplicit) IMPLICIT else NoFlags)),
               newTermName(p.name.toString),
               paramType(p.typeSignature),
               EmptyTree)

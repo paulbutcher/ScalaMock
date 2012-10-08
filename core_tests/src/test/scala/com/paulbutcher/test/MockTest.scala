@@ -137,15 +137,14 @@ class MockTest extends FreeSpec with MockFactory {
       }
     }
     
-    //! TODO - reinstate
-    // "cope with methods with implicit parameters" in {
-    //   withExpectations {
-    //     implicit val y: Double = 1.23
-    //     val m = mock[TestTrait]
-    //     (m.implicitParam(_: Int)(_: Double)).expects(42, 1.23).returning("it works")
-    //     expectResult("it works") { m.implicitParam(42) }
-    //   }
-    // }
+    "cope with methods with implicit parameters" in {
+      withExpectations {
+        implicit val y: Double = 1.23
+        val m = mock[TestTrait]
+        (m.implicitParam(_: Int)(_: Double)).expects(42, 1.23).returning("it works")
+        expectResult("it works") { m.implicitParam(42) }
+      }
+    }
     
     "cope with a var" in {
       withExpectations {
@@ -241,23 +240,21 @@ class MockTest extends FreeSpec with MockFactory {
       }
     }
     
-    //! TODO - reinstate
-    // "cope with context bounds" in {
-    //   withExpectations {
-    //     val m = mock[TestTrait]
-    //     (m.contextBound(_: String)(_: TypeTag[String])).expects("foo", typeTag[java.lang.String]).returning("it works")
-    //     expectResult("it works") { m.contextBound("foo") }
-    //   }
-    // }
+    "cope with context bounds" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.contextBound(_: String)(_: TypeTag[String])).expects("foo", typeTag[java.lang.String]).returning("it works")
+        expectResult("it works") { m.contextBound("foo") }
+      }
+    }
     
-    //! TODO - reinstate
-    // "cope with view bounds" in {
-    //   withExpectations {
-    //     val m = mock[TestTrait]
-    //     (m.viewBound(_: Int, _: Int)(_: Int => Ordered[Int])).expects(1, 2, *).returning(true)
-    //     expectResult(true) { m.viewBound(1, 2) }
-    //   }
-    // }
+    "cope with view bounds" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.viewBound(_: Int, _: Int)(_: Int => Ordered[Int])).expects(1, 2, *).returning(true)
+        expectResult(true) { m.viewBound(1, 2) }
+      }
+    }
     
     "mock a polymorphic trait" in {
       withExpectations {
