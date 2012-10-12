@@ -348,7 +348,13 @@ object MockImpl {
     def resolveOverloaded(method: TermSymbol): Symbol = {
       method.alternatives find { m => 
         paramTypes(m.typeSignature) sameElements actuals
-      } getOrElse { c.abort(c.enclosingPosition, s"Unable to resolve overloaded method $method") }
+      } getOrElse { 
+        // Report with both info and abort so that the user still sees something, even if this is within an
+        // implicit conversion (see https://issues.scala-lang.org/browse/SI-5902)
+        val message = s"Unable to resolve overloaded method ${method.name}"
+        c.info(c.enclosingPosition, message, true)
+        c.abort(c.enclosingPosition, message)
+      }
     }
     
     def mockFunctionName(name: Name, t: Type) = {

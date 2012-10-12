@@ -63,7 +63,7 @@ class MockTest extends FreeSpec with MockFactory {
 
         //! TODO - this should work, but will have to wait for resolveOverloaded to be reinstated
         //! in the macro API
-        // toMockFunction1(m.overloaded[Double] _).expects(1.23).returning("polymorphic method called")
+        // (m.overloaded[Double] _).expects(1.23).returning("polymorphic method called")
         // expectResult("polymorphic method called") { m.overloaded(1.23) }
       }
     }
