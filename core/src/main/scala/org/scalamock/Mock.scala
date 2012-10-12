@@ -330,17 +330,34 @@ object MockImpl {
   // and m is a method, find the corresponding MockFunction instance
   def findMockFunction[F: c.WeakTypeTag, M: c.WeakTypeTag](c: Context)(f: c.Expr[F], actuals: List[c.universe.Type]): c.Expr[M] = {
     import c.universe._
+
+    def paramss(methodType: Type): List[List[Symbol]] = methodType match {
+      case MethodType(params, result) => params :: paramss(result)
+      case PolyType(_, result) => paramss(result)
+      case _ => Nil
+    }
+
+    def paramTypes(methodType: Type): List[Type] =
+      paramss(methodType).flatten map { _.typeSignature }
+
+    // This performs a ridiculously simple-minded overload resolution, but it works well enough for
+    // our purposes, and is much easier than trying to backport the implementation that was deleted
+    // from the macro API (c.f. https://groups.google.com/d/msg/scala-internals/R1iZXfotqds/3xytfX39U2wJ)
+    //! TODO - replace with official resolveOverloaded if/when it's reinstated
+    def resolveOverloaded(method: TermSymbol): Symbol = {
+      method.alternatives find { m => 
+        paramTypes(m.typeSignature) sameElements actuals
+      } getOrElse { c.abort(c.enclosingPosition, s"Unable to resolve overloaded method $method") }
+    }
     
     def mockFunctionName(name: Name, t: Type) = {
-      //! TODO - reinstate
-      // val method = t.member(name)
-      // if (method.asMethod.isOverloaded) {
-      //   val term = method.asTerm 
-      //   val m = term.resolveOverloaded(NoPrefix, List(), actuals)
-      //   "mock$"+ name +"$"+ term.alternatives.indexOf(m)
-      // } else {
+      val method = t.member(name).asTerm
+      if (method.isOverloaded) {
+        val m = resolveOverloaded(method)
+        "mock$"+ name +"$"+ method.alternatives.indexOf(m)
+      } else {
         "mock$"+ name +"$0"
-      // }    
+      }    
     }
     
     def findApplication(tree: Tree): (Tree, Name) = tree match {
