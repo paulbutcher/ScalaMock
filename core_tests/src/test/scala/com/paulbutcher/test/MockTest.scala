@@ -56,7 +56,7 @@ class MockTest extends FreeSpec with MockFactory {
     "cope with overloaded methods" in {
       withExpectations {
         val m = mock[TestTrait]
-        toMockFunction1(m.overloaded(_: Int)).expects(10).returning("got an integer")
+        (m.overloaded(_: Int)).expects(10).returning("got an integer")
         (m.overloaded(_: Int, _: Double)).expects(10, 1.23).returning("got two parameters")
         expectResult("got an integer") { m.overloaded(10) }
         expectResult("got two parameters") { m.overloaded(10, 1.23) }

@@ -85,6 +85,39 @@ object MockImpl {
 
     maker.make
   }
+
+  class Utils[C <: Context](val ctx2: C) { // ctx2 to avoid clash with ctx in MockMaker (eugh!)
+    import ctx2.universe._
+
+    // Convert a methodType into its ultimate result type
+    // For nullary and normal methods, this is just the result type
+    // For curried methods, this is the final result type of the result type
+    def finalResultType(methodType: Type): Type = methodType match {
+      case NullaryMethodType(result) => result 
+      case MethodType(_, result) => finalResultType(result)
+      case PolyType(_, result) => finalResultType(result)
+      case _ => methodType
+    }
+    
+    // Convert a methodType into a list of lists of params:
+    // UnaryMethodType => Nil
+    // Normal method => List(List(p1, p2, ...))
+    // Curried method => List(List(p1, p2, ...), List(q1, q2, ...), ...)
+    def paramss(methodType: Type): List[List[Symbol]] = methodType match {
+      case MethodType(params, result) => params :: paramss(result)
+      case PolyType(_, result) => paramss(result)
+      case _ => Nil
+    }
+
+    def paramCount(methodType: Type): Int = methodType match {
+      case MethodType(params, result) => params.length + paramCount(result)
+      case PolyType(_, result) => paramCount(result)
+      case _ => 0
+    }
+    
+    def paramTypes(methodType: Type): List[Type] =
+      paramss(methodType).flatten map { _.typeSignature }
+  }
   
   def MockMaker[T: c.WeakTypeTag](c: Context)(factory: c.Expr[MockFactoryBase], stub: Boolean) = {
     val m = new MockMaker[c.type](c)
@@ -99,7 +132,10 @@ object MockImpl {
       import Flag._
       import definitions._
       import language.reflectiveCalls
-      
+
+      val utils = new Utils[ctx.type](ctx)
+      import utils._
+
       def mockFunctionClass(paramCount: Int): Type = paramCount match {
         case 0 => typeOf[MockFunction0[_]]
         case 1 => typeOf[MockFunction1[_, _]]
@@ -129,35 +165,6 @@ object MockImpl {
       }
       
       def classType(paramCount: Int) = if (stub) stubFunctionClass(paramCount) else mockFunctionClass(paramCount)
-  
-      // Convert a methodType into its ultimate result type
-      // For nullary and normal methods, this is just the result type
-      // For curried methods, this is the final result type of the result type
-      def finalResultType(methodType: Type): Type = methodType match {
-        case NullaryMethodType(result) => result 
-        case MethodType(_, result) => finalResultType(result)
-        case PolyType(_, result) => finalResultType(result)
-        case _ => methodType
-      }
-      
-      // Convert a methodType into a list of lists of params:
-      // UnaryMethodType => Nil
-      // Normal method => List(List(p1, p2, ...))
-      // Curried method => List(List(p1, p2, ...), List(q1, q2, ...), ...)
-      def paramss(methodType: Type): List[List[Symbol]] = methodType match {
-        case MethodType(params, result) => params :: paramss(result)
-        case PolyType(_, result) => paramss(result)
-        case _ => Nil
-      }
-  
-      def paramCount(methodType: Type): Int = methodType match {
-        case MethodType(params, result) => params.length + paramCount(result)
-        case PolyType(_, result) => paramCount(result)
-        case _ => 0
-      }
-      
-      def paramTypes(methodType: Type): List[Type] =
-        paramss(methodType).flatten map { _.typeSignature }
       
       def isPathDependentThis(t: Type): Boolean = t match {
         case TypeRef(pre, _, _) => isPathDependentThis(pre)
@@ -331,14 +338,8 @@ object MockImpl {
   def findMockFunction[F: c.WeakTypeTag, M: c.WeakTypeTag](c: Context)(f: c.Expr[F], actuals: List[c.universe.Type]): c.Expr[M] = {
     import c.universe._
 
-    def paramss(methodType: Type): List[List[Symbol]] = methodType match {
-      case MethodType(params, result) => params :: paramss(result)
-      case PolyType(_, result) => paramss(result)
-      case _ => Nil
-    }
-
-    def paramTypes(methodType: Type): List[Type] =
-      paramss(methodType).flatten map { _.typeSignature }
+    val utils = new Utils[c.type](c)
+    import utils._
 
     // This performs a ridiculously simple-minded overload resolution, but it works well enough for
     // our purposes, and is much easier than trying to backport the implementation that was deleted
