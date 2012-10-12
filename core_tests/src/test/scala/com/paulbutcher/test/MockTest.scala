@@ -60,6 +60,11 @@ class MockTest extends FreeSpec with MockFactory {
         (m.overloaded(_: Int, _: Double)).expects(10, 1.23).returning("got two parameters")
         expectResult("got an integer") { m.overloaded(10) }
         expectResult("got two parameters") { m.overloaded(10, 1.23) }
+
+        //! TODO - this should work, but will have to wait for resolveOverloaded to be reinstated
+        //! in the macro API
+        // toMockFunction1(m.overloaded[Double] _).expects(1.23).returning("polymorphic method called")
+        // expectResult("polymorphic method called") { m.overloaded(1.23) }
       }
     }
     
