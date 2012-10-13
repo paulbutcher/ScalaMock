@@ -181,7 +181,8 @@ object MockImpl {
           TypeTree(t)
       }
   
-      def membersNotInObject = (typeToMock.members filterNot (m => isMemberOfObject(m))).toList
+      def methodsNotInObject =
+        typeToMock.members filter (m => m.isMethod && !isMemberOfObject(m)) map (_.asMethod)
       
       //! TODO - This is a hack, but it's unclear what it should be instead. See
       //! https://groups.google.com/d/topic/scala-user/n11V6_zI5go/discussion
@@ -309,11 +310,10 @@ object MockImpl {
   
       val typeToMock = weakTypeOf[T]
       val anon = newTypeName("$anon") 
-      val methodsToMock = membersNotInObject filter { m =>
-        lazy val method = m.asMethod
-        m.isMethod && !method.isConstructor && (!(method.isStable || method.isAccessor) ||
-          m.asInstanceOf[reflect.internal.HasFlags].isDeferred) //! TODO - stop using internal if/when this gets into the API
-      }
+      val methodsToMock = methodsNotInObject.filter( m =>
+          !m.isConstructor && (!(m.isStable || m.isAccessor) ||
+            m.asInstanceOf[reflect.internal.HasFlags].isDeferred) //! TODO - stop using internal if/when this gets into the API
+        ).toList
       val forwarders = methodsToMock map forwarderImpl _
       val mocks = methodsToMock map mockMethod _
       val members = forwarders ++ mocks
