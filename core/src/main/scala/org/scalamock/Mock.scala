@@ -340,6 +340,13 @@ object MockImpl {
     val utils = new Utils[c.type](c)
     import utils._
 
+    def reportError(message: String) = {
+      // Report with both info and abort so that the user still sees something, even if this is within an
+      // implicit conversion (see https://issues.scala-lang.org/browse/SI-5902)
+      c.info(c.enclosingPosition, message, true)
+      c.abort(c.enclosingPosition, message)
+    }
+
     // This performs a ridiculously simple-minded overload resolution, but it works well enough for
     // our purposes, and is much easier than trying to backport the implementation that was deleted
     // from the macro API (c.f. https://groups.google.com/d/msg/scala-internals/R1iZXfotqds/3xytfX39U2wJ)
@@ -347,12 +354,8 @@ object MockImpl {
     def resolveOverloaded(method: TermSymbol): Symbol = {
       method.alternatives find { m => 
         paramTypes(m.typeSignature) sameElements actuals
-      } getOrElse { 
-        // Report with both info and abort so that the user still sees something, even if this is within an
-        // implicit conversion (see https://issues.scala-lang.org/browse/SI-5902)
-        val message = s"Unable to resolve overloaded method ${method.name}"
-        c.info(c.enclosingPosition, message, true)
-        c.abort(c.enclosingPosition, message)
+      } getOrElse {
+        reportError(s"Unable to resolve overloaded method ${method.name}")
       }
     }
     
@@ -373,7 +376,7 @@ object MockImpl {
       case Function(_, t) => findApplication(t)
       case Apply(t, _) => findApplication(t)
       case TypeApply(t, _) => findApplication(t)
-      case _ => c.abort(c.enclosingPosition, 
+      case _ => reportError(
           s"ScalaMock: Unrecognised structure: ${showRaw(tree)}. Please open a ticket at https://github.com/paulbutcher/ScalaMock/issues")
     }
 
