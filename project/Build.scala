@@ -30,6 +30,7 @@ object BuildSettings {
     organization := "org.scalamock",
     version := buildVersion,
     scalaVersion := buildScalaVersion,
+    scalaBinaryVersion := buildScalaVersion,
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"),
     scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++ Opts.doc.version(buildVersion) ++ Seq("-doc-root-content", "/Users/paul/scala/ScalaMock3/rootdoc.txt", "-version"),
     resolvers += Resolver.sonatypeRepo("releases"),
