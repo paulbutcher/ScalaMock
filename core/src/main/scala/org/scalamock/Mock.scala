@@ -183,13 +183,11 @@ object MockImpl {
   
       def membersNotInObject = (typeToMock.members filterNot (m => isMemberOfObject(m))).toList
       
-      //! TODO - switch to using narrow when it becomes part of the macro API
+      //! TODO - This is a hack, but it's unclear what it should be instead. See
+      //! https://groups.google.com/d/topic/scala-user/n11V6_zI5go/discussion
       def resolvedType(m: Symbol) =
         m.typeSignatureIn(SuperType(ThisType(typeToMock.typeSymbol), typeToMock))
         
-      //! TODO - replace "$init$" with nme.MIXIN_CONSTRUCTOR when it's re-instated
-      def isConstructorName(name: Name) = name == nme.CONSTRUCTOR || name.toString == "$init$"
-
       def buildParams(methodType: Type) =
         paramss(methodType) map { params =>
           params map { p =>
@@ -311,8 +309,9 @@ object MockImpl {
   
       val typeToMock = weakTypeOf[T]
       val anon = newTypeName("$anon") 
-      val methodsToMock = membersNotInObject filter { m => 
-        m.isMethod && !isConstructorName(m.name) && (!(m.asTerm.isStable || m.asTerm.isAccessor) ||
+      val methodsToMock = membersNotInObject filter { m =>
+        lazy val method = m.asMethod
+        m.isMethod && !method.isConstructor && (!(method.isStable || method.isAccessor) ||
           m.asInstanceOf[reflect.internal.HasFlags].isDeferred) //! TODO - stop using internal if/when this gets into the API
       }
       val forwarders = methodsToMock map forwarderImpl _
