@@ -201,18 +201,18 @@ object MockImpl {
         }
       
       // def <|name|>(p1: T1, p2: T2, ...): T = <|mockname|>(p1, p2, ...)
-      def methodDef(m: Symbol, methodType: Type, body: Tree): DefDef = {
+      def methodDef(m: MethodSymbol, methodType: Type, body: Tree): DefDef = {
         val params = buildParams(methodType)
         DefDef(
           Modifiers(OVERRIDE),
           m.name, 
-          m.asMethod.typeParams map TypeDef _, 
+          m.typeParams map TypeDef _, 
           params,
           paramType(finalResultType(methodType)),
           body)
       }
       
-      def methodImpl(m: Symbol, methodType: Type, body: Tree): DefDef = {
+      def methodImpl(m: MethodSymbol, methodType: Type, body: Tree): DefDef = {
         methodType match {
           case NullaryMethodType(_) => methodDef(m, methodType, body)
           case MethodType(_, _) => methodDef(m, methodType, body)
@@ -222,9 +222,9 @@ object MockImpl {
         }
       }
       
-      def forwarderImpl(m: Symbol) = {
+      def forwarderImpl(m: MethodSymbol) = {
         val mt = resolvedType(m)
-        if (m.asTerm.isStable) {
+        if (m.isStable) {
           ValDef(
             Modifiers(), 
             newTermName(m.name.toString), 
@@ -242,13 +242,13 @@ object MockImpl {
         }
       }
 
-      def mockFunctionName(m: Symbol) = {
-        val method = typeToMock.member(m.name)
-        newTermName("mock$"+ m.name +"$"+ method.asTerm.alternatives.indexOf(m))
+      def mockFunctionName(m: MethodSymbol) = {
+        val method = typeToMock.member(m.name).asTerm
+        newTermName("mock$"+ m.name +"$"+ method.alternatives.indexOf(m))
       }
       
       // val <|mockname|> = new MockFunctionN[T1, T2, ..., R](factory, '<|name|>)
-      def mockMethod(m: Symbol): ValDef = {
+      def mockMethod(m: MethodSymbol): ValDef = {
         val mt = resolvedType(m)
         val clazz = classType(paramCount(mt))
         val types = (paramTypes(mt) map paramType _) :+ paramType(finalResultType(mt))
@@ -310,10 +310,10 @@ object MockImpl {
   
       val typeToMock = weakTypeOf[T]
       val anon = newTypeName("$anon") 
-      val methodsToMock = methodsNotInObject.filter( m =>
+      val methodsToMock = methodsNotInObject.filter { m =>
           !m.isConstructor && (!(m.isStable || m.isAccessor) ||
             m.asInstanceOf[reflect.internal.HasFlags].isDeferred) //! TODO - stop using internal if/when this gets into the API
-        ).toList
+        }.toList
       val forwarders = methodsToMock map forwarderImpl _
       val mocks = methodsToMock map mockMethod _
       val members = forwarders ++ mocks
