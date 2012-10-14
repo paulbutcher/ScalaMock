@@ -2,7 +2,7 @@
 
 Native Scala mocking.
 
-For a preview of ScalaMock 3, see http://www.paulbutcher.com/2012/06/scalamock-3-0-preview-release/
+This is ScalaMock 2, which is no longer under development. The current development version is [ScalaMock 3](https://github.com/paulbutcher/ScalaMock).
 
 ## Examples
 
