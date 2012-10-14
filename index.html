@@ -25,7 +25,7 @@
     .description { font-size: 1.2em; font-style: italic;}
     .announce { background: #ff0; }
     .download { float: right; }
-    pre { background: #ddd; color: #000; padding: 15px; margin-left: 3em; }
+    pre { margin-left: 3em; }
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
     .footer { text-align:center; padding-top:30px; font-style: italic; }
     .gist { font-size: 80%; }
@@ -101,6 +101,24 @@
     
     <p>
       <a href="api/index.html#org.scalamock.package">Scaladoc</a>.
+    </p>
+
+    <h2>Future Plans</h2>
+
+    <p>
+      When Scala supports <a href="http://scalamacros.org/future.html">macro types</a>, this will enable:
+
+      <ul>
+        <li>
+          Improved syntax:
+          <pre>mockObject.expects.method(arguments)</pre>
+          instead of:
+          <pre>(mockObject.method _) expects (arguments)</pre>
+        </li>
+        <li>Mocking object creation (constructors)</li>
+        <li>Mocking singleton and companion objects (static methods)</li>
+        <li>Mocking final classes and classes with final methods or private constructors</li>
+      </ul>
     </p>
 
   </div>
