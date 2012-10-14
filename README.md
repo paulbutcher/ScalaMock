@@ -31,6 +31,8 @@ This is ScalaMock 3, which supports Scala 2.10 only. For earlier versions of Sca
       (m.forward _).verify(5.0)                         //
     }
 
+[Full worked example](http://www.paulbutcher.com/2012/10/scalamock3-step-by-step/)
+
 ## Features
 
 * Fully typesafe
