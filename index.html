@@ -28,6 +28,8 @@
     pre { background: #ddd; color: #000; padding: 15px; margin-left: 3em; }
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
     .footer { text-align:center; padding-top:30px; font-style: italic; }
+    .gist { font-size: 80%; }
+    .gist-meta { display: none; }
   </style>
 </head>
 
@@ -43,54 +45,30 @@
     </div>
 
     <div class="announce">
-      For a preview of ScalaMock 3, see: <a href="http://www.paulbutcher.com/2012/06/scalamock-3-0-preview-release/">http://www.paulbutcher.com/2012/06/scalamock-3-0-preview-release/</a>.
+      This page describes ScalaMock 3, which supports Scala 2.10 only. For earlier versions of Scala, see <a href="2.x/index.html">ScalaMock 2</a>.
     </div>
+
+    <h2>Expectations-First Style</h2>
     
-    <h2>Mocking objects</h2>
+    <script src="https://gist.github.com/3888752.js"> </script>
+
+    <h2>Record-then-Verify (Mockito) Style</h2>
     
-    <pre>def testTurtle {
-  val t = mock[Turtle]
+    <script src="https://gist.github.com/3888812.js"> </script>
 
-  t.expects.penDown()
-  t.expects.turn(90.0)
-  t.expects.forward(10.0)
-  t.expects.getPosition returning (0.0, 10.0)
-  
-  drawLine(t)
-}</pre>
-
-    <h2>Mocking functions</h2>
-    
-    <pre>def testFoldLeft() {
-  val f = mockFunction[String, Int, String]
-
-  f expects ("initial", 0) returning "intermediate one"
-  f expects ("intermediate one", 1) returning "intermediate two"
-  f expects ("intermediate two", 2) returning "intermediate three"
-  f expects ("intermediate three", 3) returning "final"
-
-  expect("final") { Seq(0, 1, 2, 3).foldLeft("initial")(f) }
-}</pre>
-
-    <p>
-      <a href="http://www.paulbutcher.com/2011/11/scalamock-step-by-step/">Full worked example</a>.
-    </p>
-    
     <h2>Features</h2>
     
-    <p>
-      As well as traits (interfaces) and functions, ScalaMock can also mock:
-    </p>
-    
     <ul>
-      <li>Classes</li>
-      <li>Singleton and companion objects (static methods)</li>
-      <li>Object creation (constructor invocation)</li>
-      <li>Polymorphic (type parameterised) methods</li>
-      <li>Classes with private constructors</li>
-      <li>Final classes and classes with final methods</li>
-      <li>Operators (methods with symbolic names)</li>
-      <li>Overloaded methods</li>
+      <li>Fully typesafe</li>
+      <li>Full support for Scala features such as:
+        <ul>
+          <li>Polymorphic (type parameterised) methods</li>
+          <li>Operators (methods with symbolic names)</li>
+          <li>Overloaded methods</li>
+          <li>Type constraints</li>
+        </ul>
+      </li>
+      <li><a href="http://www.scalatest.org/">ScalaTest</a> and <a href="http://etorreborre.github.com/specs2/">Specs2</a> integration</li>
     </ul>
     
     <h2>Downloading</h2>
@@ -100,14 +78,16 @@
     </p>
 
     <p>
-      To use ScalaMock in <a href="https://github.com/harrah/xsbt/wiki">sbt 0.11</a> with <a href="http://www.scalatest.org/">ScalaTest</a> add the following to your project file:
+      To use ScalaMock in <a href="http://www.scala-sbt.org/">sbt</a> with <a href="http://www.scalatest.org/">ScalaTest</a> add the following to your project file:
     </p>
 
-    <pre>resolvers += "Sonatype OSS Releases" at 
-  "http://oss.sonatype.org/content/repositories/releases/"
+    <script src="https://gist.github.com/3888834.js"> </script>
 
-libraryDependencies +=
-  "org.scalamock" %% "scalamock-scalatest-support" % "latest.integration"</pre>
+    <p>
+      and with <a href="http://etorreborre.github.com/specs2/">Specs2</a>:
+    </p>
+
+    <script src="https://gist.github.com/3888837.js"> </script>
     
     <p>
       The source is <a href="https://github.com/paulbutcher/scalamock">hosted on GitHub</a>.
@@ -117,10 +97,6 @@ libraryDependencies +=
     
     <p>
       <a href="api/index.html#org.scalamock.package">Scaladoc</a>.
-    </p>
-    
-    <p>
-      If you're migrating from Borachio, <a href="https://github.com/paulbutcher/ScalaMock/blob/master/MIGRATING_FROM_BORACHIO.md">read this</a>.
     </p>
 
   </div>

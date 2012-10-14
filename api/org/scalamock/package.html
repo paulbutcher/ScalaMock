@@ -2,919 +2,1142 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>org.scalamock</title>
+          <title>scalamock - ScalaMock 3.0-M5 - org.scalamock</title>
+          <meta name="description" content="scalamock - ScalaMock 3.0 - M5 - org.scalamock" />
+          <meta name="keywords" content="scalamock ScalaMock 3.0 M5 org.scalamock" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../lib/template.css" />
-      <script type="text/javascript" src="../../lib/jquery.js"></script>
+      <link href="../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../lib/jquery.js" id="jquery-js"></script>
       <script type="text/javascript" src="../../lib/jquery-ui.js"></script>
       <script type="text/javascript" src="../../lib/template.js"></script>
       <script type="text/javascript" src="../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../index.html';
+            var hash = 'org.scalamock.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
         <body class="value">
       <div id="definition">
         <img src="../../lib/package_big.png" />
-        <p id="owner"><a name="org" class="extype" href="../package.html">org</a></p>
+        <p id="owner"><a href="../package.html" class="extype" name="org">org</a></p>
         <h1>scalamock</h1>
       </div>
 
-      <h4 class="signature" id="signature">
-      <span class="kind">package</span>
-      <span class="symbol"> 
+      <h4 id="signature" class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
         <span class="name">scalamock</span>
-        
-        
       </span>
       </h4>
       
-          <div class="fullcommenttop" id="comment"><div class="comment cmt"><h3>ScalaMock: Native Scala mocking</h3><p>ScalaMock supports three different mocking styles:</p><ul><li>Function mocks.</li><li>Proxy (type-unsafe) mocks.</li><li>Generated (type-safe) mocks.</li></ul><p>In all cases, mix the relevant <code>MockFactory</code> trait into your test class. For ScalaTest use
-<a name="org.scalamock.scalatest.MockFactory" class="extype" href="scalatest/MockFactory.html">MockFactory</a>, for JUnit3 use <a name="org.scalamock.junit3.MockFactory" class="extype" href="junit3/MockFactory.html">MockFactory</a>,
-and for Specs2 use <a name="org.scalamock.specs2.MockFactory" class="extype" href="specs2/MockFactory.html">MockFactory</a>.</p><h4>Function mocks</h4><p>Function mocks are created with <code>mockFunction</code>. The following, for example, creates a mock
-function taking a single <code>Int</code> argument and returning a <code>String</code>:</p><pre>
-val m = mockFunction[Int, String]
-</pre><p>Expectations then can be set on a mock function. The following, for example, says that we expect our
-mock to be called once with the argument <code>42</code>, and that when called like that it should return the
-value <code>&quot;Forty two&quot;</code>:</p><pre>
-m expects (42) returning &quot;Forty two&quot; once
-</pre><h4>Proxy mocks</h4><p>Proxy mocks can only be used to mock traits and interfaces. To mock classes, singleton/companion
-objects etc, please use generated mocks.
-To use proxy mocks, mix <a name="org.scalamock.ProxyMockFactory" class="extype" href="ProxyMockFactory.html">ProxyMockFactory</a> into your test suite.
-Proxy mocks are created with <code>mock</code>. The following, for example, creates a mock which implements
-all the <code>Turtle</code> trait (interface):</p><pre>
-val m = mock[Turtle]
-</pre><p>Expectations can then be set on each of the methods within those traits. For example:</p><pre>
-m expects 'setPosition withArgs (10.0, 10.0)
-m expects 'forward withArgs (5.0)
-m expects 'getPosition returning (15.0, 10.0)
-</pre><p>By default, an expectation accepts any arguments and a single call. The following two statements are equivalent:</p><pre>
-m expects 'forward withArgs (*) once
-m expects 'forward
-</pre><p>As a convenience, proxy mocks also support the <code>stubs</code> method. The following two statements are equivalent:</p><pre>
-m expects 'forward anyNumberOfTimes
-m stubs 'forward
-</pre><h4>Generated mocks</h4><p>Generated mocks rely on the ScalaMock compiler plugin. See
-<a href="http://www.paulbutcher.com/2011/10/scalamock-step-by-step/">full worked example</a>.</p><p>Classes that are going to be mocked need to be declared with the <a name="org.scalamock.annotation.mock" class="extype" href="annotation/mock.html">mock</a>
-annotation. To mock a class together with its companion object, use
-<a name="org.scalamock.annotation.mockWithCompanion" class="extype" href="annotation/mockWithCompanion.html">mockWithCompanion</a>. To mock a singleton object, use
-<a name="org.scalamock.annotation.mockObject" class="extype" href="annotation/mockObject.html">mockObject</a>.</p><p>As well as <code>MockFactory</code>, your test class also needs to mix in <code>GeneratedMockFactory</code>.</p><p>Create a mock object with <code>mock</code>:</p><pre>
-val m = mock[Turtle]
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><h4>ScalaMock: Native Scala Mocking</h4><p>To use ScalaMock, mix the relevant <code>MockFactory</code> trait into your test class.
+For ScalaTest, use <a href="scalatest/MockFactory.html" class="extype" name="org.scalamock.scalatest.MockFactory">org.scalamock.scalatest.MockFactory</a> and for Specs2
+use <a href="specs2/MockFactory.html" class="extype" name="org.scalamock.specs2.MockFactory">org.scalamock.specs2.MockFactory</a>.</p><p>At present, ScalaMock can only mock traits, Java interfaces, and non-final
+classes that define a default constructor. A future version will be able to
+mock any class, and singleton/companion objects.</p><p>ScalaMock supports two different mocking styles - <i>expectations first</i> and
+<i>record then verify</i>. These styles can be mixed within a single test.</p><h4>Expectations-First Style</h4><p>In the expectations-first style, expectations are set on mock objects before
+exercising the system under test. If these expectations are not met, the
+test fails.</p><p>A mock function that supports this style is created with <code>mockFunction</code>. For
+example, to create a mock function taking a single <code>Int</code> argument and
+returning a <code>String</code>:</p><pre><span class="kw">val</span> m = mockFunction[<span class="std">Int</span>, <span class="std">String</span>]</pre><p>A mock object that supports this style is created with <code>mock</code>. For example,
+to create a mock that implements the <code>Turtle</code> trait:</p><pre><span class="kw">val</span> m = mock[Turtle]</pre><p>Expectations can then be set using <code>expects</code>:</p><pre>(m.setPosition _).expects(<span class="num">10.0</span>, <span class="num">10.0</span>)
+(m.forward _).expects(<span class="num">5.0</span>)
+(m.getPosition _).expects().returning(<span class="num">15.0</span>, <span class="num">10.0</span>)
 
-m.expects.forward(10.0) twice
-</pre><p>Create a mock object (singleton or companion) with mockObject:</p><pre>
-val m = mockObject(Turtle)
+drawLine(m, (<span class="num">10.0</span>, <span class="num">10.0</span>), (<span class="num">15.0</span>, <span class="num">10.0</span>))</pre><h4>Record-then-Verify (Mockito) Style</h4><p>In the record then verify style, expectations are verified after the system
+under test has executed.</p><p>A stub function that supports this style is created with <code>stubFunction</code>. For
+example:</p><pre><span class="kw">val</span> m = stubFunction[<span class="std">Int</span>, <span class="std">String</span>]</pre><p>A stub object that supports this style is created with <code>stub</code>. For example:</p><pre><span class="kw">val</span> m = stub[Turtle]</pre><p>Return values that are used by the system under test can be set up by using
+<code>when</code>. Calls are verified using <code>verify</code>:</p><pre>(m.getPosition _).when().returns(<span class="num">15.0</span>, <span class="num">10.0</span>)
 
-m.expects.createTurtle
-</pre><p>To mock construtor invocation, use <code>newInstance</code>:</p><pre>
-val m = mock[Turtle]
+drawLine(m, (<span class="num">10.0</span>, <span class="num">10.0</span>), (<span class="num">15.0</span>, <span class="num">10.0</span>))
 
-m.expects.newInstance('blue)
-m.expects.forward(10.0)
-</pre><h4>Expectations</h4><p>Expectations can be set on the arguments a function or method is called with and how many times
-it should be called. In addition, mocks can be instructed to return a particular value or throw
-an exception when that expectation is met.</p><h5>Arguments</h5><p>To specify expected arguments for a functional mock, use <code>expects</code>. To specify expected
-arguments for a proxy mock, use <code>withArgs</code> or <code>withArguments</code>.</p><p>If no expected arguments are given, mocks accept any arguments.</p><p>To specify arguments that should simply be tested for equality, provide the expected arguments
-as a tuple:</p><pre>
-m expects (&quot;this&quot;, &quot;that&quot;)
-</pre><p>ScalaMock currently supports two types of generalized matching: <i>wildcards</i> and <i>epsilon
-matching</i>.</p><h6>Wildcards</h6><p>Wildcard values are specified with an <code>*</code> (asterisk). For example:</p><pre>
-m expects (&quot;this&quot;, *)
-</pre><p>will match any of the following:</p><pre>
-m(&quot;this&quot;, 42)
-m(&quot;this&quot;, 1.0)
-m(&quot;this&quot;, null)
-</pre><h6>Epsilon matching</h6><p>Epsilon matching is useful when dealing with floating point values. An epsilon match is
-specified with the <code>~</code> (tilde) operator:</p><pre>
-m expects (~42.0)
-</pre><p>will match:</p><pre>
-m(42.0)
-m(42.0001)
-m(41.9999)
-</pre><p>but will not match:</p><pre>
-m(43.0)
-m(42.1)
-</pre><h6>Repeated parameters</h6><p>If you're using generated mocks, you need do nothing special to set expectations on methods
-that take repeated parameters. If you're using proxy mocks you will need to use
-the <code>**</code> operator. For example, given:</p><pre>
-def takesRepeatedParameter(x: Int, ys: String*)
-</pre><p>you can set an expectation with:</p><pre>
-m expects 'takesRepeatedParameter withArgs(42, **(&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;))
-</pre><h6>Predicate matching</h6><p>More complicated argument matching can be implemented by using <code>where</code> to pass a predicate:</p><pre>
-m = mockFunction[Double, Double, Unit]
-m expects { where _ &lt; _ }
-</pre><pre>
-m = mock[Turtle]
-m expects 'setPosition where { (x: Double, y: Double) =&gt; x &lt; y }
-</pre><h5>Return value</h5><p>Mocks can be instructed to return a specific value with <code>returns</code> or <code>returning</code>:</p><pre>
-m1 returns 42
-m2 expects (&quot;this&quot;, &quot;that&quot;) returning &quot;the other&quot;
-</pre><p>If no return value is specified, functional mocks return <code>null.asInstanceOf[R]</code> where <code>R</code> is the
-return type (which equates to <code>0</code> for <code>Int</code>, <code>0.0</code> for <code>Double</code> etc.).</p><p>If no return value is specified, proxy mocks return <code>null</code>. This works correctly for most return
-types, but not for methods returning primitive types (<code>Int</code>, <code>Double</code> etc.), where returning
-<code>null</code> leads to a <code>NullPointerException</code>. So you will need to explicitly specify a return value
-for such methods. This restriction may be lifted in the future.</p><p>You can return a computed value (or throw a computed exception) with <code>onCall</code>, for example:</p><pre>
-val mockIncrement = mockFunction[Int, Int]
-m expects (*) onCall { x: Int =&gt; x + 1 }
-</pre><h5>Exceptions</h5><p>Instead of a return value, a mock can be instructed to throw:</p><pre>
-m expects (&quot;this&quot;, &quot;that&quot;) throws new RuntimeException(&quot;what's that?&quot;)
-</pre><h5>Call count</h5><p>By default, mocks expect one or more calls (i.e. only fail if the function or method is never
-called). An exact number of calls or a range can be set with <code>repeat</code>:</p><pre>
-m1 returns 42 repeat 3 to 7
-m2 expects (3) repeat 10
-</pre><p>There are various aliases for common expectations and styles:</p><pre>
-m1 expects (&quot;this&quot;, &quot;that&quot;) once
-m2 returns &quot;foo&quot; noMoreThanTwice
-m3 expects (42) repeated 3 times
-</pre><p>For a full list, see <a name="org.scalamock.Expectation" class="extype" href="Expectation.html">Expectation</a>.</p><h4>Ordering</h4><p>By default, expectations can be satisfied in any order. For example:</p><pre>
-m expects (1)
-m expects (2)
-m(2)
-m(1)
-</pre><p>A specific sequence can be enforced with <code>inSequence</code>:</p><pre>
-inSequence {
-  m expects (1)
-  m expects (2)
+(m.setPosition _).verify(<span class="num">10.0</span>, <span class="num">10.0</span>)
+(m.forward _).verify(<span class="num">5.0</span>)</pre><h4>Argument matching</h4><p>ScalaMock supports two types of generalised matching: <i>wildcards</i> and
+<i>epsilon matching</i>.</p><h5>Wildcards</h5><p>Wildcard values are specified with an <code>*</code> (asterisk). For example:</p><pre>m expects (<span class="lit">"this"</span>, *)</pre><p>will match any of the following:</p><pre>m(<span class="lit">"this"</span>, <span class="num">42</span>)
+m(<span class="lit">"this"</span>, <span class="num">1.0</span>)
+m(<span class="lit">"this"</span>, <span class="kw">null</span>)</pre><h5>Epsilon matching</h5><p>Epsilon matching is useful when dealing with floating point values. An epsilon match is
+specified with the <code>~</code> (tilde) operator:</p><pre>m expects (~<span class="num">42.0</span>)</pre><p>will match:</p><pre>m(<span class="num">42.0</span>)
+m(<span class="num">42.0001</span>)
+m(<span class="num">41.9999</span>)</pre><p>but will not match:</p><pre>m(<span class="num">43.0</span>)
+m(<span class="num">42.1</span>)</pre><h5>Repeated parameters</h5><p>Repeated parameters are represented as a <code>Seq</code>. For example, given:</p><pre><span class="kw">def</span> takesRepeatedParameter(x: <span class="std">Int</span>, ys: <span class="std">String</span>*)</pre><p>you can set an expectation with:</p><pre>(m.takesRepeatedParameter _).expects(<span class="num">42</span>, <span class="std">Seq</span>(<span class="lit">"red"</span>, <span class="lit">"green"</span>, <span class="lit">"blue"</span>))</pre><h5>Predicate matching</h5><p>More complicated argument matching can be implemented by using <code>where</code> to
+pass a predicate:</p><pre>m = mockFunction[<span class="std">Double</span>, <span class="std">Double</span>, <span class="std">Unit</span>]
+m expects (where { _ &lt; _ })</pre><h5>Return values</h5><p>By default mocks and stubs return <code>null</code>. You can return a computed return
+value (or throw a computed exception) with <code>onCall</code>:</p><pre><span class="kw">val</span> mockIncrement = mockFunction[<span class="std">Int</span>, <span class="std">Int</span>]
+m expects (*) onCall { _ + <span class="num">1</span> }</pre><h5>Overloaded, curried and polymorphic methods</h5><p>Overloaded, curried and polymorphic methods can be mocked by specifying
+argument types. For example:</p><pre><span class="kw">trait</span> Foo {
+<span class="kw">def</span> overloaded(x: <span class="std">Int</span>): <span class="std">String</span>
+<span class="kw">def</span> overloaded(x: <span class="std">String</span>): <span class="std">String</span>
+<span class="kw">def</span> curried(x: <span class="std">Int</span>)(y: <span class="std">Double</span>): <span class="std">String</span>
+<span class="kw">def</span> polymorphic[T](x: <span class="std">List</span>[T]): <span class="std">String</span>
+}</pre><pre><span class="kw">val</span> m = mock[Foo]
+(m.overloaded(_: <span class="std">Int</span>)).expects(<span class="num">10</span>)
+(m.overloaded(_: <span class="std">String</span>)).expects(<span class="lit">"foo"</span>)
+(m.curried(_: <span class="std">Int</span>)(_: <span class="std">Double</span>)).expects(<span class="num">10</span>, <span class="num">1.23</span>)
+(m.polymorphic(_: <span class="std">List</span>[<span class="std">Int</span>])).expects(<span class="std">List</span>(<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>))</pre><h5>Exceptions</h5><p>Instead of a return value, mocks and stubs can be instructed to throw:</p><pre>m expects (<span class="lit">"this"</span>, <span class="lit">"that"</span>) throws <span class="kw">new</span> RuntimeException(<span class="lit">"what's that?"</span>)</pre><h5>Call count</h5><p>By default, mocks and stubs expect exactly one call. Alternative constraints
+can be set with <code>repeat</code>:</p><pre>m1.expects(<span class="num">42</span>).returns(<span class="num">42</span>).repeat(<span class="num">3</span> to <span class="num">7</span>)
+m2 expects (<span class="num">3</span>) repeat <span class="num">10</span></pre><p>There are various aliases for common expectations and styles:</p><pre>m1.expects(<span class="lit">"this"</span>, <span class="lit">"that"</span>).once
+m2.expects().returns(<span class="lit">"foo"</span>).noMoreThanTwice
+m3.expects(<span class="num">42</span>).repeated(<span class="num">3</span>).times</pre><p>For a full list, see <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">org.scalamock.CallHandler</a>.</p><h4>Ordering</h4><p>By default, expectations can be satisfied in any order. For example:</p><pre>m expects (<span class="num">1</span>)
+m expects (<span class="num">2</span>)
+m(<span class="num">2</span>)
+m(<span class="num">1</span>)</pre><p>A specific sequence can be enforced with <code>inSequence</code>:</p><pre>inSequence {
+  m expects (<span class="num">1</span>)
+  m expects (<span class="num">2</span>)
 }
-m(2) // throws ExpectationException
-m(1)
-</pre><p>Multiple sequences can be specified. As long as the calls within each sequence happen in the
-correct order, calls within different sequences can be interleaved. For example:</p><pre>
-val m1 = mock[Turtle]
-val m2 = mock[Turtle]
+m(<span class="num">2</span>) <span class="cmt">// throws ExpectationException</span>
+m(<span class="num">1</span>)</pre><p>Multiple sequences can be specified. As long as the calls within each sequence happen in the
+correct order, calls within different sequences can be interleaved. For example:</p><pre><span class="kw">val</span> m1 = mock[Turtle]
+<span class="kw">val</span> m2 = mock[Turtle]
 
 inSequence {
-  m1.expects.setPosition(0.0, 0.0)
-  m1.expects.penDown
-  m1.expects.forward(10.0)
-  m1.expects.penUp
+  (m1.setPosition _).expects(<span class="num">0.0</span>, <span class="num">0.0</span>)
+  (m1.penDown _).expects()
+  (m1.forward _).expects(<span class="num">10.0</span>)
+  (m1.penUp _).expects()
 }
 inSequence {
-  m2.expects.setPosition(1.0, 1.0)
-  m2.expects.turn(90.0)
-  m2.expects.forward(1.0)
-  m2.expects.getPosition returning (2.0, 1.0)
+  (m2.setPosition _).expects(<span class="num">1.0</span>, <span class="num">1.0</span>)
+  (m2.turn _).expects(<span class="num">90.0</span>)
+  (m2.forward _).expects(<span class="num">1.0</span>)
+  (m2.getPosition _).expects().returning(<span class="num">2.0</span>, <span class="num">1.0</span>)
 }
 
-m2.setPosition(1.0, 1.0)
-m1.setPosition(0.0, 0.0)
+m2.setPosition(<span class="num">1.0</span>, <span class="num">1.0</span>)
+m1.setPosition(<span class="num">0.0</span>, <span class="num">0.0</span>)
 m1.penDown
-m2.turn(90.0)
-m1.forward(10.0)
-m2.forward(1.0)
+m2.turn(<span class="num">90.0</span>)
+m1.forward(<span class="num">10.0</span>)
+m2.forward(<span class="num">1.0</span>)
 m1.penUp
-expect((2.0, 1.0)) { m2.getPosition }
-</pre><p>To specify that there is no constraint on ordering, use <code>inAnyOrder</code> (there is an implicit
+expectResult((<span class="num">2.0</span>, <span class="num">1.0</span>)) { m2.getPosition }</pre><p>To specify that there is no constraint on ordering, use <code>inAnyOrder</code> (there is an implicit
 <code>inAnyOrder</code> at the top level). Calls to <code>inSequence</code> and <code>inAnyOrder</code> can be arbitrarily
-nested. For example:</p><pre>
-m.expects.a
+nested. For example:</p><pre>(m.a _).expects()
 inSequence {
-  m.expects.b
+  (m.b _).expects()
   inAnyOrder {
-    m.expects.c
+    (m.c _).expects()
     inSequence {
-      m.expects.d
-      m.expects.e
+      (m.d _).expects()
+      (m.e _).expects()
     }
-    m.expects.f
+    (m.f _).expects()
   }
-  m.expects.g
-</pre><h4> Debugging </h4><p>If faced with a difficult to debug failing expectation, consider mixing
-one or both of the <a name="org.scalamock.VerboseErrors" class="extype" href="VerboseErrors.html">VerboseErrors</a> or <a name="org.scalamock.CallLogging" class="extype" href="CallLogging.html">CallLogging</a> traits
-into your test suite:</p><pre>
-class MyTest extends Suite with MockFactory with VerboseErrors with CallLogging
-</pre></div></div>
+  (m.g _).expects()</pre></div><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div></div>
         
 
-      <div id="template">
+      <div id="mbrsel">
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="org.scalamock"><span>scalamock</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
+          </div>
+        <div id="visbl">
+            <span class="filtertype">Visibility</span>
+            <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+          </div>
+      </div>
 
-        <div id="mbrsel">
-          <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
-          
-          
-          <div id="visbl">
-              <span class="filtertype">Visibility</span>
-              <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
+      <div id="template">
+        <div id="allMembers">
+        
+
+        <div id="types" class="types members">
+              <h3>Type Members</h3>
+              <ol><li name="org.scalamock.ArgumentMatcher" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ArgumentMatcherextendsProduct=&gt;Boolean"></a>
+      <a id="ArgumentMatcher:ArgumentMatcher"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ArgumentMatcher.html"><span class="name">ArgumentMatcher</span></a><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.Call" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CallextendsProductwithSerializable"></a>
+      <a id="Call:Call"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="Call.html"><span class="name">Call</span></a><span class="params">(<span name="target">target: <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a></span>, <span name="arguments">arguments: <span class="extype" name="scala.Product">Product</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.CallHandler" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="CallHandler[R]extendsHandler"></a>
+      <a id="CallHandler[R]:CallHandler[R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CallHandler.html"><span class="name">CallHandler</span></a><span class="tparams">[<span name="R">R</span>]</span><span class="result"> extends <span class="extype" name="org.scalamock.Handler">Handler</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.CallHandler0" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CallHandler0[R]extendsCallHandler[R]"></a>
+      <a id="CallHandler0[R]:CallHandler0[R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CallHandler0.html"><span class="name">CallHandler0</span></a><span class="tparams">[<span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler0.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.CallHandler1" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CallHandler1[T1,R]extendsCallHandler[R]"></a>
+      <a id="CallHandler1[T1,R]:CallHandler1[T1,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CallHandler1.html"><span class="name">CallHandler1</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler1.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.CallHandler2" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CallHandler2[T1,T2,R]extendsCallHandler[R]"></a>
+      <a id="CallHandler2[T1,T2,R]:CallHandler2[T1,T2,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CallHandler2.html"><span class="name">CallHandler2</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler2.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.CallHandler3" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CallHandler3[T1,T2,T3,R]extendsCallHandler[R]"></a>
+      <a id="CallHandler3[T1,T2,T3,R]:CallHandler3[T1,T2,T3,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CallHandler3.html"><span class="name">CallHandler3</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler3.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.CallHandler4" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CallHandler4[T1,T2,T3,T4,R]extendsCallHandler[R]"></a>
+      <a id="CallHandler4[T1,T2,T3,T4,R]:CallHandler4[T1,T2,T3,T4,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CallHandler4.html"><span class="name">CallHandler4</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler4.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.CallHandler5" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CallHandler5[T1,T2,T3,T4,T5,R]extendsCallHandler[R]"></a>
+      <a id="CallHandler5[T1,T2,T3,T4,T5,R]:CallHandler5[T1,T2,T3,T4,T5,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CallHandler5.html"><span class="name">CallHandler5</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler5.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.CallHandler6" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CallHandler6[T1,T2,T3,T4,T5,T6,R]extendsCallHandler[R]"></a>
+      <a id="CallHandler6[T1,T2,T3,T4,T5,T6,R]:CallHandler6[T1,T2,T3,T4,T5,T6,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CallHandler6.html"><span class="name">CallHandler6</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler6.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.CallHandler7" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CallHandler7[T1,T2,T3,T4,T5,T6,T7,R]extendsCallHandler[R]"></a>
+      <a id="CallHandler7[T1,T2,T3,T4,T5,T6,T7,R]:CallHandler7[T1,T2,T3,T4,T5,T6,T7,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CallHandler7.html"><span class="name">CallHandler7</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler7.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.CallHandler8" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CallHandler8[T1,T2,T3,T4,T5,T6,T7,T8,R]extendsCallHandler[R]"></a>
+      <a id="CallHandler8[T1,T2,T3,T4,T5,T6,T7,T8,R]:CallHandler8[T1,T2,T3,T4,T5,T6,T7,T8,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CallHandler8.html"><span class="name">CallHandler8</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler8.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.CallHandler9" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CallHandler9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]extendsCallHandler[R]"></a>
+      <a id="CallHandler9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]:CallHandler9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="CallHandler9.html"><span class="name">CallHandler9</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler9.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.Defaultable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="Defaultable[T]extendsObject"></a>
+      <a id="Defaultable[T]:Defaultable[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Defaultable.html"><span class="name">Defaultable</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.EpsilonMockParameter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="EpsilonMockParameterextendsMockParameter[Double]"></a>
+      <a id="EpsilonMockParameter:EpsilonMockParameter"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="EpsilonMockParameter.html"><span class="name">EpsilonMockParameter</span></a><span class="result"> extends <a href="MockParameter.html" class="extype" name="org.scalamock.MockParameter">MockParameter</a>[<span class="extype" name="scala.Double">Double</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FakeFunction" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FakeFunctionextendsObject"></a>
+      <a id="FakeFunction:FakeFunction"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FakeFunction.html"><span class="name">FakeFunction</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FakeFunction0" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FakeFunction0[R]extendsFakeFunctionwith()=&gt;RwithNiceToString"></a>
+      <a id="FakeFunction0[R]:FakeFunction0[R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FakeFunction0.html"><span class="name">FakeFunction0</span></a><span class="tparams">[<span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with () ⇒ <span class="extype" name="org.scalamock.FakeFunction0.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FakeFunction1" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FakeFunction1[T1,R]extendsFakeFunctionwithT1=&gt;RwithNiceToString"></a>
+      <a id="FakeFunction1[T1,R]:FakeFunction1[T1,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FakeFunction1.html"><span class="name">FakeFunction1</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with (<span class="extype" name="org.scalamock.FakeFunction1.T1">T1</span>) ⇒ <span class="extype" name="org.scalamock.FakeFunction1.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FakeFunction2" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FakeFunction2[T1,T2,R]extendsFakeFunctionwith(T1,T2)=&gt;RwithNiceToString"></a>
+      <a id="FakeFunction2[T1,T2,R]:FakeFunction2[T1,T2,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FakeFunction2.html"><span class="name">FakeFunction2</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with (<span class="extype" name="org.scalamock.FakeFunction2.T1">T1</span>, <span class="extype" name="org.scalamock.FakeFunction2.T2">T2</span>) ⇒ <span class="extype" name="org.scalamock.FakeFunction2.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FakeFunction3" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FakeFunction3[T1,T2,T3,R]extendsFakeFunctionwith(T1,T2,T3)=&gt;RwithNiceToString"></a>
+      <a id="FakeFunction3[T1,T2,T3,R]:FakeFunction3[T1,T2,T3,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FakeFunction3.html"><span class="name">FakeFunction3</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with (<span class="extype" name="org.scalamock.FakeFunction3.T1">T1</span>, <span class="extype" name="org.scalamock.FakeFunction3.T2">T2</span>, <span class="extype" name="org.scalamock.FakeFunction3.T3">T3</span>) ⇒ <span class="extype" name="org.scalamock.FakeFunction3.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FakeFunction4" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FakeFunction4[T1,T2,T3,T4,R]extendsFakeFunctionwith(T1,T2,T3,T4)=&gt;RwithNiceToString"></a>
+      <a id="FakeFunction4[T1,T2,T3,T4,R]:FakeFunction4[T1,T2,T3,T4,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FakeFunction4.html"><span class="name">FakeFunction4</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with (<span class="extype" name="org.scalamock.FakeFunction4.T1">T1</span>, <span class="extype" name="org.scalamock.FakeFunction4.T2">T2</span>, <span class="extype" name="org.scalamock.FakeFunction4.T3">T3</span>, <span class="extype" name="org.scalamock.FakeFunction4.T4">T4</span>) ⇒ <span class="extype" name="org.scalamock.FakeFunction4.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FakeFunction5" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FakeFunction5[T1,T2,T3,T4,T5,R]extendsFakeFunctionwith(T1,T2,T3,T4,T5)=&gt;RwithNiceToString"></a>
+      <a id="FakeFunction5[T1,T2,T3,T4,T5,R]:FakeFunction5[T1,T2,T3,T4,T5,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FakeFunction5.html"><span class="name">FakeFunction5</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with (<span class="extype" name="org.scalamock.FakeFunction5.T1">T1</span>, <span class="extype" name="org.scalamock.FakeFunction5.T2">T2</span>, <span class="extype" name="org.scalamock.FakeFunction5.T3">T3</span>, <span class="extype" name="org.scalamock.FakeFunction5.T4">T4</span>, <span class="extype" name="org.scalamock.FakeFunction5.T5">T5</span>) ⇒ <span class="extype" name="org.scalamock.FakeFunction5.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FakeFunction6" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FakeFunction6[T1,T2,T3,T4,T5,T6,R]extendsFakeFunctionwith(T1,T2,T3,T4,T5,T6)=&gt;RwithNiceToString"></a>
+      <a id="FakeFunction6[T1,T2,T3,T4,T5,T6,R]:FakeFunction6[T1,T2,T3,T4,T5,T6,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FakeFunction6.html"><span class="name">FakeFunction6</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with (<span class="extype" name="org.scalamock.FakeFunction6.T1">T1</span>, <span class="extype" name="org.scalamock.FakeFunction6.T2">T2</span>, <span class="extype" name="org.scalamock.FakeFunction6.T3">T3</span>, <span class="extype" name="org.scalamock.FakeFunction6.T4">T4</span>, <span class="extype" name="org.scalamock.FakeFunction6.T5">T5</span>, <span class="extype" name="org.scalamock.FakeFunction6.T6">T6</span>) ⇒ <span class="extype" name="org.scalamock.FakeFunction6.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FakeFunction7" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FakeFunction7[T1,T2,T3,T4,T5,T6,T7,R]extendsFakeFunctionwith(T1,T2,T3,T4,T5,T6,T7)=&gt;RwithNiceToString"></a>
+      <a id="FakeFunction7[T1,T2,T3,T4,T5,T6,T7,R]:FakeFunction7[T1,T2,T3,T4,T5,T6,T7,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FakeFunction7.html"><span class="name">FakeFunction7</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with (<span class="extype" name="org.scalamock.FakeFunction7.T1">T1</span>, <span class="extype" name="org.scalamock.FakeFunction7.T2">T2</span>, <span class="extype" name="org.scalamock.FakeFunction7.T3">T3</span>, <span class="extype" name="org.scalamock.FakeFunction7.T4">T4</span>, <span class="extype" name="org.scalamock.FakeFunction7.T5">T5</span>, <span class="extype" name="org.scalamock.FakeFunction7.T6">T6</span>, <span class="extype" name="org.scalamock.FakeFunction7.T7">T7</span>) ⇒ <span class="extype" name="org.scalamock.FakeFunction7.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FakeFunction8" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FakeFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]extendsFakeFunctionwith(T1,T2,T3,T4,T5,T6,T7,T8)=&gt;RwithNiceToString"></a>
+      <a id="FakeFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]:FakeFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FakeFunction8.html"><span class="name">FakeFunction8</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with (<span class="extype" name="org.scalamock.FakeFunction8.T1">T1</span>, <span class="extype" name="org.scalamock.FakeFunction8.T2">T2</span>, <span class="extype" name="org.scalamock.FakeFunction8.T3">T3</span>, <span class="extype" name="org.scalamock.FakeFunction8.T4">T4</span>, <span class="extype" name="org.scalamock.FakeFunction8.T5">T5</span>, <span class="extype" name="org.scalamock.FakeFunction8.T6">T6</span>, <span class="extype" name="org.scalamock.FakeFunction8.T7">T7</span>, <span class="extype" name="org.scalamock.FakeFunction8.T8">T8</span>) ⇒ <span class="extype" name="org.scalamock.FakeFunction8.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FakeFunction9" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="FakeFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]extendsFakeFunctionwith(T1,T2,T3,T4,T5,T6,T7,T8,T9)=&gt;RwithNiceToString"></a>
+      <a id="FakeFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]:FakeFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FakeFunction9.html"><span class="name">FakeFunction9</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with (<span class="extype" name="org.scalamock.FakeFunction9.T1">T1</span>, <span class="extype" name="org.scalamock.FakeFunction9.T2">T2</span>, <span class="extype" name="org.scalamock.FakeFunction9.T3">T3</span>, <span class="extype" name="org.scalamock.FakeFunction9.T4">T4</span>, <span class="extype" name="org.scalamock.FakeFunction9.T5">T5</span>, <span class="extype" name="org.scalamock.FakeFunction9.T6">T6</span>, <span class="extype" name="org.scalamock.FakeFunction9.T7">T7</span>, <span class="extype" name="org.scalamock.FakeFunction9.T8">T8</span>, <span class="extype" name="org.scalamock.FakeFunction9.T9">T9</span>) ⇒ <span class="extype" name="org.scalamock.FakeFunction9.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FunctionAdapter0" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FunctionAdapter0[R]extendsProduct=&gt;R"></a>
+      <a id="FunctionAdapter0[R]:FunctionAdapter0[R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FunctionAdapter0.html"><span class="name">FunctionAdapter0</span></a><span class="tparams">[<span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter0.R">R</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FunctionAdapter1" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FunctionAdapter1[T1,R]extendsProduct=&gt;R"></a>
+      <a id="FunctionAdapter1[T1,R]:FunctionAdapter1[T1,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FunctionAdapter1.html"><span class="name">FunctionAdapter1</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter1.R">R</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FunctionAdapter2" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FunctionAdapter2[T1,T2,R]extendsProduct=&gt;R"></a>
+      <a id="FunctionAdapter2[T1,T2,R]:FunctionAdapter2[T1,T2,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FunctionAdapter2.html"><span class="name">FunctionAdapter2</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter2.R">R</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FunctionAdapter3" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FunctionAdapter3[T1,T2,T3,R]extendsProduct=&gt;R"></a>
+      <a id="FunctionAdapter3[T1,T2,T3,R]:FunctionAdapter3[T1,T2,T3,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FunctionAdapter3.html"><span class="name">FunctionAdapter3</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter3.R">R</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FunctionAdapter4" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FunctionAdapter4[T1,T2,T3,T4,R]extendsProduct=&gt;R"></a>
+      <a id="FunctionAdapter4[T1,T2,T3,T4,R]:FunctionAdapter4[T1,T2,T3,T4,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FunctionAdapter4.html"><span class="name">FunctionAdapter4</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter4.R">R</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FunctionAdapter5" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FunctionAdapter5[T1,T2,T3,T4,T5,R]extendsProduct=&gt;R"></a>
+      <a id="FunctionAdapter5[T1,T2,T3,T4,T5,R]:FunctionAdapter5[T1,T2,T3,T4,T5,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FunctionAdapter5.html"><span class="name">FunctionAdapter5</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter5.R">R</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FunctionAdapter6" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FunctionAdapter6[T1,T2,T3,T4,T5,T6,R]extendsProduct=&gt;R"></a>
+      <a id="FunctionAdapter6[T1,T2,T3,T4,T5,T6,R]:FunctionAdapter6[T1,T2,T3,T4,T5,T6,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FunctionAdapter6.html"><span class="name">FunctionAdapter6</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter6.R">R</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FunctionAdapter7" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FunctionAdapter7[T1,T2,T3,T4,T5,T6,T7,R]extendsProduct=&gt;R"></a>
+      <a id="FunctionAdapter7[T1,T2,T3,T4,T5,T6,T7,R]:FunctionAdapter7[T1,T2,T3,T4,T5,T6,T7,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FunctionAdapter7.html"><span class="name">FunctionAdapter7</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter7.R">R</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FunctionAdapter8" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FunctionAdapter8[T1,T2,T3,T4,T5,T6,T7,T8,R]extendsProduct=&gt;R"></a>
+      <a id="FunctionAdapter8[T1,T2,T3,T4,T5,T6,T7,T8,R]:FunctionAdapter8[T1,T2,T3,T4,T5,T6,T7,T8,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FunctionAdapter8.html"><span class="name">FunctionAdapter8</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter8.R">R</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.FunctionAdapter9" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FunctionAdapter9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]extendsProduct=&gt;R"></a>
+      <a id="FunctionAdapter9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]:FunctionAdapter9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="FunctionAdapter9.html"><span class="name">FunctionAdapter9</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter9.R">R</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.LowPriorityDefaultable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="LowPriorityDefaultableextendsObject"></a>
+      <a id="LowPriorityDefaultable:LowPriorityDefaultable"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="LowPriorityDefaultable.html"><span class="name">LowPriorityDefaultable</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.MatchAny" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MatchAnyextendsEquals"></a>
+      <a id="MatchAny:MatchAny"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MatchAny.html"><span class="name">MatchAny</span></a><span class="result"> extends <span class="extype" name="scala.Equals">Equals</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.MatchEpsilon" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MatchEpsilonextendsEquals"></a>
+      <a id="MatchEpsilon:MatchEpsilon"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MatchEpsilon.html"><span class="name">MatchEpsilon</span></a><span class="result"> extends <span class="extype" name="scala.Equals">Equals</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.Mock" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="MockextendsObject"></a>
+      <a id="Mock:Mock"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Mock.html"><span class="name">Mock</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.MockFactoryBase" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="MockFactoryBaseextendsMock"></a>
+      <a id="MockFactoryBase:MockFactoryBase"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="MockFactoryBase.html"><span class="name">MockFactoryBase</span></a><span class="result"> extends <a href="Mock.html" class="extype" name="org.scalamock.Mock">Mock</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.MockFunction" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="MockFunctionextendsObject"></a>
+      <a id="MockFunction:MockFunction"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="MockFunction.html"><span class="name">MockFunction</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.MockFunction0" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MockFunction0[R]extendsFakeFunction0[R]withMockFunction"></a>
+      <a id="MockFunction0[R]:MockFunction0[R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MockFunction0.html"><span class="name">MockFunction0</span></a><span class="tparams">[<span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction0.html" class="extype" name="org.scalamock.FakeFunction0">FakeFunction0</a>[<span class="extype" name="org.scalamock.MockFunction0.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.MockFunction1" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MockFunction1[T1,R]extendsFakeFunction1[T1,R]withMockFunction"></a>
+      <a id="MockFunction1[T1,R]:MockFunction1[T1,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MockFunction1.html"><span class="name">MockFunction1</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction1.html" class="extype" name="org.scalamock.FakeFunction1">FakeFunction1</a>[<span class="extype" name="org.scalamock.MockFunction1.T1">T1</span>, <span class="extype" name="org.scalamock.MockFunction1.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.MockFunction2" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MockFunction2[T1,T2,R]extendsFakeFunction2[T1,T2,R]withMockFunction"></a>
+      <a id="MockFunction2[T1,T2,R]:MockFunction2[T1,T2,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MockFunction2.html"><span class="name">MockFunction2</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction2.html" class="extype" name="org.scalamock.FakeFunction2">FakeFunction2</a>[<span class="extype" name="org.scalamock.MockFunction2.T1">T1</span>, <span class="extype" name="org.scalamock.MockFunction2.T2">T2</span>, <span class="extype" name="org.scalamock.MockFunction2.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.MockFunction3" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MockFunction3[T1,T2,T3,R]extendsFakeFunction3[T1,T2,T3,R]withMockFunction"></a>
+      <a id="MockFunction3[T1,T2,T3,R]:MockFunction3[T1,T2,T3,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MockFunction3.html"><span class="name">MockFunction3</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction3.html" class="extype" name="org.scalamock.FakeFunction3">FakeFunction3</a>[<span class="extype" name="org.scalamock.MockFunction3.T1">T1</span>, <span class="extype" name="org.scalamock.MockFunction3.T2">T2</span>, <span class="extype" name="org.scalamock.MockFunction3.T3">T3</span>, <span class="extype" name="org.scalamock.MockFunction3.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.MockFunction4" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MockFunction4[T1,T2,T3,T4,R]extendsFakeFunction4[T1,T2,T3,T4,R]withMockFunction"></a>
+      <a id="MockFunction4[T1,T2,T3,T4,R]:MockFunction4[T1,T2,T3,T4,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MockFunction4.html"><span class="name">MockFunction4</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction4.html" class="extype" name="org.scalamock.FakeFunction4">FakeFunction4</a>[<span class="extype" name="org.scalamock.MockFunction4.T1">T1</span>, <span class="extype" name="org.scalamock.MockFunction4.T2">T2</span>, <span class="extype" name="org.scalamock.MockFunction4.T3">T3</span>, <span class="extype" name="org.scalamock.MockFunction4.T4">T4</span>, <span class="extype" name="org.scalamock.MockFunction4.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.MockFunction5" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MockFunction5[T1,T2,T3,T4,T5,R]extendsFakeFunction5[T1,T2,T3,T4,T5,R]withMockFunction"></a>
+      <a id="MockFunction5[T1,T2,T3,T4,T5,R]:MockFunction5[T1,T2,T3,T4,T5,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MockFunction5.html"><span class="name">MockFunction5</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction5.html" class="extype" name="org.scalamock.FakeFunction5">FakeFunction5</a>[<span class="extype" name="org.scalamock.MockFunction5.T1">T1</span>, <span class="extype" name="org.scalamock.MockFunction5.T2">T2</span>, <span class="extype" name="org.scalamock.MockFunction5.T3">T3</span>, <span class="extype" name="org.scalamock.MockFunction5.T4">T4</span>, <span class="extype" name="org.scalamock.MockFunction5.T5">T5</span>, <span class="extype" name="org.scalamock.MockFunction5.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.MockFunction6" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MockFunction6[T1,T2,T3,T4,T5,T6,R]extendsFakeFunction6[T1,T2,T3,T4,T5,T6,R]withMockFunction"></a>
+      <a id="MockFunction6[T1,T2,T3,T4,T5,T6,R]:MockFunction6[T1,T2,T3,T4,T5,T6,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MockFunction6.html"><span class="name">MockFunction6</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction6.html" class="extype" name="org.scalamock.FakeFunction6">FakeFunction6</a>[<span class="extype" name="org.scalamock.MockFunction6.T1">T1</span>, <span class="extype" name="org.scalamock.MockFunction6.T2">T2</span>, <span class="extype" name="org.scalamock.MockFunction6.T3">T3</span>, <span class="extype" name="org.scalamock.MockFunction6.T4">T4</span>, <span class="extype" name="org.scalamock.MockFunction6.T5">T5</span>, <span class="extype" name="org.scalamock.MockFunction6.T6">T6</span>, <span class="extype" name="org.scalamock.MockFunction6.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.MockFunction7" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MockFunction7[T1,T2,T3,T4,T5,T6,T7,R]extendsFakeFunction7[T1,T2,T3,T4,T5,T6,T7,R]withMockFunction"></a>
+      <a id="MockFunction7[T1,T2,T3,T4,T5,T6,T7,R]:MockFunction7[T1,T2,T3,T4,T5,T6,T7,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MockFunction7.html"><span class="name">MockFunction7</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction7.html" class="extype" name="org.scalamock.FakeFunction7">FakeFunction7</a>[<span class="extype" name="org.scalamock.MockFunction7.T1">T1</span>, <span class="extype" name="org.scalamock.MockFunction7.T2">T2</span>, <span class="extype" name="org.scalamock.MockFunction7.T3">T3</span>, <span class="extype" name="org.scalamock.MockFunction7.T4">T4</span>, <span class="extype" name="org.scalamock.MockFunction7.T5">T5</span>, <span class="extype" name="org.scalamock.MockFunction7.T6">T6</span>, <span class="extype" name="org.scalamock.MockFunction7.T7">T7</span>, <span class="extype" name="org.scalamock.MockFunction7.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.MockFunction8" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MockFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]extendsFakeFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]withMockFunction"></a>
+      <a id="MockFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]:MockFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MockFunction8.html"><span class="name">MockFunction8</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction8.html" class="extype" name="org.scalamock.FakeFunction8">FakeFunction8</a>[<span class="extype" name="org.scalamock.MockFunction8.T1">T1</span>, <span class="extype" name="org.scalamock.MockFunction8.T2">T2</span>, <span class="extype" name="org.scalamock.MockFunction8.T3">T3</span>, <span class="extype" name="org.scalamock.MockFunction8.T4">T4</span>, <span class="extype" name="org.scalamock.MockFunction8.T5">T5</span>, <span class="extype" name="org.scalamock.MockFunction8.T6">T6</span>, <span class="extype" name="org.scalamock.MockFunction8.T7">T7</span>, <span class="extype" name="org.scalamock.MockFunction8.T8">T8</span>, <span class="extype" name="org.scalamock.MockFunction8.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.MockFunction9" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MockFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]extendsFakeFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]withMockFunction"></a>
+      <a id="MockFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]:MockFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MockFunction9.html"><span class="name">MockFunction9</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction9.html" class="extype" name="org.scalamock.FakeFunction9">FakeFunction9</a>[<span class="extype" name="org.scalamock.MockFunction9.T1">T1</span>, <span class="extype" name="org.scalamock.MockFunction9.T2">T2</span>, <span class="extype" name="org.scalamock.MockFunction9.T3">T3</span>, <span class="extype" name="org.scalamock.MockFunction9.T4">T4</span>, <span class="extype" name="org.scalamock.MockFunction9.T5">T5</span>, <span class="extype" name="org.scalamock.MockFunction9.T6">T6</span>, <span class="extype" name="org.scalamock.MockFunction9.T7">T7</span>, <span class="extype" name="org.scalamock.MockFunction9.T8">T8</span>, <span class="extype" name="org.scalamock.MockFunction9.T9">T9</span>, <span class="extype" name="org.scalamock.MockFunction9.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.MockParameter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MockParameter[T]extendsObject"></a>
+      <a id="MockParameter[T]:MockParameter[T]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="MockParameter.html"><span class="name">MockParameter</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.NiceToString" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="NiceToStringextendsObject"></a>
+      <a id="NiceToString:NiceToString"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="NiceToString.html"><span class="name">NiceToString</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.StubFunction0" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StubFunction0[R]extendsFakeFunction0[R]"></a>
+      <a id="StubFunction0[R]:StubFunction0[R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="StubFunction0.html"><span class="name">StubFunction0</span></a><span class="tparams">[<span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction0.html" class="extype" name="org.scalamock.FakeFunction0">FakeFunction0</a>[<span class="extype" name="org.scalamock.StubFunction0.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.StubFunction1" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StubFunction1[T1,R]extendsFakeFunction1[T1,R]"></a>
+      <a id="StubFunction1[T1,R]:StubFunction1[T1,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="StubFunction1.html"><span class="name">StubFunction1</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction1.html" class="extype" name="org.scalamock.FakeFunction1">FakeFunction1</a>[<span class="extype" name="org.scalamock.StubFunction1.T1">T1</span>, <span class="extype" name="org.scalamock.StubFunction1.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.StubFunction2" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StubFunction2[T1,T2,R]extendsFakeFunction2[T1,T2,R]"></a>
+      <a id="StubFunction2[T1,T2,R]:StubFunction2[T1,T2,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="StubFunction2.html"><span class="name">StubFunction2</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction2.html" class="extype" name="org.scalamock.FakeFunction2">FakeFunction2</a>[<span class="extype" name="org.scalamock.StubFunction2.T1">T1</span>, <span class="extype" name="org.scalamock.StubFunction2.T2">T2</span>, <span class="extype" name="org.scalamock.StubFunction2.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.StubFunction3" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StubFunction3[T1,T2,T3,R]extendsFakeFunction3[T1,T2,T3,R]"></a>
+      <a id="StubFunction3[T1,T2,T3,R]:StubFunction3[T1,T2,T3,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="StubFunction3.html"><span class="name">StubFunction3</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction3.html" class="extype" name="org.scalamock.FakeFunction3">FakeFunction3</a>[<span class="extype" name="org.scalamock.StubFunction3.T1">T1</span>, <span class="extype" name="org.scalamock.StubFunction3.T2">T2</span>, <span class="extype" name="org.scalamock.StubFunction3.T3">T3</span>, <span class="extype" name="org.scalamock.StubFunction3.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.StubFunction4" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StubFunction4[T1,T2,T3,T4,R]extendsFakeFunction4[T1,T2,T3,T4,R]"></a>
+      <a id="StubFunction4[T1,T2,T3,T4,R]:StubFunction4[T1,T2,T3,T4,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="StubFunction4.html"><span class="name">StubFunction4</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction4.html" class="extype" name="org.scalamock.FakeFunction4">FakeFunction4</a>[<span class="extype" name="org.scalamock.StubFunction4.T1">T1</span>, <span class="extype" name="org.scalamock.StubFunction4.T2">T2</span>, <span class="extype" name="org.scalamock.StubFunction4.T3">T3</span>, <span class="extype" name="org.scalamock.StubFunction4.T4">T4</span>, <span class="extype" name="org.scalamock.StubFunction4.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.StubFunction5" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StubFunction5[T1,T2,T3,T4,T5,R]extendsFakeFunction5[T1,T2,T3,T4,T5,R]"></a>
+      <a id="StubFunction5[T1,T2,T3,T4,T5,R]:StubFunction5[T1,T2,T3,T4,T5,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="StubFunction5.html"><span class="name">StubFunction5</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction5.html" class="extype" name="org.scalamock.FakeFunction5">FakeFunction5</a>[<span class="extype" name="org.scalamock.StubFunction5.T1">T1</span>, <span class="extype" name="org.scalamock.StubFunction5.T2">T2</span>, <span class="extype" name="org.scalamock.StubFunction5.T3">T3</span>, <span class="extype" name="org.scalamock.StubFunction5.T4">T4</span>, <span class="extype" name="org.scalamock.StubFunction5.T5">T5</span>, <span class="extype" name="org.scalamock.StubFunction5.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.StubFunction6" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StubFunction6[T1,T2,T3,T4,T5,T6,R]extendsFakeFunction6[T1,T2,T3,T4,T5,T6,R]"></a>
+      <a id="StubFunction6[T1,T2,T3,T4,T5,T6,R]:StubFunction6[T1,T2,T3,T4,T5,T6,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="StubFunction6.html"><span class="name">StubFunction6</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction6.html" class="extype" name="org.scalamock.FakeFunction6">FakeFunction6</a>[<span class="extype" name="org.scalamock.StubFunction6.T1">T1</span>, <span class="extype" name="org.scalamock.StubFunction6.T2">T2</span>, <span class="extype" name="org.scalamock.StubFunction6.T3">T3</span>, <span class="extype" name="org.scalamock.StubFunction6.T4">T4</span>, <span class="extype" name="org.scalamock.StubFunction6.T5">T5</span>, <span class="extype" name="org.scalamock.StubFunction6.T6">T6</span>, <span class="extype" name="org.scalamock.StubFunction6.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.StubFunction7" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StubFunction7[T1,T2,T3,T4,T5,T6,T7,R]extendsFakeFunction7[T1,T2,T3,T4,T5,T6,T7,R]"></a>
+      <a id="StubFunction7[T1,T2,T3,T4,T5,T6,T7,R]:StubFunction7[T1,T2,T3,T4,T5,T6,T7,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="StubFunction7.html"><span class="name">StubFunction7</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction7.html" class="extype" name="org.scalamock.FakeFunction7">FakeFunction7</a>[<span class="extype" name="org.scalamock.StubFunction7.T1">T1</span>, <span class="extype" name="org.scalamock.StubFunction7.T2">T2</span>, <span class="extype" name="org.scalamock.StubFunction7.T3">T3</span>, <span class="extype" name="org.scalamock.StubFunction7.T4">T4</span>, <span class="extype" name="org.scalamock.StubFunction7.T5">T5</span>, <span class="extype" name="org.scalamock.StubFunction7.T6">T6</span>, <span class="extype" name="org.scalamock.StubFunction7.T7">T7</span>, <span class="extype" name="org.scalamock.StubFunction7.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.StubFunction8" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StubFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]extendsFakeFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]"></a>
+      <a id="StubFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]:StubFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="StubFunction8.html"><span class="name">StubFunction8</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction8.html" class="extype" name="org.scalamock.FakeFunction8">FakeFunction8</a>[<span class="extype" name="org.scalamock.StubFunction8.T1">T1</span>, <span class="extype" name="org.scalamock.StubFunction8.T2">T2</span>, <span class="extype" name="org.scalamock.StubFunction8.T3">T3</span>, <span class="extype" name="org.scalamock.StubFunction8.T4">T4</span>, <span class="extype" name="org.scalamock.StubFunction8.T5">T5</span>, <span class="extype" name="org.scalamock.StubFunction8.T6">T6</span>, <span class="extype" name="org.scalamock.StubFunction8.T7">T7</span>, <span class="extype" name="org.scalamock.StubFunction8.T8">T8</span>, <span class="extype" name="org.scalamock.StubFunction8.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.StubFunction9" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="StubFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]extendsFakeFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]"></a>
+      <a id="StubFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]:StubFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="StubFunction9.html"><span class="name">StubFunction9</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction9.html" class="extype" name="org.scalamock.FakeFunction9">FakeFunction9</a>[<span class="extype" name="org.scalamock.StubFunction9.T1">T1</span>, <span class="extype" name="org.scalamock.StubFunction9.T2">T2</span>, <span class="extype" name="org.scalamock.StubFunction9.T3">T3</span>, <span class="extype" name="org.scalamock.StubFunction9.T4">T4</span>, <span class="extype" name="org.scalamock.StubFunction9.T5">T5</span>, <span class="extype" name="org.scalamock.StubFunction9.T6">T6</span>, <span class="extype" name="org.scalamock.StubFunction9.T7">T7</span>, <span class="extype" name="org.scalamock.StubFunction9.T8">T8</span>, <span class="extype" name="org.scalamock.StubFunction9.T9">T9</span>, <span class="extype" name="org.scalamock.StubFunction9.R">R</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.Verify" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="VerifyextendsObject"></a>
+      <a id="Verify:Verify"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="Verify.html"><span class="name">Verify</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="org.scalamock.CallHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CallHandler"></a>
+      <a id="CallHandler:CallHandler"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="CallHandler$.html"><span class="name">CallHandler</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.Defaultable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Defaultable"></a>
+      <a id="Defaultable:Defaultable"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="Defaultable$.html"><span class="name">Defaultable</span></a><span class="result"> extends <a href="LowPriorityDefaultable.html" class="extype" name="org.scalamock.LowPriorityDefaultable">LowPriorityDefaultable</a></span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.MatchEpsilon" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MatchEpsilon"></a>
+      <a id="MatchEpsilon:MatchEpsilon"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="MatchEpsilon$.html"><span class="name">MatchEpsilon</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.MockImpl" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MockImpl"></a>
+      <a id="MockImpl:MockImpl"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="MockImpl$.html"><span class="name">MockImpl</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.scalatest" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="scalatest"></a>
+      <a id="scalatest:scalatest"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="scalatest/package.html"><span class="name">scalatest</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalamock.specs2" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="specs2"></a>
+      <a id="specs2:specs2"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="specs2/package.html"><span class="name">specs2</span></a>
+      </span>
+      </h4>
+      
+    </li></ol>
+            </div>
+
+        
+
+        
+        </div>
+
+        <div id="inheritedMembers">
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
             </div>
         </div>
 
-        
-
-        <div class="types members" id="types">
-              <h3>Type Members</h3>
-              <ol><li visbl="pub" name="org.scalamock.CallLogging" data-isabs="true">
-      <a id="CallLogging:CallLogging"></a>
-      <h4 class="signature">
-      <span class="kind">trait</span>
-      <span class="symbol"> 
-        <a href="CallLogging.html"><span class="name">CallLogging</span></a>
-        
-        <span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      <p class="comment cmt">Trait that can be mixed into a <a name="org.scalamock.MockFactoryBase" class="extype" href="MockFactoryBase.html">MockFactoryBase</a> to switch on
-call logging.</p>
-    </li><li visbl="pub" name="org.scalamock.ClassLoaderStrategy" data-isabs="true">
-      <a id="ClassLoaderStrategy:ClassLoaderStrategy"></a>
-      <h4 class="signature">
-      <span class="kind">trait</span>
-      <span class="symbol"> 
-        <a href="ClassLoaderStrategy.html"><span class="name">ClassLoaderStrategy</span></a>
-        
-        <span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.EpsilonMockParameter" data-isabs="false">
-      <a id="EpsilonMockParameter:EpsilonMockParameter"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="EpsilonMockParameter.html"><span class="name">EpsilonMockParameter</span></a>
-        
-        <span class="result"> extends MockParameter[Double]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.Expectation" data-isabs="true">
-      <a id="Expectation:Expectation"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="Expectation.html"><span class="name">Expectation</span></a>
-        
-        <span class="result"> extends Handler</span>
-      </span>
-      </h4>
-      <p class="comment cmt">Represents a single expectation
-</p>
-    </li><li visbl="pub" name="org.scalamock.ExpectationException" data-isabs="false">
-      <a id="ExpectationException:ExpectationException"></a>
-      <h4 class="signature">
-      <span class="kind">case class</span>
-      <span class="symbol"> 
-        <a href="ExpectationException.html"><span class="name">ExpectationException</span></a>
-        
-        <span class="params">(<span name="msg">msg: String</span>)</span><span class="result"> extends RuntimeException with Product with Serializable</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.GeneratedMockFactoryBase" data-isabs="true">
-      <a id="GeneratedMockFactoryBase:GeneratedMockFactoryBase"></a>
-      <h4 class="signature">
-      <span class="kind">trait</span>
-      <span class="symbol"> 
-        <a href="GeneratedMockFactoryBase.html"><span class="name">GeneratedMockFactoryBase</span></a>
-        
-        <span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MatchAny" data-isabs="false">
-      <a id="MatchAny:MatchAny"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MatchAny.html"><span class="name">MatchAny</span></a>
-        
-        <span class="result"> extends Equals</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MatchEpsilon" data-isabs="false">
-      <a id="MatchEpsilon:MatchEpsilon"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MatchEpsilon.html"><span class="name">MatchEpsilon</span></a>
-        
-        <span class="result"> extends Equals</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MatchRepeated" data-isabs="false">
-      <a id="MatchRepeated:MatchRepeated"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MatchRepeated.html"><span class="name">MatchRepeated</span></a>
-        
-        <span class="result"> extends Equals</span>
-      </span>
-      </h4>
-      <p class="comment cmt">Matches repeated (varargs) parameters
-</p>
-    </li><li visbl="pub" name="org.scalamock.Mock" data-isabs="true">
-      <a id="Mock:Mock"></a>
-      <h4 class="signature">
-      <span class="kind">trait</span>
-      <span class="symbol"> 
-        <a href="Mock.html"><span class="name">Mock</span></a>
-        
-        <span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockConstructor" data-isabs="false">
-      <a id="MockConstructor:MockConstructor[R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockConstructor.html"><span class="name">MockConstructor</span></a>
-        <span class="tparams">[<span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockConstructorDummy" data-isabs="false">
-      <a id="MockConstructorDummy:MockConstructorDummy"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockConstructorDummy.html"><span class="name">MockConstructorDummy</span></a>
-        
-        <span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockFactoryBase" data-isabs="true">
-      <a id="MockFactoryBase:MockFactoryBase"></a>
-      <h4 class="signature">
-      <span class="kind">trait</span>
-      <span class="symbol"> 
-        <a href="MockFactoryBase.html"><span class="name">MockFactoryBase</span></a>
-        
-        <span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockFunction" data-isabs="false">
-      <a id="MockFunction:MockFunction"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockFunction.html"><span class="name">MockFunction</span></a>
-        
-        <span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockFunction0" data-isabs="false">
-      <a id="MockFunction0:MockFunction0[R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockFunction0.html"><span class="name">MockFunction0</span></a>
-        <span class="tparams">[<span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with () ⇒ R with NiceToString</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockFunction1" data-isabs="false">
-      <a id="MockFunction1:MockFunction1[T1, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockFunction1.html"><span class="name">MockFunction1</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1) ⇒ R with NiceToString</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockFunction10" data-isabs="false">
-      <a id="MockFunction10:MockFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockFunction10.html"><span class="name">MockFunction10</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="T10">T10</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) ⇒ R with NiceToString</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockFunction2" data-isabs="false">
-      <a id="MockFunction2:MockFunction2[T1, T2, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockFunction2.html"><span class="name">MockFunction2</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1, T2) ⇒ R with NiceToString</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockFunction3" data-isabs="false">
-      <a id="MockFunction3:MockFunction3[T1, T2, T3, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockFunction3.html"><span class="name">MockFunction3</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1, T2, T3) ⇒ R with NiceToString</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockFunction4" data-isabs="false">
-      <a id="MockFunction4:MockFunction4[T1, T2, T3, T4, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockFunction4.html"><span class="name">MockFunction4</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1, T2, T3, T4) ⇒ R with NiceToString</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockFunction5" data-isabs="false">
-      <a id="MockFunction5:MockFunction5[T1, T2, T3, T4, T5, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockFunction5.html"><span class="name">MockFunction5</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5) ⇒ R with NiceToString</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockFunction6" data-isabs="false">
-      <a id="MockFunction6:MockFunction6[T1, T2, T3, T4, T5, T6, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockFunction6.html"><span class="name">MockFunction6</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6) ⇒ R with NiceToString</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockFunction7" data-isabs="false">
-      <a id="MockFunction7:MockFunction7[T1, T2, T3, T4, T5, T6, T7, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockFunction7.html"><span class="name">MockFunction7</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6, T7) ⇒ R with NiceToString</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockFunction8" data-isabs="false">
-      <a id="MockFunction8:MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockFunction8.html"><span class="name">MockFunction8</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6, T7, T8) ⇒ R with NiceToString</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockFunction9" data-isabs="false">
-      <a id="MockFunction9:MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockFunction9.html"><span class="name">MockFunction9</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends MockFunction with (T1, T2, T3, T4, T5, T6, T7, T8, T9) ⇒ R with NiceToString</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockMatcher1" data-isabs="false">
-      <a id="MockMatcher1:MockMatcher1[T1]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockMatcher1.html"><span class="name">MockMatcher1</span></a>
-        <span class="tparams">[<span name="T1">T1</span>]</span>
-        <span class="result"> extends FunctionAdapter1[T1, Boolean]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockMatcher10" data-isabs="false">
-      <a id="MockMatcher10:MockMatcher10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockMatcher10.html"><span class="name">MockMatcher10</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="T10">T10</span>]</span>
-        <span class="result"> extends FunctionAdapter10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, Boolean]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockMatcher2" data-isabs="false">
-      <a id="MockMatcher2:MockMatcher2[T1, T2]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockMatcher2.html"><span class="name">MockMatcher2</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>]</span>
-        <span class="result"> extends FunctionAdapter2[T1, T2, Boolean]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockMatcher3" data-isabs="false">
-      <a id="MockMatcher3:MockMatcher3[T1, T2, T3]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockMatcher3.html"><span class="name">MockMatcher3</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>]</span>
-        <span class="result"> extends FunctionAdapter3[T1, T2, T3, Boolean]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockMatcher4" data-isabs="false">
-      <a id="MockMatcher4:MockMatcher4[T1, T2, T3, T4]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockMatcher4.html"><span class="name">MockMatcher4</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>]</span>
-        <span class="result"> extends FunctionAdapter4[T1, T2, T3, T4, Boolean]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockMatcher5" data-isabs="false">
-      <a id="MockMatcher5:MockMatcher5[T1, T2, T3, T4, T5]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockMatcher5.html"><span class="name">MockMatcher5</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>]</span>
-        <span class="result"> extends FunctionAdapter5[T1, T2, T3, T4, T5, Boolean]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockMatcher6" data-isabs="false">
-      <a id="MockMatcher6:MockMatcher6[T1, T2, T3, T4, T5, T6]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockMatcher6.html"><span class="name">MockMatcher6</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>]</span>
-        <span class="result"> extends FunctionAdapter6[T1, T2, T3, T4, T5, T6, Boolean]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockMatcher7" data-isabs="false">
-      <a id="MockMatcher7:MockMatcher7[T1, T2, T3, T4, T5, T6, T7]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockMatcher7.html"><span class="name">MockMatcher7</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>]</span>
-        <span class="result"> extends FunctionAdapter7[T1, T2, T3, T4, T5, T6, T7, Boolean]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockMatcher8" data-isabs="false">
-      <a id="MockMatcher8:MockMatcher8[T1, T2, T3, T4, T5, T6, T7, T8]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockMatcher8.html"><span class="name">MockMatcher8</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>]</span>
-        <span class="result"> extends FunctionAdapter8[T1, T2, T3, T4, T5, T6, T7, T8, Boolean]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockMatcher9" data-isabs="false">
-      <a id="MockMatcher9:MockMatcher9[T1, T2, T3, T4, T5, T6, T7, T8, T9]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockMatcher9.html"><span class="name">MockMatcher9</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>]</span>
-        <span class="result"> extends FunctionAdapter9[T1, T2, T3, T4, T5, T6, T7, T8, T9, Boolean]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockParameter" data-isabs="false">
-      <a id="MockParameter:MockParameter[T]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockParameter.html"><span class="name">MockParameter</span></a>
-        <span class="tparams">[<span name="T">T</span>]</span>
-        <span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MockingClassLoader" data-isabs="true">
-      <a id="MockingClassLoader:MockingClassLoader"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockingClassLoader.html"><span class="name">MockingClassLoader</span></a>
-        
-        <span class="result"> extends ClassLoader</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>abstract </dd></dl></div>
-    </li><li visbl="pub" name="org.scalamock.MockingURLClassLoader" data-isabs="false">
-      <a id="MockingURLClassLoader:MockingURLClassLoader"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="MockingURLClassLoader.html"><span class="name">MockingURLClassLoader</span></a>
-        
-        <span class="result"> extends MockingClassLoader</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.NiceToString" data-isabs="true">
-      <a id="NiceToString:NiceToString"></a>
-      <h4 class="signature">
-      <span class="kind">trait</span>
-      <span class="symbol"> 
-        <a href="NiceToString.html"><span class="name">NiceToString</span></a>
-        
-        <span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.ProxyMockFactory" data-isabs="true">
-      <a id="ProxyMockFactory:ProxyMockFactory"></a>
-      <h4 class="signature">
-      <span class="kind">trait</span>
-      <span class="symbol"> 
-        <a href="ProxyMockFactory.html"><span class="name">ProxyMockFactory</span></a>
-        
-        <span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.TypeSafeExpectation" data-isabs="true">
-      <a id="TypeSafeExpectation:TypeSafeExpectation[R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="TypeSafeExpectation.html"><span class="name">TypeSafeExpectation</span></a>
-        <span class="tparams">[<span name="R">R</span>]</span>
-        <span class="result"> extends Expectation</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>abstract </dd></dl></div>
-    </li><li visbl="pub" name="org.scalamock.TypeSafeExpectation0" data-isabs="false">
-      <a id="TypeSafeExpectation0:TypeSafeExpectation0[R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="TypeSafeExpectation0.html"><span class="name">TypeSafeExpectation0</span></a>
-        <span class="tparams">[<span name="R">R</span>]</span>
-        <span class="result"> extends TypeSafeExpectation[R]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.TypeSafeExpectation1" data-isabs="false">
-      <a id="TypeSafeExpectation1:TypeSafeExpectation1[T1, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="TypeSafeExpectation1.html"><span class="name">TypeSafeExpectation1</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends TypeSafeExpectation[R]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.TypeSafeExpectation10" data-isabs="false">
-      <a id="TypeSafeExpectation10:TypeSafeExpectation10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="TypeSafeExpectation10.html"><span class="name">TypeSafeExpectation10</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="T10">T10</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends TypeSafeExpectation[R]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.TypeSafeExpectation2" data-isabs="false">
-      <a id="TypeSafeExpectation2:TypeSafeExpectation2[T1, T2, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="TypeSafeExpectation2.html"><span class="name">TypeSafeExpectation2</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends TypeSafeExpectation[R]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.TypeSafeExpectation3" data-isabs="false">
-      <a id="TypeSafeExpectation3:TypeSafeExpectation3[T1, T2, T3, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="TypeSafeExpectation3.html"><span class="name">TypeSafeExpectation3</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends TypeSafeExpectation[R]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.TypeSafeExpectation4" data-isabs="false">
-      <a id="TypeSafeExpectation4:TypeSafeExpectation4[T1, T2, T3, T4, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="TypeSafeExpectation4.html"><span class="name">TypeSafeExpectation4</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends TypeSafeExpectation[R]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.TypeSafeExpectation5" data-isabs="false">
-      <a id="TypeSafeExpectation5:TypeSafeExpectation5[T1, T2, T3, T4, T5, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="TypeSafeExpectation5.html"><span class="name">TypeSafeExpectation5</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends TypeSafeExpectation[R]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.TypeSafeExpectation6" data-isabs="false">
-      <a id="TypeSafeExpectation6:TypeSafeExpectation6[T1, T2, T3, T4, T5, T6, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="TypeSafeExpectation6.html"><span class="name">TypeSafeExpectation6</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends TypeSafeExpectation[R]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.TypeSafeExpectation7" data-isabs="false">
-      <a id="TypeSafeExpectation7:TypeSafeExpectation7[T1, T2, T3, T4, T5, T6, T7, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="TypeSafeExpectation7.html"><span class="name">TypeSafeExpectation7</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends TypeSafeExpectation[R]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.TypeSafeExpectation8" data-isabs="false">
-      <a id="TypeSafeExpectation8:TypeSafeExpectation8[T1, T2, T3, T4, T5, T6, T7, T8, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="TypeSafeExpectation8.html"><span class="name">TypeSafeExpectation8</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends TypeSafeExpectation[R]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.TypeSafeExpectation9" data-isabs="false">
-      <a id="TypeSafeExpectation9:TypeSafeExpectation9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="TypeSafeExpectation9.html"><span class="name">TypeSafeExpectation9</span></a>
-        <span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span>
-        <span class="result"> extends TypeSafeExpectation[R]</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.TypeUnsafeExpectation" data-isabs="false">
-      <a id="TypeUnsafeExpectation:TypeUnsafeExpectation"></a>
-      <h4 class="signature">
-      <span class="kind">class</span>
-      <span class="symbol"> 
-        <a href="TypeUnsafeExpectation.html"><span class="name">TypeUnsafeExpectation</span></a>
-        
-        <span class="result"> extends Expectation</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.VerboseErrors" data-isabs="true">
-      <a id="VerboseErrors:VerboseErrors"></a>
-      <h4 class="signature">
-      <span class="kind">trait</span>
-      <span class="symbol"> 
-        <a href="VerboseErrors.html"><span class="name">VerboseErrors</span></a>
-        
-        <span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      <p class="comment cmt">Trait that can be mixed into a <a name="org.scalamock.MockFactoryBase" class="extype" href="MockFactoryBase.html">MockFactoryBase</a> to switch on
-verbose error messages.</p>
-    </li></ol>
-            </div>
-        
-        
-
-        <div class="values members" id="values">
-              <h3>Value Members</h3>
-              <ol><li visbl="pub" name="org.scalamock.ClassLoaderStrategy" data-isabs="false">
-      <a id="ClassLoaderStrategy:ClassLoaderStrategy"></a>
-      <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="ClassLoaderStrategy$.html"><span class="name">ClassLoaderStrategy</span></a>
-        
-        <span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.MatchEpsilon" data-isabs="false">
-      <a id="MatchEpsilon:MatchEpsilon"></a>
-      <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="MatchEpsilon$.html"><span class="name">MatchEpsilon</span></a>
-        
-        <span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.ReflectionUtilities" data-isabs="false">
-      <a id="ReflectionUtilities:ReflectionUtilities"></a>
-      <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="ReflectionUtilities$.html"><span class="name">ReflectionUtilities</span></a>
-        
-        <span class="result"> extends AnyRef</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.annotation" data-isabs="false">
-      <a id="annotation:annotation"></a>
-      <h4 class="signature">
-      <span class="kind">package</span>
-      <span class="symbol"> 
-        <a href="annotation/package.html"><span class="name">annotation</span></a>
-        
-        
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.classClassLoaderStrategy" data-isabs="false">
-      <a id="classClassLoaderStrategy:classClassLoaderStrategy"></a>
-      <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="classClassLoaderStrategy$.html"><span class="name">classClassLoaderStrategy</span></a>
-        
-        <span class="result"> extends ClassLoaderStrategy</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.junit3" data-isabs="false">
-      <a id="junit3:junit3"></a>
-      <h4 class="signature">
-      <span class="kind">package</span>
-      <span class="symbol"> 
-        <a href="junit3/package.html"><span class="name">junit3</span></a>
-        
-        
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.scalatest" data-isabs="false">
-      <a id="scalatest:scalatest"></a>
-      <h4 class="signature">
-      <span class="kind">package</span>
-      <span class="symbol"> 
-        <a href="scalatest/package.html"><span class="name">scalatest</span></a>
-        
-        
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.specs2" data-isabs="false">
-      <a id="specs2:specs2"></a>
-      <h4 class="signature">
-      <span class="kind">package</span>
-      <span class="symbol"> 
-        <a href="specs2/package.html"><span class="name">specs2</span></a>
-        
-        
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="org.scalamock.threadContextClassLoaderStrategy" data-isabs="false">
-      <a id="threadContextClassLoaderStrategy:threadContextClassLoaderStrategy"></a>
-      <h4 class="signature">
-      <span class="kind">object</span>
-      <span class="symbol"> 
-        <a href="threadContextClassLoaderStrategy$.html"><span class="name">threadContextClassLoaderStrategy</span></a>
-        
-        <span class="result"> extends ClassLoaderStrategy</span>
-      </span>
-      </h4>
-      
-    </li></ol>
-            </div>
-
-        
-
-        
-
       </div>
-      
+
       <div id="tooltip"></div>
-      
+
+      <div id="footer">  </div>
+
+
     </body>
       </html>
