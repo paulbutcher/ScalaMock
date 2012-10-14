@@ -70,6 +70,16 @@ class MockTest extends FreeSpec with MockFactory {
         expectResult("polymorphic method called") { m.overloaded(1.23) }
       }
     }
+
+    "choose between polymorphic and non-polymorphic overloaded methods correctly" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.overloaded(_: Int)).expects(42).returning("non-polymorphic called")
+        (m.overloaded[Int] _).expects(42).returning("polymorphic called")
+        expectResult("non-polymorphic called") { m.overloaded(42) }
+        expectResult("polymorphic called") { m.overloaded[Int](42) }
+      }
+    }
     
     "cope with infix operators" in {
       withExpectations {
