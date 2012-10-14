@@ -60,11 +60,14 @@ class MockTest extends FreeSpec with MockFactory {
         (m.overloaded(_: Int, _: Double)).expects(10, 1.23).returning("got two parameters")
         expectResult("got an integer") { m.overloaded(10) }
         expectResult("got two parameters") { m.overloaded(10, 1.23) }
-
-        //! TODO - this should work, but will have to wait for resolveOverloaded to be reinstated
-        //! in the macro API
-        // (m.overloaded[Double] _).expects(1.23).returning("polymorphic method called")
-        // expectResult("polymorphic method called") { m.overloaded(1.23) }
+      }
+    }
+    
+    "cope with polymorphic overloaded methods" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.overloaded[Double] _).expects(1.23).returning("polymorphic method called")
+        expectResult("polymorphic method called") { m.overloaded(1.23) }
       }
     }
     

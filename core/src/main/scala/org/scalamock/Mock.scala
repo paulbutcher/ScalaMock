@@ -351,36 +351,38 @@ object MockImpl {
     // our purposes, and is much easier than trying to backport the implementation that was deleted
     // from the macro API (c.f. https://groups.google.com/d/msg/scala-internals/R1iZXfotqds/3xytfX39U2wJ)
     //! TODO - replace with official resolveOverloaded if/when it's reinstated
-    def resolveOverloaded(method: TermSymbol): Symbol = {
+    def resolveOverloaded(method: TermSymbol, targs: List[Type]): Symbol = {
       method.alternatives find { m => 
-        paramTypes(m.typeSignature) sameElements actuals
+        val tpe = m.typeSignature
+        if (targs.nonEmpty)
+          (paramTypes(appliedType(tpe, targs)) sameElements actuals)
+        else
+          paramTypes(tpe) sameElements actuals
       } getOrElse {
         reportError(s"Unable to resolve overloaded method ${method.name}")
       }
     }
     
-    def mockFunctionName(name: Name, t: Type) = {
+    def mockFunctionName(name: Name, t: Type, targs: List[Type]) = {
       val method = t.member(name).asTerm
-      if (method.isOverloaded) {
-        val m = resolveOverloaded(method)
-        "mock$"+ name +"$"+ method.alternatives.indexOf(m)
-      } else {
+      if (method.isOverloaded)
+        "mock$"+ name +"$"+ method.alternatives.indexOf(resolveOverloaded(method, targs))
+      else
         "mock$"+ name +"$0"
-      }    
     }
     
-    def findApplication(tree: Tree): (Tree, Name) = tree match {
-      case Select(o, n) => (o, n)
+    def findApplication(tree: Tree): (Tree, Name, List[Type]) = tree match {
+      case Select(o, n) => (o, n, Nil)
       case Block(_, t) => findApplication(t)
       case Typed(t, _) => findApplication(t)
       case Function(_, t) => findApplication(t)
       case Apply(t, _) => findApplication(t)
-      case TypeApply(t, _) => findApplication(t)
+      case TypeApply(t, args) => val (o, n, _) = findApplication(t); (o, n, args map (_.tpe))
       case _ => reportError(
           s"ScalaMock: Unrecognised structure: ${showRaw(tree)}. Please open a ticket at https://github.com/paulbutcher/ScalaMock/issues")
     }
 
-    val (obj, name) = findApplication(f.tree)
+    val (obj, name, targs) = findApplication(f.tree)
     c.Expr(
       TypeApply(
         Select(
@@ -390,7 +392,7 @@ object MockImpl {
                 Select(
                   Apply(Select(obj, newTermName("getClass")), List()),
                   newTermName("getMethod")),
-                List(Literal(Constant(mockFunctionName(name, obj.tpe))))),
+                List(Literal(Constant(mockFunctionName(name, obj.tpe, targs))))),
               newTermName("invoke")),
             List(obj)),
           newTermName("asInstanceOf")),
