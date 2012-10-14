@@ -23,7 +23,7 @@ import Keys._
 import sbt.inc.Analysis
 
 object BuildSettings {
-  val buildVersion = "3.0-M4"
+  val buildVersion = "3.0-M5"
   val buildScalaVersion = "2.10.0-RC1"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
@@ -92,8 +92,8 @@ object ShellPrompt {
 }
 
 object Dependencies {
-  val scalatest = "org.scalatest" % "scalatest_2.10.0-RC1" % "2.0.M4-2.10.0-RC1-B1"
-  val specs2 = "org.specs2" % "specs2_2.10.0-RC1" % "1.11"
+  val scalatest = "org.scalatest" % "scalatest_2.10.0-RC1" % "2.0.M4"
+  val specs2 = "org.specs2" % "specs2_2.10.0-RC1" % "1.12.2"
   val reflect = "org.scala-lang" % "scala-reflect" % BuildSettings.buildScalaVersion
   val actors = "org.scala-lang" % "scala-actors" % BuildSettings.buildScalaVersion
 }
