@@ -60,3 +60,19 @@ and with [Specs2](http://etorreborre.github.com/specs2/):
 ## Documentation
 
 [Scaladoc](http://scalamock.org/api/index.html#org.scalamock.package).
+
+## Future Plans
+
+When Scala supports [macro types](http://scalamacros.org/future.html), this will enable:
+
+* Improved syntax:
+
+      <pre>mockObject.expects.method(arguments)</pre>
+
+  instead of:
+
+      <pre>(mockObject.method _) expects (arguments)</pre>
+
+* Mocking object creation (constructors)
+* Mocking singleton and companion objects (static methods)
+* Mocking final classes and classes with final methods or private constructors
