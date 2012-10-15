@@ -177,12 +177,13 @@ package org
  * ===Overloaded, curried and polymorphic methods===
  * 
  * Overloaded, curried and polymorphic methods can be mocked by specifying 
- * argument types. For example:
+ * either argument types or type parameters. For example:
  * 
  * {{{
  * trait Foo {
  *   def overloaded(x: Int): String
  *   def overloaded(x: String): String
+ *   def overloaded[T](x: T): String
  *   def curried(x: Int)(y: Double): String
  *   def polymorphic[T](x: List[T]): String
  * }
@@ -192,8 +193,10 @@ package org
  * val m = mock[Foo]
  * (m.overloaded(_: Int)).expects(10)
  * (m.overloaded(_: String)).expects("foo")
+ * (m.overloaded[Double] _).expects(1.23)
  * (m.curried(_: Int)(_: Double)).expects(10, 1.23)
  * (m.polymorphic(_: List[Int])).expects(List(1, 2, 3))
+ * (m.polymorphic[String] _).expects("foo")
  * }}}
  *
  * ===Exceptions===
@@ -250,30 +253,19 @@ package org
  * correct order, calls within different sequences can be interleaved. For example:
  *
  * {{{
- * val m1 = mock[Turtle]
- * val m2 = mock[Turtle]
- *
  * inSequence {
- *   (m1.setPosition _).expects(0.0, 0.0)
- *   (m1.penDown _).expects()
- *   (m1.forward _).expects(10.0)
- *   (m1.penUp _).expects()
+ *   m expects (1)
+ *   m expects (2)
  * }
  * inSequence {
- *   (m2.setPosition _).expects(1.0, 1.0)
- *   (m2.turn _).expects(90.0)
- *   (m2.forward _).expects(1.0)
- *   (m2.getPosition _).expects().returning(2.0, 1.0)
+ *   m expects (3)
+ *   m expects (4)
  * }
  *
- * m2.setPosition(1.0, 1.0)
- * m1.setPosition(0.0, 0.0)
- * m1.penDown
- * m2.turn(90.0)
- * m1.forward(10.0)
- * m2.forward(1.0)
- * m1.penUp
- * expectResult((2.0, 1.0)) { m2.getPosition }
+ * m(3)
+ * m(1)
+ * m(2)
+ * m(4)
  * }}}
  *
  * To specify that there is no constraint on ordering, use `inAnyOrder` (there is an implicit
@@ -293,6 +285,7 @@ package org
  *     (m.f _).expects()
  *   }
  *   (m.g _).expects()
+ * }
  * }}}
  */
 package object scalamock
