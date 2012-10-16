@@ -65,13 +65,14 @@ and with [Specs2](http://etorreborre.github.com/specs2/):
 
 When Scala supports [macro types](http://scalamacros.org/future.html), this will enable:
 
-* Improved syntax:
+* 
+  Improved syntax:
 
-      <pre>mockObject.expects.method(arguments)</pre>
+      mockObject.expects.method(arguments)
 
   instead of:
 
-      <pre>(mockObject.method _) expects (arguments)</pre>
+      (mockObject.method _) expects (arguments)
 
 * Mocking object creation (constructors)
 * Mocking singleton and companion objects (static methods)
