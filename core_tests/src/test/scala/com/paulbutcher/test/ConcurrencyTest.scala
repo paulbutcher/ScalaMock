@@ -18,26 +18,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock
+package com.paulbutcher.test
 
-private[scalamock] class UnorderedHandlers extends Handlers {
+import org.scalamock.scalatest.MockFactory
+import org.scalatest.{FreeSpec, WordSpec}
+import org.scalamock._
+import scala.concurrent._
+import scala.concurrent.duration._
+import ExecutionContext.Implicits.global
+
+class ConcurrencyTest extends WordSpec with MockFactory {
   
-  def handle(call: Call): Option[Any] = this.synchronized {
-    for (handler <- handlers) {
-      val r = handler.handle(call)
-      if (r.isDefined)
-        return r
-    }
-    None
+  "Futures should work" in {
+    val s = stubFunction[Int]
+    s.when().returns(1)
+    expectResult(1){ Await.result(Future{ s() }, 10.seconds) }
+    s.verify().once()
   }
-  
-  def verify(call: Call): Boolean = this.synchronized {
-    for (handler <- handlers) {
-      if (handler.verify(call))
-        return true
-    }
-    false
-  }
-  
-  protected val prefix = "inAnyOrder"
 }

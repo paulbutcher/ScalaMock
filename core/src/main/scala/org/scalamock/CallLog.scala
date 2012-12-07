@@ -1,4 +1,3 @@
-// Copyright (c) 2011-2012 Paul Butcher
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,24 +19,15 @@
 
 package org.scalamock
 
-private[scalamock] class UnorderedHandlers extends Handlers {
+import collection.mutable.ListBuffer
+
+private[scalamock] class CallLog {
+
+  def +=(call: Call) = this.synchronized { log += call }
   
-  def handle(call: Call): Option[Any] = this.synchronized {
-    for (handler <- handlers) {
-      val r = handler.handle(call)
-      if (r.isDefined)
-        return r
-    }
-    None
-  }
+  def foreach(f: Call => Unit) = log foreach f
   
-  def verify(call: Call): Boolean = this.synchronized {
-    for (handler <- handlers) {
-      if (handler.verify(call))
-        return true
-    }
-    false
-  }
+  override def toString = log mkString("  ", "\n  ", "")
   
-  protected val prefix = "inAnyOrder"
+  private val log = new ListBuffer[Call]
 }

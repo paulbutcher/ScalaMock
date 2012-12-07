@@ -41,7 +41,7 @@ private[scalamock] class OrderedHandlers extends Handlers {
     var currentIndex = 0
   }
   
-  def handle(call: Call) = handleFn(call)
+  def handle(call: Call) = this.synchronized { handleFn(call) }
   
   val verifyFn = new Function1[Call, Boolean] {
     
@@ -59,7 +59,7 @@ private[scalamock] class OrderedHandlers extends Handlers {
     var currentIndex = 0
   }
  
-  def verify(call: Call) = verifyFn(call)
+  def verify(call: Call) = this.synchronized { verifyFn(call) }
 
   protected val prefix = "inSequence"
 }

@@ -29,9 +29,13 @@ trait NiceToString { self: FakeFunction =>
 
 abstract class FakeFunction(protected val factory: MockFactoryBase, private[scalamock] val name: Symbol) {
   
+  private val callLog = factory.callLog.get
+  private val expectationContext = factory.expectationContext.get
+  
   def handle(arguments: Product): Any = {
     val call = new Call(this, arguments)
-    factory.handle(call) getOrElse onUnexpected(call)
+    callLog += call
+    expectationContext.handle(call) getOrElse onUnexpected(call)
   }
   
   protected def onUnexpected(call: Call): Any

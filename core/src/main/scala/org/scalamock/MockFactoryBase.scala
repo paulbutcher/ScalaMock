@@ -19,8 +19,6 @@
 
 package org.scalamock
 
-import collection.mutable.ListBuffer
-
 trait MockFactoryBase extends Mock {
   import language.implicitConversions
   
@@ -115,11 +113,6 @@ trait MockFactoryBase extends Mock {
 
   protected implicit def MatchEpsilonToMockParameter[T](m: MatchEpsilon) = new EpsilonMockParameter(m)
   
-  private[scalamock] def handle(call: Call) = {
-    callLog.get += call
-    expectationContext.get.handle(call)
-  }
-  
   private[scalamock] def add[E <: CallHandler[_]](e: E) = {
     assert(expectationContext.get != null, "Null expectationContext - missing withExpectations?")
     expectationContext.get.add(e)
@@ -157,19 +150,8 @@ trait MockFactoryBase extends Mock {
     what
     expectationContext set prevContext
   }
-  
-  private class CallLog {
 
-    def +=(call: Call) = log += call
-    
-    def foreach(f: Call => Unit) = log foreach f
-    
-    override def toString = log mkString("  ", "\n  ", "")
-    
-    private val log = new ListBuffer[Call]
-  }
+  private[scalamock] val callLog = new InheritableThreadLocal[CallLog]
   
-  private val callLog = new InheritableThreadLocal[CallLog]
-  
-  private val expectationContext = new InheritableThreadLocal[Handlers]
+  private[scalamock] val expectationContext = new InheritableThreadLocal[Handlers]
 }
