@@ -287,5 +287,13 @@ package org
  *   (m.g _).expects()
  * }
  * }}}
+ * 
+ * == Threads ==
+ * 
+ * ScalaMock will work with tests that are run in parallel (Specs2 runs tests in parallel by
+ * default, and ScalaTest does so with `ParallelTestExecution`).
+ * 
+ * You can call mocks from other threads within tests, but any such calls must be complete
+ * before the test completes - it's an error to call a mock afterwards.
  */
 package object scalamock
