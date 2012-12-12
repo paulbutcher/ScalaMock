@@ -233,7 +233,7 @@ object MockImpl {
               Select(
                 Literal(Constant(null)), 
                 newTermName("asInstanceOf")),
-              List(Ident(mt.typeSymbol))))
+              List(TypeTree(mt))))
         } else {
           val body = Apply(
                        Select(Select(This(anon), mockFunctionName(m)), newTermName("apply")),
@@ -321,11 +321,11 @@ object MockImpl {
       def make() = {
         val result = castTo(anonClass(members), typeToMock)
 
-       // println("------------")
-       // println(showRaw(result))
-       // println("------------")
-       // println(show(result))
-       // println("------------")
+//        println("------------")
+//        println(showRaw(result))
+//        println("------------")
+//        println(show(result))
+//        println("------------")
     
         ctx.Expr(result)
       }

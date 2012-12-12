@@ -55,6 +55,7 @@ trait TestTrait {
 
   val aVal: String
   val concreteVal = "foo"
+  val fnVal: String => Int
   
   trait Embedded {
     def m(x: Int, y: Double): String
