@@ -95,7 +95,6 @@ object Dependencies {
   val scalatest = "org.scalatest" % "scalatest_2.10.0-RC5" % "2.0.M5-B1"
   val specs2 = "org.specs2" % "specs2_2.10.0-RC5" % "1.12.3"
   val reflect = "org.scala-lang" % "scala-reflect" % BuildSettings.buildScalaVersion
-  val actors = "org.scala-lang" % "scala-actors" % BuildSettings.buildScalaVersion
 }
 
 object ScalaMockBuild extends Build {
@@ -118,7 +117,7 @@ object ScalaMockBuild extends Build {
     file("core"),
     settings = buildSettings ++ Seq(
       name := "ScalaMock Core",
-	  libraryDependencies ++= Seq(reflect, actors)
+	  libraryDependencies ++= Seq(reflect)
     ))
 
   lazy val scalatestSupport = Project(
