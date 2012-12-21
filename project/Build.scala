@@ -23,14 +23,13 @@ import Keys._
 import sbt.inc.Analysis
 
 object BuildSettings {
-  val buildVersion = "3.0-M8"
-  val buildScalaVersion = "2.10.0-RC5"
+  val buildVersion = "3.0"
+  val buildScalaVersion = "2.10.0"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
     organization := "org.scalamock",
     version := buildVersion,
     scalaVersion := buildScalaVersion,
-    scalaBinaryVersion := buildScalaVersion,
     scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"),
     scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++ Opts.doc.version(buildVersion) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
     resolvers += Resolver.sonatypeRepo("releases"),
@@ -92,8 +91,8 @@ object ShellPrompt {
 }
 
 object Dependencies {
-  val scalatest = "org.scalatest" % "scalatest_2.10.0-RC5" % "2.0.M5-B1"
-  val specs2 = "org.specs2" % "specs2_2.10.0-RC5" % "1.12.3"
+  val scalatest =  "org.scalatest" % "scalatest_2.10.0" % "2.0.M5"
+  val specs2 = "org.specs2" %% "specs2" % "1.13"
   val reflect = "org.scala-lang" % "scala-reflect" % BuildSettings.buildScalaVersion
 }
 
