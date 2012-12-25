@@ -45,6 +45,15 @@ class MockTest extends FreeSpec with MockFactory {
       }
     }
     
+    "fail if a non-matching method call is made" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.twoParams _).expects(42, 1.23)
+        intercept[ExpectationException] { m.twoParams(1, 1.0) }
+        m.twoParams(42, 1.23)
+      }
+    }
+
     "cope with nullary methods" in {
       withExpectations {
         val m = mock[TestTrait]
