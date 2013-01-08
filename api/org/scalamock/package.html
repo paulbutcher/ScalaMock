@@ -2,9 +2,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>scalamock - ScalaMock 3.0-M5 - org.scalamock</title>
-          <meta name="description" content="scalamock - ScalaMock 3.0 - M5 - org.scalamock" />
-          <meta name="keywords" content="scalamock ScalaMock 3.0 M5 org.scalamock" />
+          <title>scalamock - ScalaMock 3.0 - org.scalamock</title>
+          <meta name="description" content="scalamock - ScalaMock 3.0 - org.scalamock" />
+          <meta name="keywords" content="scalamock ScalaMock 3.0 org.scalamock" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -78,16 +78,19 @@ pass a predicate:</p><pre>m = mockFunction[<span class="std">Double</span>, <spa
 m expects (where { _ &lt; _ })</pre><h5>Return values</h5><p>By default mocks and stubs return <code>null</code>. You can return a computed return
 value (or throw a computed exception) with <code>onCall</code>:</p><pre><span class="kw">val</span> mockIncrement = mockFunction[<span class="std">Int</span>, <span class="std">Int</span>]
 m expects (*) onCall { _ + <span class="num">1</span> }</pre><h5>Overloaded, curried and polymorphic methods</h5><p>Overloaded, curried and polymorphic methods can be mocked by specifying
-argument types. For example:</p><pre><span class="kw">trait</span> Foo {
+either argument types or type parameters. For example:</p><pre><span class="kw">trait</span> Foo {
 <span class="kw">def</span> overloaded(x: <span class="std">Int</span>): <span class="std">String</span>
 <span class="kw">def</span> overloaded(x: <span class="std">String</span>): <span class="std">String</span>
+<span class="kw">def</span> overloaded[T](x: T): <span class="std">String</span>
 <span class="kw">def</span> curried(x: <span class="std">Int</span>)(y: <span class="std">Double</span>): <span class="std">String</span>
 <span class="kw">def</span> polymorphic[T](x: <span class="std">List</span>[T]): <span class="std">String</span>
 }</pre><pre><span class="kw">val</span> m = mock[Foo]
 (m.overloaded(_: <span class="std">Int</span>)).expects(<span class="num">10</span>)
 (m.overloaded(_: <span class="std">String</span>)).expects(<span class="lit">"foo"</span>)
+(m.overloaded[<span class="std">Double</span>] _).expects(<span class="num">1.23</span>)
 (m.curried(_: <span class="std">Int</span>)(_: <span class="std">Double</span>)).expects(<span class="num">10</span>, <span class="num">1.23</span>)
-(m.polymorphic(_: <span class="std">List</span>[<span class="std">Int</span>])).expects(<span class="std">List</span>(<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>))</pre><h5>Exceptions</h5><p>Instead of a return value, mocks and stubs can be instructed to throw:</p><pre>m expects (<span class="lit">"this"</span>, <span class="lit">"that"</span>) throws <span class="kw">new</span> RuntimeException(<span class="lit">"what's that?"</span>)</pre><h5>Call count</h5><p>By default, mocks and stubs expect exactly one call. Alternative constraints
+(m.polymorphic(_: <span class="std">List</span>[<span class="std">Int</span>])).expects(<span class="std">List</span>(<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>))
+(m.polymorphic[<span class="std">String</span>] _).expects(<span class="lit">"foo"</span>)</pre><h5>Exceptions</h5><p>Instead of a return value, mocks and stubs can be instructed to throw:</p><pre>m expects (<span class="lit">"this"</span>, <span class="lit">"that"</span>) throws <span class="kw">new</span> RuntimeException(<span class="lit">"what's that?"</span>)</pre><h5>Call count</h5><p>By default, mocks and stubs expect exactly one call. Alternative constraints
 can be set with <code>repeat</code>:</p><pre>m1.expects(<span class="num">42</span>).returns(<span class="num">42</span>).repeat(<span class="num">3</span> to <span class="num">7</span>)
 m2 expects (<span class="num">3</span>) repeat <span class="num">10</span></pre><p>There are various aliases for common expectations and styles:</p><pre>m1.expects(<span class="lit">"this"</span>, <span class="lit">"that"</span>).once
 m2.expects().returns(<span class="lit">"foo"</span>).noMoreThanTwice
@@ -100,30 +103,19 @@ m(<span class="num">1</span>)</pre><p>A specific sequence can be enforced with <
 }
 m(<span class="num">2</span>) <span class="cmt">// throws ExpectationException</span>
 m(<span class="num">1</span>)</pre><p>Multiple sequences can be specified. As long as the calls within each sequence happen in the
-correct order, calls within different sequences can be interleaved. For example:</p><pre><span class="kw">val</span> m1 = mock[Turtle]
-<span class="kw">val</span> m2 = mock[Turtle]
-
-inSequence {
-  (m1.setPosition _).expects(<span class="num">0.0</span>, <span class="num">0.0</span>)
-  (m1.penDown _).expects()
-  (m1.forward _).expects(<span class="num">10.0</span>)
-  (m1.penUp _).expects()
+correct order, calls within different sequences can be interleaved. For example:</p><pre>inSequence {
+  m expects (<span class="num">1</span>)
+  m expects (<span class="num">2</span>)
 }
 inSequence {
-  (m2.setPosition _).expects(<span class="num">1.0</span>, <span class="num">1.0</span>)
-  (m2.turn _).expects(<span class="num">90.0</span>)
-  (m2.forward _).expects(<span class="num">1.0</span>)
-  (m2.getPosition _).expects().returning(<span class="num">2.0</span>, <span class="num">1.0</span>)
+  m expects (<span class="num">3</span>)
+  m expects (<span class="num">4</span>)
 }
 
-m2.setPosition(<span class="num">1.0</span>, <span class="num">1.0</span>)
-m1.setPosition(<span class="num">0.0</span>, <span class="num">0.0</span>)
-m1.penDown
-m2.turn(<span class="num">90.0</span>)
-m1.forward(<span class="num">10.0</span>)
-m2.forward(<span class="num">1.0</span>)
-m1.penUp
-expectResult((<span class="num">2.0</span>, <span class="num">1.0</span>)) { m2.getPosition }</pre><p>To specify that there is no constraint on ordering, use <code>inAnyOrder</code> (there is an implicit
+m(<span class="num">3</span>)
+m(<span class="num">1</span>)
+m(<span class="num">2</span>)
+m(<span class="num">4</span>)</pre><p>To specify that there is no constraint on ordering, use <code>inAnyOrder</code> (there is an implicit
 <code>inAnyOrder</code> at the top level). Calls to <code>inSequence</code> and <code>inAnyOrder</code> can be arbitrarily
 nested. For example:</p><pre>(m.a _).expects()
 inSequence {
@@ -136,7 +128,11 @@ inSequence {
     }
     (m.f _).expects()
   }
-  (m.g _).expects()</pre></div><div class="toggleContainer block">
+  (m.g _).expects()
+}</pre><h4> Threads </h4><p>ScalaMock will work with tests that are run in parallel (Specs2 runs tests in parallel by
+default, and ScalaTest does so with <code>ParallelTestExecution</code>).</p><p>You can call mocks from other threads within tests, but any such calls must be complete
+before the test completes - it's an error to call a mock afterwards.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
