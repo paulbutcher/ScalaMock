@@ -2,7 +2,7 @@
   "folders":
   [
     {
-      "path": "/Users/paul/personal/ScalaMock.typemacros",
+      "path": "/Users/paul/personal/ScalaMock3",
       "folder_exclude_patterns": ["target", ".*"],
       "file_exclude_patterns": ["*.sublime-workspace", ".ensime", ".project", ".classpath"]
     }
