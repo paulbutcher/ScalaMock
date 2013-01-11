@@ -24,6 +24,7 @@ import reflect.runtime.universe._
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.FreeSpec
 import org.scalamock._
+import some.other.pkg._
 
 class MockTest extends FreeSpec with MockFactory {
   
@@ -171,7 +172,43 @@ class MockTest extends FreeSpec with MockFactory {
         expectResult("it works") { m.implicitParam(42) }
       }
     }
+
+    "cope with references to another package" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        val x = new SomeOtherClass
+        (m.referencesSomeOtherPackage _).expects(x).returning(x)
+        expectResult(x) { m.referencesSomeOtherPackage(x) }
+      }
+    }
+
+    "cope with upper bound in another package" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        val x = new SomeOtherClass
+        (m.otherPackageUpperBound(_: SomeOtherClass)).expects(x).returning(x)
+        expectResult(x) { m.otherPackageUpperBound(x) }
+      }
+    }
     
+    "cope with explicit references to another package" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        val x = new yet.another.pkg.YetAnotherClass
+        (m.explicitPackageReference _).expects(x).returning(x)
+        expectResult(x) { m.explicitPackageReference(x) }
+      }
+    }
+
+    "cope with upper bound in an explictly referenced package" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        val x = new yet.another.pkg.YetAnotherClass
+        (m.explicitPackageUpperBound(_: yet.another.pkg.YetAnotherClass)).expects(x).returning(x)
+        expectResult(x) { m.explicitPackageUpperBound(x) }
+      }
+    }
+
     "cope with a var" in {
       withExpectations {
         val m = mock[TestTrait]
