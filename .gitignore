@@ -14,3 +14,4 @@ target/
 .target
 .cache
 .settings/
+*.sublime-workspace
