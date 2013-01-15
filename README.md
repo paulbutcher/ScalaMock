@@ -50,12 +50,12 @@ Download from [Sonatype](https://oss.sonatype.org/content/repositories/releases/
 To use ScalaMock in [sbt](http://www.scala-sbt.org/) with [ScalaTest](http://www.scalatest.org/) add the following to your project file:
 
     libraryDependencies +=
-      "org.scalamock" %% "scalamock-scalatest-support" % "3.0" % "test"
+      "org.scalamock" %% "scalamock-scalatest-support" % "3.0.1" % "test"
 
 and with [Specs2](http://etorreborre.github.com/specs2/):
 
     libraryDependencies +=
-      "org.scalamock" %% "scalamock-specs2-support" % "3.0" % "test"
+      "org.scalamock" %% "scalamock-specs2-support" % "3.0.1" % "test"
 
 ## Documentation
 
