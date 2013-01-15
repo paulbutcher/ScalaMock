@@ -21,7 +21,7 @@
 package org.scalamock.specs2
 
 import org.scalamock.MockFactoryBase
-import org.specs2.execute.{Failure, FailureException, Result}
+import org.specs2.execute.{AsResult, Failure, FailureException, Result}
 import org.specs2.main.ArgumentsShortcuts
 import org.specs2.specification.{AroundExample, Fragments, SpecificationStructure}
 
@@ -33,14 +33,14 @@ trait MockFactory extends MockFactoryBase with AroundExample { self: ArgumentsSh
   
   type ExpectationException = FailureException
 
-  protected def around[T <% Result](body: => T) = {
+  protected override def around[T : AsResult](body: => T) = {
     if (autoVerify)
-      withExpectations { body }
+      AsResult(withExpectations { body })
     else
-      body
+      AsResult(body)
   }
 
-  protected def newExpectationException(message: String, methodName: Option[Symbol]) =
+  protected override def newExpectationException(message: String, methodName: Option[Symbol]) =
     new ExpectationException(new Failure(message))
 
   protected var autoVerify = true
