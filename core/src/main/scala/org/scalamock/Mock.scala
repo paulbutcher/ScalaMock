@@ -311,7 +311,7 @@ object MockImpl {
       val typeToMock = weakTypeOf[T]
       val anon = newTypeName("$anon") 
       val methodsToMock = methodsNotInObject.filter { m =>
-          !m.isConstructor && (!(m.isStable || m.isAccessor) ||
+          !m.isConstructor && !m.isPrivate && (!(m.isStable || m.isAccessor) ||
             m.asInstanceOf[reflect.internal.HasFlags].isDeferred) //! TODO - stop using internal if/when this gets into the API
         }.toList
       val forwarders = methodsToMock map forwarderImpl _
