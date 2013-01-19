@@ -20,13 +20,30 @@
 
 package org.scalamock.scalatest
 
-import org.scalamock.Mock
-import org.scalatest.Suite
+import org.scalamock.MockFactoryBase
+import org.scalatest.{Reporter, Stopper, Suite, SuiteMixin, Tracker}
+import org.scalatest.exceptions.TestFailedException
 
-/** Trait that can be mixed into a [[http://www.scalatest.org/ ScalaTest]] suite to provide
-  * mocking support.
-  *
-  * See [[org.scalamock]] for overview documentation.
-  */
-trait MockFactory extends AbstractMockFactory with Mock { this: Suite =>
+trait AbstractMockFactory extends SuiteMixin with MockFactoryBase { this: Suite =>
+  
+  type ExpectationException = TestFailedException
+  
+  override def withFixture(test: NoArgTest) {
+
+    if (autoVerify)
+      withExpectations { test() }
+    else
+      test()
+  }
+  
+  protected def newExpectationException(message: String, methodName: Option[Symbol]) = 
+    new TestFailedException(_ => Some(message), None, {e =>
+        e.getStackTrace indexWhere { s =>
+          !s.getClassName.startsWith("org.scalamock") && !s.getClassName.startsWith("org.scalatest") &&
+          !(s.getMethodName == "newExpectationException") && !(s.getMethodName == "reportUnexpectedCall") &&
+          !(methodName.isDefined && s.getMethodName == methodName.get.name)
+        }
+      })
+
+  protected var autoVerify = true
 }

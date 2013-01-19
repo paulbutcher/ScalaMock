@@ -20,7 +20,7 @@
 
 package org.scalamock
 
-abstract class CallHandler[R: Defaultable](private[scalamock] val target: FakeFunction, private[scalamock] val argumentMatcher: Product => Boolean) extends Handler {
+class CallHandler[R: Defaultable](private[scalamock] val target: FakeFunction, private[scalamock] val argumentMatcher: Product => Boolean) extends Handler {
   import CallHandler._
   
   type Derived <: CallHandler[R]

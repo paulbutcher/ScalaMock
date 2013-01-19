@@ -18,15 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock.scalatest
+package org.scalamock.scalatest.proxy
 
-import org.scalamock.Mock
+import org.scalamock.proxy.ProxyMockFactory
+import org.scalamock.scalatest.AbstractMockFactory
 import org.scalatest.Suite
 
 /** Trait that can be mixed into a [[http://www.scalatest.org/ ScalaTest]] suite to provide
-  * mocking support.
+  * proxy mocking support.
   *
   * See [[org.scalamock]] for overview documentation.
   */
-trait MockFactory extends AbstractMockFactory with Mock { this: Suite =>
+trait MockFactory extends AbstractMockFactory with ProxyMockFactory { this: Suite =>
 }

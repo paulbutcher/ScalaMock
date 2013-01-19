@@ -1,4 +1,4 @@
-// Copyright (c) 2011-12 Paul Butcher
+// Copyright (c) 2011-2012 Paul Butcher
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,15 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock.scalatest
+package org.scalamock.proxy
 
-import org.scalamock.Mock
-import org.scalatest.Suite
+import org.scalamock.{ArgumentMatcher, Call, CallHandler, MockFactoryBase, MockParameter, Verify}
 
-/** Trait that can be mixed into a [[http://www.scalatest.org/ ScalaTest]] suite to provide
-  * mocking support.
-  *
-  * See [[org.scalamock]] for overview documentation.
-  */
-trait MockFactory extends AbstractMockFactory with Mock { this: Suite =>
+class StubFunction(factory: MockFactoryBase, name: Symbol) extends FakeFunction(factory, name) {
+
+  def onUnexpected(call: Call) = null
+
+  def whenHandler() = new WhenHander
+
+  def verifyHandler() = new VerifyHander
+
+  private[proxy] class WhenHander extends ExpectationHandler {
+    override def apply(args: MockParameter[Any]*) = super.apply(args:_*).anyNumberOfTimes
+  }
+
+  private[proxy] class VerifyHander extends ExpectationHandler {
+    override def makeHandler(matcher: (Product) => Boolean) =
+      new CallHandler[Any](StubFunction.this, matcher) with Verify
+  }
 }

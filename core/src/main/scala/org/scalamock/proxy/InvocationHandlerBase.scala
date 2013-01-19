@@ -1,4 +1,4 @@
-// Copyright (c) 2011-12 Paul Butcher
+// Copyright (c) 2011-2012 Paul Butcher
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,15 +18,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock.scalatest
+package org.scalamock.proxy
 
-import org.scalamock.Mock
-import org.scalatest.Suite
+import java.lang.reflect.{InvocationHandler, Method}
+import scala.collection.mutable.Map
+import org.scalamock.MockFactoryBase
 
-/** Trait that can be mixed into a [[http://www.scalatest.org/ ScalaTest]] suite to provide
-  * mocking support.
-  *
-  * See [[org.scalamock]] for overview documentation.
-  */
-trait MockFactory extends AbstractMockFactory with Mock { this: Suite =>
+abstract class InvocationHandlerBase[T <: FakeFunction] extends InvocationHandler {
+
+  override def invoke(proxy: AnyRef, method: Method, args: Array[AnyRef]) = {
+    val name = Symbol(method.getName)
+    lazy val fake = getFake(args(0).asInstanceOf[Symbol])
+    (handle(name, fake).getOrElse(name match {
+      case 'toString => s"proxy mock object ${System.identityHashCode(proxy)}"
+      case 'hashCode => System.identityHashCode(proxy)
+      case 'equals => (args(0) eq proxy)
+      case _ => getFake(name).handle(args)
+    })).asInstanceOf[AnyRef]
+  }
+
+  protected def makeFake(name: Symbol): T
+
+  protected def handle(name: Symbol, fake: => T): Option[Any]
+
+  private def getFake(name: Symbol): T = fakes.getOrElseUpdate(name, makeFake(name))
+
+  private val fakes = Map[Symbol, T]()
 }
