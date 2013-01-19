@@ -383,6 +383,15 @@ class MockTest extends FreeSpec with MockFactory {
         expectResult(List("four", "five", "six")) { m2.identity(List("one", "two", "three")) }
       }
     }
+
+    //! TODO - fails with assertion in mockFunctionName
+    // "mock java.io.File" in {
+    //   class MyFile extends java.io.File("")
+
+    //   withExpectations {
+    //     val m = mock[MyFile]
+    //   }
+    // }
   }
   
   "Stubs should" - {
