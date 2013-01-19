@@ -32,11 +32,9 @@ class ControllerTest extends FunSuite with MockFactory {
     val mockTurtle = stub[Turtle]
     val controller = new Controller(mockTurtle)
 
+    mockTurtle.when('getPosition)().returns(0.0, 0.0)
     inSequence {
-      inAnyOrder {
-        mockTurtle.when('getPosition)().returns(0.0, 0.0)
-        mockTurtle.when('getAngle)().returns(0.0).once
-      }
+      mockTurtle.when('getAngle)().returns(0.0).once
       mockTurtle.when('getAngle)().returns(Pi / 4)
     }
  
