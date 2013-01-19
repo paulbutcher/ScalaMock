@@ -18,42 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.example.mockitostyle
+package com.example.proxy.mockitostyle
 
-import com.example.{Order, Warehouse}
+import com.example.{Controller, Turtle}
 
-import org.scalatest.WordSpec
-import org.scalamock.scalatest.MockFactory
+import org.scalatest.FunSuite
+import org.scalamock.scalatest.proxy.MockFactory
+import scala.math.{Pi, sqrt}
+ 
+class ControllerTest extends FunSuite with MockFactory {
+ 
+  test("draw line") {
+    val mockTurtle = stub[Turtle]
+    val controller = new Controller(mockTurtle)
 
-// This is a reworked version of the example from Martin Fowler's article
-// Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
-class OrderTest extends WordSpec with MockFactory {
-  import language.postfixOps
-  
-  "An order" when {
-    "in stock" should {
-      "remove inventory" in {
-        val mockWarehouse = stub[Warehouse]
-        
-        (mockWarehouse.hasInventory _) when ("Talisker", 50) returns true
-        
-        val order = new Order("Talisker", 50)
-        order.fill(mockWarehouse)
-        
-        assert(order.isFilled)
-        (mockWarehouse.remove _) verify ("Talisker", 50) once
+    inSequence {
+      inAnyOrder {
+        mockTurtle.when('getPosition)().returns(0.0, 0.0)
+        mockTurtle.when('getAngle)().returns(0.0).once
       }
+      mockTurtle.when('getAngle)().returns(Pi / 4)
     }
+ 
+    controller.drawLine((1.0, 1.0), (2.0, 1.0))
     
-    "out of stock" should {
-      "remove nothing" in {
-        val mockWarehouse = stub[Warehouse]
-        
-        val order = new Order("Talisker", 50)
-        order.fill(mockWarehouse)
-        
-        assert(!order.isFilled)
-      }
+    inSequence {
+      mockTurtle.verify('turn)(~(Pi / 4))
+      mockTurtle.verify('forward)(~sqrt(2.0))
+      mockTurtle.verify('turn)(~(-Pi / 4))
+      mockTurtle.verify('penDown)()
+      mockTurtle.verify('forward)(1.0)
     }
   }
 }

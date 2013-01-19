@@ -18,35 +18,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.example
+package com.example.makro.mockitostyle
 
-import org.specs2.mutable.Specification
-import org.scalamock.specs2.MockFactory
+import com.example.{Order, Warehouse}
 
-/**
- * This is a demonstration and test of the Specs2 integration, using the example from
- * Martin Fowler's article Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
- */
-class OrderSpecification extends Specification with MockFactory {
+import org.scalatest.WordSpec
+import org.scalamock.scalatest.MockFactory
 
-  "An order" should  {
-    "remove inventory when in stock" in {
-      val mockWarehouse = mock[Warehouse]
-      inSequence {
-        (mockWarehouse.hasInventory _).expects("Talisker", 50).returning(true).once
-        (mockWarehouse.remove _).expects("Talisker", 50).once
+// This is a reworked version of the example from Martin Fowler's article
+// Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
+class OrderTest extends WordSpec with MockFactory {
+  import language.postfixOps
+  
+  "An order" when {
+    "in stock" should {
+      "remove inventory" in {
+        val mockWarehouse = stub[Warehouse]
+        
+        (mockWarehouse.hasInventory _) when ("Talisker", 50) returns true
+        
+        val order = new Order("Talisker", 50)
+        order.fill(mockWarehouse)
+        
+        assert(order.isFilled)
+        (mockWarehouse.remove _) verify ("Talisker", 50) once
       }
-      val order = new Order("Talisker", 50)
-      order.fill(mockWarehouse)
-      order.isFilled must beTrue
     }
-
-    "remove nothing when out of stock" in {
-      val mockWarehouse = mock[Warehouse]
-      (mockWarehouse.hasInventory _).expects(*, *).returns(false).once
-      val order = new Order("Talisker", 50)
-      order.fill(mockWarehouse)
-      order.isFilled must beFalse
+    
+    "out of stock" should {
+      "remove nothing" in {
+        val mockWarehouse = stub[Warehouse]
+        
+        val order = new Order("Talisker", 50)
+        order.fill(mockWarehouse)
+        
+        assert(!order.isFilled)
+      }
     }
   }
 }

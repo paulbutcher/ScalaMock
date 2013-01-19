@@ -18,48 +18,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.example
+package com.example.proxy
 
-import org.scalatest.Spec
-import org.scalamock.scalatest.MockFactory
+import org.scalatest.WordSpec
+import org.scalamock.scalatest.proxy.MockFactory
+import com.example.{Order, Warehouse}
 
-class HigherOrderFunctionsTest extends Spec with MockFactory {
-  import language.postfixOps
+// This is a reworked version of the example from Martin Fowler's article
+// Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
+class OrderTest extends WordSpec with MockFactory {
   
-  def testMap {
-    val f = mockFunction[Int, String]
-    
-    inSequence {
-      f expects (1) returning "one" once;
-      f expects (2) returning "two" once;
-      f expects (3) returning "three" once;
+  "An order" when {
+    "in stock" should {
+      "remove inventory" in {
+        val mockWarehouse = mock[Warehouse]
+        inSequence {
+          mockWarehouse.expects('hasInventory)("Talisker", 50).returning(true)
+          mockWarehouse.expects('remove)("Talisker", 50).once
+        }
+        
+        val order = new Order("Talisker", 50)
+        order.fill(mockWarehouse)
+        
+        assert(order.isFilled)
+      }
     }
     
-    expectResult(Seq("one", "two", "three")) { Seq(1, 2, 3) map f }
-  }
-  
-  def testRepeat {
-    def repeat(n: Int)(what: => Unit) {
-      for (i <- 0 until n)
-        what
+    "out of stock" should {
+      "remove nothing" in {
+        val mockWarehouse = mock[Warehouse]
+        mockWarehouse.expects('hasInventory)(*, *).returning(false).anyNumberOfTimes
+        
+        val order = new Order("Talisker", 50)
+        order.fill(mockWarehouse)
+        
+        assert(!order.isFilled)
+      }
     }
-    
-    val f = mockFunction[Unit]
-    f expects () repeated 4 times
-    
-    repeat(4) { f() }
-  }
-  
-  def testFoldLeft {
-    val f = mockFunction[String, Int, String]
-    
-    inSequence {
-      f expects ("initial", 0) returning "intermediate one" once;
-      f expects ("intermediate one", 1) returning "intermediate two" once;
-      f expects ("intermediate two", 2) returning "intermediate three" once;
-      f expects ("intermediate three", 3) returning "final" once;
-    }
-
-    expectResult("final") { Seq(0, 1, 2, 3).foldLeft("initial")(f) }
   }
 }

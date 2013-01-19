@@ -18,11 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.example
+package com.example.makro
 
 import org.scalatest.FunSuite
 import org.scalamock.scalatest.MockFactory
 import scala.math.{Pi, sqrt}
+import com.example.{Controller, Turtle}
  
 class ControllerTest extends FunSuite with MockFactory {
  

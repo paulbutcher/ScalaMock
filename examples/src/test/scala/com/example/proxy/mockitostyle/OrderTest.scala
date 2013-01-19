@@ -18,36 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.example
+package com.example.proxy.mockitostyle
+
+import com.example.{Order, Warehouse}
 
 import org.scalatest.WordSpec
-import org.scalamock.scalatest.MockFactory
+import org.scalamock.scalatest.proxy.MockFactory
 
 // This is a reworked version of the example from Martin Fowler's article
 // Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
 class OrderTest extends WordSpec with MockFactory {
-  import language.postfixOps
   
   "An order" when {
     "in stock" should {
       "remove inventory" in {
-        val mockWarehouse = mock[Warehouse]
-        inSequence {
-          (mockWarehouse.hasInventory _) expects ("Talisker", 50) returning true
-          (mockWarehouse.remove _) expects ("Talisker", 50) once
-        }
+        val mockWarehouse = stub[Warehouse]
+        
+        mockWarehouse.when('hasInventory)("Talisker", 50).returns(true)
         
         val order = new Order("Talisker", 50)
         order.fill(mockWarehouse)
         
         assert(order.isFilled)
+        mockWarehouse.verify('remove)("Talisker", 50).once
       }
     }
     
     "out of stock" should {
       "remove nothing" in {
-        val mockWarehouse = mock[Warehouse]
-        (mockWarehouse.hasInventory _) stubs (*, *) returning false
+        val mockWarehouse = stub[Warehouse]
+        mockWarehouse.when('hasInventory)(*, *).returns(false)
         
         val order = new Order("Talisker", 50)
         order.fill(mockWarehouse)

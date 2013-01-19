@@ -18,37 +18,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.example.mockitostyle
+package com.example.function
 
-import com.example.{Controller, Turtle}
-
-import org.scalatest.FunSuite
+import org.scalatest.Spec
 import org.scalamock.scalatest.MockFactory
-import scala.math.{Pi, sqrt}
- 
-class ControllerTest extends FunSuite with MockFactory {
-  import scala.language.postfixOps
- 
-  test("draw line") {
-    val mockTurtle = stub[Turtle]
-    val controller = new Controller(mockTurtle)
 
-    inSequence {
-      inAnyOrder {
-        (mockTurtle.getPosition _) when () returns (0.0, 0.0)
-        (mockTurtle.getAngle _) when () returns 0.0 once
-      }
-      (mockTurtle.getAngle _) when () returns Pi / 4
-    }
- 
-    controller.drawLine((1.0, 1.0), (2.0, 1.0))
+class HigherOrderFunctionsTest extends Spec with MockFactory {
+  import language.postfixOps
+  
+  def testMap {
+    val f = mockFunction[Int, String]
     
     inSequence {
-      (mockTurtle.turn _) verify ~(Pi / 4)
-      (mockTurtle.forward _) verify ~sqrt(2.0)
-      (mockTurtle.turn _) verify ~(-Pi / 4)
-      (mockTurtle.penDown _) verify ()
-      (mockTurtle.forward _) verify 1.0
+      f expects (1) returning "one" once;
+      f expects (2) returning "two" once;
+      f expects (3) returning "three" once;
     }
+    
+    expectResult(Seq("one", "two", "three")) { Seq(1, 2, 3) map f }
+  }
+  
+  def testRepeat {
+    def repeat(n: Int)(what: => Unit) {
+      for (i <- 0 until n)
+        what
+    }
+    
+    val f = mockFunction[Unit]
+    f expects () repeated 4 times
+    
+    repeat(4) { f() }
+  }
+  
+  def testFoldLeft {
+    val f = mockFunction[String, Int, String]
+    
+    inSequence {
+      f expects ("initial", 0) returning "intermediate one" once;
+      f expects ("intermediate one", 1) returning "intermediate two" once;
+      f expects ("intermediate two", 2) returning "intermediate three" once;
+      f expects ("intermediate three", 3) returning "final" once;
+    }
+
+    expectResult("final") { Seq(0, 1, 2, 3).foldLeft("initial")(f) }
   }
 }
