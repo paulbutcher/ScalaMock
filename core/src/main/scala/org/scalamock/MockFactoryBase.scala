@@ -114,8 +114,8 @@ trait MockFactoryBase extends Mock {
   protected implicit def MatchEpsilonToMockParameter[T](m: MatchEpsilon) = new EpsilonMockParameter(m)
   
   private[scalamock] def add[E <: CallHandler[_]](e: E) = {
-    assert(expectationContext.get != null, "Null expectationContext - missing withExpectations?")
-    expectationContext.get.add(e)
+    assert(currentExpectationContext.get != null, "Null expectation context - missing withExpectations?")
+    currentExpectationContext.get.add(e)
     e
   }
   
@@ -129,7 +129,10 @@ trait MockFactoryBase extends Mock {
   
   private def resetExpectations() {
     callLog set new CallLog
-    expectationContext set new UnorderedHandlers
+
+    val handlers = new UnorderedHandlers
+    expectationContext set handlers
+    currentExpectationContext set handlers
   }
   
   private def verifyExpectations() {
@@ -138,20 +141,22 @@ trait MockFactoryBase extends Mock {
       reportUnsatisfiedExpectation
     
     expectationContext set null
+    currentExpectationContext set null
   }
   
   private def errorContext =
     s"Expected:\n${expectationContext.get}\n\nActual:\n${callLog.get}"
   
   private def inContext(context: Handlers)(what: => Unit) {
-    expectationContext.get.add(context)
-    val prevContext = expectationContext.get
-    expectationContext set context
+    currentExpectationContext.get.add(context)
+    val prevContext = currentExpectationContext.get
+    currentExpectationContext set context
     what
-    expectationContext set prevContext
+    currentExpectationContext set prevContext
   }
 
   private[scalamock] val callLog = new InheritableThreadLocal[CallLog]
   
   private[scalamock] val expectationContext = new InheritableThreadLocal[Handlers]
+  private[scalamock] val currentExpectationContext = new InheritableThreadLocal[Handlers]
 }
