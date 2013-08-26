@@ -91,7 +91,7 @@ object ShellPrompt {
 }
 
 object Dependencies {
-  val scalatest =  "org.scalatest" %% "scalatest" % "2.0.M5b"
+  val scalatest =  "org.scalatest" %% "scalatest" % "2.0.RC1-SNAP1"
   val specs2 = "org.specs2" %% "specs2" % "1.13"
   val reflect = "org.scala-lang" % "scala-reflect" % BuildSettings.buildScalaVersion
 }

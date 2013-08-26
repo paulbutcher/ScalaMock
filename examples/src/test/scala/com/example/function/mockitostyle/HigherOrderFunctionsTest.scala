@@ -33,7 +33,7 @@ class HigherOrderFunctionsTest extends Spec with MockFactory {
     f when (2) returns "two"
     f when (3) returns "three"
     
-    expectResult(Seq("one", "two", "three")) { Seq(1, 2, 3) map f }
+    assertResult(Seq("one", "two", "three")) { Seq(1, 2, 3) map f }
 
     inSequence {
       f verify (1) once;
@@ -63,7 +63,7 @@ class HigherOrderFunctionsTest extends Spec with MockFactory {
     f when ("intermediate two", 2) returns "intermediate three"
     f when ("intermediate three", 3) returns "final"
 
-    expectResult("final") { Seq(0, 1, 2, 3).foldLeft("initial")(f) }
+    assertResult("final") { Seq(0, 1, 2, 3).foldLeft("initial")(f) }
     
     inSequence {
       f verify ("initial", 0) once;

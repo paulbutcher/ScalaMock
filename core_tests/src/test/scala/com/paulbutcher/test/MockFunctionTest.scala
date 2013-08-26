@@ -38,30 +38,30 @@ class MockFunctionTest extends FreeSpec with MockFactory {
   "Mock functions should" - {
     "have a sensible default name" in {
       val m = mockFunction[String]
-      expectResult("unnamed MockFunction0"){ m.toString }
+      assertResult("unnamed MockFunction0"){ m.toString }
     }
     
     "have the name we gave them" - {
       "where we use a symbol" in {
         val m1 = mockFunction[String](Symbol("a mock function"))
-        expectResult("a mock function"){ m1.toString }
+        assertResult("a mock function"){ m1.toString }
       }
 
       "where we use a string" in {
         val m2 = mockFunction[String]("another mock function")
-        expectResult("another mock function"){ m2.toString }
+        assertResult("another mock function"){ m2.toString }
       }
     }
     
     "resolve ambiguity when taking a symbol argument" - {
       "with no name specified" in {
         val m1 = mockFunction[Symbol, String]
-        expectResult("unnamed MockFunction1"){ m1.toString }
+        assertResult("unnamed MockFunction1"){ m1.toString }
       }
 
       "with a name specified" in {
         val m2 = mockFunction[Symbol, String](functionName("a named mock"))
-        expectResult("a named mock"){ m2.toString }
+        assertResult("a named mock"){ m2.toString }
       }
     }
 
@@ -69,7 +69,7 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       withExpectations {
         val m = mockFunction[String]
         m.expects()
-        expectResult(null) { m() }
+        assertResult(null) { m() }
       }
     }
     
@@ -77,7 +77,7 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       withExpectations {
         val m = mockFunction[Int]
         m.expects()
-        expectResult(0) { m() }
+        assertResult(0) { m() }
       }
     }
     
@@ -85,7 +85,7 @@ class MockFunctionTest extends FreeSpec with MockFactory {
       withExpectations {
         val m = mockFunction[String]
         m.expects().returning("a return value")
-        expectResult("a return value") { m() }
+        assertResult("a return value") { m() }
       }
     }
     
@@ -103,7 +103,7 @@ class MockFunctionTest extends FreeSpec with MockFactory {
         val m2 = mockFunction[Int, String]
         m1.expects(42).onCall(m2)
         m2.expects(42).returning("a return value")
-        expectResult("a return value") { m1(42) }
+        assertResult("a return value") { m1(42) }
       }
     }
     
@@ -168,8 +168,8 @@ class MockFunctionTest extends FreeSpec with MockFactory {
         val m = mockFunction[Int, Int, String]
         m.expects(where { _ < _ }).returning("less")
         m.expects(where { _ > _ }).returning("more")
-        expectResult("less"){ m(1, 2) }
-        expectResult("more"){ m(2, 1) }
+        assertResult("less"){ m(1, 2) }
+        assertResult("more"){ m(2, 1) }
       }
     }
     
@@ -179,7 +179,7 @@ class MockFunctionTest extends FreeSpec with MockFactory {
         inSequence {
           m.expects(42).returning(10)
         }
-        expectResult(10) { m(42) }
+        assertResult(10) { m(42) }
       }
     }
     
@@ -191,9 +191,9 @@ class MockFunctionTest extends FreeSpec with MockFactory {
           m.expects(43).returning(11).once
           m.expects(44).returning(12).twice
         }
-        repeat(5) { expectResult(10) { m(42) } }
-        repeat(1) { expectResult(11) { m(43) } }
-        repeat(2) { expectResult(12) { m(44) } }
+        repeat(5) { assertResult(10) { m(42) } }
+        repeat(1) { assertResult(11) { m(43) } }
+        repeat(2) { assertResult(12) { m(44) } }
       }
     }
     
@@ -217,8 +217,8 @@ class MockFunctionTest extends FreeSpec with MockFactory {
           m.expects(43).returning(11).once
           m.expects(44).returning(12).twice
         }
-        repeat(5) { expectResult(10) { m(42) } }
-        repeat(1) { expectResult(11) { m(43) } }
+        repeat(5) { assertResult(10) { m(42) } }
+        repeat(1) { assertResult(11) { m(43) } }
       })
     }
     
@@ -229,8 +229,8 @@ class MockFunctionTest extends FreeSpec with MockFactory {
           m.expects(42).returning(10).anyNumberOfTimes
           m.expects(43).returning(11).once
         }
-        expectResult(10) { m(42) }
-        expectResult(11) { m(43) }
+        assertResult(10) { m(42) }
+        assertResult(11) { m(43) }
         intercept[ExpectationException] { m(42) }
       }
     }
@@ -339,9 +339,9 @@ class MockFunctionTest extends FreeSpec with MockFactory {
         
         m.stubs(*).returning("a return value")
         
-        expectResult("a return value") { m(1) }
-        expectResult("a return value") { m(2) }
-        expectResult("a return value") { m(3) }
+        assertResult("a return value") { m(1) }
+        assertResult("a return value") { m(2) }
+        assertResult("a return value") { m(3) }
       }
     }
   }

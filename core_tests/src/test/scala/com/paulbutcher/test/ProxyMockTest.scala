@@ -39,7 +39,7 @@ class ProxyMockTest extends FreeSpec with MockFactory {
       withExpectations {
         val m = mock[TestTrait]
         m.expects('twoParams)(42, 1.23).returning("a return value")
-        expectResult("a return value") { m.twoParams(42, 1.23) }
+        assertResult("a return value") { m.twoParams(42, 1.23) }
       }
     }
     
@@ -56,7 +56,7 @@ class ProxyMockTest extends FreeSpec with MockFactory {
       withExpectations {
         val m = mock[TestTrait]
         m.expects('nullary)().returning("a return value")
-        expectResult("a return value") { m.nullary }
+        assertResult("a return value") { m.nullary }
       }
     }
     
@@ -65,8 +65,8 @@ class ProxyMockTest extends FreeSpec with MockFactory {
         val m = mock[TestTrait]
         m.expects('overloaded)(10).returning("got an integer")
         m.expects('overloaded)(10, 1.23).returning("got two parameters")
-        expectResult("got an integer") { m.overloaded(10) }
-        expectResult("got two parameters") { m.overloaded(10, 1.23) }
+        assertResult("got an integer") { m.overloaded(10) }
+        assertResult("got two parameters") { m.overloaded(10, 1.23) }
       }
     }
     
@@ -74,7 +74,7 @@ class ProxyMockTest extends FreeSpec with MockFactory {
       withExpectations {
         val m = mock[TestTrait]
         m.expects('overloaded)(1.23).returning("polymorphic method called")
-        expectResult("polymorphic method called") { m.overloaded(1.23) }
+        assertResult("polymorphic method called") { m.overloaded(1.23) }
       }
     }
     
@@ -84,7 +84,7 @@ class ProxyMockTest extends FreeSpec with MockFactory {
         val m2 = mock[TestTrait]
         val m3 = mock[TestTrait]
         m1.expects(Symbol("$plus"))(m2).returning(m3)
-        expectResult(m3) { m1 + m2 }
+        assertResult(m3) { m1 + m2 }
       }
     }
     
@@ -93,7 +93,7 @@ class ProxyMockTest extends FreeSpec with MockFactory {
         val m = mock[TestTrait]
         m.expects('curried)(10, 1.23).returning("curried method called")
         val partial = m.curried(10) _
-        expectResult("curried method called") { partial(1.23) }
+        assertResult("curried method called") { partial(1.23) }
       }
     }
     
@@ -102,8 +102,8 @@ class ProxyMockTest extends FreeSpec with MockFactory {
         val m = mock[TestTrait]
         m.expects('polymorphic)(List(1, 2)).returning("called with integers")
         m.expects('polymorphic)(List("foo", "bar")).returning("called with strings")
-        expectResult("called with integers") { m.polymorphic(List(1, 2)) }
-        expectResult("called with strings") { m.polymorphic(List("foo", "bar")) }
+        assertResult("called with integers") { m.polymorphic(List(1, 2)) }
+        assertResult("called with strings") { m.polymorphic(List("foo", "bar")) }
       }
     }
     
@@ -111,7 +111,7 @@ class ProxyMockTest extends FreeSpec with MockFactory {
       withExpectations {
         val m = mock[TestTrait]
         m.expects('polymorphicParam)((42, 1.23)).returning("it works")
-        expectResult("it works") { m.polymorphicParam((42, 1.23)) }
+        assertResult("it works") { m.polymorphicParam((42, 1.23)) }
       }
     }
 
@@ -127,7 +127,7 @@ class ProxyMockTest extends FreeSpec with MockFactory {
       withExpectations {
         val m = mock[TestTrait]
         m.expects('byNameParam)(*).returning("it worked")
-        expectResult("it worked") { m.byNameParam(42) }
+        assertResult("it worked") { m.byNameParam(42) }
       }
     }
 
@@ -137,7 +137,7 @@ class ProxyMockTest extends FreeSpec with MockFactory {
         m.expects(Symbol("aVar_$eq"))("foo")
         m.expects('aVar)().returning("bar")
         m.aVar = "foo"
-        expectResult("bar") { m.aVar }
+        assertResult("bar") { m.aVar }
       }
     }
     
@@ -147,7 +147,7 @@ class ProxyMockTest extends FreeSpec with MockFactory {
         m.expects(Symbol("concreteVar_$eq"))("foo")
         m.expects('concreteVar)().returning("bar")
         m.concreteVar = "foo"
-        expectResult("bar") { m.concreteVar }
+        assertResult("bar") { m.concreteVar }
       }
     }
     
@@ -155,7 +155,7 @@ class ProxyMockTest extends FreeSpec with MockFactory {
       withExpectations {
         val m = mock[TestTrait]
         m.expects('aVal)().returning("it works")
-        expectResult("it works") { m.aVal }
+        assertResult("it works") { m.aVal }
       }
     }
     
@@ -163,7 +163,7 @@ class ProxyMockTest extends FreeSpec with MockFactory {
       withExpectations {
         val m = mock[TestTrait]
         m.expects('concreteVal)().returning("it works")
-        expectResult("it works") { m.concreteVal }
+        assertResult("it works") { m.concreteVal }
       }
     }
     
@@ -171,7 +171,7 @@ class ProxyMockTest extends FreeSpec with MockFactory {
       withExpectations {
         val m = mock[TestTrait]
         m.expects('withImplementation)(42).returning(1234)
-        expectResult(1234) { m.withImplementation(42) }
+        assertResult(1234) { m.withImplementation(42) }
       }
     }
     
@@ -180,7 +180,7 @@ class ProxyMockTest extends FreeSpec with MockFactory {
         val m = mock[TestTrait]
         val e = mock[m.Embedded]
         m.expects('referencesEmbedded)().returning(e)
-        expectResult(e) { m.referencesEmbedded }
+        assertResult(e) { m.referencesEmbedded }
       }
     }
     
@@ -192,8 +192,8 @@ class ProxyMockTest extends FreeSpec with MockFactory {
         val i = mock[e.ATrait]
         e.expects('innerTraitProjected)().returning(i)
         e.expects('outerTraitProjected)().returning(o)
-        expectResult(o) { e.outerTraitProjected }
-        expectResult(i) { e.innerTraitProjected }
+        assertResult(o) { e.outerTraitProjected }
+        assertResult(i) { e.innerTraitProjected }
       }
     }
     
@@ -205,8 +205,8 @@ class ProxyMockTest extends FreeSpec with MockFactory {
         val i = mock[e.ATrait]
         e.expects('innerTrait)().returning(i)
         e.expects('outerTrait)().returning(o)
-        expectResult(o) { e.outerTrait }
-        expectResult(i) { e.innerTrait }
+        assertResult(o) { e.outerTrait }
+        assertResult(i) { e.innerTrait }
       }
     }
 
@@ -215,8 +215,8 @@ class ProxyMockTest extends FreeSpec with MockFactory {
         val m = mock[TestTrait]
         m.expects('twoParams)(where { (x: Int, y: Double) => x < y }).returning("less than")
         m.expects('twoParams)(where { (x: Int, y: Double) => x > y }).returning("greater than")
-        expectResult("less than") { m.twoParams(1, 2.0) }
-        expectResult("greater than") { m.twoParams(2, 1.0) }
+        assertResult("less than") { m.twoParams(1, 2.0) }
+        assertResult("greater than") { m.twoParams(2, 1.0) }
       }
     }
   }
@@ -225,7 +225,7 @@ class ProxyMockTest extends FreeSpec with MockFactory {
     "return null unless told otherwise" in {
       withExpectations {
         val m = stub[TestTrait]
-        expectResult(null) { m.oneParam(42) }
+        assertResult(null) { m.oneParam(42) }
       }
     }
 
@@ -233,7 +233,7 @@ class ProxyMockTest extends FreeSpec with MockFactory {
       withExpectations {
         val m = stub[TestTrait]
         m.when('twoParams)(42, 1.23).returns("a return value")
-        expectResult("a return value") { m.twoParams(42, 1.23) }
+        assertResult("a return value") { m.twoParams(42, 1.23) }
       }
     }
     
@@ -259,8 +259,8 @@ class ProxyMockTest extends FreeSpec with MockFactory {
         val m = stub[TestTrait]
         m.when('twoParams)(where { (x: Int, y: Double) => x < y }).returns("less than")
         m.when('twoParams)(where { (x: Int, y: Double) => x > y }).returns("greater than")
-        expectResult("less than") { m.twoParams(1, 2.0) }
-        expectResult("greater than") { m.twoParams(2, 1.0) }
+        assertResult("less than") { m.twoParams(1, 2.0) }
+        assertResult("greater than") { m.twoParams(2, 1.0) }
         m.verify('twoParams)(where { (x: Int, y: Double) => x < y }).once
         m.verify('twoParams)(where { (x: Int, y: Double) => x > y }).once
       }
