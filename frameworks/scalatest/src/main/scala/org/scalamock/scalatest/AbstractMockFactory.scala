@@ -21,14 +21,14 @@
 package org.scalamock.scalatest
 
 import org.scalamock.MockFactoryBase
-import org.scalatest.{Reporter, Stopper, Suite, SuiteMixin, Tracker}
+import org.scalatest.{Outcome, Reporter, Stopper, Suite, SuiteMixin, Tracker}
 import org.scalatest.exceptions.TestFailedException
 
 trait AbstractMockFactory extends SuiteMixin with MockFactoryBase { this: Suite =>
   
   type ExpectationException = TestFailedException
   
-  override def withFixture(test: NoArgTest) {
+  override def withFixture(test: NoArgTest): Outcome = {
 
     if (autoVerify)
       withExpectations { test() }

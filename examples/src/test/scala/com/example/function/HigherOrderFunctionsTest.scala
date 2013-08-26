@@ -35,7 +35,7 @@ class HigherOrderFunctionsTest extends Spec with MockFactory {
       f expects (3) returning "three" once;
     }
     
-    expectResult(Seq("one", "two", "three")) { Seq(1, 2, 3) map f }
+    assertResult(Seq("one", "two", "three")) { Seq(1, 2, 3) map f }
   }
   
   def testRepeat {
@@ -60,6 +60,6 @@ class HigherOrderFunctionsTest extends Spec with MockFactory {
       f expects ("intermediate three", 3) returning "final" once;
     }
 
-    expectResult("final") { Seq(0, 1, 2, 3).foldLeft("initial")(f) }
+    assertResult("final") { Seq(0, 1, 2, 3).foldLeft("initial")(f) }
   }
 }

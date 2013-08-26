@@ -32,7 +32,7 @@ class ConcurrencyTest extends WordSpec with MockFactory {
   "Futures should work" in {
     val s = stubFunction[Int]
     s.when().returns(1)
-    expectResult(1){ Await.result(Future{ s() }, 10.seconds) }
+    assertResult(1){ Await.result(Future{ s() }, 10.seconds) }
     s.verify().once()
   }
 }
