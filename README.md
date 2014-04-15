@@ -2,6 +2,8 @@
 
 Native Scala mocking.
 
+For the current status of ScalaMock, see [this blog post](http://paulbutcher.com/2014/04/15/scalamock-status-report/).
+
 This is ScalaMock 3, which supports Scala 2.10 only. For earlier versions of Scala, see [ScalaMock 2](https://github.com/paulbutcher/ScalaMock/tree/ScalaMock2).
 
 ## Examples
