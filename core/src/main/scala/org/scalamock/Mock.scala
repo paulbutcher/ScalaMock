@@ -127,10 +127,10 @@ object MockImpl {
   //! TODO - get rid of this nasty two-stage construction when https://issues.scala-lang.org/browse/SI-5521 is fixed
   class MockMaker[C <: Context](val ctx: C) {
     class MockMakerInner[T: ctx.WeakTypeTag](factory: ctx.Expr[MockFactoryBase], stub: Boolean) {
-      import ctx.mirror._
       import ctx.universe._
       import Flag._
       import definitions._
+      import compat._
       import language.reflectiveCalls
 
       val utils = new Utils[ctx.type](ctx)
@@ -206,7 +206,7 @@ object MockImpl {
         DefDef(
           Modifiers(OVERRIDE),
           m.name, 
-          m.typeParams map TypeDef _, 
+          m.typeParams map { p => TypeDef(p) }, 
           params,
           paramType(finalResultType(methodType)),
           body)
