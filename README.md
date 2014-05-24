@@ -1,4 +1,4 @@
-# ScalaMock
+# ScalaMock [![Build Status](https://travis-ci.org/paulbutcher/ScalaMock.svg?branch=master)](https://travis-ci.org/paulbutcher/ScalaMock)
 
 Native Scala mocking.
 
