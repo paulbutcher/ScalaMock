@@ -172,11 +172,31 @@ object MockImpl {
         case _ => false
       }
       
-      def paramType(t: Type) = t match {
+      /**
+       *  Translates forwarder parameters into Trees.
+       *  Also maps Java repeated params into Scala repeated params
+       */
+      def forwarderParamType(t: Type) : Tree = t match {
         case TypeRef(pre, sym, args) if sym == JavaRepeatedParamClass =>
           TypeTree(TypeRef(pre, RepeatedParamClass, args))
         case TypeRef(pre, sym, args) if isPathDependentThis(t) =>
           AppliedTypeTree(Ident(newTypeName(sym.name.toString)), args map TypeTree _)
+        case _ =>
+          TypeTree(t)
+      }
+
+      /**
+       *  Translates mock function parameters into Trees.
+       *  The difference between forwarderParamType is that:
+       *  T* and T... are translated into Seq[T]
+       *
+       *  see issue #24
+       */
+      def mockParamType(t: Type) : Tree = t match {
+        case TypeRef(pre, sym, args) if sym == JavaRepeatedParamClass || sym == RepeatedParamClass =>
+          AppliedTypeTree(Ident(typeOf[Seq[_]].typeSymbol), args map TypeTree _)
+        case TypeRef(pre, sym, args) if isPathDependentThis(t) =>
+          AppliedTypeTree(Ident(TypeName(sym.name.toString)), args map TypeTree _)
         case _ =>
           TypeTree(t)
       }
@@ -186,29 +206,29 @@ object MockImpl {
       
       //! TODO - This is a hack, but it's unclear what it should be instead. See
       //! https://groups.google.com/d/topic/scala-user/n11V6_zI5go/discussion
-      def resolvedType(m: Symbol) =
+      def resolvedType(m: Symbol) : Type =
         m.typeSignatureIn(SuperType(ThisType(typeToMock.typeSymbol), typeToMock))
         
-      def buildParams(methodType: Type) =
+      def buildForwarderParams(methodType: Type) =
         paramss(methodType) map { params =>
           params map { p =>
             ValDef(
               Modifiers(PARAM | (if (p.isImplicit) IMPLICIT else NoFlags)),
               newTermName(p.name.toString),
-              paramType(p.typeSignature),
+              forwarderParamType(p.typeSignature),
               EmptyTree)
           }
         }
       
       // def <|name|>(p1: T1, p2: T2, ...): T = <|mockname|>(p1, p2, ...)
       def methodDef(m: MethodSymbol, methodType: Type, body: Tree): DefDef = {
-        val params = buildParams(methodType)
+        val params = buildForwarderParams(methodType)
         DefDef(
           Modifiers(OVERRIDE),
           m.name, 
           m.typeParams map { p => TypeDef(p) }, 
           params,
-          paramType(finalResultType(methodType)),
+          forwarderParamType(finalResultType(methodType)),
           body)
       }
       
@@ -222,7 +242,7 @@ object MockImpl {
         }
       }
       
-      def forwarderImpl(m: MethodSymbol) = {
+      def forwarderImpl(m: MethodSymbol) : ValOrDefDef = {
         val mt = resolvedType(m)
         if (m.isStable) {
           ValDef(
@@ -253,10 +273,10 @@ object MockImpl {
       def mockMethod(m: MethodSymbol): ValDef = {
         val mt = resolvedType(m)
         val clazz = classType(paramCount(mt))
-        val types = (paramTypes(mt) map paramType _) :+ paramType(finalResultType(mt))
+        val types = (paramTypes(mt) map mockParamType _) :+ mockParamType(finalResultType(mt))
         ValDef(Modifiers(),
           mockFunctionName(m), 
-          TypeTree(), 
+          AppliedTypeTree(Ident(clazz.typeSymbol), types), // see issue #24
           Apply(
             Select(
               New(

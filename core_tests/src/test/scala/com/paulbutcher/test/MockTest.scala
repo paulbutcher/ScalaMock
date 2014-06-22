@@ -365,6 +365,14 @@ class MockTest extends FreeSpec with MockFactory {
 //      }
 //    }
 
+    "mock a Polymorhpic Java interface" in { // test for issue #24
+      withExpectations {
+        val m = mock[PolymorphicJavaInterface]
+        (m.simplePolymorphicMethod _).expects("foo").returning(44)
+        assertResult(44) { m.simplePolymorphicMethod("foo") }
+      }
+    }
+
     "mock a class" in {
       withExpectations {
         val m = mock[TestClass]
