@@ -393,14 +393,31 @@ class MockTest extends FreeSpec with MockFactory {
       }
     }
 
-    //! TODO - fails with assertion in mockFunctionName
-    // "mock java.io.File" in {
-    //   class MyFile extends java.io.File("")
+    "mock java.io.File" in {
+       class MyFile extends java.io.File("")
 
-    //   withExpectations {
-    //     val m = mock[MyFile]
-    //   }
-    // }
+       withExpectations {
+         val m = mock[MyFile]
+       }
+     }
+    
+    "mock classes with bridged methods" in {
+       withExpectations {
+         val m = mock[JavaClassWithBridgeMethod]
+         
+         (m.compare _).expects(new Integer(5)).returning(1)
+         (m.compare _).expects(new Integer(6)).returning(2)
+ 
+         def useBridgeMethod[T](gen : JavaGenericInterface[T], x : T) = {
+            gen.compare(x)
+         }
+
+         assertResult(1) { m.compare(new Integer(5)) } // calls: int compare(Integer)
+         assertResult(2) { useBridgeMethod(m, new Integer(6)) } // calls: int compare(Object)
+
+      }
+    }
+
   }
   
   "Stubs should" - {

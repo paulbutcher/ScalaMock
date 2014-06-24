@@ -316,6 +316,7 @@ object MockImpl {
       val anon = newTypeName("$anon") 
       val methodsToMock = methodsNotInObject.filter { m =>
           !m.isConstructor && !m.isPrivate && m.privateWithin == NoSymbol &&
+          !m.asInstanceOf[reflect.internal.HasFlags].hasFlag(reflect.internal.Flags.BRIDGE) &&
             (!(m.isStable || m.isAccessor) ||
             m.asInstanceOf[reflect.internal.HasFlags].isDeferred) //! TODO - stop using internal if/when this gets into the API
         }.toList
