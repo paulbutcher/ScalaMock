@@ -418,6 +418,14 @@ class MockTest extends FreeSpec with MockFactory {
       }
     }
 
+    "allow to be declared as var" in { // test for issue #62
+      withExpectations {
+        var m = mock[TestTrait]
+        (m.oneParam _).expects(42).returning("foo")
+        assertResult("foo") { m.oneParam(42) }
+      }
+    }
+
   }
   
   "Stubs should" - {
