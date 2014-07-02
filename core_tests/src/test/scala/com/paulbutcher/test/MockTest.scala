@@ -373,6 +373,16 @@ class MockTest extends FreeSpec with MockFactory {
       }
     }
 
+    "mock a Java class with an overloaded method" in { // test for issue #34
+      withExpectations {
+        val m = mock[JavaClassWithOverloadedMethod]
+        (m.overloadedMethod(_: String)).expects("a").returning("first")
+        (m.overloadedMethod(_: String, _: String)).expects("a", "b").returning("second")
+        assertResult("first") { m.overloadedMethod("a") }
+        assertResult("second") { m.overloadedMethod("a", "b") }
+      }
+    }
+
     "mock a class" in {
       withExpectations {
         val m = mock[TestClass]

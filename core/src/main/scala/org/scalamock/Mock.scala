@@ -360,10 +360,8 @@ object MockImpl {
     def resolveOverloaded(method: TermSymbol, targs: List[Type]): Symbol = {
       method.alternatives find { m => 
         val tpe = m.typeSignature
-        if (targs.nonEmpty)
-          (paramTypes(appliedType(tpe, targs)) sameElements actuals)
-        else
-          paramTypes(tpe) sameElements actuals
+        val pts = if (targs.nonEmpty) paramTypes(appliedType(tpe, targs)) else paramTypes(tpe)
+        pts.map(_.dealias) sameElements actuals.map(_.dealias) // see issue #34
       } getOrElse {
         reportError(s"Unable to resolve overloaded method ${method.name}")
       }
