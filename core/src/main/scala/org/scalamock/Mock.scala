@@ -37,16 +37,6 @@ trait Mock {
   implicit def toMockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R: Defaultable](f: (T1, T2, T3, T4, T5, T6, T7, T8) => R): MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R] = macro MockImpl.toMockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R]
   implicit def toMockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R: Defaultable](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9) => R): MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R] = macro MockImpl.toMockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]
 
-  implicit def toMockFunction1R[T1, R: Defaultable](f: (T1*) => R): MockFunction1[Seq[T1], R] = macro MockImpl.toMockFunction1R[T1, R]
-  implicit def toMockFunction2R[T1, T2, R: Defaultable](f: (T1, T2*) => R): MockFunction2[T1, Seq[T2], R] = macro MockImpl.toMockFunction2R[T1, T2, R]
-  implicit def toMockFunction3R[T1, T2, T3, R: Defaultable](f: (T1, T2, T3*) => R): MockFunction3[T1, T2, Seq[T3], R] = macro MockImpl.toMockFunction3R[T1, T2, T3, R]
-  implicit def toMockFunction4R[T1, T2, T3, T4, R: Defaultable](f: (T1, T2, T3, T4*) => R): MockFunction4[T1, T2, T3, Seq[T4], R] = macro MockImpl.toMockFunction4R[T1, T2, T3, T4, R]
-  implicit def toMockFunction5R[T1, T2, T3, T4, T5, R: Defaultable](f: (T1, T2, T3, T4, T5*) => R): MockFunction5[T1, T2, T3, T4, Seq[T5], R] = macro MockImpl.toMockFunction5R[T1, T2, T3, T4, T5, R]
-  implicit def toMockFunction6R[T1, T2, T3, T4, T5, T6, R: Defaultable](f: (T1, T2, T3, T4, T5, T6*) => R): MockFunction6[T1, T2, T3, T4, T5, Seq[T6], R] = macro MockImpl.toMockFunction6R[T1, T2, T3, T4, T5, T6, R]
-  implicit def toMockFunction7R[T1, T2, T3, T4, T5, T6, T7, R: Defaultable](f: (T1, T2, T3, T4, T5, T6, T7*) => R): MockFunction7[T1, T2, T3, T4, T5, T6, Seq[T7], R] = macro MockImpl.toMockFunction7R[T1, T2, T3, T4, T5, T6, T7, R]
-  implicit def toMockFunction8R[T1, T2, T3, T4, T5, T6, T7, T8, R: Defaultable](f: (T1, T2, T3, T4, T5, T6, T7, T8*) => R): MockFunction8[T1, T2, T3, T4, T5, T6, T7, Seq[T8], R] = macro MockImpl.toMockFunction8R[T1, T2, T3, T4, T5, T6, T7, T8, R]
-  implicit def toMockFunction9R[T1, T2, T3, T4, T5, T6, T7, T8, T9, R: Defaultable](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9*) => R): MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, Seq[T9], R] = macro MockImpl.toMockFunction9R[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]
-
   def stub[T](implicit factory: MockFactoryBase): T = macro MockImpl.stub[T]
 
   implicit def toStubFunction0[R: Defaultable](f: () => R): StubFunction0[R] = macro MockImpl.toStubFunction0[R]
@@ -59,16 +49,6 @@ trait Mock {
   implicit def toStubFunction7[T1, T2, T3, T4, T5, T6, T7, R: Defaultable](f: (T1, T2, T3, T4, T5, T6, T7) => R): StubFunction7[T1, T2, T3, T4, T5, T6, T7, R] = macro MockImpl.toStubFunction7[T1, T2, T3, T4, T5, T6, T7, R]
   implicit def toStubFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R: Defaultable](f: (T1, T2, T3, T4, T5, T6, T7, T8) => R): StubFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R] = macro MockImpl.toStubFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R]
   implicit def toStubFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R: Defaultable](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9) => R): StubFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R] = macro MockImpl.toStubFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]
-
-  implicit def toStubFunction1R[T1, R: Defaultable](f: (T1*) => R): StubFunction1[Seq[T1], R] = macro MockImpl.toStubFunction1R[T1, R]
-  implicit def toStubFunction2R[T1, T2, R: Defaultable](f: (T1, T2*) => R): StubFunction2[T1, Seq[T2], R] = macro MockImpl.toStubFunction2R[T1, T2, R]
-  implicit def toStubFunction3R[T1, T2, T3, R: Defaultable](f: (T1, T2, T3*) => R): StubFunction3[T1, T2, Seq[T3], R] = macro MockImpl.toStubFunction3R[T1, T2, T3, R]
-  implicit def toStubFunction4R[T1, T2, T3, T4, R: Defaultable](f: (T1, T2, T3, T4*) => R): StubFunction4[T1, T2, T3, Seq[T4], R] = macro MockImpl.toStubFunction4R[T1, T2, T3, T4, R]
-  implicit def toStubFunction5R[T1, T2, T3, T4, T5, R: Defaultable](f: (T1, T2, T3, T4, T5*) => R): StubFunction5[T1, T2, T3, T4, Seq[T5], R] = macro MockImpl.toStubFunction5R[T1, T2, T3, T4, T5, R]
-  implicit def toStubFunction6R[T1, T2, T3, T4, T5, T6, R: Defaultable](f: (T1, T2, T3, T4, T5, T6*) => R): StubFunction6[T1, T2, T3, T4, T5, Seq[T6], R] = macro MockImpl.toStubFunction6R[T1, T2, T3, T4, T5, T6, R]
-  implicit def toStubFunction7R[T1, T2, T3, T4, T5, T6, T7, R: Defaultable](f: (T1, T2, T3, T4, T5, T6, T7*) => R): StubFunction7[T1, T2, T3, T4, T5, T6, Seq[T7], R] = macro MockImpl.toStubFunction7R[T1, T2, T3, T4, T5, T6, T7, R]
-  implicit def toStubFunction8R[T1, T2, T3, T4, T5, T6, T7, T8, R: Defaultable](f: (T1, T2, T3, T4, T5, T6, T7, T8*) => R): StubFunction8[T1, T2, T3, T4, T5, T6, T7, Seq[T8], R] = macro MockImpl.toStubFunction8R[T1, T2, T3, T4, T5, T6, T7, T8, R]
-  implicit def toStubFunction9R[T1, T2, T3, T4, T5, T6, T7, T8, T9, R: Defaultable](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9*) => R): StubFunction9[T1, T2, T3, T4, T5, T6, T7, T8, Seq[T9], R] = macro MockImpl.toStubFunction9R[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]
 }
 
 object MockImpl {
@@ -172,9 +152,29 @@ object MockImpl {
         case _ => false
       }
       
-      def paramType(t: Type) = t match {
+      /**
+       *  Translates forwarder parameters into Trees.
+       *  Also maps Java repeated params into Scala repeated params
+       */
+      def forwarderParamType(t: Type) : Tree = t match {
         case TypeRef(pre, sym, args) if sym == JavaRepeatedParamClass =>
           TypeTree(TypeRef(pre, RepeatedParamClass, args))
+        case TypeRef(pre, sym, args) if isPathDependentThis(t) =>
+          AppliedTypeTree(Ident(newTypeName(sym.name.toString)), args map TypeTree _)
+        case _ =>
+          TypeTree(t)
+      }
+
+      /**
+       *  Translates mock function parameters into Trees.
+       *  The difference between forwarderParamType is that:
+       *  T* and T... are translated into Seq[T]
+       *
+       *  see issue #24
+       */
+      def mockParamType(t: Type) : Tree = t match {
+        case TypeRef(pre, sym, args) if sym == JavaRepeatedParamClass || sym == RepeatedParamClass =>
+          AppliedTypeTree(Ident(typeOf[Seq[_]].typeSymbol), args map TypeTree _)
         case TypeRef(pre, sym, args) if isPathDependentThis(t) =>
           AppliedTypeTree(Ident(newTypeName(sym.name.toString)), args map TypeTree _)
         case _ =>
@@ -186,29 +186,29 @@ object MockImpl {
       
       //! TODO - This is a hack, but it's unclear what it should be instead. See
       //! https://groups.google.com/d/topic/scala-user/n11V6_zI5go/discussion
-      def resolvedType(m: Symbol) =
+      def resolvedType(m: Symbol) : Type =
         m.typeSignatureIn(SuperType(ThisType(typeToMock.typeSymbol), typeToMock))
         
-      def buildParams(methodType: Type) =
+      def buildForwarderParams(methodType: Type) =
         paramss(methodType) map { params =>
           params map { p =>
             ValDef(
               Modifiers(PARAM | (if (p.isImplicit) IMPLICIT else NoFlags)),
               newTermName(p.name.toString),
-              paramType(p.typeSignature),
+              forwarderParamType(p.typeSignature),
               EmptyTree)
           }
         }
       
       // def <|name|>(p1: T1, p2: T2, ...): T = <|mockname|>(p1, p2, ...)
       def methodDef(m: MethodSymbol, methodType: Type, body: Tree): DefDef = {
-        val params = buildParams(methodType)
+        val params = buildForwarderParams(methodType)
         DefDef(
           Modifiers(OVERRIDE),
           m.name, 
           m.typeParams map { p => TypeDef(p) }, 
           params,
-          paramType(finalResultType(methodType)),
+          forwarderParamType(finalResultType(methodType)),
           body)
       }
       
@@ -222,7 +222,7 @@ object MockImpl {
         }
       }
       
-      def forwarderImpl(m: MethodSymbol) = {
+      def forwarderImpl(m: MethodSymbol) : ValOrDefDef = {
         val mt = resolvedType(m)
         if (m.isStable) {
           ValDef(
@@ -253,10 +253,10 @@ object MockImpl {
       def mockMethod(m: MethodSymbol): ValDef = {
         val mt = resolvedType(m)
         val clazz = classType(paramCount(mt))
-        val types = (paramTypes(mt) map paramType _) :+ paramType(finalResultType(mt))
+        val types = (paramTypes(mt) map mockParamType _) :+ mockParamType(finalResultType(mt))
         ValDef(Modifiers(),
           mockFunctionName(m), 
-          TypeTree(), 
+          AppliedTypeTree(Ident(clazz.typeSymbol), types), // see issue #24
           Apply(
             Select(
               New(
@@ -316,6 +316,7 @@ object MockImpl {
       val anon = newTypeName("$anon") 
       val methodsToMock = methodsNotInObject.filter { m =>
           !m.isConstructor && !m.isPrivate && m.privateWithin == NoSymbol &&
+          !m.asInstanceOf[reflect.internal.HasFlags].hasFlag(reflect.internal.Flags.BRIDGE) &&
             (!(m.isStable || m.isAccessor) ||
             m.asInstanceOf[reflect.internal.HasFlags].isDeferred) //! TODO - stop using internal if/when this gets into the API
         }.toList
@@ -359,10 +360,8 @@ object MockImpl {
     def resolveOverloaded(method: TermSymbol, targs: List[Type]): Symbol = {
       method.alternatives find { m => 
         val tpe = m.typeSignature
-        if (targs.nonEmpty)
-          (paramTypes(appliedType(tpe, targs)) sameElements actuals)
-        else
-          paramTypes(tpe) sameElements actuals
+        val pts = if (targs.nonEmpty) paramTypes(appliedType(tpe, targs)) else paramTypes(tpe)
+        pts.map(_.dealias) sameElements actuals.map(_.dealias) // see issue #34
       } getOrElse {
         reportError(s"Unable to resolve overloaded method ${method.name}")
       }
@@ -375,33 +374,40 @@ object MockImpl {
       else
         "mock$"+ name +"$0"
     }
-    
-    def findApplication(tree: Tree): (Tree, Name, List[Type]) = tree match {
-      case Select(o, n) => (o, n, Nil)
-      case Block(_, t) => findApplication(t)
-      case Typed(t, _) => findApplication(t)
-      case Function(_, t) => findApplication(t)
-      case Apply(t, _) => findApplication(t)
-      case TypeApply(t, args) => val (o, n, _) = findApplication(t); (o, n, args map (_.tpe))
-      case _ => reportError(
-          s"ScalaMock: Unrecognised structure: ${showRaw(tree)}. Please open a ticket at https://github.com/paulbutcher/ScalaMock/issues")
+
+    // mock.getClass().getMethod(name).invoke(obj).asInstanceOf[MockFunctionX[...]]
+    def mockedFunctionGetter(obj: Tree, name: Name, targs: List[Type]): c.Expr[M] = {
+      c.Expr(
+        TypeApply(
+          Select(
+            Apply(
+              Select(
+                Apply(
+                  Select(
+                    Apply(Select(obj, newTermName("getClass")), List()),
+                    newTermName("getMethod")),
+                  List(Literal(Constant(mockFunctionName(name, obj.tpe, targs))))),
+                newTermName("invoke")),
+              List(obj)),
+            newTermName("asInstanceOf")),
+          List(TypeTree(weakTypeOf[M]))))
     }
 
-    val (obj, name, targs) = findApplication(f.tree)
-    c.Expr(
-      TypeApply(
-        Select(
-          Apply(
-            Select(
-              Apply(
-                Select(
-                  Apply(Select(obj, newTermName("getClass")), List()),
-                  newTermName("getMethod")),
-                List(Literal(Constant(mockFunctionName(name, obj.tpe, targs))))),
-              newTermName("invoke")),
-            List(obj)),
-          newTermName("asInstanceOf")),
-        List(TypeTree(weakTypeOf[M]))))
+    def transcribeTree(tree: Tree, targs: List[Type] = Nil): c.Expr[M] = {
+      tree match {
+        case Select(qualifier, name) => mockedFunctionGetter(qualifier, name, targs)
+        case Block(stats, expr) => c.Expr[M](Block(stats, transcribeTree(expr).tree)) // see issue #62
+        case Typed(expr, tpt) => transcribeTree(expr)
+        case Function(vparams, body) => transcribeTree(body)
+        case Apply(fun, args) => transcribeTree(fun)
+        case TypeApply(fun, args) => transcribeTree(fun, args.map(_.tpe));
+        case _ => reportError(
+          s"ScalaMock: Unrecognised structure: ${showRaw(tree)}." +
+          "Please open a ticket at https://github.com/paulbutcher/ScalaMock/issues")
+      }
+    }
+    
+    transcribeTree(f.tree)
   }
 
   def toMockFunction0[R: c.WeakTypeTag](c: Context)(f: c.Expr[() => R])(evidence$1: c.Expr[Defaultable[R]]) =
@@ -434,33 +440,6 @@ object MockImpl {
   def toMockFunction9[T1: c.WeakTypeTag, T2: c.WeakTypeTag, T3: c.WeakTypeTag, T4: c.WeakTypeTag, T5: c.WeakTypeTag, T6: c.WeakTypeTag, T7: c.WeakTypeTag, T8: c.WeakTypeTag, T9: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1, T2, T3, T4, T5, T6, T7, T8, T9) => R])(evidence$10: c.Expr[Defaultable[R]]) =
     findMockFunction[(T1, T2, T3, T4, T5, T6, T7, T8, T9) => R, MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]](c)(f, List(c.weakTypeOf[T1], c.weakTypeOf[T2], c.weakTypeOf[T3], c.weakTypeOf[T4], c.weakTypeOf[T5], c.weakTypeOf[T6], c.weakTypeOf[T7], c.weakTypeOf[T8], c.weakTypeOf[T9]))
 
-  def toMockFunction1R[T1: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1*) => R])(evidence$11: c.Expr[Defaultable[R]]) =
-    findMockFunction[(T1*) => R, MockFunction1[T1, R]](c)(f, List(c.weakTypeOf[T1]))
-
-  def toMockFunction2R[T1: c.WeakTypeTag, T2: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1, T2*) => R])(evidence$12: c.Expr[Defaultable[R]]) =
-    findMockFunction[(T1, T2*) => R, MockFunction2[T1, Seq[T2], R]](c)(f, List(c.weakTypeOf[T1], c.weakTypeOf[Seq[T2]]))
-
-  def toMockFunction3R[T1: c.WeakTypeTag, T2: c.WeakTypeTag, T3: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1, T2, T3*) => R])(evidence$13: c.Expr[Defaultable[R]]) =
-    findMockFunction[(T1, T2, T3*) => R, MockFunction3[T1, T2, T3, R]](c)(f, List(c.weakTypeOf[T1], c.weakTypeOf[T2], c.weakTypeOf[T3]))
-
-  def toMockFunction4R[T1: c.WeakTypeTag, T2: c.WeakTypeTag, T3: c.WeakTypeTag, T4: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1, T2, T3, T4*) => R])(evidence$14: c.Expr[Defaultable[R]]) =
-    findMockFunction[(T1, T2, T3, T4*) => R, MockFunction4[T1, T2, T3, T4, R]](c)(f, List(c.weakTypeOf[T1], c.weakTypeOf[T2], c.weakTypeOf[T3], c.weakTypeOf[T4]))
-
-  def toMockFunction5R[T1: c.WeakTypeTag, T2: c.WeakTypeTag, T3: c.WeakTypeTag, T4: c.WeakTypeTag, T5: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1, T2, T3, T4, T5*) => R])(evidence$15: c.Expr[Defaultable[R]]) =
-    findMockFunction[(T1, T2, T3, T4, T5*) => R, MockFunction5[T1, T2, T3, T4, T5, R]](c)(f, List(c.weakTypeOf[T1], c.weakTypeOf[T2], c.weakTypeOf[T3], c.weakTypeOf[T4], c.weakTypeOf[T5]))
-
-  def toMockFunction6R[T1: c.WeakTypeTag, T2: c.WeakTypeTag, T3: c.WeakTypeTag, T4: c.WeakTypeTag, T5: c.WeakTypeTag, T6: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1, T2, T3, T4, T5, T6*) => R])(evidence$16: c.Expr[Defaultable[R]]) =
-    findMockFunction[(T1, T2, T3, T4, T5, T6*) => R, MockFunction6[T1, T2, T3, T4, T5, T6, R]](c)(f, List(c.weakTypeOf[T1], c.weakTypeOf[T2], c.weakTypeOf[T3], c.weakTypeOf[T4], c.weakTypeOf[T5], c.weakTypeOf[T6]))
-
-  def toMockFunction7R[T1: c.WeakTypeTag, T2: c.WeakTypeTag, T3: c.WeakTypeTag, T4: c.WeakTypeTag, T5: c.WeakTypeTag, T6: c.WeakTypeTag, T7: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1, T2, T3, T4, T5, T6, T7*) => R])(evidence$17: c.Expr[Defaultable[R]]) =
-    findMockFunction[(T1, T2, T3, T4, T5, T6, T7*) => R, MockFunction7[T1, T2, T3, T4, T5, T6, T7, R]](c)(f, List(c.weakTypeOf[T1], c.weakTypeOf[T2], c.weakTypeOf[T3], c.weakTypeOf[T4], c.weakTypeOf[T5], c.weakTypeOf[T6], c.weakTypeOf[T7]))
-
-  def toMockFunction8R[T1: c.WeakTypeTag, T2: c.WeakTypeTag, T3: c.WeakTypeTag, T4: c.WeakTypeTag, T5: c.WeakTypeTag, T6: c.WeakTypeTag, T7: c.WeakTypeTag, T8: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1, T2, T3, T4, T5, T6, T7, T8*) => R])(evidence$18: c.Expr[Defaultable[R]]) =
-    findMockFunction[(T1, T2, T3, T4, T5, T6, T7, T8*) => R, MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R]](c)(f, List(c.weakTypeOf[T1], c.weakTypeOf[T2], c.weakTypeOf[T3], c.weakTypeOf[T4], c.weakTypeOf[T5], c.weakTypeOf[T6], c.weakTypeOf[T7], c.weakTypeOf[T8]))
-
-  def toMockFunction9R[T1: c.WeakTypeTag, T2: c.WeakTypeTag, T3: c.WeakTypeTag, T4: c.WeakTypeTag, T5: c.WeakTypeTag, T6: c.WeakTypeTag, T7: c.WeakTypeTag, T8: c.WeakTypeTag, T9: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1, T2, T3, T4, T5, T6, T7, T8, T9*) => R])(evidence$19: c.Expr[Defaultable[R]]) =
-    findMockFunction[(T1, T2, T3, T4, T5, T6, T7, T8, T9*) => R, MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]](c)(f, List(c.weakTypeOf[T1], c.weakTypeOf[T2], c.weakTypeOf[T3], c.weakTypeOf[T4], c.weakTypeOf[T5], c.weakTypeOf[T6], c.weakTypeOf[T7], c.weakTypeOf[T8], c.weakTypeOf[T9]))
-
   def toStubFunction0[R: c.WeakTypeTag](c: Context)(f: c.Expr[() => R])(evidence$20: c.Expr[Defaultable[R]]) =
     findMockFunction[() => R, StubFunction0[R]](c)(f, List())
 
@@ -490,31 +469,4 @@ object MockImpl {
 
   def toStubFunction9[T1: c.WeakTypeTag, T2: c.WeakTypeTag, T3: c.WeakTypeTag, T4: c.WeakTypeTag, T5: c.WeakTypeTag, T6: c.WeakTypeTag, T7: c.WeakTypeTag, T8: c.WeakTypeTag, T9: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1, T2, T3, T4, T5, T6, T7, T8, T9) => R])(evidence$29: c.Expr[Defaultable[R]]) =
     findMockFunction[(T1, T2, T3, T4, T5, T6, T7, T8, T9) => R, StubFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]](c)(f, List(c.weakTypeOf[T1], c.weakTypeOf[T2], c.weakTypeOf[T3], c.weakTypeOf[T4], c.weakTypeOf[T5], c.weakTypeOf[T6], c.weakTypeOf[T7], c.weakTypeOf[T8], c.weakTypeOf[T9]))
-
-  def toStubFunction1R[T1: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1*) => R])(evidence$30: c.Expr[Defaultable[R]]) =
-    findMockFunction[(T1*) => R, StubFunction1[T1, R]](c)(f, List(c.weakTypeOf[T1]))
-
-  def toStubFunction2R[T1: c.WeakTypeTag, T2: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1, T2*) => R])(evidence$31: c.Expr[Defaultable[R]]) =
-    findMockFunction[(T1, T2*) => R, StubFunction2[T1, Seq[T2], R]](c)(f, List(c.weakTypeOf[T1], c.weakTypeOf[Seq[T2]]))
-
-  def toStubFunction3R[T1: c.WeakTypeTag, T2: c.WeakTypeTag, T3: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1, T2, T3*) => R])(evidence$32: c.Expr[Defaultable[R]]) =
-    findMockFunction[(T1, T2, T3*) => R, StubFunction3[T1, T2, T3, R]](c)(f, List(c.weakTypeOf[T1], c.weakTypeOf[T2], c.weakTypeOf[T3]))
-
-  def toStubFunction4R[T1: c.WeakTypeTag, T2: c.WeakTypeTag, T3: c.WeakTypeTag, T4: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1, T2, T3, T4*) => R])(evidence$33: c.Expr[Defaultable[R]]) =
-    findMockFunction[(T1, T2, T3, T4*) => R, StubFunction4[T1, T2, T3, T4, R]](c)(f, List(c.weakTypeOf[T1], c.weakTypeOf[T2], c.weakTypeOf[T3], c.weakTypeOf[T4]))
-
-  def toStubFunction5R[T1: c.WeakTypeTag, T2: c.WeakTypeTag, T3: c.WeakTypeTag, T4: c.WeakTypeTag, T5: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1, T2, T3, T4, T5*) => R])(evidence$34: c.Expr[Defaultable[R]]) =
-    findMockFunction[(T1, T2, T3, T4, T5*) => R, StubFunction5[T1, T2, T3, T4, T5, R]](c)(f, List(c.weakTypeOf[T1], c.weakTypeOf[T2], c.weakTypeOf[T3], c.weakTypeOf[T4], c.weakTypeOf[T5]))
-
-  def toStubFunction6R[T1: c.WeakTypeTag, T2: c.WeakTypeTag, T3: c.WeakTypeTag, T4: c.WeakTypeTag, T5: c.WeakTypeTag, T6: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1, T2, T3, T4, T5, T6*) => R])(evidence$35: c.Expr[Defaultable[R]]) =
-    findMockFunction[(T1, T2, T3, T4, T5, T6*) => R, StubFunction6[T1, T2, T3, T4, T5, T6, R]](c)(f, List(c.weakTypeOf[T1], c.weakTypeOf[T2], c.weakTypeOf[T3], c.weakTypeOf[T4], c.weakTypeOf[T5], c.weakTypeOf[T6]))
-
-  def toStubFunction7R[T1: c.WeakTypeTag, T2: c.WeakTypeTag, T3: c.WeakTypeTag, T4: c.WeakTypeTag, T5: c.WeakTypeTag, T6: c.WeakTypeTag, T7: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1, T2, T3, T4, T5, T6, T7*) => R])(evidence$36: c.Expr[Defaultable[R]]) =
-    findMockFunction[(T1, T2, T3, T4, T5, T6, T7*) => R, StubFunction7[T1, T2, T3, T4, T5, T6, T7, R]](c)(f, List(c.weakTypeOf[T1], c.weakTypeOf[T2], c.weakTypeOf[T3], c.weakTypeOf[T4], c.weakTypeOf[T5], c.weakTypeOf[T6], c.weakTypeOf[T7]))
-
-  def toStubFunction8R[T1: c.WeakTypeTag, T2: c.WeakTypeTag, T3: c.WeakTypeTag, T4: c.WeakTypeTag, T5: c.WeakTypeTag, T6: c.WeakTypeTag, T7: c.WeakTypeTag, T8: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1, T2, T3, T4, T5, T6, T7, T8*) => R])(evidence$37: c.Expr[Defaultable[R]]) =
-    findMockFunction[(T1, T2, T3, T4, T5, T6, T7, T8*) => R, StubFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R]](c)(f, List(c.weakTypeOf[T1], c.weakTypeOf[T2], c.weakTypeOf[T3], c.weakTypeOf[T4], c.weakTypeOf[T5], c.weakTypeOf[T6], c.weakTypeOf[T7], c.weakTypeOf[T8]))
-
-  def toStubFunction9R[T1: c.WeakTypeTag, T2: c.WeakTypeTag, T3: c.WeakTypeTag, T4: c.WeakTypeTag, T5: c.WeakTypeTag, T6: c.WeakTypeTag, T7: c.WeakTypeTag, T8: c.WeakTypeTag, T9: c.WeakTypeTag, R: c.WeakTypeTag](c: Context)(f: c.Expr[(T1, T2, T3, T4, T5, T6, T7, T8, T9*) => R])(evidence$38: c.Expr[Defaultable[R]]) =
-    findMockFunction[(T1, T2, T3, T4, T5, T6, T7, T8, T9*) => R, StubFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]](c)(f, List(c.weakTypeOf[T1], c.weakTypeOf[T2], c.weakTypeOf[T3], c.weakTypeOf[T4], c.weakTypeOf[T5], c.weakTypeOf[T6], c.weakTypeOf[T7], c.weakTypeOf[T8], c.weakTypeOf[T9]))
 }

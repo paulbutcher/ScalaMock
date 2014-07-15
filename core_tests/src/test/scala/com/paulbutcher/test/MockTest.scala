@@ -365,6 +365,24 @@ class MockTest extends FreeSpec with MockFactory {
 //      }
 //    }
 
+    "mock a Polymorhpic Java interface" in { // test for issue #24
+      withExpectations {
+        val m = mock[PolymorphicJavaInterface]
+        (m.simplePolymorphicMethod _).expects("foo").returning(44)
+        assertResult(44) { m.simplePolymorphicMethod("foo") }
+      }
+    }
+
+    "mock a Java class with an overloaded method" in { // test for issue #34
+      withExpectations {
+        val m = mock[JavaClassWithOverloadedMethod]
+        (m.overloadedMethod(_: String)).expects("a").returning("first")
+        (m.overloadedMethod(_: String, _: String)).expects("a", "b").returning("second")
+        assertResult("first") { m.overloadedMethod("a") }
+        assertResult("second") { m.overloadedMethod("a", "b") }
+      }
+    }
+
     "mock a class" in {
       withExpectations {
         val m = mock[TestClass]
@@ -385,14 +403,39 @@ class MockTest extends FreeSpec with MockFactory {
       }
     }
 
-    //! TODO - fails with assertion in mockFunctionName
-    // "mock java.io.File" in {
-    //   class MyFile extends java.io.File("")
+    "mock java.io.File" in {
+       class MyFile extends java.io.File("")
 
-    //   withExpectations {
-    //     val m = mock[MyFile]
-    //   }
-    // }
+       withExpectations {
+         val m = mock[MyFile]
+       }
+     }
+    
+    "mock classes with bridged methods" in {
+       withExpectations {
+         val m = mock[JavaClassWithBridgeMethod]
+         
+         (m.compare _).expects(new Integer(5)).returning(1)
+         (m.compare _).expects(new Integer(6)).returning(2)
+ 
+         def useBridgeMethod[T](gen : JavaGenericInterface[T], x : T) = {
+            gen.compare(x)
+         }
+
+         assertResult(1) { m.compare(new Integer(5)) } // calls: int compare(Integer)
+         assertResult(2) { useBridgeMethod(m, new Integer(6)) } // calls: int compare(Object)
+
+      }
+    }
+
+    "allow to be declared as var" in { // test for issue #62
+      withExpectations {
+        var m = mock[TestTrait]
+        (m.oneParam _).expects(42).returning("foo")
+        assertResult("foo") { m.oneParam(42) }
+      }
+    }
+
   }
   
   "Stubs should" - {
