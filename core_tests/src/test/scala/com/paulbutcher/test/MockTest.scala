@@ -145,6 +145,25 @@ class MockTest extends FreeSpec with MockFactory {
       }
     }
     
+    "cope with methods where Seq[T] is the last parameter" in { // issue #54
+      trait ClassWithSeqTParam {
+         def run(ints: Seq[Int]) : Int
+      }
+
+      withExpectations {
+        val m = mock[ClassWithSeqTParam]
+
+        (m.run _).expects(Seq(1, 2, 3)).returning(100)
+        assertResult(100) { m.run(Seq(1, 2, 3)) }
+
+        (m.run _).expects(*).returning(200)
+        assertResult(200) { m.run(Seq(5, 55)) }
+
+        (m.run _).expects(Seq()).returning(300)
+        assertResult(300) { m.run(Seq.empty) }
+      }
+    }
+    
     "cope with methods with by name parameters" in {
       withExpectations {
         val m = mock[TestTrait]
