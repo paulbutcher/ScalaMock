@@ -20,28 +20,45 @@
 
 package org.scalamock.specs2
 
-import org.scalamock.MockFactoryBase
-import org.specs2.execute.{AsResult, Failure, FailureException, Result}
+import org.specs2.execute.{ AsResult, Failure, FailureException, Result }
 import org.specs2.main.ArgumentsShortcuts
-import org.specs2.specification.{AroundExample, Fragments, SpecificationStructure}
+import org.specs2.specification.{ AroundExample, Fragments, SpecificationStructure }
+import org.specs2.specification.Fragment
+import org.specs2.mutable.FragmentsBuilder
+import org.specs2.mutable.Around
+import org.scalamock.MockFactoryBase
+
+/** Base trait for MockContext and IsolatedMockFactory */
+trait MockContextBase extends MockFactoryBase {
+
+  type ExpectationException = FailureException
+
+  protected override def newExpectationException(message: String, methodName: Option[Symbol]) =
+    new ExpectationException(new Failure(message))
+
+  protected def wrapAsResult[T: AsResult](body: => T) = {
+    AsResult(withExpectations { body })
+  }
+}
+
+/**
+ * Fixture-context that should be created per test-case basis
+ */
+trait MockContext extends MockContextBase with Around {
+
+  override def around[T: AsResult](body: => T) = {
+    wrapAsResult[T] { body }
+  }
+}
 
 /**
  * A trait that can be mixed into a [[http://etorreborre.github.com/specs2/ Specs2]] specification to provide
  * mocking support.
  */
-trait MockFactory extends MockFactoryBase with AroundExample { self: ArgumentsShortcuts =>
-  
-  type ExpectationException = FailureException
+trait IsolatedMockFactory extends AroundExample with MockContextBase { self: ArgumentsShortcuts =>
+  isolated
 
-  protected override def around[T : AsResult](body: => T) = {
-    if (autoVerify)
-      AsResult(withExpectations { body })
-    else
-      AsResult(body)
+  override def around[T: AsResult](body: => T) = {
+    wrapAsResult[T] { body }
   }
-
-  protected override def newExpectationException(message: String, methodName: Option[Symbol]) =
-    new ExpectationException(new Failure(message))
-
-  protected var autoVerify = true
 }

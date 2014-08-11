@@ -18,38 +18,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.example.makro
+package org.scalamock.test.specs2
 
-import org.scalamock.specs2.MockContext
+import org.scalamock.test.mockable.TestTrait
+import org.scalamock.specs2.IsolatedMockFactory
 import org.specs2.mutable.Specification
 
-import com.example.Order
-import com.example.Warehouse
-
 /**
- * This is a demonstration and test of the Specs2 integration, using the example from
- * Martin Fowler's article Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
+ *  Tests for mocks defined in suite scope (i.e. outside test case scope)
+ *
+ *  Tests for issue #25
  */
-class OrderSpecification extends Specification {
+class SuiteScopeMockParallelTest extends Specification with IsolatedMockFactory {
+  // please note that this test suite runs in isolated mode
 
-  "An order" should {
-    "remove inventory when in stock" in new MockContext {
-      val mockWarehouse = mock[Warehouse]
-      inSequence {
-        (mockWarehouse.hasInventory _).expects("Talisker", 50).returning(true).once
-        (mockWarehouse.remove _).expects("Talisker", 50).once
-      }
-      val order = new Order("Talisker", 50)
-      order.fill(mockWarehouse)
-      order.isFilled must beTrue
+  val mockWithoutExpectationsPredefined = mock[TestTrait]
+
+  "ScalaTest suite" should {
+    "allow to use mock defined suite scope" in {
+      (mockWithoutExpectationsPredefined.oneParamMethod _).expects(1).returning("one")
+      (mockWithoutExpectationsPredefined.oneParamMethod _).expects(2).returning("two")
+
+      mockWithoutExpectationsPredefined.oneParamMethod(1) must_== "one"
+      mockWithoutExpectationsPredefined.oneParamMethod(2) must_== "two"
     }
 
-    "remove nothing when out of stock" in new MockContext {
-      val mockWarehouse = mock[Warehouse]
-      (mockWarehouse.hasInventory _).expects(*, *).returns(false).once
-      val order = new Order("Talisker", 50)
-      order.fill(mockWarehouse)
-      order.isFilled must beFalse
+    "allow to use mock defined suite scope in more than one test case" in {
+      (mockWithoutExpectationsPredefined.oneParamMethod _).expects(3).returning("three")
+
+      mockWithoutExpectationsPredefined.oneParamMethod(3) must_== "three"
     }
   }
 }
