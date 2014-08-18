@@ -45,7 +45,7 @@ class FixtureContextTest extends Specification {
     mockedTrait.oneParamMethod(input) must_== output
   }
 
-  "ScalaTest suite" should {
+  "Specs2 suite" should {
     "allow to use mock defined in fixture-context" in new TestSetup {
       (mockedTrait.oneParamMethod _).expects(input).returning(output)
       (mockedTrait.oneParamMethod _).expects(2).returning("two")

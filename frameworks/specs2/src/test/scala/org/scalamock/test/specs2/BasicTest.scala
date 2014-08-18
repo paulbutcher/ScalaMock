@@ -31,7 +31,7 @@ import org.scalamock.specs2.MockContext
  */
 class BasicTest extends Specification {
 
-  "ScalaTest suite" should {
+  "Specs2 suite" should {
     "allow to use mock defined in test case scope" in new MockContext {
       val mockedTrait = mock[TestTrait]
       (mockedTrait.oneParamMethod _).expects(1).returning("one")

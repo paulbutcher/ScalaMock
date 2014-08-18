@@ -34,7 +34,7 @@ class SuiteScopeMockParallelTest extends Specification with IsolatedMockFactory 
 
   val mockWithoutExpectationsPredefined = mock[TestTrait]
 
-  "ScalaTest suite" should {
+  "Specs2 suite" should {
     "allow to use mock defined suite scope" in {
       (mockWithoutExpectationsPredefined.oneParamMethod _).expects(1).returning("one")
       (mockWithoutExpectationsPredefined.oneParamMethod _).expects(2).returning("two")
