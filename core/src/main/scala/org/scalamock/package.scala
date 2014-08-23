@@ -23,9 +23,11 @@ package org
 /**
  * ==ScalaMock: Native Scala Mocking==
  * 
- * To use ScalaMock, mix the relevant `MockFactory` trait into your test class.
- * For ScalaTest, use [[org.scalamock.scalatest.MockFactory]] and for Specs2
- * use [[org.scalamock.specs2.MockFactory]].
+ * To use ScalaMock, you need the relevant `MockFactoryBase` trait implementation:
+ * 
+ *  - for ScalaTest, use [[org.scalamock.scalatest.MockFactory]],
+ *  - for Specs2 use [[org.scalamock.specs2.IsolatedMockFactory]] or 
+ *    [[org.scalamock.specs2.MockContext]] 
  * 
  * At present, ScalaMock can only mock traits, Java interfaces, and non-final 
  * classes that define a default constructor. A future version will be able to 
