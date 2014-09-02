@@ -49,13 +49,16 @@ class ErrorReporting extends FlatSpec with ShouldMatchers {
     reporter.lastEvent.get
   }
 
-  def getErrorMessage(event: Event): String = {
+  def getThrowable[ExnT <: Throwable](event: Event)(implicit m: Manifest[ExnT]): ExnT = {
     event shouldBe a[TestFailed]
 
     val testCaseError = event.asInstanceOf[TestFailed].throwable.get
-    testCaseError shouldBe a[TestFailedException]
+    testCaseError shouldBe a[ExnT]
+    testCaseError.asInstanceOf[ExnT]
+  }
 
-    testCaseError.asInstanceOf[TestFailedException].getMessage()
+  def getErrorMessage[ExnT <: Throwable](event: Event)(implicit m: Manifest[ExnT]): String = {
+    getThrowable[ExnT](event).getMessage()
   }
 
   "ScalaTest suite" should "report unexpected call correctly" in {
@@ -67,12 +70,12 @@ class ErrorReporting extends FlatSpec with ShouldMatchers {
     }
 
     val outcome = runTestCase[TestedSuite](new TestedSuite)
-    val errorMessage = getErrorMessage(outcome)
+    val errorMessage = getErrorMessage[TestFailedException](outcome)
     errorMessage should startWith("Unexpected call")
   }
 
   // TODO it was broken before issue #25 was fixed. I will fix it later
-  ignore should "report unexpected call correctly when expectations are set" in {
+  it should "report unexpected call correctly when expectations are set" in {
     class TestedSuite extends FunSuite with MockFactory {
       test("execute block of code") {
         val mockedTrait = mock[TestTrait]
@@ -81,8 +84,23 @@ class ErrorReporting extends FlatSpec with ShouldMatchers {
       }
     }
 
+    // Unexpected call should be reported by ScalaTest
     val outcome = runTestCase[TestedSuite](new TestedSuite)
-    val errorMessage = getErrorMessage(outcome)
+    val errorMessage = getErrorMessage[TestFailedException](outcome)
     errorMessage should startWith("Unexpected call")
+  }
+
+  it should "not hide NullPointerException" in {
+    class TestedSuite extends FunSuite with MockFactory {
+      test("execute block of code") {
+        val mockedTrait = mock[TestTrait]
+        (mockedTrait.oneParamMethod _).expects(1).returning("one")
+        throw new NullPointerException;
+      }
+    }
+
+    val outcome = runTestCase[TestedSuite](new TestedSuite)
+    // NullPointerException should be reported by ScalaTest
+    getThrowable[NullPointerException](outcome) shouldBe a[NullPointerException]
   }
 }

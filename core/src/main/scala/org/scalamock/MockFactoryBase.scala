@@ -38,11 +38,15 @@ trait MockFactoryBase extends Mock {
     }
 
     try {
-      inAnyOrder(what) 
+      val result = inAnyOrder(what) 
+      verifyExpectations()
+      result
     } catch {
-      case ex : Throwable => throw ex
-    } finally {
-      verifyExpectations
+      case ex : Throwable => 
+        // do not verify expectations - just clear them. Throw original exception
+        // see issue #72
+        clearExpectations() 
+        throw ex
     }
   }
 
@@ -150,16 +154,20 @@ trait MockFactoryBase extends Mock {
     currentExpectationContext = initialHandlers
   }
 
+  private def clearExpectations() : Unit = {
+    // to forbid setting expectations after verification is done 
+    callLog = null
+    expectationContext = null
+    currentExpectationContext = null
+  }
+
   private def verifyExpectations() {
     callLog foreach expectationContext.verify _
     
     val oldCallLog = callLog
     val oldExpectationContext = expectationContext
 
-    // to forbid setting expectations after verification is done 
-    callLog = null
-    expectationContext = null
-    currentExpectationContext = null
+    clearExpectations()
 
     if (!oldExpectationContext.isSatisfied)
       reportUnsatisfiedExpectation(oldCallLog, oldExpectationContext)
