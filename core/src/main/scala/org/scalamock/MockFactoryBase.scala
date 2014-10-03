@@ -22,7 +22,7 @@ package org.scalamock
 trait MockFactoryBase extends Mock {
   import language.implicitConversions
   
-  type ExpectationException <: Exception
+  type ExpectationException <: Throwable
   
   protected def withExpectations[T](what: => T): T = {
     resetExpectations
