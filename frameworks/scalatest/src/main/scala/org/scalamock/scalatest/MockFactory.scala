@@ -95,7 +95,7 @@ import org.scalatest.Suite
  * ===Fixture contexts===
  *
  * You can also run each test case in separate fixture context. Fixture contexts can be extended 
- * and combined and since each test case uses different instace of fixture context test cases do not
+ * and combined and since each test case uses different instance of fixture context test cases do not
  * interfere with each other while they can have shared mocks and expectations.
  * 
  * {{{
