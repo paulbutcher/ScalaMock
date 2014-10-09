@@ -28,10 +28,12 @@ trait NiceToString { self: FakeFunction =>
 }
 
 abstract class FakeFunction(protected val factory: MockFactoryBase, private[scalamock] val name: Symbol) {
-  
-  private val callLog = factory.callLog.get
-  private val expectationContext = factory.expectationContext.get
-  
+
+  // [issue #25] we must always refer current factory vars because 
+  // they are updated during intitialize/resetExpectations!
+  private def callLog = factory.callLog
+  private def expectationContext = factory.expectationContext
+
   def handle(arguments: Product): Any = {
     val call = new Call(this, arguments)
     callLog += call
