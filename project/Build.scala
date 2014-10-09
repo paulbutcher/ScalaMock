@@ -94,10 +94,6 @@ object Dependencies {
   val scalatest =  "org.scalatest" %% "scalatest" % "2.1.3"
   val specs2 = "org.specs2" %% "specs2" % "2.3.11"
   val reflect = "org.scala-lang" % "scala-reflect" % BuildSettings.buildScalaVersion
-
-  // Specs2 and ScalaTest use different scala-xml versions
-  // and this caused problems with referencing class org.scalatest.events.Event
-  val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "1.0.2" % "test" 
 }
 
 object ScalaMockBuild extends Build {
@@ -128,7 +124,7 @@ object ScalaMockBuild extends Build {
     file("frameworks/scalatest"),
     settings = buildSettings ++ Seq(
       name := "ScalaMock ScalaTest Support",
-      libraryDependencies ++= Seq(scalatest, scalaXml)
+      libraryDependencies ++= Seq(scalatest)
     )) dependsOn(core)
 
   lazy val specs2Support = Project(
