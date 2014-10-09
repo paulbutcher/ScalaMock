@@ -22,7 +22,7 @@ package org.scalamock
 trait MockFactoryBase extends Mock {
   import language.implicitConversions
   
-  type ExpectationException <: Exception
+  type ExpectationException <: Throwable
 
   private[scalamock] var callLog: CallLog = _
   private[scalamock] var currentExpectationContext: Handlers = _
