@@ -23,19 +23,34 @@ trait MockFactoryBase extends Mock {
   import language.implicitConversions
   
   type ExpectationException <: Throwable
+
+  private[scalamock] var callLog: CallLog = _
+  private[scalamock] var currentExpectationContext: Handlers = _
+  private[scalamock] var expectationContext: Handlers = _
+
+  initializeExpectations
   
-  protected def withExpectations[T](what: => T): T = {
-    resetExpectations
-    val r = what
-    verifyExpectations
-    r
+  def withExpectations[T](what: => T): T = {
+    if (expectationContext == null) {
+      // we don't reset expectations for the first test case to allow
+      // defining expectations in Suite scope and writing tests in OneInstancePerTest/isolated style 
+      initializeExpectations
+    }
+
+    try {
+      inAnyOrder(what) 
+    } catch {
+      case ex : Throwable => throw ex
+    } finally {
+      verifyExpectations
+    }
   }
-  
-  protected def inAnyOrder(what: => Unit) {
+
+  protected def inAnyOrder[T](what: => T): T = {
     inContext(new UnorderedHandlers)(what)
   }
-  
-  protected def inSequence(what: => Unit) {
+
+  protected def inSequence[T](what: => T): T = {
     inContext(new OrderedHandlers)(what)
   }
   
@@ -112,51 +127,54 @@ trait MockFactoryBase extends Mock {
   protected implicit def MatchAnyToMockParameter[T](m: MatchAny) = new MockParameter[T](m)
 
   protected implicit def MatchEpsilonToMockParameter[T](m: MatchEpsilon) = new EpsilonMockParameter(m)
-  
+
   private[scalamock] def add[E <: CallHandler[_]](e: E) = {
-    assert(currentExpectationContext.get != null, "Null expectation context - missing withExpectations?")
-    currentExpectationContext.get.add(e)
+    assert(currentExpectationContext != null, "Null expectation context - missing withExpectations?")
+    currentExpectationContext.add(e)
     e
   }
-  
+
   private[scalamock] def reportUnexpectedCall(call: Call) =
-    throw newExpectationException(s"Unexpected call: $call\n\n$errorContext", Some(call.target.name))
-  
-  private def reportUnsatisfiedExpectation() =
-    throw newExpectationException(s"Unsatisfied expectation:\n\n$errorContext")
-  
+    throw newExpectationException(s"Unexpected call: $call\n\n%s".format(errorContext(callLog, expectationContext)), Some(call.target.name))
+
+  private def reportUnsatisfiedExpectation(callLog : CallLog, expectationContext : Handlers) =
+    throw newExpectationException(s"Unsatisfied expectation:\n\n%s".format(errorContext(callLog, expectationContext)))
+
   protected def newExpectationException(message: String, methodName: Option[Symbol] = None): ExpectationException
-  
-  private def resetExpectations() {
-    callLog set new CallLog
 
-    val handlers = new UnorderedHandlers
-    expectationContext set handlers
-    currentExpectationContext set handlers
+  private def initializeExpectations() {
+    val initialHandlers = new UnorderedHandlers
+    callLog = new CallLog
+
+    expectationContext = initialHandlers
+    currentExpectationContext = initialHandlers
   }
-  
+
   private def verifyExpectations() {
-    callLog.get foreach expectationContext.get.verify _
-    if (!expectationContext.get.isSatisfied)
-      reportUnsatisfiedExpectation
+    callLog foreach expectationContext.verify _
     
-    expectationContext set null
-    currentExpectationContext set null
-  }
-  
-  private def errorContext =
-    s"Expected:\n${expectationContext.get}\n\nActual:\n${callLog.get}"
-  
-  private def inContext(context: Handlers)(what: => Unit) {
-    currentExpectationContext.get.add(context)
-    val prevContext = currentExpectationContext.get
-    currentExpectationContext set context
-    what
-    currentExpectationContext set prevContext
+    val oldCallLog = callLog
+    val oldExpectationContext = expectationContext
+
+    // to forbid setting expectations after verification is done 
+    callLog = null
+    expectationContext = null
+    currentExpectationContext = null
+
+    if (!oldExpectationContext.isSatisfied)
+      reportUnsatisfiedExpectation(oldCallLog, oldExpectationContext)
   }
 
-  private[scalamock] val callLog = new InheritableThreadLocal[CallLog]
-  
-  private[scalamock] val expectationContext = new InheritableThreadLocal[Handlers]
-  private[scalamock] val currentExpectationContext = new InheritableThreadLocal[Handlers]
+  private def errorContext(callLog : CallLog, expectationContext : Handlers) =
+    s"Expected:\n${expectationContext}\n\nActual:\n${callLog}"
+
+  private def inContext[T](context: Handlers)(what: => T): T = {
+    currentExpectationContext.add(context)
+    val prevContext = currentExpectationContext
+    currentExpectationContext = context
+    val r = what
+    currentExpectationContext = prevContext
+    r
+  }
+
 }
