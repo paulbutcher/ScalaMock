@@ -21,7 +21,7 @@
 package org.scalamock.scalatest
 
 import org.scalamock.MockFactoryBase
-import org.scalatest.{Outcome, Reporter, Stopper, Suite, SuiteMixin, Tracker}
+import org.scalatest.{Outcome, Reporter, Stopper, Suite, SuiteMixin, Tracker, Failed}
 import org.scalatest.exceptions.TestFailedException
 
 trait AbstractMockFactory extends SuiteMixin with MockFactoryBase { this: Suite =>
@@ -30,10 +30,21 @@ trait AbstractMockFactory extends SuiteMixin with MockFactoryBase { this: Suite 
   
   override def withFixture(test: NoArgTest): Outcome = {
 
-    if (autoVerify)
-      withExpectations { test() }
-    else
+    if (autoVerify) {
+      withExpectations { 
+        val outcome = test() 
+        outcome match {
+          case Failed(throwable) => 
+            // MockFactoryBase does not know how to handle ScalaTest Outcome.
+            // Throw error that caused test failure to prevent hiding it by 
+            // "unsatisfied expectation" exception (see issue #72)
+            throw throwable 
+          case _ => outcome
+        }
+      }
+    } else {
       test()
+    }
   }
   
   protected def newExpectationException(message: String, methodName: Option[Symbol]) = 

@@ -20,28 +20,180 @@
 
 package org.scalamock.specs2
 
-import org.scalamock.MockFactoryBase
-import org.specs2.execute.{AsResult, Failure, FailureException, Result}
+import org.specs2.execute.{ AsResult, Failure, FailureException, Result }
 import org.specs2.main.ArgumentsShortcuts
-import org.specs2.specification.{AroundExample, Fragments, SpecificationStructure}
+import org.specs2.specification.{ AroundExample, Fragments, SpecificationStructure }
+import org.specs2.specification.Fragment
+import org.specs2.mutable.FragmentsBuilder
+import org.specs2.mutable.Around
+import org.scalamock.MockFactoryBase
 
 /**
- * A trait that can be mixed into a [[http://etorreborre.github.com/specs2/ Specs2]] specification to provide
- * mocking support.
+ * Base trait for MockContext and IsolatedMockFactory
+ *
+ * @define techniques
+ * To use ScalaMock in Specs2 tests you can either:
+ *  - mix `Specification` with [[org.scalamock.specs2.IsolatedMockFactory]] to
+ *    get '''isolated test cases''' or
+ *  - run each test case in separate '''fixture context''' - [[org.scalamock.specs2.MockContext]]
  */
-trait MockFactory extends MockFactoryBase with AroundExample { self: ArgumentsShortcuts =>
-  
-  type ExpectationException = FailureException
+trait MockContextBase extends MockFactoryBase {
 
-  protected override def around[T : AsResult](body: => T) = {
-    if (autoVerify)
-      AsResult(withExpectations { body })
-    else
-      AsResult(body)
-  }
+  type ExpectationException = FailureException
 
   protected override def newExpectationException(message: String, methodName: Option[Symbol]) =
     new ExpectationException(new Failure(message))
 
-  protected var autoVerify = true
+  protected def wrapAsResult[T: AsResult](body: => T) = {
+    AsResult(withExpectations { body })
+  }
 }
+
+/**
+ * Fixture context that should be created per test-case basis
+ *
+ * $techniques
+ *
+ * '''Fixture contexts''' are more flexible and are recommened for complex test suites where single
+ * set of fixtures does not fit all test cases.
+ *
+ * ==Basic usage==
+ *
+ * For simple test cases it's enough to run test case in new `MockContext` scope.
+ *
+ * {{{
+ * class BasicCoffeeMachineTest extends Specification {
+ *
+ *  	"CoffeeMachine" should {
+ *  	     "not turn on the heater when the water container is empty" in new MockContext {
+ *  	         val waterContainerMock = mock[WaterContainer]
+ *  	         (waterContainerMock.isOverfull _).expects().returning(true)
+ *  	         // ...
+ *  	     }
+ *
+ *  	     "not turn on the heater when the water container is overfull" in new MockContext {
+ *  	         val waterContainerMock = mock[WaterContainer]
+ *  	         // ...
+ *  	     }
+ *  	}
+ * }
+ * }}}
+ *
+ * ==Complex fixture contexts==
+ *
+ * When multiple test cases need to work with the same mocks (and more generally - the same
+ * fixtures: files, sockets, database connections, etc.) you can use fixture contexts.
+ *
+ * {{{
+ * class CoffeeMachineTest extends Specification {
+ *
+ * 	trait Test extends MockContext { // fixture context
+ * 	    // shared objects
+ * 	    val waterContainerMock = mock[WaterContainer]
+ * 	    val heaterMock = mock[Heater]
+ * 	    val coffeeMachine = new CoffeeMachine(waterContainerMock, heaterMock)
+ *
+ * 	    // test setup
+ * 	    coffeeMachine.powerOn()
+ * 	}
+ *
+ * 	// you can extend and combine fixture-contexts
+ * 	trait OverfullWaterContainerTest extends Test {
+ * 	    // you can set expectations and use mocks in fixture-context
+ * 	    (waterContainerMock.isEmpty _).expects().returning(true)
+ *
+ * 	    // and define helper functions
+ * 	    def complexLogic() {
+ * 	        coffeeMachine.powerOff()
+ * 	        // ...
+ * 	    }
+ * 	}
+ *
+ * 	"CoffeeMachine" should {
+ * 	     "not turn on the heater when the water container is empty" in new MockContext {
+ * 	         val heaterMock = mock[Heater]
+ * 	         val waterContainerMock = mock[WaterContainer]
+ * 	         val coffeeMachine = new CoffeeMachine(waterContainerMock, heaterMock)
+ * 	         (waterContainerMock.isOverfull _).expects().returning(true)
+ * 	         // ...
+ * 	     }
+ *
+ * 	     "not turn on the heater when the water container is overfull" in new OverfullWaterContainerTest {
+ * 	         // ...
+ * 	         complexLogic()
+ * 	     }
+ * 	}
+ * }
+ * }}}
+ */
+trait MockContext extends MockContextBase with Around {
+
+  override def around[T: AsResult](body: => T) = {
+    wrapAsResult[T] { body }
+  }
+}
+
+/**
+ * A trait that can be mixed into a [[http://etorreborre.github.com/specs2/ Specs2]] specification to provide
+ * mocking support.
+ *
+ * $techniques
+ *
+ * '''Isolated tests cases''' are clean and simple, recommended when all test cases have the same
+ *    or very similar fixtures
+ *
+ * {{{
+ * class IsolatedCoffeeMachineTest extends Specification with IsolatedMockFactory {
+ * 	
+ * 	// shared objects
+ * 	val waterContainerMock = mock[WaterContainer]
+ * 	val heaterMock = mock[Heater]
+ * 	val coffeeMachine = new CoffeeMachine(waterContainerMock, heaterMock)
+ *
+ * 	// you can set common expectations in suite scope
+ * 	(waterContainerMock.isOverfull _).expects().returning(true)
+ *
+ * 	// test setup
+ * 	coffeeMachine.powerOn()
+ *
+ * 	"CoffeeMachine" should {
+ * 	    "not turn on the heater when the water container is empty" in {
+ * 	        coffeeMachine.isOn must_== true
+ * 	        // ...
+ * 	        coffeeMachine.powerOff()
+ * 	        coffeeMachine.isOn must_== false
+ * 	    }
+ *
+ * 	    "not turn on the heater when the water container is overfull" in {
+ * 	        // each test case uses separate, fresh Suite so the coffee machine is turned on
+ * 	        coffeeMachine.isOn must_== true
+ * 	        // ...
+ * 	    }
+ * 	}
+ * }
+ * }}}
+ */
+trait IsolatedMockFactory extends AroundExample with MockContextBase { self: ArgumentsShortcuts =>
+  isolated
+
+  override def around[T: AsResult](body: => T) = {
+    wrapAsResult[T] { body }
+  }
+}
+
+/**
+ * A trait that can be mixed into a [[http://etorreborre.github.com/specs2/ Specs2]] specification to provide
+ * mocking support.
+ *
+ * MockFactory does not work well in with thread pools and futures. Fixture-contexts support is also broken.
+ *
+ * $techniques
+ */
+@deprecated("MockFactory is buggy. Please use IsolatedMockFactory or MockContext instead", "3.2")
+trait MockFactory extends AroundExample with MockContextBase { self: ArgumentsShortcuts =>
+
+  override def around[T: AsResult](body: => T) = {
+    wrapAsResult[T] { body }
+  }
+}
+

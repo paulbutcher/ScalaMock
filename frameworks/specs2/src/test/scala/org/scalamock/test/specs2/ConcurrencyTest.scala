@@ -18,38 +18,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.example.makro
+package org.scalamock.test.specs2
+
+import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.concurrent.duration.SECONDS
 
 import org.scalamock.specs2.MockContext
+import org.scalamock.test.mockable.TestTrait
 import org.specs2.mutable.Specification
 
-import com.example.Order
-import com.example.Warehouse
+class ConcurrencyTest extends Specification {
 
-/**
- * This is a demonstration and test of the Specs2 integration, using the example from
- * Martin Fowler's article Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
- */
-class OrderSpecification extends Specification {
+  "Futures should work" in new MockContext {
+    val s = stubFunction[Int]
+    s.when().returns(1)
+    Await.result(Future { s() }, Duration(10, SECONDS)) must be_==(1)
+    s.verify().once()
+  }
 
-  "An order" should {
-    "remove inventory when in stock" in new MockContext {
-      val mockWarehouse = mock[Warehouse]
-      inSequence {
-        (mockWarehouse.hasInventory _).expects("Talisker", 50).returning(true).once
-        (mockWarehouse.remove _).expects("Talisker", 50).once
-      }
-      val order = new Order("Talisker", 50)
-      order.fill(mockWarehouse)
-      order.isFilled must beTrue
+  "Concurrent mock access should work" in new MockContext {
+    val m = mock[TestTrait]
+    (m.oneParamMethod _).expects(42).repeated(500000).returning("a")
+
+    val futures = (1 to 500000).map { _ =>
+      Future { m.oneParamMethod(42) }
     }
 
-    "remove nothing when out of stock" in new MockContext {
-      val mockWarehouse = mock[Warehouse]
-      (mockWarehouse.hasInventory _).expects(*, *).returns(false).once
-      val order = new Order("Talisker", 50)
-      order.fill(mockWarehouse)
-      order.isFilled must beFalse
-    }
+    futures.foreach(future => Await.result(future, Duration(10, SECONDS)))
   }
 }

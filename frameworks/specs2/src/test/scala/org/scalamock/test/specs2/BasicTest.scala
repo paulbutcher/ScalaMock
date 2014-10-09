@@ -18,21 +18,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.paulbutcher.test
+package org.scalamock.test.specs2
 
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.{FreeSpec, WordSpec}
-import org.scalamock._
-import scala.concurrent._
-import scala.concurrent.duration._
-import ExecutionContext.Implicits.global
+import org.scalamock.test.mockable.TestTrait
+import org.specs2.mutable.Specification
+import org.scalamock.specs2.MockContext
 
-class ConcurrencyTest extends WordSpec with MockFactory {
-  
-  "Futures should work" in {
-    val s = stubFunction[Int]
-    s.when().returns(1)
-    assertResult(1){ Await.result(Future{ s() }, 10.seconds) }
-    s.verify().once()
+/**
+ *  Tests for mocks defined in test case scope
+ *
+ *  Tests for issue #25
+ */
+class BasicTest extends Specification {
+
+  "Specs2 suite" should {
+    "allow to use mock defined in test case scope" in new MockContext {
+      val mockedTrait = mock[TestTrait]
+      (mockedTrait.oneParamMethod _).expects(1).returning("one")
+      (mockedTrait.oneParamMethod _).expects(2).returning("two")
+
+      mockedTrait.oneParamMethod(1) must_== "one"
+      mockedTrait.oneParamMethod(2) must_== "two"
+    }
+
+    "use separate call logs for each test case" in new MockContext {
+      val mockedTrait = mock[TestTrait]
+      (mockedTrait.oneParamMethod _).expects(3).returning("three")
+
+      mockedTrait.oneParamMethod(3) must_== "three"
+    }
   }
 }

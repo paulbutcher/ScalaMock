@@ -18,38 +18,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.example.makro
+package org.scalamock.test.specs2
 
-import org.scalamock.specs2.MockContext
+import org.scalamock.test.mockable.TestTrait
 import org.specs2.mutable.Specification
-
-import com.example.Order
-import com.example.Warehouse
+import org.scalamock.specs2.MockFactory
 
 /**
- * This is a demonstration and test of the Specs2 integration, using the example from
- * Martin Fowler's article Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
- */
-class OrderSpecification extends Specification {
+ * Tests that old specs2 tests suites work with ScalaMock 3.2 using deprecated MockFactory
+ */ 
+class BackwardCompatibilityTest extends Specification with MockFactory {
 
-  "An order" should {
-    "remove inventory when in stock" in new MockContext {
-      val mockWarehouse = mock[Warehouse]
-      inSequence {
-        (mockWarehouse.hasInventory _).expects("Talisker", 50).returning(true).once
-        (mockWarehouse.remove _).expects("Talisker", 50).once
-      }
-      val order = new Order("Talisker", 50)
-      order.fill(mockWarehouse)
-      order.isFilled must beTrue
-    }
+  "Deprecated MockFactory" can {
+    "be used with old test suites" in {
+      val mockedTrait = mock[TestTrait]
+      (mockedTrait.oneParamMethod _).expects(1).returning("one")
+      (mockedTrait.oneParamMethod _).expects(2).returning("two")
 
-    "remove nothing when out of stock" in new MockContext {
-      val mockWarehouse = mock[Warehouse]
-      (mockWarehouse.hasInventory _).expects(*, *).returns(false).once
-      val order = new Order("Talisker", 50)
-      order.fill(mockWarehouse)
-      order.isFilled must beFalse
+      mockedTrait.oneParamMethod(1) must_== "one"
+      mockedTrait.oneParamMethod(2) must_== "two"
     }
   }
 }
