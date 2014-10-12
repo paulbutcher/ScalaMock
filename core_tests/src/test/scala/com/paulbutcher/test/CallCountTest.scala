@@ -20,55 +20,41 @@
 
 package com.paulbutcher.test
 
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.FreeSpec
+class CallCountTest extends IsolatedSpec {
 
-class CallCountTest extends FreeSpec with MockFactory {
-  
+  val noArgFunMock = mockFunction[String]
+  val intFunMock = mockFunction[Int, String]
+
   autoVerify = false
-  
-  def repeat(n: Int)(what: => Unit) {
-    for (i <- 0 until n)
-      what
-  }
-  
-  "Mock functions should" - {
 
-    "fail if a method isn't called often enough" in {
-      intercept[ExpectationException](withExpectations {
-        val m = mockFunction[String, Int, Int]
-        m.expects("foo", 42).twice
-        m("foo", 42)
-      })
-    }
-    
-    "fail if an unexpected call is made" in {
+  behavior of "Mock function"
+
+  it should "fail if a method isn't called often enough" in {
+    intercept[ExpectationException] {
       withExpectations {
-        val m = mockFunction[String, Int, Int]
-        intercept[ExpectationException] { m("foo", 42) }
+        intFunMock.expects(42).twice()
+        intFunMock(42)
       }
     }
-    
-    "fail if a method is called too often" in {
-      withExpectations {
-        val m = mockFunction[String, Int, Int]
-        m.expects("foo", 42).twice
-        m("foo", 42)
-        m("foo", 42)
-        intercept[ExpectationException] { m("foo", 42) }
-      }
-    }
-    
-    "treat stubs as syntactic sugar for anyNumberOfTimes" in {
-      withExpectations {
-        val m = mockFunction[Int, String]
-        
-        m.stubs(*).returning("a return value")
-        
-        assertResult("a return value") { m(1) }
-        assertResult("a return value") { m(2) }
-        assertResult("a return value") { m(3) }
-      }
-    }
+  }
+
+  it should "fail if an unexpected call is made" in withExpectations {
+    intercept[ExpectationException] { intFunMock(42) }
+  }
+
+  it should "fail if a method is called too often" in withExpectations {
+    intFunMock.expects(42).twice
+
+    intFunMock(42)
+    intFunMock(42)
+    intercept[ExpectationException] { intFunMock(42) }
+  }
+
+  it should "treat stubs as syntactic sugar for anyNumberOfTimes" in withExpectations {
+    intFunMock.stubs(*).returning("a return value")
+
+    assertResult("a return value") { intFunMock(1) }
+    assertResult("a return value") { intFunMock(2) }
+    assertResult("a return value") { intFunMock(3) }
   }
 }

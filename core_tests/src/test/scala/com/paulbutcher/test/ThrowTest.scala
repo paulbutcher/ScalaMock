@@ -20,18 +20,15 @@
 
 package com.paulbutcher.test
 
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.{ OneInstancePerTest, FlatSpec, ShouldMatchers }
-
-class ThrowTest extends FlatSpec with MockFactory with ShouldMatchers with OneInstancePerTest {
+class ThrowTest extends IsolatedSpec {
 
   case class TestException() extends RuntimeException
   case class AnotherTestException() extends RuntimeException
 
-  behavior of "Mock function"
-
   val noArgFunMock = mockFunction[String]
   val intFunMock = mockFunction[Int, String]
+
+  behavior of "Mock function"
 
   it should "throw what it is told to (throwing)" in {
     noArgFunMock.expects().throwing(new TestException)
