@@ -21,21 +21,37 @@
 package com.paulbutcher.test
 
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.FreeSpec
+import org.scalatest.{ OneInstancePerTest, FlatSpec, ShouldMatchers }
 
-class ThrowTest extends FreeSpec with MockFactory {
-  
-  autoVerify = false
-  
+class ThrowTest extends FlatSpec with MockFactory with ShouldMatchers with OneInstancePerTest {
+
   case class TestException() extends RuntimeException
+  case class AnotherTestException() extends RuntimeException
 
-  "Mock functions should" - {
-    "throw what they're told to" in {
-      withExpectations {
-        val m = mockFunction[String]
-        m.expects().throwing(new TestException)
-        intercept[TestException]{ m() }
-      }
-    }
+  behavior of "Mock function"
+
+  val noArgFunMock = mockFunction[String]
+  val intFunMock = mockFunction[Int, String]
+
+  it should "throw what it is told to (throwing)" in {
+    noArgFunMock.expects().throwing(new TestException)
+    intercept[TestException] { noArgFunMock() }
+  }
+
+  it should "throw what it is told to (throws)" in {
+    noArgFunMock.expects().throws(new TestException)
+    intercept[TestException] { noArgFunMock() }
+  }
+
+  it should "throw computed exception" in {
+    intFunMock.expects(*).repeat(3 to 3).onCall({ arg: Int =>
+      if (arg == 1) throw new TestException()
+      else if (arg == 2) throw new AnotherTestException()
+      else "Foo"
+    })
+
+    intercept[TestException] { intFunMock(1) }
+    intercept[AnotherTestException] { intFunMock(2) }
+    intFunMock(3) shouldBe "Foo"
   }
 }
