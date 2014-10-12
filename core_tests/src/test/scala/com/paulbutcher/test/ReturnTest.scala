@@ -42,11 +42,83 @@ class ReturnTest extends IsolatedSpec {
     assertResult("a return value") { intToStringMock(5) }
   }
 
+  it should "return a calculated return value" in {
+    intToIntMock.expects(*).onCall({ arg: Int => arg + 1 })
+    intToIntMock(42) shouldBe (43)
+  }
+
   it should "return a calculated return value (chaining mocks)" in {
     val m1 = mockFunction[Int, String]
     val m2 = mockFunction[Int, String]
     m1.expects(42).onCall(m2)
     m2.expects(42).returning("a return value")
     assertResult("a return value") { m1(42) }
+  }
+
+  it should "handle stacked expectations (returning)" in {
+    intToStringMock.expects(*).returning("1")
+    intToStringMock.expects(*).returning("2")
+
+    intToStringMock(1) shouldBe ("1")
+    intToStringMock(2) shouldBe ("2")
+  }
+
+  it should "handle stacked expectations (returning) and call count" in {
+    intToStringMock.expects(*).returning("1").twice()
+    intToStringMock.expects(*).returning("2")
+
+    intToStringMock(1) shouldBe ("1")
+    intToStringMock(1) shouldBe ("1")
+    intToStringMock(2) shouldBe ("2")
+  }
+
+  it should "handle stacked expectations (onCall)" in {
+    intToStringMock.expects(*).onCall({ _: Int => "1" })
+    intToStringMock.expects(*).onCall({ _: Int => "2" })
+
+    intToStringMock(1) shouldBe ("1")
+    intToStringMock(2) shouldBe ("2")
+  }
+
+  it should "handle stacked expectations (onCall) and call count" in {
+    intToStringMock.expects(*).onCall({ _: Int => "1" }).twice
+    intToStringMock.expects(*).onCall({ _: Int => "2" })
+
+    intToStringMock(1) shouldBe ("1")
+    intToStringMock(1) shouldBe ("1")
+    intToStringMock(2) shouldBe ("2")
+  }
+
+  it should "match return value to provided arguments (returning)" in {
+    intToStringMock.expects(1).onCall({ _: Int => "1" })
+    intToStringMock.expects(2).onCall({ _: Int => "2" })
+
+    intToStringMock(2) shouldBe ("2")
+    intToStringMock(1) shouldBe ("1")
+  }
+
+  it should "match return value to provided arguments (onCall)" in {
+    intToStringMock.expects(1).returning("1")
+    intToStringMock.expects(2).returning("2")
+
+    intToStringMock(2) shouldBe ("2")
+    intToStringMock(1) shouldBe ("1")
+  }
+
+  it should "match return value to provided arguments (different order)" in {
+    intToStringMock.expects(1).returning("1")
+    intToStringMock.expects(2).returning("2")
+
+    intToStringMock(1) shouldBe ("1")
+    intToStringMock(2) shouldBe ("2")
+  }
+
+  it should "match return value to provided arguments (call count)" in {
+    intToStringMock.expects(1).returning("1").twice()
+    intToStringMock.expects(2).returning("2")
+
+    intToStringMock(1) shouldBe ("1")
+    intToStringMock(2) shouldBe ("2")
+    intToStringMock(1) shouldBe ("1")
   }
 }
