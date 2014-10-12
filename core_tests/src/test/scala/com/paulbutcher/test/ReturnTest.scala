@@ -20,52 +20,33 @@
 
 package com.paulbutcher.test
 
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.FreeSpec
+class ReturnTest extends IsolatedSpec {
 
-class ReturnTest extends FreeSpec with MockFactory {
-  
-  autoVerify = false
-  
-  def repeat(n: Int)(what: => Unit) {
-    for (i <- 0 until n)
-      what
+  val intToStringMock = mockFunction[Int, String]
+  val intToIntMock = mockFunction[Int, Int]
+
+  behavior of "Mock function"
+
+  it should "return null by default" in {
+    intToStringMock.expects(*)
+    assertResult(null) { intToStringMock(5) }
   }
-  
-  "Mock functions should" - {
 
-    "return null by default" in {
-      withExpectations {
-        val m = mockFunction[String]
-        m.expects()
-        assertResult(null) { m() }
-      }
-    }
-    
-    "return a null-like default value for non reference types" in {
-      withExpectations {
-        val m = mockFunction[Int]
-        m.expects()
-        assertResult(0) { m() }
-      }
-    }
-    
-    "return what they're told to" in {
-      withExpectations {
-        val m = mockFunction[String]
-        m.expects().returning("a return value")
-        assertResult("a return value") { m() }
-      }
-    }
+  it should "return a null-like default value for non reference types" in {
+    intToIntMock.expects(*)
+    assertResult(0) { intToIntMock(5) }
+  }
 
-    "return a calculated return value" in {
-      withExpectations {
-        val m1 = mockFunction[Int, String]
-        val m2 = mockFunction[Int, String]
-        m1.expects(42).onCall(m2)
-        m2.expects(42).returning("a return value")
-        assertResult("a return value") { m1(42) }
-      }
-    }
+  it should "return what they're told to" in {
+    intToStringMock.expects(*).returning("a return value")
+    assertResult("a return value") { intToStringMock(5) }
+  }
+
+  it should "return a calculated return value (chaining mocks)" in {
+    val m1 = mockFunction[Int, String]
+    val m2 = mockFunction[Int, String]
+    m1.expects(42).onCall(m2)
+    m2.expects(42).returning("a return value")
+    assertResult("a return value") { m1(42) }
   }
 }
