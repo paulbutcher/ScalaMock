@@ -24,62 +24,184 @@ class OrderingTest extends IsolatedSpec {
 
   autoVerify = false
 
+  val intFunMock = mockFunction[Int, Int]
+  val stringFunMock = mockFunction[String, Int]
+
   behavior of "Mock function"
 
-  it should "handle a degenerate sequence" in withExpectations {
-    val m = mockFunction[Int, Int]
-    inSequence {
-      m.expects(42).returning(10)
+  it should "accept calls in any order by default" in withExpectations {
+    intFunMock.expects(1).returning(1)
+    intFunMock.expects(2).returning(2)
+
+    intFunMock(2) shouldBe 2
+    intFunMock(1) shouldBe 1
+  }
+
+  it should "accept calls in any order when inAnyOrder" in withExpectations {
+    inAnyOrder {
+      intFunMock.expects(1).returning(1)
+      intFunMock.expects(2).returning(2)
     }
-    assertResult(10) { m(42) }
+
+    intFunMock(2) shouldBe 2
+    intFunMock(1) shouldBe 1
   }
 
   it should "handle a sequence of calls" in withExpectations {
-    val m = mockFunction[Int, Int]
     inSequence {
-      m.expects(42).returning(10).repeated(3 to 7)
-      m.expects(43).returning(11).once
-      m.expects(44).returning(12).twice
+      intFunMock.expects(1).returning(1)
+      intFunMock.expects(2).returning(2)
+      intFunMock.expects(3).returning(3)
     }
-    repeat(5) { assertResult(10) { m(42) } }
-    repeat(1) { assertResult(11) { m(43) } }
-    repeat(2) { assertResult(12) { m(44) } }
+
+    intFunMock(1) shouldBe 1
+    intFunMock(2) shouldBe 2
+    intFunMock(3) shouldBe 3
   }
 
-  it should "fail if functions are called out of sequence" in {
-    intercept[ExpectationException](withExpectations {
-      val m = mockFunction[Int, Int]
-      inSequence {
-        m.expects(42).returning(10).repeated(3 to 7)
-        m.expects(43).returning(11).once
-        m.expects(44).returning(12).twice
-      }
-      repeat(5) { m(42) }
-    })
+  it should "handle a degenerate sequence" in withExpectations {
+    inSequence {
+      intFunMock.expects(42).returning(10)
+    }
+    intFunMock(42) shouldBe 10
   }
 
-  it should "fail if the entire sequence isn't called" in {
-    intercept[ExpectationException](withExpectations {
-      val m = mockFunction[Int, Int]
+  class InSequenceTest {
+    def setupExpectations(): Unit = {
       inSequence {
-        m.expects(42).returning(10).repeated(3 to 7)
-        m.expects(43).returning(11).once
-        m.expects(44).returning(12).twice
+        intFunMock.expects(1).returning(1).repeated(3 to 7)
+        intFunMock.expects(2).returning(2).once
+        intFunMock.expects(3).returning(3).twice
       }
-      repeat(5) { assertResult(10) { m(42) } }
-      repeat(1) { assertResult(11) { m(43) } }
-    })
+    }
+  }
+
+  it should "handle a sequence of calls (call count)" in new InSequenceTest {
+    withExpectations {
+      setupExpectations()
+
+      repeat(5) { intFunMock(1) shouldBe 1 }
+      repeat(1) { intFunMock(2) shouldBe 2 }
+      repeat(2) { intFunMock(3) shouldBe 3 }
+    }
+  }
+
+  it should "fail if the entire sequence isn't called (none)" in new InSequenceTest {
+    demandExpectationException {
+      setupExpectations()
+    }
+  }
+
+  it should "fail if the entire sequence isn't called (1)" in new InSequenceTest {
+    demandExpectationException {
+      setupExpectations()
+
+      repeat(5) { intFunMock(1) shouldBe 1 }
+    }
+  }
+
+  it should "fail if the entire sequence isn't called (1,2)" in new InSequenceTest {
+    demandExpectationException {
+      setupExpectations()
+
+      repeat(5) { assertResult(10) { intFunMock(1) } }
+      repeat(1) { assertResult(11) { intFunMock(2) } }
+    }
+  }
+
+  it should "fail if the entire sequence isn't called (2,3)" in new InSequenceTest {
+    demandExpectationException {
+      setupExpectations()
+
+      repeat(1) { intFunMock(2) shouldBe 2 }
+      repeat(2) { intFunMock(3) shouldBe 3 }
+    }
+  }
+
+  it should "fail if the entire sequence isn't called (1,3)" in new InSequenceTest {
+    demandExpectationException {
+      setupExpectations()
+
+      repeat(5) { intFunMock(1) shouldBe 1 }
+      repeat(2) { intFunMock(3) shouldBe 3 }
+    }
+  }
+
+  it should "fail if the sequence is called out of order (1,3,2)" in new InSequenceTest {
+    demandExpectationException {
+      setupExpectations()
+
+      repeat(5) { intFunMock(1) shouldBe 1 }
+      repeat(2) { intFunMock(3) shouldBe 3 }
+      repeat(1) { intFunMock(2) shouldBe 2 }
+    }
   }
 
   it should "not match a previous item in the sequence" in withExpectations {
-    val m = mockFunction[Int, Int]
     inSequence {
-      m.expects(42).returning(10).anyNumberOfTimes
-      m.expects(43).returning(11).once
+      intFunMock.expects(1).returning(1).anyNumberOfTimes
+      intFunMock.expects(2).returning(2).once
     }
-    assertResult(10) { m(42) }
-    assertResult(11) { m(43) }
-    intercept[ExpectationException] { m(42) }
+
+    intFunMock(1) shouldBe 1
+    intFunMock(2) shouldBe 2
+    intercept[ExpectationException] { intFunMock(1) }
+  }
+
+  it should "fail if unexpected call is made" in {
+    demandExpectationException {
+      inSequence {
+        intFunMock.expects(1).returning(1).anyNumberOfTimes
+        intFunMock.expects(2).returning(2).once
+      }
+
+      intFunMock(1) shouldBe 1
+      intFunMock(3) // TODO exception should be thrown here
+    }
+  }
+
+  class InSequenceMultipleMocksTest {
+    val m1 = mockFunction[Int, Int]
+    val m2 = mockFunction[Int, Int]
+    val m3 = mockFunction[Int, Int]
+
+    def setupExpectations(): Unit = {
+      inSequence {
+        m1.expects(1).returning(1)
+        m2.expects(2).returning(2)
+        m3.expects(3).returning(3)
+      }
+    }
+
+  }
+
+  it should "handle a sequence of calls (multiple mocks)" in new InSequenceMultipleMocksTest {
+    withExpectations {
+      setupExpectations()
+
+      m1(1) shouldBe 1
+      m2(2) shouldBe 2
+      m3(3) shouldBe 3
+    }
+  }
+
+  it should "fail if the sequence is called out of order (1,3,2) - multiple mocks" in new InSequenceMultipleMocksTest {
+    demandExpectationException {
+      setupExpectations()
+
+      m1(1) shouldBe 1
+      m3(3) shouldBe 3
+      m2(2) shouldBe 2
+    }
+  }
+
+  it should "fail if the entire sequence isn't called (1,2) - multiple mocks" in new InSequenceMultipleMocksTest {
+    demandExpectationException {
+      setupExpectations()
+
+      m1(1) shouldBe 1
+      m2(2) shouldBe 2
+    }
   }
 
   it should "handle a combination of ordered and unordered expectations" in withExpectations {
@@ -120,37 +242,73 @@ class OrderingTest extends IsolatedSpec {
     m(4)
   }
 
-  it should "handle valid deeply nested expectation contexts" in withExpectations {
+  class NestedExpectationsTest {
     val m = mockFunction[String, Unit]
 
-    m.expects("1")
-    inSequence {
-      m.expects("2.1")
-      inAnyOrder {
-        m.expects("2.2.1")
-        inSequence {
-          m.expects("2.2.2.1")
-          m.expects("2.2.2.2")
+    def setupExpectations(): Unit = {
+      m.expects("1")
+      inSequence {
+        m.expects("2.1")
+        inAnyOrder {
+          m.expects("2.2.1")
+          inSequence {
+            m.expects("2.2.2.1")
+            m.expects("2.2.2.2")
+          }
+          m.expects("2.2.3").anyNumberOfTimes
         }
-        m.expects("2.2.3").anyNumberOfTimes
+        m.expects("2.3")
       }
-      m.expects("2.3")
+      m.expects("3")
     }
-    m.expects("3")
+  }
 
-    m("2.1")
-    m("1")
-    m("2.2.3")
-    m("2.2.2.1")
-    m("2.2.2.2")
-    m("2.2.1")
-    m("3")
-    m("2.2.3")
-    m("2.3")
+  it should "handle valid deeply nested expectation contexts (1)" in new NestedExpectationsTest {
+    withExpectations {
+      setupExpectations()
+      m("2.1")
+      m("1")
+      m("2.2.3")
+      m("2.2.2.1")
+      m("2.2.2.2")
+      m("2.2.1")
+      m("3")
+      m("2.2.3")
+      m("2.3")
+    }
+  }
+
+  it should "handle valid deeply nested expectation contexts (2)" in new NestedExpectationsTest {
+    withExpectations {
+      setupExpectations()
+      m("2.1")
+      m("1")
+      m("2.2.3")
+      m("2.2.2.1")
+      m("2.2.1")
+      m("2.2.2.2")
+      m("3")
+      m("2.2.3")
+      m("2.3")
+    }
+  }
+
+  it should "handle valid deeply nested expectation contexts (3)" in new NestedExpectationsTest {
+    withExpectations {
+      setupExpectations()
+      m("2.1")
+      m("1")
+      m("2.2.3")
+      m("2.2.2.1")
+      m("2.2.2.2")
+      m("2.2.1")
+      m("3")
+      m("2.3")
+    }
   }
 
   it should "handle invalid deeply nested expectation contexts" in {
-    intercept[ExpectationException](withExpectations {
+    demandExpectationException {
       val m = mockFunction[String, Unit]
 
       m.expects("1")
@@ -170,7 +328,28 @@ class OrderingTest extends IsolatedSpec {
 
       m("2.1")
       m("1")
+      m("2.2.1")
+      m("2.2.2.1")
+      m("2.2.2.2")
+      m("2.3") // 2.3 before 2.2.3
       m("2.2.3")
-    })
+      m("3")
+    }
+  }
+
+  it should "handle invalid deeply nested expectation contexts (2)" in {
+    demandExpectationException {
+      inSequence {
+        inAnyOrder {
+          stringFunMock.expects("1.1")
+          stringFunMock.expects("1.2")
+        }
+        stringFunMock.expects("2")
+      }
+
+      stringFunMock("1.1")
+      stringFunMock("2")
+      stringFunMock("1.2")
+    }
   }
 }

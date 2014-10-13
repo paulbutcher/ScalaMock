@@ -10,4 +10,10 @@ class IsolatedSpec extends FlatSpec with MockFactory with ShouldMatchers with On
       what
   }
 
+  def demandExpectationException(block: => Unit): Unit = {
+    intercept[ExpectationException](withExpectations {
+      block
+    })
+  }
+
 }
