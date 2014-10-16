@@ -18,7 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.paulbutcher.test
+package com.paulbutcher.test.feature
+
+import com.paulbutcher.test.IsolatedSpec
 
 class ReturnTest extends IsolatedSpec {
 

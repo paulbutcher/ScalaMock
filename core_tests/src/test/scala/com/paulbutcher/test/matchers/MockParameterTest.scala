@@ -18,37 +18,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.paulbutcher.test
+package com.paulbutcher.test.matchers
 
-class ThrowTest extends IsolatedSpec {
+import org.scalamock._
+import org.scalatest.FreeSpec
 
-  case class TestException() extends RuntimeException
-  case class AnotherTestException() extends RuntimeException
-
-  val noArgFunMock = mockFunction[String]
-  val intFunMock = mockFunction[Int, String]
-
-  behavior of "Mock function"
-
-  it should "throw what it is told to (throwing)" in {
-    noArgFunMock.expects().throwing(new TestException)
-    intercept[TestException] { noArgFunMock() }
+class MockParameterTest extends FreeSpec {
+  
+  "A mock parameter should" - {
+    "be equal" - {
+      "if its value is equal" in {
+        assert(new MockParameter(42) == 42)
+      }
+    
+      "with a wildcard" in {
+        assert(new MockParameter[Int](new MatchAny) == 123)
+      }
+    
+      "with an epsilon" in {
+        assert(new MockParameter(new MatchEpsilon(1.0)) == 1.0001)
+      }
+    }
+    
+    "not be equal" - {
+      "with different values" in {
+        assert(!(new MockParameter(42) == 43))
+      }
+      
+      "with different types" in {
+        assert(!(new MockParameter(42) == "forty two"))
+      }
+    }
   }
-
-  it should "throw what it is told to (throws)" in {
-    noArgFunMock.expects().throws(new TestException)
-    intercept[TestException] { noArgFunMock() }
-  }
-
-  it should "throw computed exception" in {
-    intFunMock.expects(*).repeat(3 to 3).onCall({ arg: Int =>
-      if (arg == 1) throw new TestException()
-      else if (arg == 2) throw new AnotherTestException()
-      else "Foo"
-    })
-
-    intercept[TestException] { intFunMock(1) }
-    intercept[AnotherTestException] { intFunMock(2) }
-    intFunMock(3) shouldBe "Foo"
+  
+  "A product of mock parameters should" - {
+    "compare correctly to a product of non mock parameters" in {
+      val p1 = (new MockParameter(42), new MockParameter[String](new MatchAny), new MockParameter(new MatchEpsilon(1.0)))
+      val p2 = (42, "foo", 1.0001)
+      assert(p1 == p2)
+    }
   }
 }
