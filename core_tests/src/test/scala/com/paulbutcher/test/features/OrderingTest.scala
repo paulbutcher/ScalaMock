@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.paulbutcher.test.feature
+package com.paulbutcher.test.features
 
 import com.paulbutcher.test.IsolatedSpec
 
