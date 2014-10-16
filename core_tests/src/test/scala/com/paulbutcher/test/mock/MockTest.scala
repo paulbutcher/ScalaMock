@@ -458,38 +458,4 @@ class MockTest extends FreeSpec with MockFactory {
     }
 
   }
-  
-  "Stubs should" - {
-    "return null unless told otherwise" in {
-      withExpectations {
-        val m = stub[TestTrait]
-        assertResult(null) { m.oneParam(42) }
-      }
-    }
-    
-    "return what they're told to" in {
-      withExpectations {
-        val m = stub[TestTrait]
-        (m.twoParams _).when(42, 1.23).returns("a return value")
-        assertResult("a return value") { m.twoParams(42, 1.23) }
-      }
-    }
-    
-    "verify calls" in {
-      withExpectations {
-        val m = stub[TestTrait]
-        m.twoParams(42, 1.23)
-        m.twoParams(42, 1.23)
-        (m.twoParams _).verify(42, 1.23).twice
-      }
-    }
-    
-    "fail when verification fails" in {
-      intercept[ExpectationException](withExpectations {
-        val m = stub[TestTrait]
-        m.twoParams(42, 1.00)
-        (m.twoParams _).verify(42, 1.23).once
-      })
-    }
-  }
 }
