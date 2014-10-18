@@ -26,7 +26,13 @@ class StubTest extends IsolatedSpec {
   autoVerify = false
   val m = stub[TestTrait]
 
-  behavior of "Stubs"
+  behavior of "Stub"
+
+  it can "have its methods called any number of times" in withExpectations {
+    m.oneParam(42)
+    m.oneParam(42)
+    m.twoParams(1, 1.23)
+  }
 
   it should "return null unless told otherwise" in withExpectations {
     m.oneParam(42) shouldBe null
@@ -37,15 +43,33 @@ class StubTest extends IsolatedSpec {
     m.twoParams(42, 1.23) shouldBe "a return value"
   }
 
+  it should "handle chained expectations" in {
+    (m.oneParam _).when(*).returns("1").twice()
+    (m.oneParam _).when(*).returns("2").once()
+
+    m.oneParam(1) shouldBe "1"
+    m.oneParam(2) shouldBe "1"
+    m.oneParam(2) shouldBe "2"
+    m.oneParam(2) shouldBe null
+  }
+
   it should "verify calls" in withExpectations {
     m.twoParams(42, 1.23)
     m.twoParams(42, 1.23)
     (m.twoParams _).verify(42, 1.23).twice
   }
 
-  it should "fail when verification fails" in {
+  it should "fail when verification fails because of parameter mismatch" in {
     demandExpectationException {
       m.twoParams(42, 1.00)
+      (m.twoParams _).verify(42, 1.23).once
+    }
+  }
+
+  it should "fail when verification fails because of unexpected call count" in {
+    demandExpectationException {
+      m.twoParams(42, 1.23)
+      m.twoParams(42, 1.23)
       (m.twoParams _).verify(42, 1.23).once
     }
   }
