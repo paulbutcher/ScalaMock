@@ -35,34 +35,6 @@ class StubFunctionTest extends FreeSpec with MockFactory {
   case class TestException() extends RuntimeException
 
   "Stub functions should" - {
-    "have a sensible default name" in {
-      val m = stubFunction[String]
-      assertResult("unnamed StubFunction0"){ m.toString }
-    }
-    
-    "have the name we gave them" - {
-      "where we use a symbol" in {
-        val m1 = stubFunction[String](Symbol("a stub function"))
-        assertResult("a stub function"){ m1.toString }
-      }
-
-      "where we use a string" in {
-        val m2 = stubFunction[String]("another stub function")
-        assertResult("another stub function"){ m2.toString }
-      }
-    }
-    
-    "resolve ambiguity when taking a symbol argument" - {
-      "with no name specified" in {
-        val m1 = stubFunction[Symbol, String]
-        assertResult("unnamed StubFunction1"){ m1.toString }
-      }
-
-      "with a name specified" in {
-        val m2 = stubFunction[Symbol, String](functionName("a named stub"))
-        assertResult("a named stub"){ m2.toString }
-      }
-    }
 
     "return null by default" in {
       withExpectations {

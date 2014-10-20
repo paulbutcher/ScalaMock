@@ -33,34 +33,6 @@ class MockFunctionTest extends FreeSpec with MockFactory {
   }
   
   "Mock functions should" - {
-    "have a sensible default name" in {
-      val m = mockFunction[String]
-      assertResult("unnamed MockFunction0"){ m.toString }
-    }
-    
-    "have the name we gave them" - {
-      "where we use a symbol" in {
-        val m1 = mockFunction[String](Symbol("a mock function"))
-        assertResult("a mock function"){ m1.toString }
-      }
-
-      "where we use a string" in {
-        val m2 = mockFunction[String]("another mock function")
-        assertResult("another mock function"){ m2.toString }
-      }
-    }
-    
-    "resolve ambiguity when taking a symbol argument" - {
-      "with no name specified" in {
-        val m1 = mockFunction[Symbol, String]
-        assertResult("unnamed MockFunction1"){ m1.toString }
-      }
-
-      "with a name specified" in {
-        val m2 = mockFunction[Symbol, String](functionName("a named mock"))
-        assertResult("a named mock"){ m2.toString }
-      }
-    }
 
     "match literal arguments" in {
       withExpectations {
