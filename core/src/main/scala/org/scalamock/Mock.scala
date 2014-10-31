@@ -52,7 +52,7 @@ trait Mock {
 }
 
 object MockImpl {
-  import reflect.macros.Context
+  import reflect.macros.blackbox.Context
   
   def mock[T: c.WeakTypeTag](c: Context)(factory: c.Expr[MockFactoryBase]): c.Expr[T] = {
     val maker = MockMaker[T](c)(factory, stub = false)
@@ -158,9 +158,9 @@ object MockImpl {
        */
       def forwarderParamType(t: Type) : Tree = t match {
         case TypeRef(pre, sym, args) if sym == JavaRepeatedParamClass =>
-          TypeTree(TypeRef(pre, RepeatedParamClass, args))
+          TypeTree(internal.typeRef(pre, RepeatedParamClass, args))
         case TypeRef(pre, sym, args) if isPathDependentThis(t) =>
-          AppliedTypeTree(Ident(newTypeName(sym.name.toString)), args map TypeTree _)
+          AppliedTypeTree(Ident(TypeName(sym.name.toString)), args map TypeTree _)
         case _ =>
           TypeTree(t)
       }
@@ -176,7 +176,7 @@ object MockImpl {
         case TypeRef(pre, sym, args) if sym == JavaRepeatedParamClass || sym == RepeatedParamClass =>
           AppliedTypeTree(Ident(typeOf[Seq[_]].typeSymbol), args map TypeTree _)
         case TypeRef(pre, sym, args) if isPathDependentThis(t) =>
-          AppliedTypeTree(Ident(newTypeName(sym.name.toString)), args map TypeTree _)
+          AppliedTypeTree(Ident(TypeName(sym.name.toString)), args map TypeTree _)
         case _ =>
           TypeTree(t)
       }
@@ -187,14 +187,14 @@ object MockImpl {
       //! TODO - This is a hack, but it's unclear what it should be instead. See
       //! https://groups.google.com/d/topic/scala-user/n11V6_zI5go/discussion
       def resolvedType(m: Symbol) : Type =
-        m.typeSignatureIn(SuperType(ThisType(typeToMock.typeSymbol), typeToMock))
+        m.typeSignatureIn(internal.superType(internal.thisType(typeToMock.typeSymbol), typeToMock))
         
       def buildForwarderParams(methodType: Type) =
         paramss(methodType) map { params =>
           params map { p =>
             ValDef(
               Modifiers(PARAM | (if (p.isImplicit) IMPLICIT else NoFlags)),
-              newTermName(p.name.toString),
+              TermName(p.name.toString),
               forwarderParamType(p.typeSignature),
               EmptyTree)
           }
@@ -206,7 +206,7 @@ object MockImpl {
         DefDef(
           Modifiers(OVERRIDE),
           m.name, 
-          m.typeParams map { p => TypeDef(p) }, 
+          m.typeParams map { p => internal.typeDef(p) },
           params,
           forwarderParamType(finalResultType(methodType)),
           body)
@@ -227,17 +227,17 @@ object MockImpl {
         if (m.isStable) {
           ValDef(
             Modifiers(), 
-            newTermName(m.name.toString), 
+            TermName(m.name.toString),
             TypeTree(mt), 
             TypeApply(
               Select(
                 Literal(Constant(null)), 
-                newTermName("asInstanceOf")),
+                TermName("asInstanceOf")),
               List(TypeTree(mt))))
         } else {
           val body = Apply(
-                       Select(Select(This(anon), mockFunctionName(m)), newTermName("apply")),
-                       paramss(mt).flatten map { p => Ident(newTermName(p.name.toString)) })
+                       Select(Select(This(anon), mockFunctionName(m)), TermName("apply")),
+                       paramss(mt).flatten map { p => Ident(TermName(p.name.toString)) })
           methodImpl(m, mt, body)
         }
       }
@@ -246,7 +246,7 @@ object MockImpl {
         val method = typeToMock.member(m.name).asTerm
         val index = method.alternatives.indexOf(m)
         assert(index >= 0)
-        newTermName("mock$"+ m.name +"$"+ index)
+        TermName("mock$"+ m.name +"$"+ index)
       }
       
       // val <|mockname|> = new MockFunctionN[T1, T2, ..., R](factory, '<|name|>)
@@ -263,11 +263,11 @@ object MockImpl {
                 AppliedTypeTree(
                   Ident(clazz.typeSymbol),
                   types)),
-              newTermName("<init>")),
+              TermName("<init>")),
             List(
               factory.tree, 
               Apply(
-                Select(Select(Ident(newTermName("scala")), newTermName("Symbol")), newTermName("apply")),
+                Select(Select(Ident(TermName("scala")), TermName("Symbol")), TermName("apply")),
                 List(Literal(Constant(m.name.toString)))))))
       }
       
@@ -275,16 +275,16 @@ object MockImpl {
       def initDef = 
         DefDef(
           Modifiers(), 
-          newTermName("<init>"), 
+          TermName("<init>"),
           List(), 
           List(List()), 
           TypeTree(),
           Block(
             List(
               Apply(
-                Select(Super(This(newTypeName("")), newTypeName("")), newTermName("<init>")),
+                Select(Super(This(TypeName("")), TypeName("")), TermName("<init>")),
                 List())),
-            Literal(Constant())))
+            Literal(Constant(()))))
         
       def isMemberOfObject(m: Symbol) = TypeTag.Object.tpe.member(m.name) != NoSymbol
   
@@ -298,22 +298,22 @@ object MockImpl {
               List(),
               Template(
                 List(TypeTree(typeToMock)), 
-                emptyValDef,
+                noSelfType,
                 initDef +: members))),
           Apply(
             Select(
               New(Ident(anon)), 
-              newTermName("<init>")), 
+              TermName("<init>")),
             List()))
       
       // <|expr|>.asInstanceOf[<|t|>]
       def castTo(expr: Tree, t: Type) =
         TypeApply(
-          Select(expr, newTermName("asInstanceOf")),
+          Select(expr, TermName("asInstanceOf")),
           List(TypeTree(t)))
   
       val typeToMock = weakTypeOf[T]
-      val anon = newTypeName("$anon") 
+      val anon = TypeName("$anon")
       val methodsToMock = methodsNotInObject.filter { m =>
           !m.isConstructor && !m.isPrivate && m.privateWithin == NoSymbol &&
           !m.asInstanceOf[reflect.internal.HasFlags].hasFlag(reflect.internal.Flags.BRIDGE) &&
@@ -384,12 +384,12 @@ object MockImpl {
               Select(
                 Apply(
                   Select(
-                    Apply(Select(obj, newTermName("getClass")), List()),
-                    newTermName("getMethod")),
+                    Apply(Select(obj, TermName("getClass")), List()),
+                    TermName("getMethod")),
                   List(Literal(Constant(mockFunctionName(name, obj.tpe, targs))))),
-                newTermName("invoke")),
+                TermName("invoke")),
               List(obj)),
-            newTermName("asInstanceOf")),
+            TermName("asInstanceOf")),
           List(TypeTree(weakTypeOf[M]))))
     }
 
