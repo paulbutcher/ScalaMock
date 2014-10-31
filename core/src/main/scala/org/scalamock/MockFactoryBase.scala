@@ -38,7 +38,7 @@ trait MockFactoryBase extends Mock {
     }
 
     try {
-      val result = inAnyOrder(what) 
+      val result = what
       verifyExpectations()
       result
     } catch {

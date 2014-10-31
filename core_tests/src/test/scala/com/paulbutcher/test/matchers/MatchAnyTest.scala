@@ -1,15 +1,15 @@
 // Copyright (c) 2011-2012 Paul Butcher
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,29 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.paulbutcher.test
+package com.paulbutcher.test.matchers
 
-import org.scalatest.FreeSpec
 import org.scalamock._
+import org.scalatest.FreeSpec
 
-class MatchEpsilonTest extends FreeSpec {
+class MatchAnyTest extends FreeSpec {
 
-  "MatchEpsilon should" - {
-    "match anything that's close to the given value" in {
-      assert(new MatchEpsilon(1.0) == 1.0)
-      assert(new MatchEpsilon(1.0) == 1.0f)
-      assert(new MatchEpsilon(1.0) == 1.0001)
-      assert(new MatchEpsilon(1.0) == 1.0001f)
-      assert(new MatchEpsilon(1.0) == 1)
-    }
-    
-    "not match anything that's not close enough" in {
-      assert(!(new MatchEpsilon(1.0) == 1.1))
-      assert(!(new MatchEpsilon(1.0) == 0.9))
-    }
-    
-    "only match numbers" in {
-      assert(!(new MatchEpsilon(1.0) == "foo"))
-    }
+  "MatchAny should match anything" in {
+    assert(new MatchAny == 1.0)
+    assert(new MatchAny == "")
+    assert(new MatchAny == (0, 42))
+    assert(new MatchAny == List(1, 2, 3))
   }
 }

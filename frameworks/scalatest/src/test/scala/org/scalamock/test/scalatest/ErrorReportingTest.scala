@@ -22,15 +22,10 @@ package org.scalamock.test.scalatest
 
 import org.scalamock.scalatest.MockFactory
 import org.scalamock.test.mockable.TestTrait
-import org.scalatest.Args
-import org.scalatest.FlatSpec
-import org.scalatest.FunSuite
-import org.scalatest.Reporter
-import org.scalatest.ShouldMatchers
-import org.scalatest.Suite
-import org.scalatest.events.Event
-import org.scalatest.events.TestFailed
+import org.scalatest.{Args, FlatSpec, FunSuite, Reporter, ShouldMatchers, Suite}
+import org.scalatest.events.{Event, TestFailed}
 import org.scalatest.exceptions.TestFailedException
+import scala.language.postfixOps
 
 /**
  *  Tests that errors are reported correctly in ScalaTest suites
@@ -74,7 +69,6 @@ class ErrorReporting extends FlatSpec with ShouldMatchers {
     errorMessage should startWith("Unexpected call")
   }
 
-  // TODO it was broken before issue #25 was fixed. I will fix it later
   it should "report unexpected call correctly when expectations are set" in {
     class TestedSuite extends FunSuite with MockFactory {
       test("execute block of code") {
@@ -102,5 +96,34 @@ class ErrorReporting extends FlatSpec with ShouldMatchers {
     val outcome = runTestCase[TestedSuite](new TestedSuite)
     // NullPointerException should be reported by ScalaTest
     getThrowable[NullPointerException](outcome) shouldBe a[NullPointerException]
+  }
+
+  it should "report unexpected calls in readable manner" in {
+    class TestedSuite extends FunSuite with MockFactory {
+      val suiteScopeMock = mock[TestTrait]
+      (suiteScopeMock.noParamMethod _) expects() returning("two") twice
+
+      test("execute block of code") {
+        val mockedTrait = mock[TestTrait]
+        (mockedTrait.oneParamMethod _).expects(1).returning("one")
+        mockedTrait.oneParamMethod(3)
+      }
+    }
+
+    // Unexpected call should be reported by ScalaTest
+    val outcome = runTestCase[TestedSuite](new TestedSuite)
+    val errorMessage = getErrorMessage[TestFailedException](outcome)
+    errorMessage shouldBe
+      """|Unexpected call: oneParamMethod(3)
+         |
+         |Expected:
+         |inAnyOrder {
+         |  noParamMethod() twice (never called - UNSATISFIED)
+         |  oneParamMethod(1) once (never called - UNSATISFIED)
+         |}
+         |
+         |Actual:
+         |  oneParamMethod(3)
+      """.stripMargin.trim
   }
 }

@@ -1,15 +1,15 @@
 // Copyright (c) 2011-2012 Paul Butcher
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,11 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.paulbutcher.test
+package com.paulbutcher.test.stub
 
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.FreeSpec
-import org.scalamock._
 
 class StubFunctionTest extends FreeSpec with MockFactory {
   
@@ -36,34 +35,6 @@ class StubFunctionTest extends FreeSpec with MockFactory {
   case class TestException() extends RuntimeException
 
   "Stub functions should" - {
-    "have a sensible default name" in {
-      val m = stubFunction[String]
-      assertResult("unnamed StubFunction0"){ m.toString }
-    }
-    
-    "have the name we gave them" - {
-      "where we use a symbol" in {
-        val m1 = stubFunction[String](Symbol("a stub function"))
-        assertResult("a stub function"){ m1.toString }
-      }
-
-      "where we use a string" in {
-        val m2 = stubFunction[String]("another stub function")
-        assertResult("another stub function"){ m2.toString }
-      }
-    }
-    
-    "resolve ambiguity when taking a symbol argument" - {
-      "with no name specified" in {
-        val m1 = stubFunction[Symbol, String]
-        assertResult("unnamed StubFunction1"){ m1.toString }
-      }
-
-      "with a name specified" in {
-        val m2 = stubFunction[Symbol, String](functionName("a named stub"))
-        assertResult("a named stub"){ m2.toString }
-      }
-    }
 
     "return null by default" in {
       withExpectations {

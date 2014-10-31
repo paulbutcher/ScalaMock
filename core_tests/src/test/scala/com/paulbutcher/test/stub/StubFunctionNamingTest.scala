@@ -1,15 +1,15 @@
 // Copyright (c) 2011-2012 Paul Butcher
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,44 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.paulbutcher.test
+package com.paulbutcher.test.stub
 
-import org.scalatest.FreeSpec
-import org.scalamock._
+import com.paulbutcher.test.IsolatedSpec
 
-class MockParameterTest extends FreeSpec {
-  
-  "A mock parameter should" - {
-    "be equal" - {
-      "if its value is equal" in {
-        assert(new MockParameter(42) == 42)
-      }
-    
-      "with a wildcard" in {
-        assert(new MockParameter[Int](new MatchAny) == 123)
-      }
-    
-      "with an epsilon" in {
-        assert(new MockParameter(new MatchEpsilon(1.0)) == 1.0001)
-      }
-    }
-    
-    "not be equal" - {
-      "with different values" in {
-        assert(!(new MockParameter(42) == 43))
-      }
-      
-      "with different types" in {
-        assert(!(new MockParameter(42) == "forty two"))
-      }
-    }
+class StubFunctionNamingTest extends IsolatedSpec {
+
+  behavior of "Stub function"
+
+  it should "have a sensible default name" in {
+    val m = stubFunction[String]
+    m.toString shouldBe "unnamed StubFunction0"
   }
-  
-  "A product of mock parameters should" - {
-    "compare correctly to a product of non mock parameters" in {
-      val p1 = (new MockParameter(42), new MockParameter[String](new MatchAny), new MockParameter(new MatchEpsilon(1.0)))
-      val p2 = (42, "foo", 1.0001)
-      assert(p1 == p2)
-    }
+
+  it should "have the name we gave them when we use a symbol" in {
+    val m = stubFunction[String](Symbol("a stub function"))
+    m.toString shouldBe "a stub function"
+  }
+
+  it should "have the name we gave them when we use a string" in {
+    val m = stubFunction[String]("another stub function")
+    m.toString shouldBe "another stub function"
+  }
+
+  it should "resolve ambiguity when taking a symbol argument with no name specified" in {
+    val m = stubFunction[Symbol, String]
+    m.toString shouldBe "unnamed StubFunction1"
+  }
+
+  it should "resolve ambiguity when taking a symbol argument with a name specified" in {
+    val m = stubFunction[Symbol, String](functionName("a named stub"))
+    m.toString shouldBe "a named stub"
   }
 }
