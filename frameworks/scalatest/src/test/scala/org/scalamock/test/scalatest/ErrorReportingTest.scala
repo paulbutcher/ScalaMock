@@ -25,6 +25,7 @@ import org.scalamock.test.mockable.TestTrait
 import org.scalatest.{Args, FlatSpec, FunSuite, Reporter, ShouldMatchers, Suite}
 import org.scalatest.events.{Event, TestFailed}
 import org.scalatest.exceptions.TestFailedException
+import scala.language.postfixOps
 
 /**
  *  Tests that errors are reported correctly in ScalaTest suites
