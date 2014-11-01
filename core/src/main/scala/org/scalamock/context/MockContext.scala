@@ -1,7 +1,6 @@
-package org.scalamock
+package org.scalamock.context
 
-import org.scalamock.context.{ Call, CallLog }
-import org.scalamock.handlers.{ CallHandler, Handlers }
+import org.scalamock.handlers.{CallHandler, Handlers}
 
 private[scalamock] trait MockContext {
   type ExpectationException <: Throwable

@@ -20,8 +20,7 @@
 
 package org.scalamock.proxy
 
-import org.scalamock.MockContext
-import org.scalamock.context.Call
+import org.scalamock.context.{MockContext, Call}
 
 class MockFunction(mockContext: MockContext, name: Symbol) extends FakeFunction(mockContext, name) {
 

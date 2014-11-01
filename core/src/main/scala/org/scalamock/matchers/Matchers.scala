@@ -1,6 +1,6 @@
 package org.scalamock.matchers
 
-import org.scalamock.MockContext
+import org.scalamock.context.MockContext
 import org.scalamock.function._
 
 trait Matchers { this: MockContext =>

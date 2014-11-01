@@ -20,10 +20,11 @@
 
 package org.scalamock.proxy
 
+import org.scalamock.context.MockContext
 import org.scalamock.function.NiceToString
 import org.scalamock.handlers.CallHandler
 import org.scalamock.matchers.{ArgumentMatcher, MockParameter}
-import org.scalamock.{function, MockContext}
+import org.scalamock.function
 
 abstract class FakeFunction(mockContext: MockContext, name: Symbol)
     extends function.FakeFunction(mockContext, name) with NiceToString {

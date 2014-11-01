@@ -21,7 +21,8 @@
 package org.scalamock.proxy
 
 import java.lang.reflect.{InvocationHandler, Proxy => JavaProxy}
-import org.scalamock.MockContext
+import org.scalamock.context.MockContext
+
 import scala.reflect.{ClassTag, classTag}
 
 trait ProxyMockFactory {

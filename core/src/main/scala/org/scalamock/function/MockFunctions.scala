@@ -1,6 +1,6 @@
 package org.scalamock.function
 
-import org.scalamock.MockContext
+import org.scalamock.context.MockContext
 import org.scalamock.util.Defaultable
 
 trait MockFunctions { this: MockContext =>

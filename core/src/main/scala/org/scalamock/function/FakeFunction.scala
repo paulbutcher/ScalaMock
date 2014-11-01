@@ -20,8 +20,7 @@
 
 package org.scalamock.function
 
-import org.scalamock.MockContext
-import org.scalamock.context.Call
+import org.scalamock.context.{MockContext, Call}
 
 // This has to be a separate trait, not a method in MockFunction, because
 // otherwise linearization will choose the MockFunctionN toString

@@ -1,7 +1,7 @@
 package org.scalamock.clazz
 
-import org.scalamock.MockContext
 import org.scalamock.clazz.MockFunctionFinder.findMockFunction
+import org.scalamock.context.MockContext
 import org.scalamock.function._
 import org.scalamock.util.Defaultable
 

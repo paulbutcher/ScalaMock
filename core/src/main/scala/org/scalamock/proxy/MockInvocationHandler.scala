@@ -20,7 +20,7 @@
 
 package org.scalamock.proxy
 
-import org.scalamock.MockContext
+import org.scalamock.context.MockContext
 
 class MockInvocationHandler(mockContext: MockContext) extends InvocationHandlerBase[MockFunction] {
 

@@ -20,8 +20,7 @@
 
 package org.scalamock.function
 
-import org.scalamock.MockContext
-import org.scalamock.context.Call
+import org.scalamock.context.{MockContext, Call}
 import org.scalamock.handlers._
 import org.scalamock.matchers.MockParameter
 import org.scalamock.util.Defaultable

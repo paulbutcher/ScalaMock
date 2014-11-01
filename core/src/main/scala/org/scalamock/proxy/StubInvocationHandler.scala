@@ -20,7 +20,7 @@
 
 package org.scalamock.proxy
 
-import org.scalamock.MockContext
+import org.scalamock.context.MockContext
 
 class StubInvocationHandler(mockContext: MockContext) extends InvocationHandlerBase[StubFunction] {
 

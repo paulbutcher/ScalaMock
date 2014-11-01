@@ -20,11 +20,10 @@
 
 package org.scalamock.function
 
-import org.scalamock.context.Call
+import org.scalamock.context.{MockContext, Call}
 import org.scalamock.handlers._
 import org.scalamock.matchers.MockParameter
 import org.scalamock.util.Defaultable
-import org.scalamock.MockContext
 
 class StubFunction0[R: Defaultable](mockContext: MockContext, name: Symbol)
   extends FakeFunction0[R](mockContext, name) {

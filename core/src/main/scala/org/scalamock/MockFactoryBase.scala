@@ -20,7 +20,7 @@
 package org.scalamock
 
 import org.scalamock.clazz.Mock
-import org.scalamock.context.CallLog
+import org.scalamock.context.{MockContext, CallLog}
 import org.scalamock.function._
 import org.scalamock.handlers.{ Handlers, OrderedHandlers, UnorderedHandlers }
 import org.scalamock.matchers._
