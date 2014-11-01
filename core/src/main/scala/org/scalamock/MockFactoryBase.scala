@@ -19,6 +19,7 @@
 
 package org.scalamock
 
+import org.scalamock.clazz.Mock
 import org.scalamock.context.{Call, CallLog}
 import org.scalamock.function._
 import org.scalamock.handlers.{CallHandler, UnorderedHandlers, OrderedHandlers, Handlers}
