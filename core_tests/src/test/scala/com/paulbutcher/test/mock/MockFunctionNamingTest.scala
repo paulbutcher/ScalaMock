@@ -28,7 +28,7 @@ class MockFunctionNamingTest extends IsolatedSpec {
 
   it should "have a sensible default name" in {
     val m = mockFunction[String]
-    m.toString shouldBe "unnamed MockFunction0"
+    m.toString shouldBe "MockFunction0-1"
   }
 
   it should "have the name we gave them when we use a symbol" in {
@@ -43,11 +43,21 @@ class MockFunctionNamingTest extends IsolatedSpec {
 
   it should "resolve ambiguity when taking a symbol argument with no name specified" in {
     val m = mockFunction[Symbol, String]
-    m.toString shouldBe "unnamed MockFunction1"
+    m.toString shouldBe "MockFunction1-1"
   }
 
   it should "resolve ambiguity when taking a symbol argument with a name specified" in {
     val m = mockFunction[Symbol, String](functionName("a named mock"))
     m.toString shouldBe "a named mock"
+  }
+
+  it should "have differentiating default name" in {
+    val m1 = mockFunction[String]
+    val m2 = mockFunction[String]
+    val m3 = mockFunction[Int, String]
+
+    m1.toString shouldBe "MockFunction0-1"
+    m2.toString shouldBe "MockFunction0-2"
+    m3.toString shouldBe "MockFunction1-3"
   }
 }

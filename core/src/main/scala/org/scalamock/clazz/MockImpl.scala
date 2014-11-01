@@ -9,18 +9,28 @@ object MockImpl {
   import scala.reflect.macros.blackbox.Context
 
   def mock[T: c.WeakTypeTag](c: Context)(mockContext: c.Expr[MockContext]): c.Expr[T] = {
-    val maker = MockMaker[T](c)(mockContext, stub = false)
+    val maker = MockMaker[T](c)(mockContext, stub = false, mockName = None)
     maker.make
   }
 
   def stub[T: c.WeakTypeTag](c: Context)(mockContext: c.Expr[MockContext]): c.Expr[T] = {
-    val maker = MockMaker[T](c)(mockContext, stub = true)
+    val maker = MockMaker[T](c)(mockContext, stub = true, mockName = None)
     maker.make
   }
 
-  def MockMaker[T: c.WeakTypeTag](c: Context)(mockContext: c.Expr[MockContext], stub: Boolean) = {
+  def mockWithName[T: c.WeakTypeTag](c: Context)(mockName: c.Expr[String])(mockContext: c.Expr[MockContext]): c.Expr[T] = {
+    val maker = MockMaker[T](c)(mockContext, stub = false, mockName = Some(mockName))
+    maker.make
+  }
+
+  def stubWithName[T: c.WeakTypeTag](c: Context)(mockName: c.Expr[String])(mockContext: c.Expr[MockContext]): c.Expr[T] = {
+    val maker = MockMaker[T](c)(mockContext, stub = true, mockName = Some(mockName))
+    maker.make
+  }
+
+  def MockMaker[T: c.WeakTypeTag](c: Context)(mockContext: c.Expr[MockContext], stub: Boolean, mockName: Option[c.Expr[String]]) = {
     val m = new MockMaker[c.type](c)
-    new m.MockMakerInner[T](mockContext, stub)
+    new m.MockMakerInner[T](mockContext, stub, mockName)
   }
 
   def toMockFunction0[R: c.WeakTypeTag](c: Context)(f: c.Expr[() => R])(evidence$1: c.Expr[Defaultable[R]]) =

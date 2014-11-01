@@ -31,6 +31,9 @@ trait Mock {
   def mock[T](implicit mockContext: MockContext) : T = macro MockImpl.mock[T]
   def stub[T](implicit mockContext: MockContext): T = macro MockImpl.stub[T]
 
+  def mock[T](mockName: String)(implicit mockContext: MockContext) : T = macro MockImpl.mockWithName[T]
+  def stub[T](mockName: String)(implicit mockContext: MockContext): T = macro MockImpl.stubWithName[T]
+
   implicit def toMockFunction0[R: Defaultable](f: () => R): MockFunction0[R] = macro MockImpl.toMockFunction0[R]
   implicit def toMockFunction1[T1, R: Defaultable](f: T1 => R): MockFunction1[T1, R] = macro MockImpl.toMockFunction1[T1, R]
   implicit def toMockFunction2[T1, T2, R: Defaultable](f: (T1, T2) => R): MockFunction2[T1, T2, R] = macro MockImpl.toMockFunction2[T1, T2, R]

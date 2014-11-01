@@ -1,6 +1,6 @@
 package org.scalamock.context
 
-import org.scalamock.handlers.{CallHandler, Handlers}
+import org.scalamock.handlers.{ CallHandler, Handlers }
 
 private[scalamock] trait MockContext {
   type ExpectationException <: Throwable
@@ -8,6 +8,7 @@ private[scalamock] trait MockContext {
   private[scalamock] var callLog: CallLog = _
   private[scalamock] var currentExpectationContext: Handlers = _
   private[scalamock] var expectationContext: Handlers = _
+  private[scalamock] val mockNameGenerator: MockNameGenerator = new MockNameGenerator()
 
   protected def newExpectationException(message: String, methodName: Option[Symbol] = None): ExpectationException
 
@@ -23,6 +24,9 @@ private[scalamock] trait MockContext {
   private[scalamock] def reportUnsatisfiedExpectation(callLog: CallLog, expectationContext: Handlers) =
     throw newExpectationException(s"Unsatisfied expectation:\n\n%s".format(errorContext(callLog, expectationContext)))
 
-  private def errorContext(callLog: CallLog, expectationContext: Handlers) =
+  private[scalamock] def errorContext(callLog: CallLog, expectationContext: Handlers) =
     s"Expected:\n${expectationContext}\n\nActual:\n${callLog}"
+
+  /** Generates unique names for mocks, stubs, and mock functions */
+  def generateMockDefaultName(prefix: String): Symbol = mockNameGenerator.generateMockName(prefix)
 }

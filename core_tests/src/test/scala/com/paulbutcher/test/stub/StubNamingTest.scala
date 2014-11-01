@@ -20,34 +20,24 @@
 
 package com.paulbutcher.test.stub
 
-import com.paulbutcher.test.IsolatedSpec
+import com.paulbutcher.test._
+import org.scalamock.function.StubFunction0
 
-class StubFunctionNamingTest extends IsolatedSpec {
+class StubNamingTest extends IsolatedSpec {
 
-  behavior of "Stub function"
+  def getStubMethodName(method: StubFunction0[String]) = method.toString
 
-  it should "have a sensible default name" in {
-    val m = stubFunction[String]
-    m.toString shouldBe "StubFunction0-1"
+  behavior of "Stub"
+
+  it should "have a sensible method name when mocking a method without parameters" in {
+    val myStub = stub[TestTrait]
+    getStubMethodName(myStub.noParams _) shouldBe "<stub-1> TestTrait.noParams"
   }
 
-  it should "have the name we gave them when we use a symbol" in {
-    val m = stubFunction[String](Symbol("a stub function"))
-    m.toString shouldBe "a stub function"
+  it can "be named using string literal" in {
+    val myStub = stub[TestTrait]("stub name")
+    getStubMethodName(myStub.noParams _) shouldBe "<stub name> TestTrait.noParams"
   }
 
-  it should "have the name we gave them when we use a string" in {
-    val m = stubFunction[String]("another stub function")
-    m.toString shouldBe "another stub function"
-  }
-
-  it should "resolve ambiguity when taking a symbol argument with no name specified" in {
-    val m = stubFunction[Symbol, String]
-    m.toString shouldBe "StubFunction1-1"
-  }
-
-  it should "resolve ambiguity when taking a symbol argument with a name specified" in {
-    val m = stubFunction[Symbol, String](functionName("a named stub"))
-    m.toString shouldBe "a named stub"
-  }
+  // NOTE: MockNamingTest contains more test cases related to mock naming
 }

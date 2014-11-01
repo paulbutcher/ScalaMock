@@ -8,7 +8,7 @@ import scala.reflect.macros.blackbox.Context
 
 //! TODO - get rid of this nasty two-stage construction when https://issues.scala-lang.org/browse/SI-5521 is fixed
 class MockMaker[C <: Context](val ctx: C) {
-  class MockMakerInner[T: ctx.WeakTypeTag](mockContext: ctx.Expr[MockContext], stub: Boolean) {
+  class MockMakerInner[T: ctx.WeakTypeTag](mockContext: ctx.Expr[MockContext], stub: Boolean, mockName: Option[ctx.Expr[String]]) {
     import ctx.universe._
     import Flag._
     import definitions._
@@ -151,7 +151,7 @@ class MockMaker[C <: Context](val ctx: C) {
       val mt = resolvedType(m)
       val clazz = classType(paramCount(mt))
       val types = (paramTypes(mt) map mockParamType _) :+ mockParamType(finalResultType(mt))
-      val name = applyOn(scalaSymbol, "apply", literal(m.name.toString))
+      val name = applyOn(scalaSymbol, "apply", mockNameGenerator.generateMockMethodName(m, mt))
 
       ValDef(Modifiers(),
         mockFunctionName(m),
@@ -187,6 +187,52 @@ class MockMaker[C <: Context](val ctx: C) {
               initDef +: members))),
         callConstructor(New(Ident(anon))))
 
+    /**
+     * Class that is responsible for creating mock (and its methods) names so they can be reported on expectations error.
+     * It either uses mock name specified by user or asks mockContext to generate new one.
+     */
+    class MockNameGenerator() {
+      private val mockNameValName = TermName("mock$special$mockName")
+
+      /** Member of mock that holds mock name */
+      val mockNameVal = {
+        val mockNameValRhs = {
+          if (mockName.nonEmpty) {
+            // new String(mockNameExpr)
+            callConstructor(New(scalaString), mockName.get.tree)
+          } else {
+            // mockContext.generateMockDefaultName(prefix).name
+            val namePrefix = Literal(Constant(if (stub) "stub" else "mock"))
+            selectTerm(applyOn(mockContext.tree, "generateMockDefaultName", namePrefix), "name")
+          }
+        }
+        // val mock$special$mockName = ...
+        ValDef(Modifiers(), mockNameValName, TypeTree(), mockNameValRhs)
+      }
+
+      def generateMockMethodName(method: MethodSymbol, methodType: Type): Tree = {
+        val mockType: Type = typeToMock.resultType
+        val mockTypeNamePart: String = mockType.typeSymbol.name.toString
+        val mockTypeArgsPart: String = generateTypeArgsString(mockType.typeArgs)
+        val objectNamePart: Tree = Select(This(anon), mockNameValName)
+
+        val methodTypeParamsPart: String = generateTypeArgsString(methodType.typeParams map (_.name))
+        val methodNamePart: String = method.name.toString
+
+        // "<%s> %s%s.%s".format(objectNamePart, mockTypeNamePart, mockTypeArgsPart, methodNamePart, methodTypeParamsPart)
+        val formatStr = applyOn(scalaPredef, "augmentString", literal("<%s> %s%s.%s%s"))
+        applyOn(formatStr, "format",
+          objectNamePart, literal(mockTypeNamePart), literal(mockTypeArgsPart), literal(methodNamePart), literal(methodTypeParamsPart))
+      }
+
+      private def generateTypeArgsString(typeArgs: List[Any]): String = {
+        if (typeArgs.nonEmpty)
+          "[%s]".format(typeArgs.mkString(","))
+        else ""
+      }
+    }
+
+    val mockNameGenerator = new MockNameGenerator()
     val typeToMock = weakTypeOf[T]
     val anon = TypeName("$anon")
     val methodsToMock = methodsNotInObject.filter { m =>
@@ -197,7 +243,7 @@ class MockMaker[C <: Context](val ctx: C) {
     }.toList
     val forwarders = methodsToMock map forwarderImpl _
     val mocks = methodsToMock map mockMethod _
-    val members = forwarders ++ mocks
+    val members = mockNameGenerator.mockNameVal :: forwarders ++ mocks
 
     def make() = {
       val result = castTo(anonClass(members), typeToMock)

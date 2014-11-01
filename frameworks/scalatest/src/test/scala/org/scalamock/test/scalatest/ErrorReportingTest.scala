@@ -100,12 +100,14 @@ class ErrorReporting extends FlatSpec with ShouldMatchers {
 
   it should "report unexpected calls in readable manner" in {
     class TestedSuite extends FunSuite with MockFactory {
-      val suiteScopeMock = mock[TestTrait]
+      val suiteScopeMock = mock[TestTrait]("suite mock")
       (suiteScopeMock.noParamMethod _) expects() returning("two") twice
 
       test("execute block of code") {
         val mockedTrait = mock[TestTrait]
-        (mockedTrait.oneParamMethod _).expects(1).returning("one")
+        (mockedTrait.polymorphicMethod _).expects(List(1)).returning("one")
+
+        suiteScopeMock.noParamMethod()
         mockedTrait.oneParamMethod(3)
       }
     }
@@ -114,16 +116,17 @@ class ErrorReporting extends FlatSpec with ShouldMatchers {
     val outcome = runTestCase[TestedSuite](new TestedSuite)
     val errorMessage = getErrorMessage[TestFailedException](outcome)
     errorMessage shouldBe
-      """|Unexpected call: oneParamMethod(3)
+      """|Unexpected call: <mock-1> TestTrait.oneParamMethod(3)
          |
          |Expected:
          |inAnyOrder {
-         |  noParamMethod() twice (never called - UNSATISFIED)
-         |  oneParamMethod(1) once (never called - UNSATISFIED)
+         |  <suite mock> TestTrait.noParamMethod() twice (called once - UNSATISFIED)
+         |  <mock-1> TestTrait.polymorphicMethod[T](List(1)) once (never called - UNSATISFIED)
          |}
          |
          |Actual:
-         |  oneParamMethod(3)
+         |  <suite mock> TestTrait.noParamMethod()
+         |  <mock-1> TestTrait.oneParamMethod(3)
       """.stripMargin.trim
   }
 }
