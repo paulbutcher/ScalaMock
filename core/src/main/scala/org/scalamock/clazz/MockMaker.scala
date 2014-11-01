@@ -1,6 +1,9 @@
-package org.scalamock
+package org.scalamock.clazz
 
+import org.scalamock.MockFactoryBase
+import org.scalamock.function._
 import org.scalamock.util.MacroUtils
+
 import scala.reflect.macros.blackbox.Context
 
 //! TODO - get rid of this nasty two-stage construction when https://issues.scala-lang.org/browse/SI-5521 is fixed

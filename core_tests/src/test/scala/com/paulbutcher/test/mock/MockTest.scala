@@ -22,6 +22,7 @@ package com.paulbutcher.test.mock
 
 import com.paulbutcher.test._
 import org.scalamock._
+import org.scalamock.function.FunctionAdapter1
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.FreeSpec
 import some.other.pkg._

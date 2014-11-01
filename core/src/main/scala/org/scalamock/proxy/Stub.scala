@@ -20,7 +20,7 @@
 
 package org.scalamock.proxy
 
-import org.scalamock.{CallHandler, MockParameter}
+import org.scalamock.matchers.MockParameter
 
 trait Stub {
   def when(name: Symbol): FakeFunction#ExpectationHandler

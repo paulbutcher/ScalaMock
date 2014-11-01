@@ -20,7 +20,8 @@
 
 package org.scalamock.proxy
 
-import org.scalamock.{ArgumentMatcher, Call, CallHandler, MockFactoryBase}
+import org.scalamock.MockFactoryBase
+import org.scalamock.context.Call
 
 class MockFunction(factory: MockFactoryBase, name: Symbol) extends FakeFunction(factory, name) {
 

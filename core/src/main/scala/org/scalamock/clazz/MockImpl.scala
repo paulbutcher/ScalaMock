@@ -1,6 +1,8 @@
-package org.scalamock
+package org.scalamock.clazz
 
-import org.scalamock.util.MacroUtils
+import org.scalamock.MockFactoryBase
+import org.scalamock.function._
+import org.scalamock.util.{Defaultable, MacroUtils}
 
 object MockImpl {
   import scala.reflect.macros.blackbox.Context
@@ -52,9 +54,9 @@ object MockImpl {
     def mockFunctionName(name: Name, t: Type, targs: List[Type]) = {
       val method = t.member(name).asTerm
       if (method.isOverloaded)
-        "mock$"+ name +"$"+ method.alternatives.indexOf(resolveOverloaded(method, targs))
+        "mock$" + name + "$" + method.alternatives.indexOf(resolveOverloaded(method, targs))
       else
-        "mock$"+ name +"$0"
+        "mock$" + name + "$0"
     }
 
     // mock.getClass().getMethod(name).invoke(obj).asInstanceOf[MockFunctionX[...]]
@@ -73,7 +75,7 @@ object MockImpl {
         case TypeApply(fun, args) => transcribeTree(fun, args.map(_.tpe));
         case _ => reportError(
           s"ScalaMock: Unrecognised structure: ${showRaw(tree)}." +
-          "Please open a ticket at https://github.com/paulbutcher/ScalaMock/issues")
+            "Please open a ticket at https://github.com/paulbutcher/ScalaMock/issues")
       }
     }
 

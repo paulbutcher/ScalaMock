@@ -20,7 +20,10 @@
 
 package org.scalamock.proxy
 
-import org.scalamock.{ArgumentMatcher, Call, CallHandler, MockFactoryBase, MockParameter, Verify}
+import org.scalamock.context.Call
+import org.scalamock.handlers.{Verify, CallHandler}
+import org.scalamock.matchers.MockParameter
+import org.scalamock.MockFactoryBase
 
 class StubFunction(factory: MockFactoryBase, name: Symbol) extends FakeFunction(factory, name) {
 

@@ -20,6 +20,8 @@
 
 package org
 
+import org.scalamock.handlers.CallHandler
+
 /**
  * ==ScalaMock: Native Scala Mocking==
  * 
@@ -227,7 +229,7 @@ package org
  * m3.expects(42).repeated(3).times
  * }}}
  *
- * For a full list, see [[org.scalamock.CallHandler]].
+ * For a full list, see [[CallHandler]].
  *
  * ==Ordering==
  *

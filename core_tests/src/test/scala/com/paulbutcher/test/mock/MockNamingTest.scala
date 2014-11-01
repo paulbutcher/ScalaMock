@@ -21,7 +21,7 @@
 package com.paulbutcher.test.mock
 
 import com.paulbutcher.test.{ IsolatedSpec, TestTrait }
-import org.scalamock.MockFunction
+import org.scalamock.function.MockFunction
 
 class MockNamingTest extends IsolatedSpec {
 

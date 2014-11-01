@@ -19,6 +19,12 @@
 
 package org.scalamock
 
+import org.scalamock.context.{Call, CallLog}
+import org.scalamock.function._
+import org.scalamock.handlers.{CallHandler, UnorderedHandlers, OrderedHandlers, Handlers}
+import org.scalamock.matchers.{EpsilonMockParameter, MockParameter, MatchEpsilon, MatchAny}
+import org.scalamock.util.Defaultable
+
 trait MockFactoryBase extends Mock {
   import language.implicitConversions
   

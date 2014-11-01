@@ -20,6 +20,10 @@
 
 package org.scalamock
 
+import org.scalamock.clazz.MockImpl
+import org.scalamock.function._
+import org.scalamock.util.Defaultable
+
 trait Mock {
   import scala.language.experimental.macros
   import scala.language.implicitConversions

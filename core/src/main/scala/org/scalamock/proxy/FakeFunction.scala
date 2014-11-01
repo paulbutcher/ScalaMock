@@ -20,10 +20,13 @@
 
 package org.scalamock.proxy
 
-import org.scalamock.{ArgumentMatcher, CallHandler, MockFactoryBase, MockParameter, NiceToString}
+import org.scalamock.function.NiceToString
+import org.scalamock.handlers.CallHandler
+import org.scalamock.matchers.{ArgumentMatcher, MockParameter}
+import org.scalamock.{function, MockFactoryBase}
 
 abstract class FakeFunction(factory: MockFactoryBase, name: Symbol) 
-    extends org.scalamock.FakeFunction(factory, name) with NiceToString {
+    extends function.FakeFunction(factory, name) with NiceToString {
 
   def handle(args: Array[AnyRef]): Any = handle(seq2Product(args))
 

@@ -1,15 +1,15 @@
 // Copyright (c) 2011-2012 Paul Butcher
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,24 +18,50 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock
+package org.scalamock.handlers
 
-import collection.mutable.ListBuffer
+import org.scalamock.context.Call
 
-private[scalamock] abstract class Handlers extends Handler {
+private[scalamock] class OrderedHandlers extends Handlers {
   
-  def add(handler: Handler) {
-    handlers += handler
+  val handleFn = new Function1[Call, Option[Any]] {
+    
+    def apply(call: Call): Option[Any] = {
+      for (i <- currentIndex until handlers.length) {
+        val handler = handlers(i)
+        val r = handler.handle(call)
+        if (r.isDefined) {
+          currentIndex = i
+          return r
+        }
+        if (!handler.isSatisfied)
+          return None
+      }
+      None
+    }
+
+    var currentIndex = 0
   }
   
-  def isSatisfied = handlers forall (_.isSatisfied)
+  def handle(call: Call) = this.synchronized { handleFn(call) }
   
-  override def toString = 
-    handlers.map { h => 
-      h.toString.lines map { l => "  "+ l }
-    }.flatten.mkString(s"$prefix {\n", "\n", "\n}")
-  
-  protected val handlers = new ListBuffer[Handler]
-  
-  protected val prefix: String
+  val verifyFn = new Function1[Call, Boolean] {
+    
+    def apply(call: Call): Boolean = {
+      for (i <- currentIndex until handlers.length) {
+        val handler = handlers(i)
+        if (handler.verify(call)) {
+          currentIndex = i
+          return true
+        }
+      }
+      false
+    }
+
+    var currentIndex = 0
+  }
+ 
+  def verify(call: Call) = this.synchronized { verifyFn(call) }
+
+  protected val prefix = "inSequence"
 }

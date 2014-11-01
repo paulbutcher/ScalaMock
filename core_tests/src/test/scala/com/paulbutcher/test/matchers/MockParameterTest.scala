@@ -21,6 +21,7 @@
 package com.paulbutcher.test.matchers
 
 import org.scalamock._
+import org.scalamock.matchers.{MockParameter, MatchEpsilon, MatchAny}
 import org.scalatest.FreeSpec
 
 class MockParameterTest extends FreeSpec {
