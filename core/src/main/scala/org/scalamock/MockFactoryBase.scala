@@ -20,15 +20,14 @@
 package org.scalamock
 
 import org.scalamock.clazz.Mock
-import org.scalamock.context.{Call, CallLog}
+import org.scalamock.context.{ Call, CallLog }
 import org.scalamock.function._
-import org.scalamock.handlers.{CallHandler, Handlers, OrderedHandlers, UnorderedHandlers}
-import org.scalamock.matchers.{EpsilonMockParameter, MatchAny, MatchEpsilon, MockParameter}
+import org.scalamock.handlers.{ CallHandler, Handlers, OrderedHandlers, UnorderedHandlers }
+import org.scalamock.matchers._
 
-
-trait MockFactoryBase extends Mock with MockFunctions {
+trait MockFactoryBase extends Mock with MockFunctions with Matchers {
   import scala.language.implicitConversions
-  
+
   type ExpectationException <: Throwable
 
   private[scalamock] var callLog: CallLog = _
@@ -36,7 +35,7 @@ trait MockFactoryBase extends Mock with MockFunctions {
   private[scalamock] var expectationContext: Handlers = _
 
   initializeExpectations
-  
+
   def withExpectations[T](what: => T): T = {
     if (expectationContext == null) {
       // we don't reset expectations for the first test case to allow
@@ -49,10 +48,10 @@ trait MockFactoryBase extends Mock with MockFunctions {
       verifyExpectations()
       result
     } catch {
-      case ex : Throwable => 
+      case ex: Throwable =>
         // do not verify expectations - just clear them. Throw original exception
         // see issue #72
-        clearExpectations() 
+        clearExpectations()
         throw ex
     }
   }
@@ -64,33 +63,9 @@ trait MockFactoryBase extends Mock with MockFunctions {
   protected def inSequence[T](what: => T): T = {
     inContext(new OrderedHandlers)(what)
   }
-  
+
   //! TODO - https://issues.scala-lang.org/browse/SI-5831
   implicit val _factory = this
-  
-
-  protected def where[T1](matcher: T1 => Boolean) = new FunctionAdapter1(matcher)
-  protected def where[T1, T2](matcher: (T1, T2) => Boolean) = new FunctionAdapter2(matcher)
-  protected def where[T1, T2, T3](matcher: (T1, T2, T3) => Boolean) = new FunctionAdapter3(matcher)
-  protected def where[T1, T2, T3, T4](matcher: (T1, T2, T3, T4) => Boolean) = new FunctionAdapter4(matcher)
-  protected def where[T1, T2, T3, T4, T5](matcher: (T1, T2, T3, T4, T5) => Boolean) = new FunctionAdapter5(matcher)
-  protected def where[T1, T2, T3, T4, T5, T6](matcher: (T1, T2, T3, T4, T5, T6) => Boolean) = new FunctionAdapter6(matcher)
-  protected def where[T1, T2, T3, T4, T5, T6, T7](matcher: (T1, T2, T3, T4, T5, T6, T7) => Boolean) = new FunctionAdapter7(matcher)
-  protected def where[T1, T2, T3, T4, T5, T6, T7, T8](matcher: (T1, T2, T3, T4, T5, T6, T7, T8) => Boolean) = new FunctionAdapter8(matcher)
-  protected def where[T1, T2, T3, T4, T5, T6, T7, T8, T9](matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9) => Boolean) = new FunctionAdapter9(matcher)
-
-  protected def * = new MatchAny
-
-  protected class EpsilonMatcher(d: Double) {
-    def unary_~() = new MatchEpsilon(d)
-  }
-  protected implicit def doubleToEpsilon(d: Double) = new EpsilonMatcher(d)
-
-  protected implicit def toMockParameter[T](v: T) = new MockParameter(v)
-
-  protected implicit def MatchAnyToMockParameter[T](m: MatchAny) = new MockParameter[T](m)
-
-  protected implicit def MatchEpsilonToMockParameter[T](m: MatchEpsilon) = new EpsilonMockParameter(m)
 
   private[scalamock] def add[E <: CallHandler[_]](e: E) = {
     assert(currentExpectationContext != null, "Null expectation context - missing withExpectations?")
@@ -101,7 +76,7 @@ trait MockFactoryBase extends Mock with MockFunctions {
   private[scalamock] def reportUnexpectedCall(call: Call) =
     throw newExpectationException(s"Unexpected call: $call\n\n%s".format(errorContext(callLog, expectationContext)), Some(call.target.name))
 
-  private def reportUnsatisfiedExpectation(callLog : CallLog, expectationContext : Handlers) =
+  private def reportUnsatisfiedExpectation(callLog: CallLog, expectationContext: Handlers) =
     throw newExpectationException(s"Unsatisfied expectation:\n\n%s".format(errorContext(callLog, expectationContext)))
 
   protected def newExpectationException(message: String, methodName: Option[Symbol] = None): ExpectationException
@@ -114,7 +89,7 @@ trait MockFactoryBase extends Mock with MockFunctions {
     currentExpectationContext = initialHandlers
   }
 
-  private def clearExpectations() : Unit = {
+  private def clearExpectations(): Unit = {
     // to forbid setting expectations after verification is done 
     callLog = null
     expectationContext = null
@@ -123,7 +98,7 @@ trait MockFactoryBase extends Mock with MockFunctions {
 
   private def verifyExpectations() {
     callLog foreach expectationContext.verify _
-    
+
     val oldCallLog = callLog
     val oldExpectationContext = expectationContext
 
@@ -133,7 +108,7 @@ trait MockFactoryBase extends Mock with MockFunctions {
       reportUnsatisfiedExpectation(oldCallLog, oldExpectationContext)
   }
 
-  private def errorContext(callLog : CallLog, expectationContext : Handlers) =
+  private def errorContext(callLog: CallLog, expectationContext: Handlers) =
     s"Expected:\n${expectationContext}\n\nActual:\n${callLog}"
 
   private def inContext[T](context: Handlers)(what: => T): T = {

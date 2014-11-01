@@ -53,5 +53,4 @@ trait MockFunctions { this: MockFactoryBase => // TODO MockFactoryBase => MockCo
   protected def stubFunction[T1, T2, T3, T4, T5, T6, T7, R: Defaultable] = new StubFunction7[T1, T2, T3, T4, T5, T6, T7, R](this, Symbol("unnamed StubFunction7"))
   protected def stubFunction[T1, T2, T3, T4, T5, T6, T7, T8, R: Defaultable] = new StubFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R](this, Symbol("unnamed StubFunction8"))
   protected def stubFunction[T1, T2, T3, T4, T5, T6, T7, T8, T9, R: Defaultable] = new StubFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](this, Symbol("unnamed StubFunction9"))
-
 }
