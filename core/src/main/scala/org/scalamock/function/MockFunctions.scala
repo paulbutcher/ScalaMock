@@ -1,9 +1,9 @@
 package org.scalamock.function
 
-import org.scalamock.MockFactoryBase
+import org.scalamock.MockContext
 import org.scalamock.util.Defaultable
 
-trait MockFunctions { this: MockFactoryBase => // TODO MockFactoryBase => MockContext
+trait MockFunctions { this: MockContext =>
   import scala.language.implicitConversions
 
   protected case class FunctionName(name: Symbol)

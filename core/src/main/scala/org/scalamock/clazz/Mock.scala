@@ -20,7 +20,7 @@
 
 package org.scalamock.clazz
 
-import org.scalamock.MockFactoryBase
+import org.scalamock.MockContext
 import org.scalamock.function._
 import org.scalamock.util.Defaultable
 
@@ -28,8 +28,9 @@ trait Mock {
   import scala.language.experimental.macros
   import scala.language.implicitConversions
   
-  def mock[T](implicit factory: MockFactoryBase) : T = macro MockImpl.mock[T]
-  
+  def mock[T](implicit mockContext: MockContext) : T = macro MockImpl.mock[T]
+  def stub[T](implicit mockContext: MockContext): T = macro MockImpl.stub[T]
+
   implicit def toMockFunction0[R: Defaultable](f: () => R): MockFunction0[R] = macro MockImpl.toMockFunction0[R]
   implicit def toMockFunction1[T1, R: Defaultable](f: T1 => R): MockFunction1[T1, R] = macro MockImpl.toMockFunction1[T1, R]
   implicit def toMockFunction2[T1, T2, R: Defaultable](f: (T1, T2) => R): MockFunction2[T1, T2, R] = macro MockImpl.toMockFunction2[T1, T2, R]
@@ -40,8 +41,6 @@ trait Mock {
   implicit def toMockFunction7[T1, T2, T3, T4, T5, T6, T7, R: Defaultable](f: (T1, T2, T3, T4, T5, T6, T7) => R): MockFunction7[T1, T2, T3, T4, T5, T6, T7, R] = macro MockImpl.toMockFunction7[T1, T2, T3, T4, T5, T6, T7, R]
   implicit def toMockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R: Defaultable](f: (T1, T2, T3, T4, T5, T6, T7, T8) => R): MockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R] = macro MockImpl.toMockFunction8[T1, T2, T3, T4, T5, T6, T7, T8, R]
   implicit def toMockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R: Defaultable](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9) => R): MockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R] = macro MockImpl.toMockFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]
-
-  def stub[T](implicit factory: MockFactoryBase): T = macro MockImpl.stub[T]
 
   implicit def toStubFunction0[R: Defaultable](f: () => R): StubFunction0[R] = macro MockImpl.toStubFunction0[R]
   implicit def toStubFunction1[T1,  R: Defaultable](f: T1 => R): StubFunction1[T1, R] = macro MockImpl.toStubFunction1[T1, R]

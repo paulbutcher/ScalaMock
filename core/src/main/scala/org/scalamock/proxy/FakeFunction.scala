@@ -23,18 +23,18 @@ package org.scalamock.proxy
 import org.scalamock.function.NiceToString
 import org.scalamock.handlers.CallHandler
 import org.scalamock.matchers.{ArgumentMatcher, MockParameter}
-import org.scalamock.{function, MockFactoryBase}
+import org.scalamock.{function, MockContext}
 
-abstract class FakeFunction(factory: MockFactoryBase, name: Symbol) 
-    extends function.FakeFunction(factory, name) with NiceToString {
+abstract class FakeFunction(mockContext: MockContext, name: Symbol)
+    extends function.FakeFunction(mockContext, name) with NiceToString {
 
   def handle(args: Array[AnyRef]): Any = handle(seq2Product(args))
 
   class ExpectationHandler {
     def apply(args: MockParameter[Any]*) =
-      factory.add(makeHandler(new ArgumentMatcher(seq2Product(args))))
+      mockContext.add(makeHandler(new ArgumentMatcher(seq2Product(args))))
 
-    def apply(matcher: (Product) => Boolean) = factory.add(makeHandler(matcher))
+    def apply(matcher: (Product) => Boolean) = mockContext.add(makeHandler(matcher))
 
     def makeHandler(matcher: (Product) => Boolean) =
       new CallHandler[Any](FakeFunction.this, matcher)

@@ -1,9 +1,9 @@
 package org.scalamock.matchers
 
-import org.scalamock.MockFactoryBase
+import org.scalamock.MockContext
 import org.scalamock.function._
 
-trait Matchers { this: MockFactoryBase =>
+trait Matchers { this: MockContext =>
   import scala.language.implicitConversions
 
   protected def where[T1](matcher: T1 => Boolean) = new FunctionAdapter1(matcher)

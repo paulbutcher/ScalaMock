@@ -1,6 +1,6 @@
 package org.scalamock.clazz
 
-import org.scalamock.MockFactoryBase
+import org.scalamock.MockContext
 import org.scalamock.function._
 import org.scalamock.util.MacroUtils
 
@@ -8,7 +8,7 @@ import scala.reflect.macros.blackbox.Context
 
 //! TODO - get rid of this nasty two-stage construction when https://issues.scala-lang.org/browse/SI-5521 is fixed
 class MockMaker[C <: Context](val ctx: C) {
-  class MockMakerInner[T: ctx.WeakTypeTag](factory: ctx.Expr[MockFactoryBase], stub: Boolean) {
+  class MockMakerInner[T: ctx.WeakTypeTag](mockContext: ctx.Expr[MockContext], stub: Boolean) {
     import ctx.universe._
     import Flag._
     import definitions._
@@ -146,7 +146,7 @@ class MockMaker[C <: Context](val ctx: C) {
       TermName("mock$" + m.name + "$" + index)
     }
 
-    // val <|mockname|> = new MockFunctionN[T1, T2, ..., R](factory, '<|name|>)
+    // val <|mockname|> = new MockFunctionN[T1, T2, ..., R](mockContext, '<|name|>)
     def mockMethod(m: MethodSymbol): ValDef = {
       val mt = resolvedType(m)
       val clazz = classType(paramCount(mt))
@@ -158,7 +158,7 @@ class MockMaker[C <: Context](val ctx: C) {
         AppliedTypeTree(Ident(clazz.typeSymbol), types), // see issue #24
         callConstructor(
           New(AppliedTypeTree(Ident(clazz.typeSymbol), types)),
-          factory.tree, name))
+          mockContext.tree, name))
     }
 
     // def <init>() = super.<init>()

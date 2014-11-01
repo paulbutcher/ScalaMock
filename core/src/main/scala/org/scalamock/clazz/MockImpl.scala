@@ -1,25 +1,25 @@
 package org.scalamock.clazz
 
-import org.scalamock.MockFactoryBase
+import org.scalamock.MockContext
 import org.scalamock.function._
 import org.scalamock.util.{Defaultable, MacroUtils}
 
 object MockImpl {
   import scala.reflect.macros.blackbox.Context
 
-  def mock[T: c.WeakTypeTag](c: Context)(factory: c.Expr[MockFactoryBase]): c.Expr[T] = {
-    val maker = MockMaker[T](c)(factory, stub = false)
+  def mock[T: c.WeakTypeTag](c: Context)(mockContext: c.Expr[MockContext]): c.Expr[T] = {
+    val maker = MockMaker[T](c)(mockContext, stub = false)
     maker.make
   }
 
-  def stub[T: c.WeakTypeTag](c: Context)(factory: c.Expr[MockFactoryBase]): c.Expr[T] = {
-    val maker = MockMaker[T](c)(factory, stub = true)
+  def stub[T: c.WeakTypeTag](c: Context)(mockContext: c.Expr[MockContext]): c.Expr[T] = {
+    val maker = MockMaker[T](c)(mockContext, stub = true)
     maker.make
   }
 
-  def MockMaker[T: c.WeakTypeTag](c: Context)(factory: c.Expr[MockFactoryBase], stub: Boolean) = {
+  def MockMaker[T: c.WeakTypeTag](c: Context)(mockContext: c.Expr[MockContext], stub: Boolean) = {
     val m = new MockMaker[c.type](c)
-    new m.MockMakerInner[T](factory, stub)
+    new m.MockMakerInner[T](mockContext, stub)
   }
 
   // Given something of the structure <|o.m _|> where o is a mock object

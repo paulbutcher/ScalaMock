@@ -21,8 +21,8 @@
 package org.scalamock.proxy
 
 import java.lang.reflect.{InvocationHandler, Method}
+
 import scala.collection.mutable.Map
-import org.scalamock.MockFactoryBase
 
 abstract class InvocationHandlerBase[T <: FakeFunction] extends InvocationHandler {
 

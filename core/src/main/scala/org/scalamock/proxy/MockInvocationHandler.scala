@@ -20,10 +20,9 @@
 
 package org.scalamock.proxy
 
-import scala.collection.mutable.Map
-import org.scalamock.MockFactoryBase
+import org.scalamock.MockContext
 
-class MockInvocationHandler(factory: MockFactoryBase) extends InvocationHandlerBase[MockFunction] {
+class MockInvocationHandler(mockContext: MockContext) extends InvocationHandlerBase[MockFunction] {
 
   protected override def handle(name: Symbol, fake: => MockFunction) =
     name match {
@@ -31,5 +30,5 @@ class MockInvocationHandler(factory: MockFactoryBase) extends InvocationHandlerB
       case _ => None
     }
 
-  protected override def makeFake(name: Symbol) = new MockFunction(factory, name)
+  protected override def makeFake(name: Symbol) = new MockFunction(mockContext, name)
 }

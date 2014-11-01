@@ -20,12 +20,12 @@
 
 package org.scalamock.proxy
 
-import org.scalamock.MockFactoryBase
+import org.scalamock.MockContext
 import org.scalamock.context.Call
 
-class MockFunction(factory: MockFactoryBase, name: Symbol) extends FakeFunction(factory, name) {
+class MockFunction(mockContext: MockContext, name: Symbol) extends FakeFunction(mockContext, name) {
 
-  def onUnexpected(call: Call) = factory.reportUnexpectedCall(call)
+  def onUnexpected(call: Call) = mockContext.reportUnexpectedCall(call)
 
   def expectationHandler() = new ExpectationHandler
 }
