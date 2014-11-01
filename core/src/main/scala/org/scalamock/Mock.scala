@@ -20,6 +20,8 @@
 
 package org.scalamock
 
+import org.scalamock.util.MacroUtils
+
 trait Mock {
   import language.experimental.macros
   import language.implicitConversions
@@ -66,39 +68,6 @@ object MockImpl {
     maker.make
   }
 
-  class Utils[C <: Context](val ctx2: C) { // ctx2 to avoid clash with ctx in MockMaker (eugh!)
-    import ctx2.universe._
-
-    // Convert a methodType into its ultimate result type
-    // For nullary and normal methods, this is just the result type
-    // For curried methods, this is the final result type of the result type
-    def finalResultType(methodType: Type): Type = methodType match {
-      case NullaryMethodType(result) => result 
-      case MethodType(_, result) => finalResultType(result)
-      case PolyType(_, result) => finalResultType(result)
-      case _ => methodType
-    }
-    
-    // Convert a methodType into a list of lists of params:
-    // UnaryMethodType => Nil
-    // Normal method => List(List(p1, p2, ...))
-    // Curried method => List(List(p1, p2, ...), List(q1, q2, ...), ...)
-    def paramss(methodType: Type): List[List[Symbol]] = methodType match {
-      case MethodType(params, result) => params :: paramss(result)
-      case PolyType(_, result) => paramss(result)
-      case _ => Nil
-    }
-
-    def paramCount(methodType: Type): Int = methodType match {
-      case MethodType(params, result) => params.length + paramCount(result)
-      case PolyType(_, result) => paramCount(result)
-      case _ => 0
-    }
-    
-    def paramTypes(methodType: Type): List[Type] =
-      paramss(methodType).flatten map { _.typeSignature }
-  }
-  
   def MockMaker[T: c.WeakTypeTag](c: Context)(factory: c.Expr[MockFactoryBase], stub: Boolean) = {
     val m = new MockMaker[c.type](c)
     new m.MockMakerInner[T](factory, stub)
@@ -110,10 +79,9 @@ object MockImpl {
       import ctx.universe._
       import Flag._
       import definitions._
-      import compat._
       import language.reflectiveCalls
 
-      val utils = new Utils[ctx.type](ctx)
+      val utils = new MacroUtils[ctx.type](ctx)
       import utils._
 
       def mockFunctionClass(paramCount: Int): Type = paramCount match {
@@ -228,15 +196,11 @@ object MockImpl {
           ValDef(
             Modifiers(), 
             TermName(m.name.toString),
-            TypeTree(mt), 
-            TypeApply(
-              Select(
-                Literal(Constant(null)), 
-                TermName("asInstanceOf")),
-              List(TypeTree(mt))))
+            TypeTree(mt),
+            castTo(literal(null), mt))
         } else {
-          val body = Apply(
-                       Select(Select(This(anon), mockFunctionName(m)), TermName("apply")),
+          val body = applyListOn(
+                       Select(This(anon), mockFunctionName(m)), "apply",
                        paramss(mt).flatten map { p => Ident(TermName(p.name.toString)) })
           methodImpl(m, mt, body)
         }
@@ -254,21 +218,14 @@ object MockImpl {
         val mt = resolvedType(m)
         val clazz = classType(paramCount(mt))
         val types = (paramTypes(mt) map mockParamType _) :+ mockParamType(finalResultType(mt))
+        val name = applyOn(scalaSymbol, "apply", literal(m.name.toString))
+
         ValDef(Modifiers(),
           mockFunctionName(m), 
           AppliedTypeTree(Ident(clazz.typeSymbol), types), // see issue #24
-          Apply(
-            Select(
-              New(
-                AppliedTypeTree(
-                  Ident(clazz.typeSymbol),
-                  types)),
-              TermName("<init>")),
-            List(
-              factory.tree, 
-              Apply(
-                Select(Select(Ident(TermName("scala")), TermName("Symbol")), TermName("apply")),
-                List(Literal(Constant(m.name.toString)))))))
+          callConstructor(
+              New(AppliedTypeTree(Ident(clazz.typeSymbol), types)),
+              factory.tree, name))
       }
       
       // def <init>() = super.<init>()
@@ -280,14 +237,10 @@ object MockImpl {
           List(List()), 
           TypeTree(),
           Block(
-            List(
-              Apply(
-                Select(Super(This(TypeName("")), TypeName("")), TermName("<init>")),
-                List())),
+            List(callConstructor(Super(This(TypeName("")), TypeName("")))),
             Literal(Constant(()))))
         
-      def isMemberOfObject(m: Symbol) = TypeTag.Object.tpe.member(m.name) != NoSymbol
-  
+
       // new <|typeToMock|> { <|members|> }
       def anonClass(members: List[Tree]) =
         Block(
@@ -300,18 +253,8 @@ object MockImpl {
                 List(TypeTree(typeToMock)), 
                 noSelfType,
                 initDef +: members))),
-          Apply(
-            Select(
-              New(Ident(anon)), 
-              TermName("<init>")),
-            List()))
+          callConstructor(New(Ident(anon))))
       
-      // <|expr|>.asInstanceOf[<|t|>]
-      def castTo(expr: Tree, t: Type) =
-        TypeApply(
-          Select(expr, TermName("asInstanceOf")),
-          List(TypeTree(t)))
-  
       val typeToMock = weakTypeOf[T]
       val anon = TypeName("$anon")
       val methodsToMock = methodsNotInObject.filter { m =>
@@ -343,7 +286,7 @@ object MockImpl {
   def findMockFunction[F: c.WeakTypeTag, M: c.WeakTypeTag](c: Context)(f: c.Expr[F], actuals: List[c.universe.Type]): c.Expr[M] = {
     import c.universe._
 
-    val utils = new Utils[c.type](c)
+    val utils = new MacroUtils[c.type](c)
     import utils._
 
     def reportError(message: String) = {
@@ -377,20 +320,8 @@ object MockImpl {
 
     // mock.getClass().getMethod(name).invoke(obj).asInstanceOf[MockFunctionX[...]]
     def mockedFunctionGetter(obj: Tree, name: Name, targs: List[Type]): c.Expr[M] = {
-      c.Expr(
-        TypeApply(
-          Select(
-            Apply(
-              Select(
-                Apply(
-                  Select(
-                    Apply(Select(obj, TermName("getClass")), List()),
-                    TermName("getMethod")),
-                  List(Literal(Constant(mockFunctionName(name, obj.tpe, targs))))),
-                TermName("invoke")),
-              List(obj)),
-            TermName("asInstanceOf")),
-          List(TypeTree(weakTypeOf[M]))))
+      val method = applyOn(applyOn(obj, "getClass"), "getMethod", literal(mockFunctionName(name, obj.tpe, targs)))
+      c.Expr(castTo(applyOn(method, "invoke", obj), weakTypeOf[M]))
     }
 
     def transcribeTree(tree: Tree, targs: List[Type] = Nil): c.Expr[M] = {
