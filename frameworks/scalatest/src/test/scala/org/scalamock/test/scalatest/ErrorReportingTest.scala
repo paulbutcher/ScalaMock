@@ -22,8 +22,8 @@ package org.scalamock.test.scalatest
 
 import org.scalamock.scalatest.MockFactory
 import org.scalamock.test.mockable.TestTrait
-import org.scalatest.{Args, FlatSpec, FunSuite, Reporter, ShouldMatchers, Suite}
-import org.scalatest.events.{Event, TestFailed}
+import org.scalatest.{ Args, FlatSpec, FunSuite, Reporter, ShouldMatchers, Suite }
+import org.scalatest.events.{ Event, TestFailed }
 import org.scalatest.exceptions.TestFailedException
 import scala.language.postfixOps
 
@@ -98,10 +98,36 @@ class ErrorReporting extends FlatSpec with ShouldMatchers {
     getThrowable[NullPointerException](outcome) shouldBe a[NullPointerException]
   }
 
+  it should "report default mock names" in {
+    class TestedSuite extends FunSuite with MockFactory {
+      test("execute block of code") {
+        val mockA = mock[TestTrait]
+        val mockB = mock[TestTrait]
+
+        (mockA.oneParamMethod _).expects(3)
+        mockB.oneParamMethod(3)
+      }
+    }
+
+    val outcome = runTestCase[TestedSuite](new TestedSuite)
+    val errorMessage = getErrorMessage[TestFailedException](outcome)
+    errorMessage shouldBe
+      """|Unexpected call: <mock-2> TestTrait.oneParamMethod(3)
+        |
+        |Expected:
+        |inAnyOrder {
+        |  <mock-1> TestTrait.oneParamMethod(3) once (never called - UNSATISFIED)
+        |}
+        |
+        |Actual:
+        |  <mock-2> TestTrait.oneParamMethod(3)
+      """.stripMargin.trim
+  }
+
   it should "report unexpected calls in readable manner" in {
     class TestedSuite extends FunSuite with MockFactory {
       val suiteScopeMock = mock[TestTrait]("suite mock")
-      (suiteScopeMock.noParamMethod _) expects() returning("two") twice
+      (suiteScopeMock.noParamMethod _) expects () returning ("two") twice
 
       test("execute block of code") {
         val mockedTrait = mock[TestTrait]
@@ -112,7 +138,6 @@ class ErrorReporting extends FlatSpec with ShouldMatchers {
       }
     }
 
-    // Unexpected call should be reported by ScalaTest
     val outcome = runTestCase[TestedSuite](new TestedSuite)
     val errorMessage = getErrorMessage[TestFailedException](outcome)
     errorMessage shouldBe
