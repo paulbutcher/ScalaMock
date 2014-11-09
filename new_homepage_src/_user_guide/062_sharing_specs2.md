@@ -13,13 +13,13 @@ To use ScalaMock in Specs2 tests you can either:
 
 ## Fixture contexts
 
-*Fixture context* instances should be created per test-case basis and implement `MockContext` trait.
+*Fixture context* instances should be created on a per test-case basis and implement the `MockContext` trait.
 
-Fixture contexts are more flexible and are recommended for complex test suites where single set of fixtures does not fit all test cases.
+Fixture contexts are more flexible and are recommended for complex test suites where a single set of fixtures does not fit all test cases.
 
 ### Basic usage 
 
-For simple test cases it's enough to run each test case in new `MockContext` scope.
+For simple test cases it's enough to run each test case in a new `MockContext` scope:
 
 ```scala
 class BasicCoffeeMachineTest extends Specification {
@@ -41,7 +41,7 @@ class BasicCoffeeMachineTest extends Specification {
 
 ### Complex fixture contexts
 
-When multiple test cases need to work with the same mocks (and more generally - the same fixtures: files, sockets, database connections, etc.) you can use fixture contexts that extends `MockContext` trait.
+When multiple test cases need to work with the same mocks (and more generally, the same fixtures: files, sockets, database connections, etc.) you can use fixture contexts that extends `MockContext` trait:
 
 ```scala
 class CoffeeMachineTest extends Specification {
@@ -87,9 +87,9 @@ class CoffeeMachineTest extends Specification {
 
 ## Isolated test cases
 
-Using *Isolated tests cases* is a clean and simple way to share mocks and fixture by all test cases. This technique is recommended when all test cases use the same or very similar fixtures.
+Using *Isolated tests cases* is a clean and simple way to share mocks and fixtures across all test cases. This technique is recommended when all test cases use the same or very similar fixtures.
 
-`IsolatedMockFactory` can be mixed into a [Specs2](http://etorreborre.github.com/specs2/) `Specification` to provide mocking support. Please note that this causes to run whole suite in isolated mode.
+`IsolatedMockFactory` can be mixed into a [Specs2](http://etorreborre.github.com/specs2/) `Specification` to provide mocking support. Please note that this causes the whole suite to run in isolated mode:
 
 ```scala
 class IsolatedCoffeeMachineTest extends Specification with IsolatedMockFactory {

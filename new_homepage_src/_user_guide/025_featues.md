@@ -6,7 +6,7 @@ permalink: /user-guide/features/
 
 # Features
 
-This is an overview of ScalaMock features. For more details about certain feature please refer appropriate User Guide chapter.
+This is an overview of ScalaMock features. For more details about a particular feature, please refer to the appropriate User Guide chapter.
 
 ## Supported Scala features
 
@@ -73,6 +73,12 @@ inAnyOrder {
 ```scala
 (databaseMock.getPlayerByName _).expects("Hans").returning(Player(name="Hans", country="Germany"))
 (databaseMock.getPlayerByName _).expects("Boris").returning(Player(name="Hans", country="Russia"))
+```
+
+### Throwing exceptions
+
+```scala
+(databaseMock.getPlayerByName _).expects("George").throwing(new NoSuchElementException)
 ```
 
 ### Call handlers

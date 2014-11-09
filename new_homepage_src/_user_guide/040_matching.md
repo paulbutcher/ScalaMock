@@ -72,12 +72,12 @@ trait PlayerLeaderBoard {
 }
 ```
 
-Now imagine that we want to set expectation that `addPointsForPlayer` is called with:
+Now imagine that we want to set an expectation that `addPointsForPlayer` is called with:
 
 * `points` equal to 100 and
 * `player` who can have any `name`, any `emailAddress` and come from any `country` as long its `id` is 789
 
-To achieve that in ScalaMock we can use where with appropriate predicate:
+To achieve that in ScalaMock we can use `where` as follows:
 
 ```
 (leaderBoardMock.addPointsForPlayer _) expects (where {

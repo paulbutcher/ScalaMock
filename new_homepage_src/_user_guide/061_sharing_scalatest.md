@@ -6,21 +6,21 @@ permalink: /user-guide/sharing-scalatest/
 
 # Sharing mocks and expectations in ScalaTest
 
-Sometimes multiple test cases need to work with the same mocks (and more generally - the same fixtures: files, sockets, database connections, etc.). There are many techniques to avoid duplicating the fixture code across test cases in ScalaTest, but ScalaMock recommends and officially supports these two:
+Sometimes multiple test cases need to work with the same mocks (and more generally, the same fixtures: files, sockets, database connections, etc.). There are many techniques to avoid duplicating fixture code across test cases in ScalaTest, but ScalaMock recommends and officially supports these two:
 
-* *isolated tests cases* - clean and simple, recommended when all test cases have the same or very similar fixtures
-* *fixture contexts* - more flexible, recommended for complex test suites where single set of fixtures does not fit all test cases
+* *isolated tests cases*: clean and simple, recommended when all test cases have the same or very similar fixtures
+* *fixture contexts*: more flexible, recommended for complex test suites where a single set of fixtures does not fit all test cases
 
 ## Isolated test cases
 
-If you mix `org.scalatest.OneInstancePerTest` trait into a `Suite`, each test case will run in its own instance of the suite class and therefore each test will get a fresh copy of the instance variables. 
+If you mix the `org.scalatest.OneInstancePerTest` trait into a `Suite`, each test case will run in its own instance of the suite class and therefore each test will get a fresh copy of the instance variables. 
 
 This way in the suite scope you can:
 
 * declare instance variables (e.g. mocks) that will be used by multiple test cases and 
 * perform common test case setup (e.g. set up some mock expectations). 
 
-Because each test cases has fresh instance variables different test cases do not interfere with each other.
+Because each test cases has fresh instance variables, different test cases do not interfere with each other.
 
 ```scala
 import org.scalatest.OneInstancePerTest
@@ -59,7 +59,7 @@ class CoffeeMachineTest extends FlatSpec with ShouldMatchers with OneInstancePer
 
 ## Fixture contexts
 
-You can also run each test case in separate fixture context. Fixture contexts can be extended and combined and since each test case uses different instance of fixture context test cases do not
+You can also run each test case in a separate fixture context. Fixture contexts can be extended and combined and, since each test case uses a different instance of the fixture context, test cases do not
 interfere with each other while they can have shared mocks and expectations.
 
 ```scala

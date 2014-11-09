@@ -6,7 +6,7 @@ permalink: /user-guide/mocking_style/
 
 # Choosing your mocking style 
 
-ScalaMock supports two different mocking styles - *expectations-first* and *record-then-verify*. These styles can be mixed within a single test.
+ScalaMock supports two different mocking styles---*expectations-first* and *record-then-verify*. These styles can be mixed within a single test.
 
 ## Expectations-First Style
 
@@ -43,7 +43,7 @@ Expectations can then be set using `expects`:
 }
 ```
 
-In above example `heaterMock.isReady` is expected be invoked without arguments (in `.expects()` part) and it will return `true` once invoked. The heater mock is also expected to have `setPowerState` methods called with `PowerState.On` and `PowerState.Off` arguments.  
+In the above example `heaterMock.isReady` is expected be invoked without arguments (`.expects()`) and it will return `true` once invoked. The heater mock also expects to have its `setPowerState` method called twice, once with `PowerState.On` and once with `PowerState.Off`.  
 
 Of course, in order to increase test readability you can define expectations, then exercise tested code, define subsequent expectations, continue executing system under test and so on. For example:
 
@@ -87,7 +87,7 @@ val m = stubFunction[Int, String]
 
 ### Mocking objects 
 
-A stub object that supports record-then-verify style is created with `stub`. For example:
+A stub object that supports the record-then-verify style is created with `stub`. For example:
 
 ```scala
 val heaterStub = stub[Heater]
@@ -109,11 +109,11 @@ Return values that are used by the system under test can be set up by using `whe
 }
 ```
 
-In above example `heaterStub.isReady` will return `true` every time is called. This is different to the *Expectations-first* style example, where `heaterMock.isReady` is expected to be called exactly once. However, `setPowerState(PowerState.On)` is verified to be called exactly once because we did not use modifiers like `.anyNumberOfTimes()` or `.twice()`.
+In the above example `heaterStub.isReady` will return `true` every time is called. This is different from the *Expectations-first* style example, where `heaterMock.isReady` is expected to be called exactly once. However, `setPowerState(PowerState.On)` is verified to be called exactly once because we did not use modifiers like `.anyNumberOfTimes()` or `.twice()`.
 
 In the above example we don't care whether `heaterStub.isReady()` was called or not - we specify only return values. To verify that `isReady()` was called we would have to add third `verify` statement.
 
-In both examples we verify that `setPowerState` is called with `PowerState.On` and `PowerState.Off` parameters. We do not enforce order in which this method is called. See [Ordering](/user-guide/ordering) chapter for more details about this topic.
+In both examples we verify that `setPowerState` is called with `PowerState.On` and `PowerState.Off` parameters. We do not enforce order in which this method is called. See the [Ordering](/user-guide/ordering) chapter for more details about this topic.
 
 ## Mixing mocking styles
 
@@ -209,7 +209,7 @@ Please note that since we stubbed `CountryLeaderBoard`, we check that we add vic
 * have any other method invoked, for example `clearAllPointsForCountry(Countries.Russia)` or 
 * have `addVictoryForCountry` called with different arguments, for example: `addVictoryForCountry(Countries.Germany)`. TODO
 
-This is why you should:
+We recommend that you:
 
 * mock objects for which you have strict expectations and 
 * stub objects for which you don't have strict expectations, for example because you prefer to make your tests more independent to trait implementations changes.

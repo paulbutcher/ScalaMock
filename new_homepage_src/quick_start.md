@@ -4,7 +4,7 @@ title: Quick Start
 permalink: /quick-start/
 ---
 
-This article describes how to use ScalaMock in your tests. Because it is just an introduction to ScalaMock, it describes only the basic usage of this mocking framework. For more details please refer [User Guide](/user-guide/).
+This article describes how to use ScalaMock in your tests. Because it is just an introduction to ScalaMock, it describes only the basic usage of this mocking framework. For more details please refer to the [User Guide](/user-guide/).
 
 ## Installation
 
@@ -14,19 +14,19 @@ To use ScalaMock in [sbt](http://www.scala-sbt.org/) with [ScalaTest](http://www
 libraryDependencies += "org.scalamock" %% "scalamock-scalatest-support" % "3.2-RC1" % "test"
 ```
 
-If you don't use sbt or ScalaTest please check [Installation](/user-guide/installation/) chapter in User Guide.
+If you don't use sbt or ScalaTest please check the [Installation](/user-guide/installation/) chapter in the User Guide.
 
-The sample code described in this article is available on [GitHub](/TODO)
+The sample code described in this article is available on [GitHub](/TODO).
 
 ## Leaderboad example 
 
-The example assumes that we're writing code that is responsible for updating Country Leaderboard (i.e. *Top Countries*) every time a match between two players finishes in our online multiplayer game. 
+This example assumes that we're writing code that is responsible for updating a Country Leaderboard (i.e. *Top Countries*) every time a match between two players finishes in an online multiplayer game. 
 
-They say that picture is worth a thousand words, so before we get into details let's look at the below diagram.
+They say that picture is worth a thousand words, so before we get into details let's look at a diagram:
 
 ![Diagram](/assets/img/sm_qs_leaderboard.png)
 
-We have `Player` class that represents a player and `MatchResult` which describes result of a played game between two players. Each player has its unique id and country it came from:
+The `Player` class represents a player and `MatchResult` describes the result of a played game between two players. Each player has its unique id and country it came from:
 
 ```scala
 type PlayerId = Int
@@ -34,7 +34,7 @@ case class Player(id: PlayerId, nickname: String, country: Country)
 case class MatchResult(winner: PlayerId, loser: PlayerId)
 ```
 
-There is also `CountryLeaderboard` trait that describes Country Leaderboard interface:
+There is also the `CountryLeaderboard` trait that describes the Country Leaderboard interface:
 
 ```scala
 case class CountryLeaderboardEntry(country: Country, points: Int)
@@ -45,7 +45,7 @@ trait CountryLeaderboard {
 }
 ```
 
-The class we are going to test is called `MatchResultObserver` since its responsibility is to observe created `MatchResult` instances.
+The class we are going to test is called `MatchResultObserver` since its responsibility is to observe created `MatchResult` instances:
 
 ```scala
 class MatchResultObserver(playerDatabase: PlayerDatabase, countryLeaderBoard: CountryLeaderboard) {
@@ -56,7 +56,7 @@ class MatchResultObserver(playerDatabase: PlayerDatabase, countryLeaderBoard: Co
 }
 ```
 
-Finally, there is the `PlayerDatabase` trait that provides an abstract interface for accessing player information from some database.
+Finally, there is the `PlayerDatabase` trait that provides an abstract interface for accessing player information from some database:
 
 ```scala
 trait PlayerDatabase {
@@ -68,7 +68,7 @@ As mentioned before, the `MatchResultObserver` is the class we are going to test
 
 ### Objects interacting with tested class
 
-`MatchResultObserver` is a very simple class and it should be easy to test it. Unfortunately the only available implementation of `PlayerDatabase` is one that uses some relational database to store and retrieve players.
+`MatchResultObserver` is a very simple class and it should be easy to test it. Unfortunately the only available implementation of `PlayerDatabase` is one that uses some relational database to store and retrieve players:
 
 ```scala
 class RealPlayerDatabase(
@@ -81,9 +81,9 @@ class RealPlayerDatabase(
 }
 ```
 
-It would be a nightmare to setup database, fill it with sample players, create all `RealPlayerDatabase` dependencies (like `TransactionManager`) and dependencies of dependencies. 
+It would be a nightmare to setup a database, fill it with sample players, create all of `RealPlayerDatabase`'s dependencies (like `TransactionManager`) and the dependencies of those dependencies. 
 
-Fortunately, mocking is useful in this kind of situation because instead of testing `MatchResultObserver` with `RealPlayerDatabase` we can test it with much simpler `PlayerDatabase` implementation. We could implement `PlayerDatabase` trait by ourselves, for example:
+Fortunately, mocking is useful in this kind of situation because instead of testing `MatchResultObserver` with `RealPlayerDatabase` we can test it with a much simpler `PlayerDatabase` implementation. We could directly implement `PlayerDatabase`, for example:
 
 ```
 class FakePlayerDatabase extends PlayerDatabase {
@@ -95,13 +95,13 @@ class FakePlayerDatabase extends PlayerDatabase {
 }
 ```
 
-In this case it does not look that bad. But implementing complex traits or having fake implementation generic enough to handle all test cases can be really cumbersome and error-prone task.
+In this case it does not look that bad. But implementing complex traits or having a fake implementation generic enough to handle all test cases can be a really cumbersome and error-prone task.
 
-This is where ScalaMock comes to play.
+This is where ScalaMock comes into play.
 
 ### Stubbing objects interacting with tested class
 
-With ScalaMock you can create objects that pretend to implement some trait or interface. Then you can instruct mocked object how it should respond to all interactions with it. For example:
+With ScalaMock you can create objects that pretend to implement some trait or interface. Then you can instruct that "faked" object how it should respond to all interactions with it. For example:
 
 ```scala
 // create fakeDb stub that implements PlayerDatabase trait
@@ -118,7 +118,7 @@ assert(fakeDb.getPlayerById(222).nickname == "boris")
 ### Mocking objects interacting with tested class
 
 ScalaMock supports both two mocking styles: *Expectations-First Style* (mocks) and *Record-then-Verify* (stubs). 
-Previously we used stubs to create fake `PlayerDatabase` and now we will use mocks to mock `CountryLeaderboard` and set our test expectations.
+Previously we used a stub to create a fake `PlayerDatabase` and now we will use a mock `CountryLeaderboard` to set our test expectations:
 
 ```scala
 // create CountryLeaderboard mock
@@ -132,11 +132,11 @@ countryLeaderBoardMock.addVictoryForCountry(Countries.Germany) // OK
 countryLeaderBoardMock.addVictoryForCountry(Countries.Russia)  // throws TestFailedException
 ```
 
-To read more about differences between mocks and stubs please check [Choosing your mocking style](/user-guide/mocking_style/) chapter in User Guide.
+To read more about the differences between mocks and stubs please check [Choosing your mocking style](/user-guide/mocking_style/) chapter in the User Guide.
 
 ### Testing with ScalaMock
 
-To provide mocking support in ScalaTest suites just mix your suite with `org.scalamock.scalatest.MockFactory`.
+To provide mocking support in ScalaTest suites just mix your suite with `org.scalamock.scalatest.MockFactory`:
 
 ```scala
 import org.scalamock.scalatest.MockFactory
@@ -165,7 +165,7 @@ class MatchResultObserverTest extends FlatSpec with MockFactory {
 }
 ```
 
-To read how to use ScalaMock with different testing frameworks please check [Integration with testing frameworks](/user-guide/integration/) chapter in User Guide.
+To use ScalaMock with different testing frameworks please check the [Integration with testing frameworks](/user-guide/integration/) chapter in the User Guide.
 
 ## Further reading
 
@@ -186,4 +186,4 @@ inAnyOrder {
 }
 ```
 
-Please read [User Guide](/user-guide/) for more details.
+Please read the [User Guide](/user-guide/) for more details.

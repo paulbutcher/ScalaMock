@@ -6,11 +6,11 @@ permalink: /user-guide/integration/
 
 # Integration with testing frameworks
 
-ScalaMock can be used in tests written using [ScalaTest](http://scalatest.org) and [Specs2](http://etorreborre.github.io/specs2/) frameworks.
+ScalaMock can be used in tests written using the [ScalaTest](http://scalatest.org) or [Specs2](http://etorreborre.github.io/specs2/) frameworks.
 
 ## ScalaTest 
 
-To provide mocking support in ScalaTest suites just mix your suite with `org.scalamock.scalatest.MockFactory`
+To provide mocking support in ScalaTest suites just mix your suite with `org.scalamock.scalatest.MockFactory`:
 
 ```scala
 import org.scalatest.FlatSpec
@@ -29,7 +29,7 @@ class CoffeeMachineTest extends FlatSpec with ShouldMatchers with MockFactory {
 
 ## Specs2
 
-To use ScalaMock in Specs2 tests you should run each test case in separate fixture context that implements `org.scalamock.specs2.MockContext`
+To use ScalaMock in Specs2 tests you should run each test case in a separate fixture context that implements `org.scalamock.specs2.MockContext`:
 
 
 ```scala

@@ -12,7 +12,7 @@ You can download ScalaMock jars and sources from [Sonatype](https://oss.sonatype
 
 ## Sources
 
-You can find ScalaMock repository and source code on [Github](https://github.com/paulbutcher/ScalaMock)
+You can find the ScalaMock repository and source code on [Github](https://github.com/paulbutcher/ScalaMock).
 
 ## sbt projects
 
