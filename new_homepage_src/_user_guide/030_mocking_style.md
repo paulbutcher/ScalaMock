@@ -207,7 +207,7 @@ The same example using only *Record-then-Verify* style:
 Please note that since we stubbed `CountryLeaderBoard`, we check that we add victory for Germany but we allow (since stubs are less strict than mocks) `countryLeaderBoardStub` to:
 
 * have any other method invoked, for example `clearAllPointsForCountry(Countries.Russia)` or 
-* have `addVictoryForCountry` called with different arguments, for example: `addVictoryForCountry(Countries.Germany)`. TODO
+* have `addVictoryForCountry` called with different arguments, for example: `addVictoryForCountry(Countries.Germany)`.
 
 We recommend that you:
 

@@ -16,7 +16,7 @@ libraryDependencies += "org.scalamock" %% "scalamock-scalatest-support" % "3.2" 
 
 If you don't use sbt or ScalaTest please check the [Installation](/user-guide/installation/) chapter in the User Guide.
 
-The sample code described in this article is available on [GitHub](/TODO).
+The sample code described in this article is available on [GitHub](http://github.com/pawel-wiejacha/scalamock-examples).
 
 ## Leaderboad example 
 
