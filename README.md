@@ -2,9 +2,7 @@
 
 Native Scala mocking.
 
-For the current status of ScalaMock, see [this blog post](http://paulbutcher.com/2014/04/15/scalamock-status-report/).
-
-This is ScalaMock 3, which supports Scala 2.10 and Scala 2.11 only. For earlier versions of Scala, see [ScalaMock 2](https://github.com/paulbutcher/ScalaMock/tree/ScalaMock2).
+Official website: [http://www.scalamock.org/](http://www.scalamock.org/)
 
 ## Examples
 
@@ -52,33 +50,22 @@ Download from [Sonatype](https://oss.sonatype.org/content/repositories/releases/
 To use ScalaMock in [sbt](http://www.scala-sbt.org/) with [ScalaTest](http://www.scalatest.org/) add the following to your project file:
 
     libraryDependencies +=
-      "org.scalamock" %% "scalamock-scalatest-support" % "3.2-RC1" % "test"
+      "org.scalamock" %% "scalamock-scalatest-support" % "3.2" % "test"
 
 and with [Specs2](http://etorreborre.github.com/specs2/):
 
     libraryDependencies +=
-      "org.scalamock" %% "scalamock-specs2-support" % "3.2-RC1" % "test"
+      "org.scalamock" %% "scalamock-specs2-support" % "3.2" % "test"
 
 ## Documentation
 
-[Scaladoc](http://scalamock.org/api/index.html#org.scalamock.package).
+* [Quick Start](http://scalamock.org/quick-start/)
+* [User Guide](http://scalamock.org/user-guide/)
+* [Scaladoc](http://scalamock.org/api/index.html#org.scalamock.package).
 
 ## Future Plans
 
-When Scala supports [macro types](http://scalamacros.org/future.html), this will enable:
-
-* 
-  Improved syntax:
-
-      mockObject.expects.method(arguments)
-
-  instead of:
-
-      (mockObject.method _) expects (arguments)
-
-* Mocking object creation (constructors)
-* Mocking singleton and companion objects (static methods)
-* Mocking final classes and classes with final methods or private constructors
+Check our [roadmap](http://www.monosity.com/roadmap/).
 
 ### Acknowledgements
 

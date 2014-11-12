@@ -3,7 +3,7 @@
 ## New in ScalaMock 3.2
 
 - improved reporting of unsatisfied expectations (fix for #72)
-- updated, extended and reorganized documentation (created User guide)
+- updated, extended and reorganized documentation (created the User Guide and Quick Start)
 - improved support for sharing mocks and expectations by different test cases
 - expectations can be set in Suite scope (fix for #25 and #35)
 - fixed two bugs in scalamock-specs2-support:
@@ -20,7 +20,7 @@
 ## New in ScalaMock 3.1
 
 - ScalaTest 2.0 support
-- ScalaMock works with Scala-2.11 
+- ScalaMock works with Scala-2.11
 
 ## New in ScalaMock 3.0.1
 
