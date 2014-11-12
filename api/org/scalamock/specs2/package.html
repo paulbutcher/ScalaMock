@@ -1,10 +1,9 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
-          <title>specs2 - ScalaMock 3.0 - org.scalamock.specs2</title>
-          <meta name="description" content="specs2 - ScalaMock 3.0 - org.scalamock.specs2" />
-          <meta name="keywords" content="specs2 ScalaMock 3.0 org.scalamock.specs2" />
+          <title>specs2 - ScalaMock 3.2 - org.scalamock.specs2</title>
+          <meta name="description" content="specs2 - ScalaMock 3.2 - org.scalamock.specs2" />
+          <meta name="keywords" content="specs2 ScalaMock 3.2 org.scalamock.specs2" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -31,7 +30,11 @@
       <div id="definition">
         <img src="../../../lib/package_big.png" />
         <p id="owner"><a href="../../package.html" class="extype" name="org">org</a>.<a href="../package.html" class="extype" name="org.scalamock">scalamock</a></p>
-        <h1>specs2</h1>
+        <h1>specs2</h1> <span class="permalink">
+      <a href="../../../index.html#org.scalamock.specs2.package" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -63,8 +66,145 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="org.scalamock.specs2.MockFactory" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="MockFactoryextendsMockFactoryBasewithAroundExample"></a>
+              <ol><li name="org.scalamock.specs2.IsolatedMockFactory" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="IsolatedMockFactoryextendsAroundExamplewithMockContextBase"></a>
+      <a id="IsolatedMockFactory:IsolatedMockFactory"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="IsolatedMockFactory.html"><span class="name">IsolatedMockFactory</span></a><span class="result"> extends <span class="extype" name="org.specs2.specification.AroundExample">AroundExample</span> with <a href="MockContextBase.html" class="extype" name="org.scalamock.specs2.MockContextBase">MockContextBase</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#org.scalamock.specs2.package@IsolatedMockFactoryextendsAroundExamplewithMockContextBase" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A trait that can be mixed into a <a href="http://etorreborre.github.com/specs2/" target="_blank">Specs2</a> specification to provide
+mocking support.</p><div class="fullcomment"><div class="comment cmt"><p>A trait that can be mixed into a <a href="http://etorreborre.github.com/specs2/" target="_blank">Specs2</a> specification to provide
+mocking support.</p><p>To use ScalaMock in Specs2 tests you can either:</p><ul><li>mix <code>Specification</code> with <a href="IsolatedMockFactory.html" class="extype" name="org.scalamock.specs2.IsolatedMockFactory">org.scalamock.specs2.IsolatedMockFactory</a> to
+   get <b>isolated test cases</b> or</li><li>run each test case in separate <b>fixture context</b> - <a href="MockContext.html" class="extype" name="org.scalamock.specs2.MockContext">org.scalamock.specs2.MockContext</a></li></ul><p><b>Isolated tests cases</b> are clean and simple, recommended when all test cases have the same
+   or very similar fixtures</p><pre><span class="kw">class</span> IsolatedCoffeeMachineTest <span class="kw">extends</span> Specification <span class="kw">with</span> IsolatedMockFactory {
+
+	<span class="cmt">// shared objects</span>
+	<span class="kw">val</span> waterContainerMock = mock[WaterContainer]
+	<span class="kw">val</span> heaterMock = mock[Heater]
+	<span class="kw">val</span> coffeeMachine = <span class="kw">new</span> CoffeeMachine(waterContainerMock, heaterMock)
+
+	<span class="cmt">// you can set common expectations in suite scope</span>
+	(waterContainerMock.isOverfull _).expects().returning(<span class="kw">true</span>)
+
+	<span class="cmt">// test setup</span>
+	coffeeMachine.powerOn()
+
+	<span class="lit">"CoffeeMachine"</span> should {
+	    <span class="lit">"not turn on the heater when the water container is empty"</span> in {
+	        coffeeMachine.isOn must_== <span class="kw">true</span>
+	        <span class="cmt">// ...</span>
+	        coffeeMachine.powerOff()
+	        coffeeMachine.isOn must_== <span class="kw">false</span>
+	    }
+
+	    <span class="lit">"not turn on the heater when the water container is overfull"</span> in {
+	        <span class="cmt">// each test case uses separate, fresh Suite so the coffee machine is turned on</span>
+	        coffeeMachine.isOn must_== <span class="kw">true</span>
+	        <span class="cmt">// ...</span>
+	    }
+	}
+}</pre></div></div>
+    </li><li name="org.scalamock.specs2.MockContext" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="MockContextextendsMockContextBasewithAround"></a>
+      <a id="MockContext:MockContext"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="MockContext.html"><span class="name">MockContext</span></a><span class="result"> extends <a href="MockContextBase.html" class="extype" name="org.scalamock.specs2.MockContextBase">MockContextBase</a> with <span class="extype" name="org.specs2.mutable.Around">Around</span></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#org.scalamock.specs2.package@MockContextextendsMockContextBasewithAround" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Fixture context that should be created per test-case basis</p><div class="fullcomment"><div class="comment cmt"><p>Fixture context that should be created per test-case basis</p><p>To use ScalaMock in Specs2 tests you can either:</p><ul><li>mix <code>Specification</code> with <a href="IsolatedMockFactory.html" class="extype" name="org.scalamock.specs2.IsolatedMockFactory">org.scalamock.specs2.IsolatedMockFactory</a> to
+   get <b>isolated test cases</b> or</li><li>run each test case in separate <b>fixture context</b> - <a href="MockContext.html" class="extype" name="org.scalamock.specs2.MockContext">org.scalamock.specs2.MockContext</a></li></ul><p><b>Fixture contexts</b> are more flexible and are recommened for complex test suites where single
+set of fixtures does not fit all test cases.</p><h4>Basic usage</h4><p>For simple test cases it's enough to run test case in new <code>MockContext</code> scope.</p><pre><span class="kw">class</span> BasicCoffeeMachineTest <span class="kw">extends</span> Specification {
+
+	<span class="lit">"CoffeeMachine"</span> should {
+	     <span class="lit">"not turn on the heater when the water container is empty"</span> in <span class="kw">new</span> MockContext {
+	         <span class="kw">val</span> waterContainerMock = mock[WaterContainer]
+	         (waterContainerMock.isOverfull _).expects().returning(<span class="kw">true</span>)
+	         <span class="cmt">// ...</span>
+	     }
+
+	     <span class="lit">"not turn on the heater when the water container is overfull"</span> in <span class="kw">new</span> MockContext {
+	         <span class="kw">val</span> waterContainerMock = mock[WaterContainer]
+	         <span class="cmt">// ...</span>
+	     }
+	}
+}</pre><h4>Complex fixture contexts</h4><p>When multiple test cases need to work with the same mocks (and more generally - the same
+fixtures: files, sockets, database connections, etc.) you can use fixture contexts.</p><pre><span class="kw">class</span> CoffeeMachineTest <span class="kw">extends</span> Specification {
+
+	<span class="kw">trait</span> Test <span class="kw">extends</span> MockContext { <span class="cmt">// fixture context</span>
+	    <span class="cmt">// shared objects</span>
+	    <span class="kw">val</span> waterContainerMock = mock[WaterContainer]
+	    <span class="kw">val</span> heaterMock = mock[Heater]
+	    <span class="kw">val</span> coffeeMachine = <span class="kw">new</span> CoffeeMachine(waterContainerMock, heaterMock)
+
+	    <span class="cmt">// test setup</span>
+	    coffeeMachine.powerOn()
+	}
+
+	<span class="cmt">// you can extend and combine fixture-contexts</span>
+	<span class="kw">trait</span> OverfullWaterContainerTest <span class="kw">extends</span> Test {
+	    <span class="cmt">// you can set expectations and use mocks in fixture-context</span>
+	    (waterContainerMock.isEmpty _).expects().returning(<span class="kw">true</span>)
+
+	    <span class="cmt">// and define helper functions</span>
+	    <span class="kw">def</span> complexLogic() {
+	        coffeeMachine.powerOff()
+	        <span class="cmt">// ...</span>
+	    }
+	}
+
+	<span class="lit">"CoffeeMachine"</span> should {
+	     <span class="lit">"not turn on the heater when the water container is empty"</span> in <span class="kw">new</span> MockContext {
+	         <span class="kw">val</span> heaterMock = mock[Heater]
+	         <span class="kw">val</span> waterContainerMock = mock[WaterContainer]
+	         <span class="kw">val</span> coffeeMachine = <span class="kw">new</span> CoffeeMachine(waterContainerMock, heaterMock)
+	         (waterContainerMock.isOverfull _).expects().returning(<span class="kw">true</span>)
+	         <span class="cmt">// ...</span>
+	     }
+
+	     <span class="lit">"not turn on the heater when the water container is overfull"</span> in <span class="kw">new</span> OverfullWaterContainerTest {
+	         <span class="cmt">// ...</span>
+	         complexLogic()
+	     }
+	}
+}</pre></div></div>
+    </li><li name="org.scalamock.specs2.MockContextBase" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="MockContextBaseextendsMockFactoryBase"></a>
+      <a id="MockContextBase:MockContextBase"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
+        <a href="MockContextBase.html"><span class="name">MockContextBase</span></a><span class="result"> extends <a href="../MockFactoryBase.html" class="extype" name="org.scalamock.MockFactoryBase">MockFactoryBase</a></span>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../../index.html#org.scalamock.specs2.package@MockContextBaseextendsMockFactoryBase" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">Base trait for MockContext and IsolatedMockFactory</p>
+    </li><li name="org.scalamock.specs2.MockFactory" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="MockFactoryextendsAroundExamplewithMockContextBase"></a>
       <a id="MockFactory:MockFactory"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -72,11 +212,21 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="MockFactory.html"><span class="name">MockFactory</span></a><span class="result"> extends <a href="../MockFactoryBase.html" class="extype" name="org.scalamock.MockFactoryBase">MockFactoryBase</a> with <span class="extype" name="org.specs2.specification.AroundExample">AroundExample</span></span>
+        <a href="MockFactory.html"><span class="name deprecated" title="Deprecated: (Since version 3.2) MockFactory is buggy. Please use IsolatedMockFactory or MockContext instead">MockFactory</span></a><span class="result"> extends <span class="extype" name="org.specs2.specification.AroundExample">AroundExample</span> with <a href="MockContextBase.html" class="extype" name="org.scalamock.specs2.MockContextBase">MockContextBase</a></span>
       </span>
-      </h4>
-      <p class="comment cmt">A trait that can be mixed into a <a href="http://etorreborre.github.com/specs2/" target="_blank">Specs2</a> specification to provide
-mocking support.</p>
+      </h4><span class="permalink">
+      <a href="../../../index.html#org.scalamock.specs2.package@MockFactoryextendsAroundExamplewithMockContextBase" title="Permalink" target="_top">
+        <img src="../../../lib/permalink.png" />
+      </a>
+    </span>
+      <p class="shortcomment cmt">A trait that can be mixed into a <a href="http://etorreborre.github.com/specs2/" target="_blank">Specs2</a> specification to provide
+mocking support.</p><div class="fullcomment"><div class="comment cmt"><p>A trait that can be mixed into a <a href="http://etorreborre.github.com/specs2/" target="_blank">Specs2</a> specification to provide
+mocking support.</p><p>MockFactory does not work well in with thread pools and futures. Fixture-contexts support is also broken.</p><p>To use ScalaMock in Specs2 tests you can either:</p><ul><li>mix <code>Specification</code> with <a href="IsolatedMockFactory.html" class="extype" name="org.scalamock.specs2.IsolatedMockFactory">org.scalamock.specs2.IsolatedMockFactory</a> to
+   get <b>isolated test cases</b> or</li><li>run each test case in separate <b>fixture context</b> - <a href="MockContext.html" class="extype" name="org.scalamock.specs2.MockContext">org.scalamock.specs2.MockContext</a>
+</li></ul></div><dl class="attributes block"> <dt>Annotations</dt><dd>
+                <span class="name">@deprecated</span>
+              
+        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 3.2)</i> MockFactory is buggy. Please use IsolatedMockFactory or MockContext instead</p></dd></dl></div>
     </li></ol>
             </div>
 

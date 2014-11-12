@@ -1,10 +1,9 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html >
 <html>
         <head>
-          <title>scalamock - ScalaMock 3.0 - org.scalamock</title>
-          <meta name="description" content="scalamock - ScalaMock 3.0 - org.scalamock" />
-          <meta name="keywords" content="scalamock ScalaMock 3.0 org.scalamock" />
+          <title>scalamock - ScalaMock 3.2 - org.scalamock</title>
+          <meta name="description" content="scalamock - ScalaMock 3.2 - org.scalamock" />
+          <meta name="keywords" content="scalamock ScalaMock 3.2 org.scalamock" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
       <link href="../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
@@ -31,7 +30,11 @@
       <div id="definition">
         <img src="../../lib/package_big.png" />
         <p id="owner"><a href="../package.html" class="extype" name="org">org</a></p>
-        <h1>scalamock</h1>
+        <h1>scalamock</h1> <span class="permalink">
+      <a href="../../index.html#org.scalamock.package" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       </div>
 
       <h4 id="signature" class="signature">
@@ -44,9 +47,8 @@
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><h4>ScalaMock: Native Scala Mocking</h4><p>To use ScalaMock, mix the relevant <code>MockFactory</code> trait into your test class.
-For ScalaTest, use <a href="scalatest/MockFactory.html" class="extype" name="org.scalamock.scalatest.MockFactory">org.scalamock.scalatest.MockFactory</a> and for Specs2
-use <a href="specs2/MockFactory.html" class="extype" name="org.scalamock.specs2.MockFactory">org.scalamock.specs2.MockFactory</a>.</p><p>At present, ScalaMock can only mock traits, Java interfaces, and non-final
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><h4>ScalaMock: Native Scala Mocking</h4><p>To use ScalaMock, you need the relevant <code>MockFactoryBase</code> trait implementation:</p><ul><li>for ScalaTest, use <a href="scalatest/MockFactory.html" class="extype" name="org.scalamock.scalatest.MockFactory">org.scalamock.scalatest.MockFactory</a>,</li><li>for Specs2 use <a href="specs2/IsolatedMockFactory.html" class="extype" name="org.scalamock.specs2.IsolatedMockFactory">org.scalamock.specs2.IsolatedMockFactory</a> or
+   <a href="specs2/MockContext.html" class="extype" name="org.scalamock.specs2.MockContext">org.scalamock.specs2.MockContext</a></li></ul><p>At present, ScalaMock can only mock traits, Java interfaces, and non-final
 classes that define a default constructor. A future version will be able to
 mock any class, and singleton/companion objects.</p><p>ScalaMock supports two different mocking styles - <i>expectations first</i> and
 <i>record then verify</i>. These styles can be mixed within a single test.</p><h4>Expectations-First Style</h4><p>In the expectations-first style, expectations are set on mock objects before
@@ -185,7 +187,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="ArgumentMatcher.html"><span class="name">ArgumentMatcher</span></a><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@ArgumentMatcherextendsProduct=&gt;Boolean" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.Call" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CallextendsProductwithSerializable"></a>
@@ -198,20 +204,28 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="Call.html"><span class="name">Call</span></a><span class="params">(<span name="target">target: <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a></span>, <span name="arguments">arguments: <span class="extype" name="scala.Product">Product</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@CallextendsProductwithSerializable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
-    </li><li name="org.scalamock.CallHandler" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+    </li><li name="org.scalamock.CallHandler" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CallHandler[R]extendsHandler"></a>
       <a id="CallHandler[R]:CallHandler[R]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier">abstract </span>
+        <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
         <a href="CallHandler.html"><span class="name">CallHandler</span></a><span class="tparams">[<span name="R">R</span>]</span><span class="result"> extends <span class="extype" name="org.scalamock.Handler">Handler</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@CallHandler[R]extendsHandler" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.CallHandler0" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CallHandler0[R]extendsCallHandler[R]"></a>
@@ -224,7 +238,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="CallHandler0.html"><span class="name">CallHandler0</span></a><span class="tparams">[<span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler0.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@CallHandler0[R]extendsCallHandler[R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.CallHandler1" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CallHandler1[T1,R]extendsCallHandler[R]"></a>
@@ -237,7 +255,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="CallHandler1.html"><span class="name">CallHandler1</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler1.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@CallHandler1[T1,R]extendsCallHandler[R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.CallHandler2" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CallHandler2[T1,T2,R]extendsCallHandler[R]"></a>
@@ -250,7 +272,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="CallHandler2.html"><span class="name">CallHandler2</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler2.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@CallHandler2[T1,T2,R]extendsCallHandler[R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.CallHandler3" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CallHandler3[T1,T2,T3,R]extendsCallHandler[R]"></a>
@@ -263,7 +289,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="CallHandler3.html"><span class="name">CallHandler3</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler3.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@CallHandler3[T1,T2,T3,R]extendsCallHandler[R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.CallHandler4" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CallHandler4[T1,T2,T3,T4,R]extendsCallHandler[R]"></a>
@@ -276,7 +306,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="CallHandler4.html"><span class="name">CallHandler4</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler4.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@CallHandler4[T1,T2,T3,T4,R]extendsCallHandler[R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.CallHandler5" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CallHandler5[T1,T2,T3,T4,T5,R]extendsCallHandler[R]"></a>
@@ -289,7 +323,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="CallHandler5.html"><span class="name">CallHandler5</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler5.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@CallHandler5[T1,T2,T3,T4,T5,R]extendsCallHandler[R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.CallHandler6" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CallHandler6[T1,T2,T3,T4,T5,T6,R]extendsCallHandler[R]"></a>
@@ -302,7 +340,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="CallHandler6.html"><span class="name">CallHandler6</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler6.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@CallHandler6[T1,T2,T3,T4,T5,T6,R]extendsCallHandler[R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.CallHandler7" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CallHandler7[T1,T2,T3,T4,T5,T6,T7,R]extendsCallHandler[R]"></a>
@@ -315,7 +357,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="CallHandler7.html"><span class="name">CallHandler7</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler7.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@CallHandler7[T1,T2,T3,T4,T5,T6,T7,R]extendsCallHandler[R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.CallHandler8" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CallHandler8[T1,T2,T3,T4,T5,T6,T7,T8,R]extendsCallHandler[R]"></a>
@@ -328,7 +374,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="CallHandler8.html"><span class="name">CallHandler8</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler8.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@CallHandler8[T1,T2,T3,T4,T5,T6,T7,T8,R]extendsCallHandler[R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.CallHandler9" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="CallHandler9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]extendsCallHandler[R]"></a>
@@ -341,10 +391,14 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="CallHandler9.html"><span class="name">CallHandler9</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="CallHandler.html" class="extype" name="org.scalamock.CallHandler">CallHandler</a>[<span class="extype" name="org.scalamock.CallHandler9.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@CallHandler9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]extendsCallHandler[R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.Defaultable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="Defaultable[T]extendsObject"></a>
+      <a id="Defaultable[T]extendsAnyRef"></a>
       <a id="Defaultable[T]:Defaultable[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -354,7 +408,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="Defaultable.html"><span class="name">Defaultable</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@Defaultable[T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.EpsilonMockParameter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="EpsilonMockParameterextendsMockParameter[Double]"></a>
@@ -367,10 +425,14 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="EpsilonMockParameter.html"><span class="name">EpsilonMockParameter</span></a><span class="result"> extends <a href="MockParameter.html" class="extype" name="org.scalamock.MockParameter">MockParameter</a>[<span class="extype" name="scala.Double">Double</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@EpsilonMockParameterextendsMockParameter[Double]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FakeFunction" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="FakeFunctionextendsObject"></a>
+      <a id="FakeFunctionextendsAnyRef"></a>
       <a id="FakeFunction:FakeFunction"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -380,7 +442,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FakeFunction.html"><span class="name">FakeFunction</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FakeFunctionextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FakeFunction0" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="FakeFunction0[R]extendsFakeFunctionwith()=&gt;RwithNiceToString"></a>
@@ -393,7 +459,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FakeFunction0.html"><span class="name">FakeFunction0</span></a><span class="tparams">[<span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with () ⇒ <span class="extype" name="org.scalamock.FakeFunction0.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FakeFunction0[R]extendsFakeFunctionwith()=&gt;RwithNiceToString" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FakeFunction1" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="FakeFunction1[T1,R]extendsFakeFunctionwithT1=&gt;RwithNiceToString"></a>
@@ -406,7 +476,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FakeFunction1.html"><span class="name">FakeFunction1</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with (<span class="extype" name="org.scalamock.FakeFunction1.T1">T1</span>) ⇒ <span class="extype" name="org.scalamock.FakeFunction1.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FakeFunction1[T1,R]extendsFakeFunctionwithT1=&gt;RwithNiceToString" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FakeFunction2" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="FakeFunction2[T1,T2,R]extendsFakeFunctionwith(T1,T2)=&gt;RwithNiceToString"></a>
@@ -419,7 +493,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FakeFunction2.html"><span class="name">FakeFunction2</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with (<span class="extype" name="org.scalamock.FakeFunction2.T1">T1</span>, <span class="extype" name="org.scalamock.FakeFunction2.T2">T2</span>) ⇒ <span class="extype" name="org.scalamock.FakeFunction2.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FakeFunction2[T1,T2,R]extendsFakeFunctionwith(T1,T2)=&gt;RwithNiceToString" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FakeFunction3" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="FakeFunction3[T1,T2,T3,R]extendsFakeFunctionwith(T1,T2,T3)=&gt;RwithNiceToString"></a>
@@ -432,7 +510,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FakeFunction3.html"><span class="name">FakeFunction3</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with (<span class="extype" name="org.scalamock.FakeFunction3.T1">T1</span>, <span class="extype" name="org.scalamock.FakeFunction3.T2">T2</span>, <span class="extype" name="org.scalamock.FakeFunction3.T3">T3</span>) ⇒ <span class="extype" name="org.scalamock.FakeFunction3.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FakeFunction3[T1,T2,T3,R]extendsFakeFunctionwith(T1,T2,T3)=&gt;RwithNiceToString" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FakeFunction4" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="FakeFunction4[T1,T2,T3,T4,R]extendsFakeFunctionwith(T1,T2,T3,T4)=&gt;RwithNiceToString"></a>
@@ -445,7 +527,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FakeFunction4.html"><span class="name">FakeFunction4</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with (<span class="extype" name="org.scalamock.FakeFunction4.T1">T1</span>, <span class="extype" name="org.scalamock.FakeFunction4.T2">T2</span>, <span class="extype" name="org.scalamock.FakeFunction4.T3">T3</span>, <span class="extype" name="org.scalamock.FakeFunction4.T4">T4</span>) ⇒ <span class="extype" name="org.scalamock.FakeFunction4.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FakeFunction4[T1,T2,T3,T4,R]extendsFakeFunctionwith(T1,T2,T3,T4)=&gt;RwithNiceToString" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FakeFunction5" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="FakeFunction5[T1,T2,T3,T4,T5,R]extendsFakeFunctionwith(T1,T2,T3,T4,T5)=&gt;RwithNiceToString"></a>
@@ -458,7 +544,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FakeFunction5.html"><span class="name">FakeFunction5</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with (<span class="extype" name="org.scalamock.FakeFunction5.T1">T1</span>, <span class="extype" name="org.scalamock.FakeFunction5.T2">T2</span>, <span class="extype" name="org.scalamock.FakeFunction5.T3">T3</span>, <span class="extype" name="org.scalamock.FakeFunction5.T4">T4</span>, <span class="extype" name="org.scalamock.FakeFunction5.T5">T5</span>) ⇒ <span class="extype" name="org.scalamock.FakeFunction5.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FakeFunction5[T1,T2,T3,T4,T5,R]extendsFakeFunctionwith(T1,T2,T3,T4,T5)=&gt;RwithNiceToString" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FakeFunction6" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="FakeFunction6[T1,T2,T3,T4,T5,T6,R]extendsFakeFunctionwith(T1,T2,T3,T4,T5,T6)=&gt;RwithNiceToString"></a>
@@ -471,7 +561,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FakeFunction6.html"><span class="name">FakeFunction6</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with (<span class="extype" name="org.scalamock.FakeFunction6.T1">T1</span>, <span class="extype" name="org.scalamock.FakeFunction6.T2">T2</span>, <span class="extype" name="org.scalamock.FakeFunction6.T3">T3</span>, <span class="extype" name="org.scalamock.FakeFunction6.T4">T4</span>, <span class="extype" name="org.scalamock.FakeFunction6.T5">T5</span>, <span class="extype" name="org.scalamock.FakeFunction6.T6">T6</span>) ⇒ <span class="extype" name="org.scalamock.FakeFunction6.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FakeFunction6[T1,T2,T3,T4,T5,T6,R]extendsFakeFunctionwith(T1,T2,T3,T4,T5,T6)=&gt;RwithNiceToString" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FakeFunction7" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="FakeFunction7[T1,T2,T3,T4,T5,T6,T7,R]extendsFakeFunctionwith(T1,T2,T3,T4,T5,T6,T7)=&gt;RwithNiceToString"></a>
@@ -484,7 +578,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FakeFunction7.html"><span class="name">FakeFunction7</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with (<span class="extype" name="org.scalamock.FakeFunction7.T1">T1</span>, <span class="extype" name="org.scalamock.FakeFunction7.T2">T2</span>, <span class="extype" name="org.scalamock.FakeFunction7.T3">T3</span>, <span class="extype" name="org.scalamock.FakeFunction7.T4">T4</span>, <span class="extype" name="org.scalamock.FakeFunction7.T5">T5</span>, <span class="extype" name="org.scalamock.FakeFunction7.T6">T6</span>, <span class="extype" name="org.scalamock.FakeFunction7.T7">T7</span>) ⇒ <span class="extype" name="org.scalamock.FakeFunction7.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FakeFunction7[T1,T2,T3,T4,T5,T6,T7,R]extendsFakeFunctionwith(T1,T2,T3,T4,T5,T6,T7)=&gt;RwithNiceToString" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FakeFunction8" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="FakeFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]extendsFakeFunctionwith(T1,T2,T3,T4,T5,T6,T7,T8)=&gt;RwithNiceToString"></a>
@@ -497,7 +595,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FakeFunction8.html"><span class="name">FakeFunction8</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with (<span class="extype" name="org.scalamock.FakeFunction8.T1">T1</span>, <span class="extype" name="org.scalamock.FakeFunction8.T2">T2</span>, <span class="extype" name="org.scalamock.FakeFunction8.T3">T3</span>, <span class="extype" name="org.scalamock.FakeFunction8.T4">T4</span>, <span class="extype" name="org.scalamock.FakeFunction8.T5">T5</span>, <span class="extype" name="org.scalamock.FakeFunction8.T6">T6</span>, <span class="extype" name="org.scalamock.FakeFunction8.T7">T7</span>, <span class="extype" name="org.scalamock.FakeFunction8.T8">T8</span>) ⇒ <span class="extype" name="org.scalamock.FakeFunction8.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FakeFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]extendsFakeFunctionwith(T1,T2,T3,T4,T5,T6,T7,T8)=&gt;RwithNiceToString" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FakeFunction9" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="FakeFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]extendsFakeFunctionwith(T1,T2,T3,T4,T5,T6,T7,T8,T9)=&gt;RwithNiceToString"></a>
@@ -510,7 +612,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FakeFunction9.html"><span class="name">FakeFunction9</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction.html" class="extype" name="org.scalamock.FakeFunction">FakeFunction</a> with (<span class="extype" name="org.scalamock.FakeFunction9.T1">T1</span>, <span class="extype" name="org.scalamock.FakeFunction9.T2">T2</span>, <span class="extype" name="org.scalamock.FakeFunction9.T3">T3</span>, <span class="extype" name="org.scalamock.FakeFunction9.T4">T4</span>, <span class="extype" name="org.scalamock.FakeFunction9.T5">T5</span>, <span class="extype" name="org.scalamock.FakeFunction9.T6">T6</span>, <span class="extype" name="org.scalamock.FakeFunction9.T7">T7</span>, <span class="extype" name="org.scalamock.FakeFunction9.T8">T8</span>, <span class="extype" name="org.scalamock.FakeFunction9.T9">T9</span>) ⇒ <span class="extype" name="org.scalamock.FakeFunction9.R">R</span> with <a href="NiceToString.html" class="extype" name="org.scalamock.NiceToString">NiceToString</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FakeFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]extendsFakeFunctionwith(T1,T2,T3,T4,T5,T6,T7,T8,T9)=&gt;RwithNiceToString" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FunctionAdapter0" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="FunctionAdapter0[R]extendsProduct=&gt;R"></a>
@@ -523,7 +629,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FunctionAdapter0.html"><span class="name">FunctionAdapter0</span></a><span class="tparams">[<span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter0.R">R</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FunctionAdapter0[R]extendsProduct=&gt;R" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FunctionAdapter1" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="FunctionAdapter1[T1,R]extendsProduct=&gt;R"></a>
@@ -536,7 +646,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FunctionAdapter1.html"><span class="name">FunctionAdapter1</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter1.R">R</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FunctionAdapter1[T1,R]extendsProduct=&gt;R" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FunctionAdapter2" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="FunctionAdapter2[T1,T2,R]extendsProduct=&gt;R"></a>
@@ -549,7 +663,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FunctionAdapter2.html"><span class="name">FunctionAdapter2</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter2.R">R</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FunctionAdapter2[T1,T2,R]extendsProduct=&gt;R" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FunctionAdapter3" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="FunctionAdapter3[T1,T2,T3,R]extendsProduct=&gt;R"></a>
@@ -562,7 +680,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FunctionAdapter3.html"><span class="name">FunctionAdapter3</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter3.R">R</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FunctionAdapter3[T1,T2,T3,R]extendsProduct=&gt;R" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FunctionAdapter4" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="FunctionAdapter4[T1,T2,T3,T4,R]extendsProduct=&gt;R"></a>
@@ -575,7 +697,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FunctionAdapter4.html"><span class="name">FunctionAdapter4</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter4.R">R</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FunctionAdapter4[T1,T2,T3,T4,R]extendsProduct=&gt;R" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FunctionAdapter5" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="FunctionAdapter5[T1,T2,T3,T4,T5,R]extendsProduct=&gt;R"></a>
@@ -588,7 +714,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FunctionAdapter5.html"><span class="name">FunctionAdapter5</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter5.R">R</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FunctionAdapter5[T1,T2,T3,T4,T5,R]extendsProduct=&gt;R" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FunctionAdapter6" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="FunctionAdapter6[T1,T2,T3,T4,T5,T6,R]extendsProduct=&gt;R"></a>
@@ -601,7 +731,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FunctionAdapter6.html"><span class="name">FunctionAdapter6</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter6.R">R</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FunctionAdapter6[T1,T2,T3,T4,T5,T6,R]extendsProduct=&gt;R" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FunctionAdapter7" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="FunctionAdapter7[T1,T2,T3,T4,T5,T6,T7,R]extendsProduct=&gt;R"></a>
@@ -614,7 +748,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FunctionAdapter7.html"><span class="name">FunctionAdapter7</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter7.R">R</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FunctionAdapter7[T1,T2,T3,T4,T5,T6,T7,R]extendsProduct=&gt;R" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FunctionAdapter8" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="FunctionAdapter8[T1,T2,T3,T4,T5,T6,T7,T8,R]extendsProduct=&gt;R"></a>
@@ -627,7 +765,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FunctionAdapter8.html"><span class="name">FunctionAdapter8</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter8.R">R</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FunctionAdapter8[T1,T2,T3,T4,T5,T6,T7,T8,R]extendsProduct=&gt;R" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.FunctionAdapter9" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="FunctionAdapter9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]extendsProduct=&gt;R"></a>
@@ -640,10 +782,14 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="FunctionAdapter9.html"><span class="name">FunctionAdapter9</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span><span class="result"> extends (<span class="extype" name="scala.Product">Product</span>) ⇒ <span class="extype" name="org.scalamock.FunctionAdapter9.R">R</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@FunctionAdapter9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]extendsProduct=&gt;R" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.LowPriorityDefaultable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="LowPriorityDefaultableextendsObject"></a>
+      <a id="LowPriorityDefaultableextendsAnyRef"></a>
       <a id="LowPriorityDefaultable:LowPriorityDefaultable"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -653,7 +799,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="LowPriorityDefaultable.html"><span class="name">LowPriorityDefaultable</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@LowPriorityDefaultableextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.MatchAny" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MatchAnyextendsEquals"></a>
@@ -666,7 +816,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="MatchAny.html"><span class="name">MatchAny</span></a><span class="result"> extends <span class="extype" name="scala.Equals">Equals</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@MatchAnyextendsEquals" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.MatchEpsilon" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MatchEpsilonextendsEquals"></a>
@@ -679,10 +833,14 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="MatchEpsilon.html"><span class="name">MatchEpsilon</span></a><span class="result"> extends <span class="extype" name="scala.Equals">Equals</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@MatchEpsilonextendsEquals" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.Mock" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="MockextendsObject"></a>
+      <a id="MockextendsAnyRef"></a>
       <a id="Mock:Mock"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -692,7 +850,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="Mock.html"><span class="name">Mock</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@MockextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.MockFactoryBase" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
       <a id="MockFactoryBaseextendsMock"></a>
@@ -705,10 +867,14 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="MockFactoryBase.html"><span class="name">MockFactoryBase</span></a><span class="result"> extends <a href="Mock.html" class="extype" name="org.scalamock.Mock">Mock</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@MockFactoryBaseextendsMock" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.MockFunction" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="MockFunctionextendsObject"></a>
+      <a id="MockFunctionextendsAnyRef"></a>
       <a id="MockFunction:MockFunction"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -718,7 +884,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="MockFunction.html"><span class="name">MockFunction</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@MockFunctionextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.MockFunction0" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MockFunction0[R]extendsFakeFunction0[R]withMockFunction"></a>
@@ -731,7 +901,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="MockFunction0.html"><span class="name">MockFunction0</span></a><span class="tparams">[<span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction0.html" class="extype" name="org.scalamock.FakeFunction0">FakeFunction0</a>[<span class="extype" name="org.scalamock.MockFunction0.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@MockFunction0[R]extendsFakeFunction0[R]withMockFunction" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.MockFunction1" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MockFunction1[T1,R]extendsFakeFunction1[T1,R]withMockFunction"></a>
@@ -744,7 +918,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="MockFunction1.html"><span class="name">MockFunction1</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction1.html" class="extype" name="org.scalamock.FakeFunction1">FakeFunction1</a>[<span class="extype" name="org.scalamock.MockFunction1.T1">T1</span>, <span class="extype" name="org.scalamock.MockFunction1.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@MockFunction1[T1,R]extendsFakeFunction1[T1,R]withMockFunction" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.MockFunction2" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MockFunction2[T1,T2,R]extendsFakeFunction2[T1,T2,R]withMockFunction"></a>
@@ -757,7 +935,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="MockFunction2.html"><span class="name">MockFunction2</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction2.html" class="extype" name="org.scalamock.FakeFunction2">FakeFunction2</a>[<span class="extype" name="org.scalamock.MockFunction2.T1">T1</span>, <span class="extype" name="org.scalamock.MockFunction2.T2">T2</span>, <span class="extype" name="org.scalamock.MockFunction2.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@MockFunction2[T1,T2,R]extendsFakeFunction2[T1,T2,R]withMockFunction" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.MockFunction3" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MockFunction3[T1,T2,T3,R]extendsFakeFunction3[T1,T2,T3,R]withMockFunction"></a>
@@ -770,7 +952,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="MockFunction3.html"><span class="name">MockFunction3</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction3.html" class="extype" name="org.scalamock.FakeFunction3">FakeFunction3</a>[<span class="extype" name="org.scalamock.MockFunction3.T1">T1</span>, <span class="extype" name="org.scalamock.MockFunction3.T2">T2</span>, <span class="extype" name="org.scalamock.MockFunction3.T3">T3</span>, <span class="extype" name="org.scalamock.MockFunction3.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@MockFunction3[T1,T2,T3,R]extendsFakeFunction3[T1,T2,T3,R]withMockFunction" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.MockFunction4" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MockFunction4[T1,T2,T3,T4,R]extendsFakeFunction4[T1,T2,T3,T4,R]withMockFunction"></a>
@@ -783,7 +969,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="MockFunction4.html"><span class="name">MockFunction4</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction4.html" class="extype" name="org.scalamock.FakeFunction4">FakeFunction4</a>[<span class="extype" name="org.scalamock.MockFunction4.T1">T1</span>, <span class="extype" name="org.scalamock.MockFunction4.T2">T2</span>, <span class="extype" name="org.scalamock.MockFunction4.T3">T3</span>, <span class="extype" name="org.scalamock.MockFunction4.T4">T4</span>, <span class="extype" name="org.scalamock.MockFunction4.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@MockFunction4[T1,T2,T3,T4,R]extendsFakeFunction4[T1,T2,T3,T4,R]withMockFunction" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.MockFunction5" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MockFunction5[T1,T2,T3,T4,T5,R]extendsFakeFunction5[T1,T2,T3,T4,T5,R]withMockFunction"></a>
@@ -796,7 +986,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="MockFunction5.html"><span class="name">MockFunction5</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction5.html" class="extype" name="org.scalamock.FakeFunction5">FakeFunction5</a>[<span class="extype" name="org.scalamock.MockFunction5.T1">T1</span>, <span class="extype" name="org.scalamock.MockFunction5.T2">T2</span>, <span class="extype" name="org.scalamock.MockFunction5.T3">T3</span>, <span class="extype" name="org.scalamock.MockFunction5.T4">T4</span>, <span class="extype" name="org.scalamock.MockFunction5.T5">T5</span>, <span class="extype" name="org.scalamock.MockFunction5.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@MockFunction5[T1,T2,T3,T4,T5,R]extendsFakeFunction5[T1,T2,T3,T4,T5,R]withMockFunction" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.MockFunction6" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MockFunction6[T1,T2,T3,T4,T5,T6,R]extendsFakeFunction6[T1,T2,T3,T4,T5,T6,R]withMockFunction"></a>
@@ -809,7 +1003,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="MockFunction6.html"><span class="name">MockFunction6</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction6.html" class="extype" name="org.scalamock.FakeFunction6">FakeFunction6</a>[<span class="extype" name="org.scalamock.MockFunction6.T1">T1</span>, <span class="extype" name="org.scalamock.MockFunction6.T2">T2</span>, <span class="extype" name="org.scalamock.MockFunction6.T3">T3</span>, <span class="extype" name="org.scalamock.MockFunction6.T4">T4</span>, <span class="extype" name="org.scalamock.MockFunction6.T5">T5</span>, <span class="extype" name="org.scalamock.MockFunction6.T6">T6</span>, <span class="extype" name="org.scalamock.MockFunction6.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@MockFunction6[T1,T2,T3,T4,T5,T6,R]extendsFakeFunction6[T1,T2,T3,T4,T5,T6,R]withMockFunction" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.MockFunction7" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MockFunction7[T1,T2,T3,T4,T5,T6,T7,R]extendsFakeFunction7[T1,T2,T3,T4,T5,T6,T7,R]withMockFunction"></a>
@@ -822,7 +1020,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="MockFunction7.html"><span class="name">MockFunction7</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction7.html" class="extype" name="org.scalamock.FakeFunction7">FakeFunction7</a>[<span class="extype" name="org.scalamock.MockFunction7.T1">T1</span>, <span class="extype" name="org.scalamock.MockFunction7.T2">T2</span>, <span class="extype" name="org.scalamock.MockFunction7.T3">T3</span>, <span class="extype" name="org.scalamock.MockFunction7.T4">T4</span>, <span class="extype" name="org.scalamock.MockFunction7.T5">T5</span>, <span class="extype" name="org.scalamock.MockFunction7.T6">T6</span>, <span class="extype" name="org.scalamock.MockFunction7.T7">T7</span>, <span class="extype" name="org.scalamock.MockFunction7.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@MockFunction7[T1,T2,T3,T4,T5,T6,T7,R]extendsFakeFunction7[T1,T2,T3,T4,T5,T6,T7,R]withMockFunction" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.MockFunction8" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MockFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]extendsFakeFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]withMockFunction"></a>
@@ -835,7 +1037,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="MockFunction8.html"><span class="name">MockFunction8</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction8.html" class="extype" name="org.scalamock.FakeFunction8">FakeFunction8</a>[<span class="extype" name="org.scalamock.MockFunction8.T1">T1</span>, <span class="extype" name="org.scalamock.MockFunction8.T2">T2</span>, <span class="extype" name="org.scalamock.MockFunction8.T3">T3</span>, <span class="extype" name="org.scalamock.MockFunction8.T4">T4</span>, <span class="extype" name="org.scalamock.MockFunction8.T5">T5</span>, <span class="extype" name="org.scalamock.MockFunction8.T6">T6</span>, <span class="extype" name="org.scalamock.MockFunction8.T7">T7</span>, <span class="extype" name="org.scalamock.MockFunction8.T8">T8</span>, <span class="extype" name="org.scalamock.MockFunction8.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@MockFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]extendsFakeFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]withMockFunction" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.MockFunction9" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MockFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]extendsFakeFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]withMockFunction"></a>
@@ -848,10 +1054,14 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="MockFunction9.html"><span class="name">MockFunction9</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction9.html" class="extype" name="org.scalamock.FakeFunction9">FakeFunction9</a>[<span class="extype" name="org.scalamock.MockFunction9.T1">T1</span>, <span class="extype" name="org.scalamock.MockFunction9.T2">T2</span>, <span class="extype" name="org.scalamock.MockFunction9.T3">T3</span>, <span class="extype" name="org.scalamock.MockFunction9.T4">T4</span>, <span class="extype" name="org.scalamock.MockFunction9.T5">T5</span>, <span class="extype" name="org.scalamock.MockFunction9.T6">T6</span>, <span class="extype" name="org.scalamock.MockFunction9.T7">T7</span>, <span class="extype" name="org.scalamock.MockFunction9.T8">T8</span>, <span class="extype" name="org.scalamock.MockFunction9.T9">T9</span>, <span class="extype" name="org.scalamock.MockFunction9.R">R</span>] with <a href="MockFunction.html" class="extype" name="org.scalamock.MockFunction">MockFunction</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@MockFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]extendsFakeFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]withMockFunction" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.MockParameter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="MockParameter[T]extendsObject"></a>
+      <a id="MockParameter[T]extendsAnyRef"></a>
       <a id="MockParameter[T]:MockParameter[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -861,10 +1071,14 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="MockParameter.html"><span class="name">MockParameter</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@MockParameter[T]extendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.NiceToString" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="NiceToStringextendsObject"></a>
+      <a id="NiceToStringextendsAnyRef"></a>
       <a id="NiceToString:NiceToString"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -874,7 +1088,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="NiceToString.html"><span class="name">NiceToString</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@NiceToStringextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.StubFunction0" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StubFunction0[R]extendsFakeFunction0[R]"></a>
@@ -887,7 +1105,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="StubFunction0.html"><span class="name">StubFunction0</span></a><span class="tparams">[<span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction0.html" class="extype" name="org.scalamock.FakeFunction0">FakeFunction0</a>[<span class="extype" name="org.scalamock.StubFunction0.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@StubFunction0[R]extendsFakeFunction0[R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.StubFunction1" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StubFunction1[T1,R]extendsFakeFunction1[T1,R]"></a>
@@ -900,7 +1122,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="StubFunction1.html"><span class="name">StubFunction1</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction1.html" class="extype" name="org.scalamock.FakeFunction1">FakeFunction1</a>[<span class="extype" name="org.scalamock.StubFunction1.T1">T1</span>, <span class="extype" name="org.scalamock.StubFunction1.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@StubFunction1[T1,R]extendsFakeFunction1[T1,R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.StubFunction2" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StubFunction2[T1,T2,R]extendsFakeFunction2[T1,T2,R]"></a>
@@ -913,7 +1139,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="StubFunction2.html"><span class="name">StubFunction2</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction2.html" class="extype" name="org.scalamock.FakeFunction2">FakeFunction2</a>[<span class="extype" name="org.scalamock.StubFunction2.T1">T1</span>, <span class="extype" name="org.scalamock.StubFunction2.T2">T2</span>, <span class="extype" name="org.scalamock.StubFunction2.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@StubFunction2[T1,T2,R]extendsFakeFunction2[T1,T2,R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.StubFunction3" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StubFunction3[T1,T2,T3,R]extendsFakeFunction3[T1,T2,T3,R]"></a>
@@ -926,7 +1156,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="StubFunction3.html"><span class="name">StubFunction3</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction3.html" class="extype" name="org.scalamock.FakeFunction3">FakeFunction3</a>[<span class="extype" name="org.scalamock.StubFunction3.T1">T1</span>, <span class="extype" name="org.scalamock.StubFunction3.T2">T2</span>, <span class="extype" name="org.scalamock.StubFunction3.T3">T3</span>, <span class="extype" name="org.scalamock.StubFunction3.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@StubFunction3[T1,T2,T3,R]extendsFakeFunction3[T1,T2,T3,R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.StubFunction4" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StubFunction4[T1,T2,T3,T4,R]extendsFakeFunction4[T1,T2,T3,T4,R]"></a>
@@ -939,7 +1173,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="StubFunction4.html"><span class="name">StubFunction4</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction4.html" class="extype" name="org.scalamock.FakeFunction4">FakeFunction4</a>[<span class="extype" name="org.scalamock.StubFunction4.T1">T1</span>, <span class="extype" name="org.scalamock.StubFunction4.T2">T2</span>, <span class="extype" name="org.scalamock.StubFunction4.T3">T3</span>, <span class="extype" name="org.scalamock.StubFunction4.T4">T4</span>, <span class="extype" name="org.scalamock.StubFunction4.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@StubFunction4[T1,T2,T3,T4,R]extendsFakeFunction4[T1,T2,T3,T4,R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.StubFunction5" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StubFunction5[T1,T2,T3,T4,T5,R]extendsFakeFunction5[T1,T2,T3,T4,T5,R]"></a>
@@ -952,7 +1190,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="StubFunction5.html"><span class="name">StubFunction5</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction5.html" class="extype" name="org.scalamock.FakeFunction5">FakeFunction5</a>[<span class="extype" name="org.scalamock.StubFunction5.T1">T1</span>, <span class="extype" name="org.scalamock.StubFunction5.T2">T2</span>, <span class="extype" name="org.scalamock.StubFunction5.T3">T3</span>, <span class="extype" name="org.scalamock.StubFunction5.T4">T4</span>, <span class="extype" name="org.scalamock.StubFunction5.T5">T5</span>, <span class="extype" name="org.scalamock.StubFunction5.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@StubFunction5[T1,T2,T3,T4,T5,R]extendsFakeFunction5[T1,T2,T3,T4,T5,R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.StubFunction6" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StubFunction6[T1,T2,T3,T4,T5,T6,R]extendsFakeFunction6[T1,T2,T3,T4,T5,T6,R]"></a>
@@ -965,7 +1207,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="StubFunction6.html"><span class="name">StubFunction6</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction6.html" class="extype" name="org.scalamock.FakeFunction6">FakeFunction6</a>[<span class="extype" name="org.scalamock.StubFunction6.T1">T1</span>, <span class="extype" name="org.scalamock.StubFunction6.T2">T2</span>, <span class="extype" name="org.scalamock.StubFunction6.T3">T3</span>, <span class="extype" name="org.scalamock.StubFunction6.T4">T4</span>, <span class="extype" name="org.scalamock.StubFunction6.T5">T5</span>, <span class="extype" name="org.scalamock.StubFunction6.T6">T6</span>, <span class="extype" name="org.scalamock.StubFunction6.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@StubFunction6[T1,T2,T3,T4,T5,T6,R]extendsFakeFunction6[T1,T2,T3,T4,T5,T6,R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.StubFunction7" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StubFunction7[T1,T2,T3,T4,T5,T6,T7,R]extendsFakeFunction7[T1,T2,T3,T4,T5,T6,T7,R]"></a>
@@ -978,7 +1224,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="StubFunction7.html"><span class="name">StubFunction7</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction7.html" class="extype" name="org.scalamock.FakeFunction7">FakeFunction7</a>[<span class="extype" name="org.scalamock.StubFunction7.T1">T1</span>, <span class="extype" name="org.scalamock.StubFunction7.T2">T2</span>, <span class="extype" name="org.scalamock.StubFunction7.T3">T3</span>, <span class="extype" name="org.scalamock.StubFunction7.T4">T4</span>, <span class="extype" name="org.scalamock.StubFunction7.T5">T5</span>, <span class="extype" name="org.scalamock.StubFunction7.T6">T6</span>, <span class="extype" name="org.scalamock.StubFunction7.T7">T7</span>, <span class="extype" name="org.scalamock.StubFunction7.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@StubFunction7[T1,T2,T3,T4,T5,T6,T7,R]extendsFakeFunction7[T1,T2,T3,T4,T5,T6,T7,R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.StubFunction8" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StubFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]extendsFakeFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]"></a>
@@ -991,7 +1241,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="StubFunction8.html"><span class="name">StubFunction8</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction8.html" class="extype" name="org.scalamock.FakeFunction8">FakeFunction8</a>[<span class="extype" name="org.scalamock.StubFunction8.T1">T1</span>, <span class="extype" name="org.scalamock.StubFunction8.T2">T2</span>, <span class="extype" name="org.scalamock.StubFunction8.T3">T3</span>, <span class="extype" name="org.scalamock.StubFunction8.T4">T4</span>, <span class="extype" name="org.scalamock.StubFunction8.T5">T5</span>, <span class="extype" name="org.scalamock.StubFunction8.T6">T6</span>, <span class="extype" name="org.scalamock.StubFunction8.T7">T7</span>, <span class="extype" name="org.scalamock.StubFunction8.T8">T8</span>, <span class="extype" name="org.scalamock.StubFunction8.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@StubFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]extendsFakeFunction8[T1,T2,T3,T4,T5,T6,T7,T8,R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.StubFunction9" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="StubFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]extendsFakeFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]"></a>
@@ -1004,10 +1258,14 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="StubFunction9.html"><span class="name">StubFunction9</span></a><span class="tparams">[<span name="T1">T1</span>, <span name="T2">T2</span>, <span name="T3">T3</span>, <span name="T4">T4</span>, <span name="T5">T5</span>, <span name="T6">T6</span>, <span name="T7">T7</span>, <span name="T8">T8</span>, <span name="T9">T9</span>, <span name="R">R</span>]</span><span class="result"> extends <a href="FakeFunction9.html" class="extype" name="org.scalamock.FakeFunction9">FakeFunction9</a>[<span class="extype" name="org.scalamock.StubFunction9.T1">T1</span>, <span class="extype" name="org.scalamock.StubFunction9.T2">T2</span>, <span class="extype" name="org.scalamock.StubFunction9.T3">T3</span>, <span class="extype" name="org.scalamock.StubFunction9.T4">T4</span>, <span class="extype" name="org.scalamock.StubFunction9.T5">T5</span>, <span class="extype" name="org.scalamock.StubFunction9.T6">T6</span>, <span class="extype" name="org.scalamock.StubFunction9.T7">T7</span>, <span class="extype" name="org.scalamock.StubFunction9.T8">T8</span>, <span class="extype" name="org.scalamock.StubFunction9.T9">T9</span>, <span class="extype" name="org.scalamock.StubFunction9.R">R</span>]</span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@StubFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]extendsFakeFunction9[T1,T2,T3,T4,T5,T6,T7,T8,T9,R]" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.Verify" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
-      <a id="VerifyextendsObject"></a>
+      <a id="VerifyextendsAnyRef"></a>
       <a id="Verify:Verify"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -1017,7 +1275,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="Verify.html"><span class="name">Verify</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@VerifyextendsAnyRef" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
@@ -1037,7 +1299,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="CallHandler$.html"><span class="name">CallHandler</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@CallHandler" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.Defaultable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="Defaultable"></a>
@@ -1050,7 +1316,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="Defaultable$.html"><span class="name">Defaultable</span></a><span class="result"> extends <a href="LowPriorityDefaultable.html" class="extype" name="org.scalamock.LowPriorityDefaultable">LowPriorityDefaultable</a></span>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@Defaultable" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.MatchEpsilon" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MatchEpsilon"></a>
@@ -1063,7 +1333,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="MatchEpsilon$.html"><span class="name">MatchEpsilon</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@MatchEpsilon" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.MockImpl" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MockImpl"></a>
@@ -1076,7 +1350,28 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="MockImpl$.html"><span class="name">MockImpl</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@MockImpl" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
+      
+    </li><li name="org.scalamock.proxy" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="proxy"></a>
+      <a id="proxy:proxy"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="proxy/package.html"><span class="name">proxy</span></a>
+      </span>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@proxy" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.scalatest" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="scalatest"></a>
@@ -1089,7 +1384,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="scalatest/package.html"><span class="name">scalatest</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@scalatest" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li><li name="org.scalamock.specs2" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="specs2"></a>
@@ -1102,7 +1401,11 @@ before the test completes - it's an error to call a mock afterwards.
       <span class="symbol">
         <a href="specs2/package.html"><span class="name">specs2</span></a>
       </span>
-      </h4>
+      </h4><span class="permalink">
+      <a href="../../index.html#org.scalamock.package@specs2" title="Permalink" target="_top">
+        <img src="../../lib/permalink.png" />
+      </a>
+    </span>
       
     </li></ol>
             </div>
