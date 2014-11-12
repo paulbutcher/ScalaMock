@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/assets/ico/favicon.ico">
+    <link rel="alternate" type="application/rss+xml" href="/feed.xml" title="RSS feed for this page"/>
+
+    <title>ScalaMock - User Guide - Installation</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/highligh-js-styles/default.css" rel="stylesheet" >
+    <link href="/assets/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="/assets/js/modernizr.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-56676479-1', 'auto');
+      ga('send', 'pageview');
+   </script>
+</head>
+
+
+    <body>
+        <!-- Fixed navbar -->
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">ScalaMock</a>
+    </div>
+    <div class="navbar-collapse collapse navbar-right">
+      <ul class="nav navbar-nav">
+        <li ><a href="/">Home</a></li>
+        <li ><a href="/news/">News</a></li>
+        <li ><a href="/quick-start/">Quick Start</a></li>
+        <li class="active"><a href="/user-guide/">User Guide</a></li>
+        <li ><a href="/roadmap/">Roadmap</a></li>
+        <li ><a href="/feedback/">Feedback</a></li>
+        <li><a href="http://github.com/paulbutcher/scalamock">Github</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+
+
+            <div id="blue">
+    <div class="container">
+        <div class="row">
+            <h3>User Guide - Installation</h3>
+        </div><!-- /row -->
+    </div> <!-- /container -->
+</div><!-- /blue -->
+    
+
+<div class="container mb" id="main-content">
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-lg-push-8 col-md-push-8" id="sidebar">
+    
+    
+
+    
+
+    <h4><a href="/user-guide/">User Guide index</a></h4>
+    <div class="hline"></div>
+
+
+    <ul class="page-index">
+    
+        
+            <li> <a href="/user-guide/installation/">Installation </a>
+            
+                <ul><li class="toc_level-1 toc_section-1"><a href="#packages"><span class="toctext">Packages</span></a></li><li class="toc_level-1 toc_section-2"><a href="#sources"><span class="toctext">Sources</span></a></li><li class="toc_level-1 toc_section-3"><a href="#sbt-projects"><span class="toctext">sbt projects</span></a></li><li class="toc_level-1 toc_section-4"><a href="#maven-projects"><span class="toctext">Maven projects</span></a></li></ul>
+            
+            </li>
+        
+    
+        
+            <li> <a href="/user-guide/integration/">Integration with testing frameworks </a>
+            
+            </li>
+        
+    
+        
+            <li> <a href="/user-guide/features/">Features </a>
+            
+            </li>
+        
+    
+        
+            <li> <a href="/user-guide/mocking_style/">Choosing your mocking style </a>
+            
+            </li>
+        
+    
+        
+            <li> <a href="/user-guide/matching/">Argument matching </a>
+            
+            </li>
+        
+    
+        
+            <li> <a href="/user-guide/ordering/">Ordering </a>
+            
+            </li>
+        
+    
+        
+            <li> <a href="/user-guide/sharing-scalatest/">Sharing mocks and expectations in ScalaTest </a>
+            
+            </li>
+        
+    
+        
+            <li> <a href="/user-guide/sharing-specs2/">Sharing mocks and expectations in Specs2 </a>
+            
+            </li>
+        
+    
+        
+            <li> <a href="/user-guide/advanced_topics/">Advanced topics </a>
+            
+            </li>
+        
+    
+        
+            <li> <a href="/user-guide/faq/">FAQ </a>
+            
+            </li>
+        
+    
+        
+        
+    
+    </ul>
+
+    
+
+
+</div>
+
+
+        <! -- BLOG POSTS LIST -->
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-lg-pull-4 col-md-pull-4">
+            <h1 id="installation">Installation</h1>
+
+<h2 id="packages">Packages</h2>
+
+<p>You can download ScalaMock jars and sources from <a href="https://oss.sonatype.org/content/repositories/releases/org/scalamock/">Sonatype</a>.</p>
+
+<h2 id="sources">Sources</h2>
+
+<p>You can find the ScalaMock repository and source code on <a href="https://github.com/paulbutcher/ScalaMock">Github</a>.</p>
+
+<h2 id="sbt-projects">sbt projects</h2>
+
+<p>To use ScalaMock in <a href="http://www.scala-sbt.org/">sbt</a> with <a href="http://www.scalatest.org/">ScalaTest</a> add the following to your project file:</p>
+
+<pre><code class="language-scala">libraryDependencies += "org.scalamock" %% "scalamock-scalatest-support" % "3.2" % "test"
+</code></pre>
+
+<p>To use ScalaMock with <a href="http://etorreborre.github.com/specs2/">Specs2</a>:</p>
+
+<pre><code class="language-scala">libraryDependencies += "org.scalamock" %% "scalamock-specs2-support" % "3.2" % "test"
+</code></pre>
+
+<h2 id="maven-projects">Maven projects</h2>
+
+<p>To include ScalaMock in your Maven project add the following to your <code>pom.xml</code>:</p>
+
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.scalamock&lt;/groupId&gt;
+    &lt;artifactId&gt;scalamock-scalatest-support_2.11&lt;/artifactId&gt;
+    &lt;version&gt;3.2&lt;/version&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+
+        </div><! --/col-lg-8 -->
+
+
+    </div><! --/row -->
+</div><! --/container -->
+
+
+        <!--
+<div id="footerwrap">
+    <div class="container">
+        <p>ScalaMock - native Scala mocking framework</p>
+    </div>
+</div>
+-->
+<!-- based on https://github.com/st4ple/solid-jekyll -->
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    </body>
+</html>

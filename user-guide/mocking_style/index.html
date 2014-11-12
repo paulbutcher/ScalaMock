@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="/assets/ico/favicon.ico">
+    <link rel="alternate" type="application/rss+xml" href="/feed.xml" title="RSS feed for this page"/>
+
+    <title>ScalaMock - User Guide - Choosing your mocking style</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/assets/css/style.css" rel="stylesheet">
+    <link href="/assets/css/highligh-js-styles/default.css" rel="stylesheet" >
+    <link href="/assets/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="/assets/js/modernizr.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-56676479-1', 'auto');
+      ga('send', 'pageview');
+   </script>
+</head>
+
+
+    <body>
+        <!-- Fixed navbar -->
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">ScalaMock</a>
+    </div>
+    <div class="navbar-collapse collapse navbar-right">
+      <ul class="nav navbar-nav">
+        <li ><a href="/">Home</a></li>
+        <li ><a href="/news/">News</a></li>
+        <li ><a href="/quick-start/">Quick Start</a></li>
+        <li class="active"><a href="/user-guide/">User Guide</a></li>
+        <li ><a href="/roadmap/">Roadmap</a></li>
+        <li ><a href="/feedback/">Feedback</a></li>
+        <li><a href="http://github.com/paulbutcher/scalamock">Github</a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>
+
+
+            <div id="blue">
+    <div class="container">
+        <div class="row">
+            <h3>User Guide - Choosing your mocking style</h3>
+        </div><!-- /row -->
+    </div> <!-- /container -->
+</div><!-- /blue -->
+    
+
+<div class="container mb" id="main-content">
+    <div class="row">
+
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 col-lg-push-8 col-md-push-8" id="sidebar">
+    
+    
+
+    
+
+    <h4><a href="/user-guide/">User Guide index</a></h4>
+    <div class="hline"></div>
+
+
+    <ul class="page-index">
+    
+        
+            <li> <a href="/user-guide/installation/">Installation </a>
+            
+            </li>
+        
+    
+        
+            <li> <a href="/user-guide/integration/">Integration with testing frameworks </a>
+            
+            </li>
+        
+    
+        
+            <li> <a href="/user-guide/features/">Features </a>
+            
+            </li>
+        
+    
+        
+            <li> <a href="/user-guide/mocking_style/">Choosing your mocking style </a>
+            
+                <ul><li class="toc_level-1 toc_section-1"><a href="#expectations-first-style"><span class="toctext">Expectations-First Style</span></a><ul><li class="toc_level-2 toc_section-2"><a href="#mocking-functions"><span class="toctext">Mocking functions</span></a></li><li class="toc_level-2 toc_section-3"><a href="#mocking-objects"><span class="toctext">Mocking objects</span></a></li></ul></li><li class="toc_level-1 toc_section-4"><a href="#record-then-verify-mockito-style"><span class="toctext">Record-then-Verify (Mockito) Style</span></a><ul><li class="toc_level-2 toc_section-5"><a href="#mocking-functions-1"><span class="toctext">Mocking functions</span></a></li><li class="toc_level-2 toc_section-6"><a href="#mocking-objects-1"><span class="toctext">Mocking objects</span></a></li></ul></li><li class="toc_level-1 toc_section-7"><a href="#mixing-mocking-styles"><span class="toctext">Mixing mocking styles</span></a><ul><li class="toc_level-2 toc_section-8"><a href="#example-with-mixed-mocking-styles"><span class="toctext">Example with mixed mocking styles</span></a></li><li class="toc_level-2 toc_section-9"><a href="#example-using-expectations-first-style-only"><span class="toctext">Example using Expectations-first style only</span></a></li><li class="toc_level-2 toc_section-10"><a href="#example-using-record-then-verify-style-only"><span class="toctext">Example using Record-then-verify style only</span></a></li></ul></li></ul>
+            
+            </li>
+        
+    
+        
+            <li> <a href="/user-guide/matching/">Argument matching </a>
+            
+            </li>
+        
+    
+        
+            <li> <a href="/user-guide/ordering/">Ordering </a>
+            
+            </li>
+        
+    
+        
+            <li> <a href="/user-guide/sharing-scalatest/">Sharing mocks and expectations in ScalaTest </a>
+            
+            </li>
+        
+    
+        
+            <li> <a href="/user-guide/sharing-specs2/">Sharing mocks and expectations in Specs2 </a>
+            
+            </li>
+        
+    
+        
+            <li> <a href="/user-guide/advanced_topics/">Advanced topics </a>
+            
+            </li>
+        
+    
+        
+            <li> <a href="/user-guide/faq/">FAQ </a>
+            
+            </li>
+        
+    
+        
+        
+    
+    </ul>
+
+    
+
+
+</div>
+
+
+        <! -- BLOG POSTS LIST -->
+        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-lg-pull-4 col-md-pull-4">
+            <h1 id="choosing-your-mocking-style">Choosing your mocking style</h1>
+
+<p>ScalaMock supports two different mocking styles—<em>expectations-first</em> and <em>record-then-verify</em>. These styles can be mixed within a single test.</p>
+
+<h2 id="expectations-first-style">Expectations-First Style</h2>
+
+<p>In the expectations-first style, expectations are set on mock objects before exercising the system under test. If these expectations are not met, the test fails.</p>
+
+<h3 id="mocking-functions">Mocking functions</h3>
+
+<p>A mock function that supports this style is created with <code>mockFunction</code>. For example, to create a mock function taking a single <code>Int</code> argument and returning a <code>String</code>:</p>
+
+<pre><code class="language-scala">val m = mockFunction[Int, String]
+</code></pre>
+
+<h3 id="mocking-objects">Mocking objects</h3>
+
+<p>A mock object that supports expectations-first style is created with <code>mock</code>. For example, to create a mock that implements the <code>Heater</code> trait:</p>
+
+<pre><code class="language-scala">val heaterMock = mock[HeaterMock]
+</code></pre>
+
+<p>Expectations can then be set using <code>expects</code>:</p>
+
+<pre><code class="language-scala">"CoffeeMachine" should "turn off the heater after coffee making is finished" in {
+  val heaterMock = mock[Heater]
+  val coffeeMachine = new CoffeeMachine(heaterMock)
+
+  (heaterMock.isReady _).expects().returning(true)
+  (heaterMock.setPowerState _).expects(PowerState.On)
+  (heaterMock.setPowerState _).expects(PowerState.Off)
+  
+  coffeeMachine.makeCoffee()
+}
+</code></pre>
+
+<p>In the above example <code>heaterMock.isReady</code> is expected be invoked without arguments (<code>.expects()</code>) and it will return <code>true</code> once invoked. The heater mock also expects to have its <code>setPowerState</code> method called twice, once with <code>PowerState.On</code> and once with <code>PowerState.Off</code>.  </p>
+
+<p>Of course, in order to increase test readability you can define expectations, then exercise tested code, define subsequent expectations, continue executing system under test and so on. For example:</p>
+
+<pre><code class="language-scala">"CoffeeMachine" should "be able to prepare two coffees" in {
+
+  val heaterMock = mock[Heater]
+  val milkContainerMock = mock[MilkContainer]
+  val coffeeMachine = new CoffeeMachine(heaterMock, milkContainerMock)
+  
+  // expectations for making a black coffee:
+  
+  (heaterMock.setPowerState _).expects(PowerState.On)
+  (heaterMock.setPowerState _).expects(PowerState.Off)
+  
+  coffeeMachine.makeBlackCoffee()
+  
+  // expectations for making a coffee with milk:
+  
+  (milkContainerMock.isEmpty _).expects().returns(false)
+  (milkContainerMock.fetchMilk _).expects(MilkPortions.SmallCoffee)
+  
+  (heaterMock.setPowerState _).expects(PowerState.On)
+  (heaterMock.setPowerState _).expects(PowerState.Off)
+  
+  coffeeMachine.makeCoffeeWithMilk()
+}
+</code></pre>
+
+<h2 id="record-then-verify-mockito-style">Record-then-Verify (Mockito) Style</h2>
+
+<h3 id="mocking-functions-1">Mocking functions</h3>
+
+<p>In the record-then-verify style, expectations are verified after the system under test has executed. </p>
+
+<p>A stub function that supports this style is created with <code>stubFunction</code>. For example:</p>
+
+<pre><code class="language-scala">val m = stubFunction[Int, String]
+</code></pre>
+
+<h3 id="mocking-objects-1">Mocking objects</h3>
+
+<p>A stub object that supports the record-then-verify style is created with <code>stub</code>. For example:</p>
+
+<pre><code class="language-scala">val heaterStub = stub[Heater]
+</code></pre>
+
+<p>Return values that are used by the system under test can be set up by using <code>when</code> before running the tested system. Calls are verified using <code>verify</code>:</p>
+
+<pre><code>"CoffeeMachine" should "turn off the heater after coffee making is finished" in {
+  val heaterStub = stub[Heater]
+  val coffeeMachine = new CoffeeMachine(heaterStub)
+
+  (heaterStub.isReady _).when().returns(true)
+
+  coffeeMachine.makeCoffee()
+
+  (heaterStub.setPowerState _).verify(PowerState.On)
+  (heaterStub.setPowerState _).verify(PowerState.Off)
+}
+</code></pre>
+
+<p>In the above example <code>heaterStub.isReady</code> will return <code>true</code> every time is called. This is different from the <em>Expectations-first</em> style example, where <code>heaterMock.isReady</code> is expected to be called exactly once. However, <code>setPowerState(PowerState.On)</code> is verified to be called exactly once because we did not use modifiers like <code>.anyNumberOfTimes()</code> or <code>.twice()</code>.</p>
+
+<p>In the above example we don’t care whether <code>heaterStub.isReady()</code> was called or not - we specify only return values. To verify that <code>isReady()</code> was called we would have to add third <code>verify</code> statement.</p>
+
+<p>In both examples we verify that <code>setPowerState</code> is called with <code>PowerState.On</code> and <code>PowerState.Off</code> parameters. We do not enforce order in which this method is called. See the <a href="/user-guide/ordering">Ordering</a> chapter for more details about this topic.</p>
+
+<h2 id="mixing-mocking-styles">Mixing mocking styles</h2>
+
+<p>You can mix different styles within a single test to get the best of each style. </p>
+
+<p>In the following example we are testing handling match results in simple Player vs Player game. The game provides two Leaderboards: <em>Top players</em> and <em>Top countries</em> based on the cumulative score of all players from given country. </p>
+
+<p>In the following test case:</p>
+
+<ul>
+  <li>we test class <code>MatchResultObserver</code> that records <code>MatchResult</code>s and updates both <code>PlayerLeaderBoard</code> and <code>CountryLeaderBoard</code> so we use real <code>MatchResultObserver</code></li>
+  <li>the goal of this test case is to test that <code>CountryLeaderBoard</code> is updated correctly,</li>
+  <li>we <em>stub</em> <code>PlayerDatabase</code> which provides details about players, because:
+    <ul>
+      <li>we don’t want to test it in this test case (it has separate unit tests)</li>
+      <li>we want to provide player details without setting up database</li>
+      <li>we don’t care how many times and in which order <code>PlayerDatabase.getPlayerById()</code> is called - it’s up to the implementation</li>
+    </ul>
+  </li>
+  <li>we could either mock <code>CountryLeaderBoard</code> or stub it but we decided to <em>mock</em> it because:
+    <ul>
+      <li>the goal is to check <code>CountryLeaderBoard</code> is updated correctly so we want to write our expectation at the beginning of test (this is our style of writing tests)</li>
+      <li>we prefer to stub objects we don’t have strict expectations and mock rest of them</li>
+    </ul>
+  </li>
+  <li>we <em>stub</em> <code>PlayerLeaderBoard</code> because we really don’t care about it in this test case. We just have to provide it in <code>MatchResultObserver</code> constructor</li>
+</ul>
+
+<h3 id="example-with-mixed-mocking-styles">Example with mixed mocking styles</h3>
+
+<pre><code class="language-scala">val loser = Player(id=111, nickname="Hans", country=Countries.Germany)
+val winner = Player(id=222, nickname="Boris", country=Countries.Russia)
+
+"MatchResultObserver" should "update PlayerLeaderBoard after finished match" in {
+  val playerLeaderBoardStub = stub[PlayerLeaderBoard]
+  val countryLeaderBoardMock = mock[CountryLeaderBoard]
+  val playerDatabaseStub = stub[PlayerDatabase]
+  
+  // expectations
+  (countryLeaderBoardMock.addVictoryForCountry _).expects(Countries.Russia)
+
+  // defining stubs
+  (playerDatabaseStub.getPlayerById _).when(loser.id).returns(loser)
+  (playerDatabaseStub.getPlayerById _).when(winner.id).returns(winner)
+
+  // run system under test
+  val matchResultObserver = new MatchResultObserver(playerDatabaseStub, playerLeaderBoardStub, countryLeaderBoardMock)
+  matchResultObserver.recordMatchResult(MatchResult(winner=winner.id, loser=loser.id))
+}
+</code></pre>
+
+<h3 id="example-using-expectations-first-style-only">Example using Expectations-first style only</h3>
+
+<p>The above example using only <em>Expectations-first</em> style:</p>
+
+<pre><code class="language-scala">"MatchResultObserver" should "update PlayerLeaderBoard after finished match" in {
+  val playerLeaderBoardMock = mock[PlayerLeaderBoard]
+  val countryLeaderBoardMock = mock[CountryLeaderBoard]
+  val playerDatabaseMock = mock[PlayerDatabase]
+  
+  (countryLeaderBoardMock.addVictoryForCountry _).expects(Countries.Russia)
+  (playerLeaderBoardMock.addVictoryForPlayer _).expects(*).anyNumberOfTimes() // we don't care
+
+  (playerDatabaseMock.getPlayerById _).expects(loser.id).returning(loser)
+  (playerDatabaseMock.getPlayerById _).expects(winner.id).returning(winner)
+
+  val matchResultObserver = new MatchResultObserver(playerDatabaseMock, playerLeaderBoardMock, countryLeaderBoardMock)
+  matchResultObserver.recordMatchResult(MatchResult(winner=winner.id, loser=loser.id))
+}
+</code></pre>
+
+<p>Please note that this time we check that <code>playerDatabaseMock.getPlayerById</code> is called exactly twice (once with <code>loser.id</code> and once <code>winner.id</code>).</p>
+
+<h3 id="example-using-record-then-verify-style-only">Example using Record-then-verify style only</h3>
+
+<p>The same example using only <em>Record-then-Verify</em> style:</p>
+
+<pre><code class="language-scala">"MatchResultObserver" should "update PlayerLeaderBoard after finished match" in {
+  val playerLeaderBoardStub = stub[PlayerLeaderBoard]
+  val countryLeaderBoardStub = stub[CountryLeaderBoard]
+  val playerDatabaseStub = stub[PlayerDatabase]
+  
+  // defining stubs
+  (playerDatabaseStub.getPlayerById _).when(loser.id).returns(loser)
+  (playerDatabaseStub.getPlayerById _).when(winner.id).returns(winner)
+
+  // run system under test
+  val matchResultObserver = new MatchResultObserver(playerDatabaseStub, playerLeaderBoardStub, countryLeaderBoardStub)
+  matchResultObserver.recordMatchResult(MatchResult(winner=winner.id, loser=loser.id))
+
+  // expectations
+  (countryLeaderBoardStub.addVictoryForCountry _).verify(Countries.Russia)
+}
+</code></pre>
+
+<p>Please note that since we stubbed <code>CountryLeaderBoard</code>, we check that we add victory for Germany but we allow (since stubs are less strict than mocks) <code>countryLeaderBoardStub</code> to:</p>
+
+<ul>
+  <li>have any other method invoked, for example <code>clearAllPointsForCountry(Countries.Russia)</code> or </li>
+  <li>have <code>addVictoryForCountry</code> called with different arguments, for example: <code>addVictoryForCountry(Countries.Germany)</code>. TODO</li>
+</ul>
+
+<p>We recommend that you:</p>
+
+<ul>
+  <li>mock objects for which you have strict expectations and </li>
+  <li>stub objects for which you don’t have strict expectations, for example because you prefer to make your tests more independent to trait implementations changes.</li>
+</ul>
+
+
+        </div><! --/col-lg-8 -->
+
+
+    </div><! --/row -->
+</div><! --/container -->
+
+
+        <!--
+<div id="footerwrap">
+    <div class="container">
+        <p>ScalaMock - native Scala mocking framework</p>
+    </div>
+</div>
+-->
+<!-- based on https://github.com/st4ple/solid-jekyll -->
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+<script src="/assets/js/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+    </body>
+</html>

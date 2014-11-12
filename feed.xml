@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ScalaMock</title>
+    <description>Native scala mocking</description>
+    <link>http://monosity.com/</link>
+    <atom:link href="http://monosity.com/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Wed, 12 Nov 2014 20:11:03 +0100</pubDate>
+    <lastBuildDate>Wed, 12 Nov 2014 20:11:03 +0100</lastBuildDate>
+    <generator>Jekyll v2.4.0</generator>
+    
+      <item>
+        <title>: ScalaMock 3.2 released</title>
+        <description>&lt;ul&gt;
+  &lt;li&gt;improved reporting of unsatisfied expectations (fix for #72)&lt;/li&gt;
+  &lt;li&gt;updated, extended and reorganized documentation (created the User Guide and Quick Start)&lt;/li&gt;
+  &lt;li&gt;improved support for sharing mocks and expectations by different test cases&lt;/li&gt;
+  &lt;li&gt;expectations can be set in Suite scope (fix for #25 and #35)&lt;/li&gt;
+  &lt;li&gt;fixed two bugs in scalamock-specs2-support:
+    &lt;ul&gt;
+      &lt;li&gt;mocks can be used in threads managed by thread pools (e.g. in Futures)&lt;/li&gt;
+      &lt;li&gt;mocks can be defined in fixture-contexts&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;improved support for mocking Java classes:
+    &lt;ul&gt;
+      &lt;li&gt;mocking overloaded methods in Java classes (fix for #34)&lt;/li&gt;
+      &lt;li&gt;mocking Java classes with bridge methods (fix for #32)&lt;/li&gt;
+      &lt;li&gt;mocking Java classes with polymorphic methods (fix for #24)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;various bug fixes:
+    &lt;ul&gt;
+      &lt;li&gt;mocks can be declared as &lt;code&gt;var&lt;/code&gt; (fix for #62)&lt;/li&gt;
+      &lt;li&gt;mocking methods with Seq[T] parameters (fix for #54)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+</description>
+        <pubDate>Wed, 12 Nov 2014 00:00:00 +0100</pubDate>
+        <link>http://monosity.com/scalamock-3-2-released</link>
+        <guid isPermaLink="true">http://monosity.com/scalamock-3-2-released</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>: ScalaMock 3.1 released</title>
+        <description>&lt;ul&gt;
+  &lt;li&gt;ScalaTest 2.0 support&lt;/li&gt;
+  &lt;li&gt;ScalaMock works with Scala-2.11 &lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 18 Apr 2014 00:00:00 +0200</pubDate>
+        <link>http://monosity.com/scalamock-3-1-released</link>
+        <guid isPermaLink="true">http://monosity.com/scalamock-3-1-released</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>: ScalaMock 3.0.1 released</title>
+        <description>&lt;ul&gt;
+  &lt;li&gt;Reinstate Specs2 support (fix for #26)&lt;/li&gt;
+  &lt;li&gt;Don’t generate mocks for private methods (fix for #27)&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Tue, 15 Jan 2013 00:00:00 +0100</pubDate>
+        <link>http://monosity.com/scalamock-3-0-1-released</link>
+        <guid isPermaLink="true">http://monosity.com/scalamock-3-0-1-released</guid>
+        
+        
+      </item>
+    
+  </channel>
+</rss>
