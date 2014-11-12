@@ -61,15 +61,15 @@ libraryDependencies +=
 and with [Specs2](http://etorreborre.github.com/specs2/):
 
 ```scala
-    libraryDependencies +=
-      "org.scalamock" %% "scalamock-specs2-support" % "3.2" % "test"
+libraryDependencies +=
+  "org.scalamock" %% "scalamock-specs2-support" % "3.2" % "test"
 ```
 
 ## Documentation
 
 * [Quick Start](http://scalamock.org/quick-start/)
 * [User Guide](http://scalamock.org/user-guide/)
-* [Scaladoc](http://scalamock.org/api/index.html#org.scalamock.package).
+* [Scaladoc](http://scalamock.org/api/index.html#org.scalamock.package)
 
 ## Future Plans
 
