@@ -21,18 +21,18 @@
 package org.scalamock.scalatest
 
 import org.scalamock.MockFactoryBase
-import org.scalatest.{Outcome, Reporter, Stopper, Suite, SuiteMixin, Tracker, Failed}
 import org.scalatest.exceptions.TestFailedException
+import org.scalatest.{Failed, Outcome, Suite, SuiteMixin}
 
 trait AbstractMockFactory extends SuiteMixin with MockFactoryBase { this: Suite =>
   
   type ExpectationException = TestFailedException
   
-  override def withFixture(test: NoArgTest): Outcome = {
+  abstract override def withFixture(test: NoArgTest): Outcome = {
 
     if (autoVerify) {
       withExpectations { 
-        val outcome = test() 
+        val outcome = super.withFixture(test)
         outcome match {
           case Failed(throwable) => 
             // MockFactoryBase does not know how to handle ScalaTest Outcome.
@@ -43,7 +43,7 @@ trait AbstractMockFactory extends SuiteMixin with MockFactoryBase { this: Suite 
         }
       }
     } else {
-      test()
+      super.withFixture(test)
     }
   }
   
