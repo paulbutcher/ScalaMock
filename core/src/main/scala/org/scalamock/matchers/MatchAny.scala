@@ -20,11 +20,12 @@
 
 package org.scalamock.matchers
 
-class MatchAny extends Equals {
-  
+/** Matcher that matches everything */
+class MatchAny extends MatcherBase {
+
   override def canEqual(that: Any) = true
 
   override def equals(that: Any) = true
-  
+
   override def toString = "*"
 }

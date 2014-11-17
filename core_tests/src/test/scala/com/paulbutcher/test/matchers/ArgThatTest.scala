@@ -18,22 +18,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock.matchers
+package com.paulbutcher.test.matchers
 
-// The dummy argument (eugh!) is necessary to avoid:
-//
-// [error] double definition:
-// [error] constructor MockParameter:(v: T)org.scalamock.matchers.MockParameter[T] and
-// [error] constructor MockParameter:(value: AnyRef)org.scalamock.matchers.MockParameter[T]
-// [error] have same type after erasure: (v: java.lang.Object)org.scalamock.matchers.MockParameter
+import org.scalamock.scalatest.MockFactory
+import org.scalatest.{ FlatSpec, ShouldMatchers }
 
-class MockParameter[T] protected (private[scalamock] val value: AnyRef, dummy: Boolean = false) {
-  
-  def this(v: T) = this(v.asInstanceOf[AnyRef])
-  def this(v: MatcherBase) = this(v.asInstanceOf[AnyRef])
+class ArgThatTest extends FlatSpec with ShouldMatchers with MockFactory {
 
-  override def equals(that: Any) = value equals that
+  behavior of "ArgThat"
 
-  override def toString = value.toString
+  it should "check predicate while matching arguments" in {
+    val startsWithPredicate = argThat[String](x => x.startsWith("A"))
+    startsWithPredicate.equals("Alice") shouldBe true
+    startsWithPredicate.equals("Anna") shouldBe true
+    startsWithPredicate.equals("Bob") shouldBe false
+    intercept[ClassCastException] { startsWithPredicate.equals(55) } // 55 is not a String
+  }
 }
-

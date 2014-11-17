@@ -22,7 +22,8 @@ package org.scalamock.matchers
 
 import scala.math.abs
 
-class MatchEpsilon(value: Double) extends Equals {
+/** Matcher that matches all numbers that are close to a given value */
+class MatchEpsilon(value: Double) extends MatcherBase {
 
   override def canEqual(that: Any) = that.isInstanceOf[Number]
 
@@ -30,11 +31,11 @@ class MatchEpsilon(value: Double) extends Equals {
     case n: Number => abs(value - n.doubleValue) < MatchEpsilon.epsilon
     case _ => false
   }
-  
-  override def toString = "~"+ value
+
+  override def toString = "~" + value
 }
 
 object MatchEpsilon {
-  
+
   val epsilon = 0.001
 }

@@ -20,41 +20,40 @@
 
 package com.paulbutcher.test.matchers
 
-import org.scalamock._
-import org.scalamock.matchers.{MockParameter, MatchEpsilon, MatchAny}
-import org.scalatest.FreeSpec
+import org.scalamock.matchers.{MatchAny, MatchEpsilon, MockParameter}
+import org.scalatest.{FreeSpec, ShouldMatchers}
 
-class MockParameterTest extends FreeSpec {
+class MockParameterTest extends FreeSpec with ShouldMatchers {
   
   "A mock parameter should" - {
     "be equal" - {
       "if its value is equal" in {
-        assert(new MockParameter(42) == 42)
+        new MockParameter(42) shouldBe 42
       }
     
       "with a wildcard" in {
-        assert(new MockParameter[Int](new MatchAny) == 123)
+        new MockParameter[Int](new MatchAny) shouldBe 123
       }
     
       "with an epsilon" in {
-        assert(new MockParameter(new MatchEpsilon(1.0)) == 1.0001)
+        new MockParameter[Double](new MatchEpsilon(1.0)) shouldBe 1.0001
       }
     }
     
     "not be equal" - {
       "with different values" in {
-        assert(!(new MockParameter(42) == 43))
+        new MockParameter(42) should not be(43)
       }
       
       "with different types" in {
-        assert(!(new MockParameter(42) == "forty two"))
+       new MockParameter(42) should not be("forty two")
       }
     }
   }
   
   "A product of mock parameters should" - {
     "compare correctly to a product of non mock parameters" in {
-      val p1 = (new MockParameter(42), new MockParameter[String](new MatchAny), new MockParameter(new MatchEpsilon(1.0)))
+      val p1 = (new MockParameter(42), new MockParameter[String](new MatchAny), new MockParameter[Double](new MatchEpsilon(1.0)))
       val p2 = (42, "foo", 1.0001)
       assert(p1 == p2)
     }
