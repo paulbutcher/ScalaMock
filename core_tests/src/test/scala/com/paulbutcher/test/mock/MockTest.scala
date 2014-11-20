@@ -369,41 +369,6 @@ class MockTest extends FreeSpec with MockFactory {
         assertResult(i) { e.innerTrait("foo", 1.23) }
       }
     }
-    
-    "mock a Java interface" in {
-      withExpectations {
-        val m = mock[JavaInterface]
-        (m.m _).expects(42, "foo").returning("a return value")
-        assertResult("a return value") { m.m(42, "foo") }
-      }
-    }
-
-    //! TODO - this is going to have to wait for macro types for a proper solution
-//    "cope with Java methods with repeated parameters" in {
-//      withExpectations {
-//        val m = mock[JavaInterface]
-//        (m.repeatedParam _).expects(42, Seq(1.23, 4.56))
-//        m.repeatedParam(42, 1.23, 4.56)
-//      }
-//    }
-
-    "mock a Polymorhpic Java interface" in { // test for issue #24
-      withExpectations {
-        val m = mock[PolymorphicJavaInterface]
-        (m.simplePolymorphicMethod _).expects("foo").returning(44)
-        assertResult(44) { m.simplePolymorphicMethod("foo") }
-      }
-    }
-
-    "mock a Java class with an overloaded method" in { // test for issue #34
-      withExpectations {
-        val m = mock[JavaClassWithOverloadedMethod]
-        (m.overloadedMethod(_: String)).expects("a").returning("first")
-        (m.overloadedMethod(_: String, _: String)).expects("a", "b").returning("second")
-        assertResult("first") { m.overloadedMethod("a") }
-        assertResult("second") { m.overloadedMethod("a", "b") }
-      }
-    }
 
     "mock a class" in {
       withExpectations {
@@ -433,23 +398,6 @@ class MockTest extends FreeSpec with MockFactory {
        }
      }
     
-    "mock classes with bridged methods" in {
-       withExpectations {
-         val m = mock[JavaClassWithBridgeMethod]
-         
-         (m.compare _).expects(new Integer(5)).returning(1)
-         (m.compare _).expects(new Integer(6)).returning(2)
- 
-         def useBridgeMethod[T](gen : JavaGenericInterface[T], x : T) = {
-            gen.compare(x)
-         }
-
-         assertResult(1) { m.compare(new Integer(5)) } // calls: int compare(Integer)
-         assertResult(2) { useBridgeMethod(m, new Integer(6)) } // calls: int compare(Object)
-
-      }
-    }
-
     "allow to be declared as var" in { // test for issue #62
       withExpectations {
         var m = mock[TestTrait]
