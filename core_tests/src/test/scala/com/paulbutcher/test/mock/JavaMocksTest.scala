@@ -42,27 +42,38 @@ class JavaMocksTest extends IsolatedSpec {
     assertResult(44) { m.simplePolymorphicMethod("foo") }
   }
 
+  it should "mock a Polymorhpic Java interface (type parametrized method parameter)" in {
+    val m = mock[PolymorphicJavaInterface]
+    val arg = new java.util.ArrayList[String]
+    (m.polymorphicMethod[String] _).expects(arg).returning("foo")
+
+    m.polymorphicMethod(arg) shouldBe "foo"
+  }
+
   it should "mock a Java class with an overloaded method (different param count)" in { // test for issue #34
     val m = mock[JavaClassWithOverloadedMethod]
     (m.overloadedMethod(_: String)).expects("a").returning("first")
     (m.overloadedMethod(_: String, _: String)).expects("a", "b").returning("second")
-    assertResult("first") { m.overloadedMethod("a") }
-    assertResult("second") { m.overloadedMethod("a", "b") }
+
+    m.overloadedMethod("a") shouldBe "first"
+    m.overloadedMethod("a", "b") shouldBe "second"
   }
 
   it should "mock a Java class with an overloaded method (the same param count)" in { // test for issue #73
     val m = mock[JavaClassWithOverloadedMethod]
     (m.overloadedSameParamCount(_: String)).expects("one").returning("first")
     (m.overloadedSameParamCount(_: Integer)).expects(new Integer(2)).returning(2)
-    assertResult("first") { m.overloadedSameParamCount("one") }
-    assertResult(2) { m.overloadedSameParamCount(2) }
+
+    m.overloadedSameParamCount("one") shouldBe "first"
+    m.overloadedSameParamCount(2) shouldBe 2
   }
 
   it should "mock a Java class with an overloaded method (with primitive param)" in { // test for issue #73
     val m = mock[JavaClassWithOverloadedMethod]
     (m.overloadedWithPrimitiveParam(_: String)).expects("one").returning("first")
     (m.overloadedWithPrimitiveParam(_: Int)).expects(2).returning("second")
-    assertResult("first") { m.overloadedWithPrimitiveParam("one") }
-    assertResult("second") { m.overloadedWithPrimitiveParam(2) }
+
+    m.overloadedWithPrimitiveParam("one") shouldBe "first"
+    m.overloadedWithPrimitiveParam(2) shouldBe "second"
   }
 }
