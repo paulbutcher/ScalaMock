@@ -3,8 +3,6 @@ package com.paulbutcher.test.mock
 import com.paulbutcher.test._
 
 class JavaMocksTest extends IsolatedSpec {
-  val javaMock = mock[JavaClassWithOverloadedMethod]
-
   behavior of "ScalaMock while mocking Java classes and interfaces"
 
   it should "mock Java generics" in {
