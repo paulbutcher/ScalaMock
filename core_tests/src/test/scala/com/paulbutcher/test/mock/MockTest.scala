@@ -21,15 +21,14 @@
 package com.paulbutcher.test.mock
 
 import com.paulbutcher.test._
-import org.scalamock._
 import org.scalamock.function.FunctionAdapter1
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.FreeSpec
+import org.scalatest.{ShouldMatchers, FreeSpec}
 import some.other.pkg._
 
 import scala.reflect.runtime.universe._
 
-class MockTest extends FreeSpec with MockFactory {
+class MockTest extends FreeSpec with MockFactory with ShouldMatchers {
   
   autoVerify = false
   
@@ -406,5 +405,10 @@ class MockTest extends FreeSpec with MockFactory {
       }
     }
 
+    "mock Function1[A, B] trait" in withExpectations { // test for issue #69
+      val f = mock[Function1[Any, Boolean]]
+      (f.apply _).expects(*).returning(true)
+      f("this is something") shouldBe true
+    }
   }
 }
