@@ -42,11 +42,27 @@ class JavaMocksTest extends IsolatedSpec {
     assertResult(44) { m.simplePolymorphicMethod("foo") }
   }
 
-  it should "mock a Java class with an overloaded method" in { // test for issue #34
+  it should "mock a Java class with an overloaded method (different param count)" in { // test for issue #34
     val m = mock[JavaClassWithOverloadedMethod]
     (m.overloadedMethod(_: String)).expects("a").returning("first")
     (m.overloadedMethod(_: String, _: String)).expects("a", "b").returning("second")
     assertResult("first") { m.overloadedMethod("a") }
     assertResult("second") { m.overloadedMethod("a", "b") }
+  }
+
+  it should "mock a Java class with an overloaded method (the same param count)" in { // test for issue #73
+    val m = mock[JavaClassWithOverloadedMethod]
+    (m.overloadedSameParamCount(_: String)).expects("one").returning("first")
+    (m.overloadedSameParamCount(_: Integer)).expects(new Integer(2)).returning(2)
+    assertResult("first") { m.overloadedSameParamCount("one") }
+    assertResult(2) { m.overloadedSameParamCount(2) }
+  }
+
+  it should "mock a Java class with an overloaded method (with primitive param)" in { // test for issue #73
+    val m = mock[JavaClassWithOverloadedMethod]
+    (m.overloadedWithPrimitiveParam(_: String)).expects("one").returning("first")
+    (m.overloadedWithPrimitiveParam(_: Int)).expects(2).returning("second")
+    assertResult("first") { m.overloadedWithPrimitiveParam("one") }
+    assertResult("second") { m.overloadedWithPrimitiveParam(2) }
   }
 }
