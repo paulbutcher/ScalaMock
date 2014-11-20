@@ -21,7 +21,9 @@
 package com.paulbutcher.test;
 
 public class JavaClassWithBridgeMethod implements JavaGenericInterface<Integer> {
-	public int compare(Integer other) { return 3; }
-	// compiler will also generate the bridge method: 
-	//   public int compare(Object other)
+    public int compare(Integer other) { return 3; }
+    // compiler will also generate the bridge method:
+    //   public int compare(Object other)
+
+    public int simpleMethod(String b) { return 4; }
 }

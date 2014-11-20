@@ -7,6 +7,13 @@ class JavaMocksTest extends IsolatedSpec {
 
   behavior of "ScalaMock while mocking Java classes and interfaces"
 
+  it should "mock Java generics" in {
+    val m = mock[JavaGenericInterface[Int]]
+    (m.simpleMethod _) expects ("two") returning 42
+
+    m.simpleMethod("two") shouldBe 42
+  }
+
   it should "mock classes with bridged methods" in {
     val m = mock[JavaClassWithBridgeMethod]
 
