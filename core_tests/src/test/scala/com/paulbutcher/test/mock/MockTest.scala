@@ -26,7 +26,9 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest.{ShouldMatchers, FreeSpec}
 import some.other.pkg._
 
-import scala.reflect.runtime.universe._
+import scala.reflect.ClassTag
+import scala.reflect.runtime.universe.{ TypeTag, typeTag }
+import scala.util.{Try, Failure}
 
 class MockTest extends FreeSpec with MockFactory with ShouldMatchers {
   
@@ -409,6 +411,19 @@ class MockTest extends FreeSpec with MockFactory with ShouldMatchers {
       val f = mock[Function1[Any, Boolean]]
       (f.apply _).expects(*).returning(true)
       f("this is something") shouldBe true
+    }
+
+    "mock methods that need a class tag" in withExpectations {
+      case class User(first: String, last: String, enabled: Boolean)
+
+      trait DataProviderComponent {
+        def find[T: ClassTag](id: Int): Try[T]
+      }
+
+      val provider = mock[DataProviderComponent]
+
+      (provider.find[User](_: Int)(_: ClassTag[User])) expects (13, *) returning (Failure[User](new Exception()))
+      provider.find[User](13) shouldBe a[Failure[_]]
     }
   }
 }
