@@ -81,4 +81,13 @@ class JavaMocksTest extends IsolatedSpec {
     m.overloadedWithPrimitiveParam("one") shouldBe "first"
     m.overloadedWithPrimitiveParam(2) shouldBe "second"
   }
+
+  it should "mock a Java class with an overloaded method (with type params)" in {
+    val m = mock[JavaClassWithOverloadedMethod]
+    (m.overloadedGeneric(_: String)).expects("one").returning("first")
+    (m.overloadedGeneric(_: Int)).expects(2).returning("second")
+
+    m.overloadedGeneric("one") shouldBe "first"
+    m.overloadedGeneric(2) shouldBe "second"
+  }
 }

@@ -44,4 +44,13 @@ public class JavaClassWithOverloadedMethod {
     public String overloadedWithPrimitiveParam(int a) {
         return "foo";
     }
+
+    public String overloadedGeneric(String a) {
+        return "foo";
+    }
+
+    public <T> String overloadedGeneric(T a) {
+        return "foo";
+    }
+
 }

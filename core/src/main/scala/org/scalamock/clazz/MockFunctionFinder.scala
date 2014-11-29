@@ -30,7 +30,12 @@ object MockFunctionFinder {
     def resolveOverloaded(method: TermSymbol, targs: List[Type]): Symbol = {
       method.alternatives find { m =>
         val tpe = m.typeSignature
-        val pts = if (targs.nonEmpty) paramTypes(appliedType(tpe, targs)) else paramTypes(tpe)
+        val pts = {
+          if (targs.nonEmpty && tpe.typeParams.length == targs.length)
+            paramTypes(appliedType(tpe, targs))
+          else
+            paramTypes(tpe)
+        }
         pts.map(_.dealias) sameElements actuals.map(_.dealias) // see issue #34
       } getOrElse {
         reportError(s"Unable to resolve overloaded method ${method.name}")
