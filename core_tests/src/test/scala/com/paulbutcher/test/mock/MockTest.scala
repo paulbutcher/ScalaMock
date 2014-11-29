@@ -66,35 +66,7 @@ class MockTest extends FreeSpec with MockFactory with ShouldMatchers {
         assertResult("a return value") { m.nullary }
       }
     }
-    
-    "cope with overloaded methods" in {
-      withExpectations {
-        val m = mock[TestTrait]
-        (m.overloaded(_: Int)).expects(10).returning("got an integer")
-        (m.overloaded(_: Int, _: Double)).expects(10, 1.23).returning("got two parameters")
-        assertResult("got an integer") { m.overloaded(10) }
-        assertResult("got two parameters") { m.overloaded(10, 1.23) }
-      }
-    }
-    
-    "cope with polymorphic overloaded methods" in {
-      withExpectations {
-        val m = mock[TestTrait]
-        (m.overloaded[Double] _).expects(1.23).returning("polymorphic method called")
-        assertResult("polymorphic method called") { m.overloaded(1.23) }
-      }
-    }
 
-    "choose between polymorphic and non-polymorphic overloaded methods correctly" in {
-      withExpectations {
-        val m = mock[TestTrait]
-        (m.overloaded(_: Int)).expects(42).returning("non-polymorphic called")
-        (m.overloaded[Int] _).expects(42).returning("polymorphic called")
-        assertResult("non-polymorphic called") { m.overloaded(42) }
-        assertResult("polymorphic called") { m.overloaded[Int](42) }
-      }
-    }
-    
     "cope with infix operators" in {
       withExpectations {
         val m1 = mock[TestTrait]
