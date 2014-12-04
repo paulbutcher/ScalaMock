@@ -1,5 +1,13 @@
 # Release notes
 
+## New in ScalaMock 3.2.1
+
+- [new feature] support for custom parameter matchers (issue #42)
+- [new feature] named mocks (issue #82)
+- [new feature] improved reporting of expectation errors (issue #82)
+- [fix] mocking methods with default parameter value (issue #43)
+- [fix] mocking polymorphic overloaded methods (issue #85)
+
 ## New in ScalaMock 3.2
 
 - improved reporting of unsatisfied expectations (fix for #72)
