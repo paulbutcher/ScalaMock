@@ -227,7 +227,7 @@ package org
  * m3.expects(42).repeated(3).times
  * }}}
  *
- * For a full list, see [[org.scalamock.CallHandler]].
+ * For a full list, see [[org.scalamock.handlers.CallHandler]].
  *
  * ==Ordering==
  *

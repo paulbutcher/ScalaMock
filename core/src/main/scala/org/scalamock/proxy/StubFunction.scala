@@ -20,9 +20,11 @@
 
 package org.scalamock.proxy
 
-import org.scalamock.{ArgumentMatcher, Call, CallHandler, MockFactoryBase, MockParameter, Verify}
+import org.scalamock.context.{MockContext, Call}
+import org.scalamock.handlers.{CallHandler, Verify}
+import org.scalamock.matchers.MockParameter
 
-class StubFunction(factory: MockFactoryBase, name: Symbol) extends FakeFunction(factory, name) {
+class StubFunction(mockContext: MockContext, name: Symbol) extends FakeFunction(mockContext, name) {
 
   def onUnexpected(call: Call) = null
 

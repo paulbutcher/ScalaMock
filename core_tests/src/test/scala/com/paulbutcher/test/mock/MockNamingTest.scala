@@ -20,38 +20,84 @@
 
 package com.paulbutcher.test.mock
 
-import com.paulbutcher.test.{ IsolatedSpec, TestTrait }
-import org.scalamock.MockFunction
+import com.paulbutcher.test._
+import org.scalamock.function.MockFunction
 
 class MockNamingTest extends IsolatedSpec {
 
   def getMockMethodName(method: MockFunction) = method.toString
-  val m = mock[TestTrait]
+  val m = mock[TestTrait]("mock")
 
   behavior of "Mock"
 
   it should "have a sensible method name when mocking a method without parameters" in {
-    // TODO IMO this is not sensible name - it should be either TestTrait.noParams or m.noParams (see issue #82)
-    getMockMethodName(m.noParams _) shouldBe "noParams"
+    getMockMethodName(m.noParams _) shouldBe "<mock> TestTrait.noParams"
   }
 
   it should "have a sensible method name when mocking one parameter method" in {
-    getMockMethodName(m.oneParam _) shouldBe "oneParam"
+    getMockMethodName(m.oneParam _) shouldBe "<mock> TestTrait.oneParam"
   }
 
   it should "have a sensible method name when mocking an operator" in {
-    getMockMethodName(m.+ _) shouldBe "$plus" // TODO could be better
+    getMockMethodName(m.+ _) shouldBe "<mock> TestTrait.$plus" // TODO could be better
   }
 
   it should "have a sensible method name when mocking curried method" in {
-    getMockMethodName(m.curried(_: Int)(_: Double)) shouldBe "curried"
+    getMockMethodName(m.curried(_: Int)(_: Double)) shouldBe "<mock> TestTrait.curried"
   }
 
   it should "have a sensible method name when mocking polymorphic method" in {
-    getMockMethodName(m.polymorphic _) shouldBe "polymorphic"
+    getMockMethodName(m.polymorphic _) shouldBe "<mock> TestTrait.polymorphic[T]"
   }
 
   it should "have a sensible method name when mocking overloaded method" in {
-    getMockMethodName(m.overloaded(_: Int)) shouldBe "overloaded"
+    getMockMethodName(m.overloaded(_: Int)) shouldBe "<mock> TestTrait.overloaded"
+  }
+
+  it should "have a sensible method name when mocking a class" in {
+    val myMock = mock[TestClass]
+    getMockMethodName(myMock.m _) shouldBe "<mock-1> TestClass.m"
+  }
+
+  it should "have a sensible method name when mocking polymorphic trait" in {
+    val myMock = mock[PolymorphicTrait[List[Int]]]
+    getMockMethodName(myMock.method[Map[Int, String]] _) shouldBe "<mock-1> PolymorphicTrait[List[Int]].method[U]"
+  }
+
+  it should "have a sensible method name when mocking Java polymorphic interface" in {
+    val myMock = mock[JavaGenericInterface[List[Int]]]
+    getMockMethodName(myMock.compare _) shouldBe "<mock-1> JavaGenericInterface[List[Int]].compare"
+  }
+
+  it can "be named using string literal" in {
+    val myMock = mock[TestTrait]("mock name")
+    getMockMethodName(myMock.oneParam _) shouldBe "<mock name> TestTrait.oneParam"
+  }
+
+  it should "should have its name evaluated during mock construction" in {
+    var prefix = "mock"
+    val mocks = for (idx <- 1 to 2) yield mock[TestTrait](prefix + idx)
+    prefix = "changed"
+
+    getMockMethodName(mocks(0).oneParam _) shouldBe "<mock1> TestTrait.oneParam"
+    getMockMethodName(mocks(1).oneParam _) shouldBe "<mock2> TestTrait.oneParam"
+  }
+
+  it should "have sensible default name assigned" in {
+    val myMock = mock[TestTrait]
+    getMockMethodName(myMock.noParams _) shouldBe "<mock-1> TestTrait.noParams"
+  }
+
+  it should "have consistent names of mocked methods" in {
+    val myMock = mock[TestTrait]
+    getMockMethodName(myMock.noParams _) shouldBe "<mock-1> TestTrait.noParams"
+    getMockMethodName(myMock.twoParams _) shouldBe "<mock-1> TestTrait.twoParams" // not <mock-2>
+  }
+
+  it should "should have differentiating default name assigned" in {
+    val myMock1 = mock[TestTrait]
+    val myMock2 = mock[TestTrait]
+    getMockMethodName(myMock2.oneParam _) shouldBe "<mock-2> TestTrait.oneParam"
+    getMockMethodName(myMock1.oneParam _) shouldBe "<mock-1> TestTrait.oneParam"
   }
 }

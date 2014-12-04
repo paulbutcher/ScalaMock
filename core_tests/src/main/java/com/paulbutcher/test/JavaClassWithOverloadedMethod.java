@@ -21,11 +21,36 @@
 package com.paulbutcher.test;
 
 public class JavaClassWithOverloadedMethod {
-	public String overloadedMethod(String a) {
-		return "bar1";
-	}
+    public String overloadedMethod(String a) {
+        return "bar1";
+    }
 
-	public String overloadedMethod(String a, String b) {
-		return "bar2";
-	}
+    public String overloadedMethod(String a, String b) {
+        return "bar2";
+    }
+
+    public String overloadedSameParamCount(String a) {
+        return "foo";
+    }
+
+    public Integer overloadedSameParamCount(Integer a) {
+        return 42;
+    }
+
+    public String overloadedWithPrimitiveParam(String a) {
+        return "foo";
+    }
+
+    public String overloadedWithPrimitiveParam(int a) {
+        return "foo";
+    }
+
+    public String overloadedGeneric(String a) {
+        return "foo";
+    }
+
+    public <T> String overloadedGeneric(T a) {
+        return "foo";
+    }
+
 }

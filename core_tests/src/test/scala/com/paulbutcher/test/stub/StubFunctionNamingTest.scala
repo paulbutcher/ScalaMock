@@ -28,7 +28,7 @@ class StubFunctionNamingTest extends IsolatedSpec {
 
   it should "have a sensible default name" in {
     val m = stubFunction[String]
-    m.toString shouldBe "unnamed StubFunction0"
+    m.toString shouldBe "StubFunction0-1"
   }
 
   it should "have the name we gave them when we use a symbol" in {
@@ -43,7 +43,7 @@ class StubFunctionNamingTest extends IsolatedSpec {
 
   it should "resolve ambiguity when taking a symbol argument with no name specified" in {
     val m = stubFunction[Symbol, String]
-    m.toString shouldBe "unnamed StubFunction1"
+    m.toString shouldBe "StubFunction1-1"
   }
 
   it should "resolve ambiguity when taking a symbol argument with a name specified" in {

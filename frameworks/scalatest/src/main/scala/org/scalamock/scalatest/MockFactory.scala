@@ -20,7 +20,7 @@
 
 package org.scalamock.scalatest
 
-import org.scalamock.Mock
+import org.scalamock.clazz.Mock
 import org.scalatest.Suite
 
 /**

@@ -21,6 +21,7 @@
 package com.paulbutcher.test.matchers
 
 import org.scalamock._
+import org.scalamock.matchers.MatchEpsilon
 import org.scalatest.FreeSpec
 
 class MatchEpsilonTest extends FreeSpec {

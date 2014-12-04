@@ -22,39 +22,15 @@ package org.scalamock.test.scalatest
 
 import org.scalamock.scalatest.MockFactory
 import org.scalamock.test.mockable.TestTrait
-import org.scalatest.{Args, FlatSpec, FunSuite, Reporter, ShouldMatchers, Suite}
-import org.scalatest.events.{Event, TestFailed}
+import org.scalatest.{ Args, FlatSpec, FunSuite, Reporter, ShouldMatchers, Suite }
+import org.scalatest.events.{ Event, TestFailed }
 import org.scalatest.exceptions.TestFailedException
 import scala.language.postfixOps
 
 /**
  *  Tests that errors are reported correctly in ScalaTest suites
  */
-class ErrorReporting extends FlatSpec with ShouldMatchers {
-
-  /** Executes single ScalaTest test case and returns its outcome (i.e. either TestSucccess or TestFailure) */
-  def runTestCase[T <: Suite](suite: T): Event = {
-    class TestReporter extends Reporter {
-      var lastEvent: Option[Event] = None
-      override def apply(e: Event): Unit = { lastEvent = Some(e) }
-    }
-
-    val reporter = new TestReporter
-    suite.run(None, Args(reporter))
-    reporter.lastEvent.get
-  }
-
-  def getThrowable[ExnT <: Throwable](event: Event)(implicit m: Manifest[ExnT]): ExnT = {
-    event shouldBe a[TestFailed]
-
-    val testCaseError = event.asInstanceOf[TestFailed].throwable.get
-    testCaseError shouldBe a[ExnT]
-    testCaseError.asInstanceOf[ExnT]
-  }
-
-  def getErrorMessage[ExnT <: Throwable](event: Event)(implicit m: Manifest[ExnT]): String = {
-    getThrowable[ExnT](event).getMessage()
-  }
+class ErrorReporting extends FlatSpec with ShouldMatchers with TestSuiteRunner {
 
   "ScalaTest suite" should "report unexpected call correctly" in {
     class TestedSuite extends FunSuite with MockFactory {
@@ -98,32 +74,60 @@ class ErrorReporting extends FlatSpec with ShouldMatchers {
     getThrowable[NullPointerException](outcome) shouldBe a[NullPointerException]
   }
 
+  it should "report default mock names" in {
+    class TestedSuite extends FunSuite with MockFactory {
+      test("execute block of code") {
+        val mockA = mock[TestTrait]
+        val mockB = mock[TestTrait]
+
+        (mockA.oneParamMethod _).expects(3)
+        mockB.oneParamMethod(3)
+      }
+    }
+
+    val outcome = runTestCase[TestedSuite](new TestedSuite)
+    val errorMessage = getErrorMessage[TestFailedException](outcome)
+    errorMessage shouldBe
+      """|Unexpected call: <mock-2> TestTrait.oneParamMethod(3)
+        |
+        |Expected:
+        |inAnyOrder {
+        |  <mock-1> TestTrait.oneParamMethod(3) once (never called - UNSATISFIED)
+        |}
+        |
+        |Actual:
+        |  <mock-2> TestTrait.oneParamMethod(3)
+      """.stripMargin.trim
+  }
+
   it should "report unexpected calls in readable manner" in {
     class TestedSuite extends FunSuite with MockFactory {
-      val suiteScopeMock = mock[TestTrait]
-      (suiteScopeMock.noParamMethod _) expects() returning("two") twice
+      val suiteScopeMock = mock[TestTrait]("suite mock")
+      (suiteScopeMock.noParamMethod _) expects () returning ("two") twice
 
       test("execute block of code") {
         val mockedTrait = mock[TestTrait]
-        (mockedTrait.oneParamMethod _).expects(1).returning("one")
+        (mockedTrait.polymorphicMethod _).expects(List(1)).returning("one")
+
+        suiteScopeMock.noParamMethod()
         mockedTrait.oneParamMethod(3)
       }
     }
 
-    // Unexpected call should be reported by ScalaTest
     val outcome = runTestCase[TestedSuite](new TestedSuite)
     val errorMessage = getErrorMessage[TestFailedException](outcome)
     errorMessage shouldBe
-      """|Unexpected call: oneParamMethod(3)
+      """|Unexpected call: <mock-1> TestTrait.oneParamMethod(3)
          |
          |Expected:
          |inAnyOrder {
-         |  noParamMethod() twice (never called - UNSATISFIED)
-         |  oneParamMethod(1) once (never called - UNSATISFIED)
+         |  <suite mock> TestTrait.noParamMethod() twice (called once - UNSATISFIED)
+         |  <mock-1> TestTrait.polymorphicMethod[T](List(1)) once (never called - UNSATISFIED)
          |}
          |
          |Actual:
-         |  oneParamMethod(3)
+         |  <suite mock> TestTrait.noParamMethod()
+         |  <mock-1> TestTrait.oneParamMethod(3)
       """.stripMargin.trim
   }
 }

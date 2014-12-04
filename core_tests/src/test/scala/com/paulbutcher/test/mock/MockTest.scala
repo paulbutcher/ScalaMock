@@ -21,14 +21,16 @@
 package com.paulbutcher.test.mock
 
 import com.paulbutcher.test._
-import org.scalamock._
+import org.scalamock.function.FunctionAdapter1
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.FreeSpec
+import org.scalatest.{ShouldMatchers, FreeSpec}
 import some.other.pkg._
 
-import scala.reflect.runtime.universe._
+import scala.reflect.ClassTag
+import scala.reflect.runtime.universe.{ TypeTag, typeTag }
+import scala.util.{Try, Failure}
 
-class MockTest extends FreeSpec with MockFactory {
+class MockTest extends FreeSpec with MockFactory with ShouldMatchers {
   
   autoVerify = false
   
@@ -64,35 +66,7 @@ class MockTest extends FreeSpec with MockFactory {
         assertResult("a return value") { m.nullary }
       }
     }
-    
-    "cope with overloaded methods" in {
-      withExpectations {
-        val m = mock[TestTrait]
-        (m.overloaded(_: Int)).expects(10).returning("got an integer")
-        (m.overloaded(_: Int, _: Double)).expects(10, 1.23).returning("got two parameters")
-        assertResult("got an integer") { m.overloaded(10) }
-        assertResult("got two parameters") { m.overloaded(10, 1.23) }
-      }
-    }
-    
-    "cope with polymorphic overloaded methods" in {
-      withExpectations {
-        val m = mock[TestTrait]
-        (m.overloaded[Double] _).expects(1.23).returning("polymorphic method called")
-        assertResult("polymorphic method called") { m.overloaded(1.23) }
-      }
-    }
 
-    "choose between polymorphic and non-polymorphic overloaded methods correctly" in {
-      withExpectations {
-        val m = mock[TestTrait]
-        (m.overloaded(_: Int)).expects(42).returning("non-polymorphic called")
-        (m.overloaded[Int] _).expects(42).returning("polymorphic called")
-        assertResult("non-polymorphic called") { m.overloaded(42) }
-        assertResult("polymorphic called") { m.overloaded[Int](42) }
-      }
-    }
-    
     "cope with infix operators" in {
       withExpectations {
         val m1 = mock[TestTrait]
@@ -368,41 +342,6 @@ class MockTest extends FreeSpec with MockFactory {
         assertResult(i) { e.innerTrait("foo", 1.23) }
       }
     }
-    
-    "mock a Java interface" in {
-      withExpectations {
-        val m = mock[JavaInterface]
-        (m.m _).expects(42, "foo").returning("a return value")
-        assertResult("a return value") { m.m(42, "foo") }
-      }
-    }
-
-    //! TODO - this is going to have to wait for macro types for a proper solution
-//    "cope with Java methods with repeated parameters" in {
-//      withExpectations {
-//        val m = mock[JavaInterface]
-//        (m.repeatedParam _).expects(42, Seq(1.23, 4.56))
-//        m.repeatedParam(42, 1.23, 4.56)
-//      }
-//    }
-
-    "mock a Polymorhpic Java interface" in { // test for issue #24
-      withExpectations {
-        val m = mock[PolymorphicJavaInterface]
-        (m.simplePolymorphicMethod _).expects("foo").returning(44)
-        assertResult(44) { m.simplePolymorphicMethod("foo") }
-      }
-    }
-
-    "mock a Java class with an overloaded method" in { // test for issue #34
-      withExpectations {
-        val m = mock[JavaClassWithOverloadedMethod]
-        (m.overloadedMethod(_: String)).expects("a").returning("first")
-        (m.overloadedMethod(_: String, _: String)).expects("a", "b").returning("second")
-        assertResult("first") { m.overloadedMethod("a") }
-        assertResult("second") { m.overloadedMethod("a", "b") }
-      }
-    }
 
     "mock a class" in {
       withExpectations {
@@ -432,23 +371,6 @@ class MockTest extends FreeSpec with MockFactory {
        }
      }
     
-    "mock classes with bridged methods" in {
-       withExpectations {
-         val m = mock[JavaClassWithBridgeMethod]
-         
-         (m.compare _).expects(new Integer(5)).returning(1)
-         (m.compare _).expects(new Integer(6)).returning(2)
- 
-         def useBridgeMethod[T](gen : JavaGenericInterface[T], x : T) = {
-            gen.compare(x)
-         }
-
-         assertResult(1) { m.compare(new Integer(5)) } // calls: int compare(Integer)
-         assertResult(2) { useBridgeMethod(m, new Integer(6)) } // calls: int compare(Object)
-
-      }
-    }
-
     "allow to be declared as var" in { // test for issue #62
       withExpectations {
         var m = mock[TestTrait]
@@ -457,5 +379,23 @@ class MockTest extends FreeSpec with MockFactory {
       }
     }
 
+    "mock Function1[A, B] trait" in withExpectations { // test for issue #69
+      val f = mock[Function1[Any, Boolean]]
+      (f.apply _).expects(*).returning(true)
+      f("this is something") shouldBe true
+    }
+
+    "mock methods that need a class tag" in withExpectations {
+      case class User(first: String, last: String, enabled: Boolean)
+
+      trait DataProviderComponent {
+        def find[T: ClassTag](id: Int): Try[T]
+      }
+
+      val provider = mock[DataProviderComponent]
+
+      (provider.find[User](_: Int)(_: ClassTag[User])) expects (13, *) returning (Failure[User](new Exception()))
+      provider.find[User](13) shouldBe a[Failure[_]]
+    }
   }
 }

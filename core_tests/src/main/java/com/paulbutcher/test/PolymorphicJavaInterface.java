@@ -20,6 +20,9 @@
 
 package com.paulbutcher.test;
 
+import java.util.List;
+
 public interface PolymorphicJavaInterface {
     public <T> T simplePolymorphicMethod(String arg1);
+    public <T> T polymorphicMethod(List<T> arg1);
 }

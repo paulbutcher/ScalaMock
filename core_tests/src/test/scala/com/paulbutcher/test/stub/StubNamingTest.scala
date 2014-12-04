@@ -1,14 +1,15 @@
-// 
+// Copyright (c) 2011-2012 Paul Butcher
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -17,17 +18,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock
+package com.paulbutcher.test.stub
 
-import collection.mutable.ListBuffer
+import com.paulbutcher.test._
+import org.scalamock.function.StubFunction0
 
-private[scalamock] class CallLog {
+class StubNamingTest extends IsolatedSpec {
 
-  def +=(call: Call) = this.synchronized { log += call }
-  
-  def foreach(f: Call => Unit) = log foreach f
-  
-  override def toString = log mkString("  ", "\n  ", "")
-  
-  private val log = new ListBuffer[Call]
+  def getStubMethodName(method: StubFunction0[String]) = method.toString
+
+  behavior of "Stub"
+
+  it should "have a sensible method name when mocking a method without parameters" in {
+    val myStub = stub[TestTrait]
+    getStubMethodName(myStub.noParams _) shouldBe "<stub-1> TestTrait.noParams"
+  }
+
+  it can "be named using string literal" in {
+    val myStub = stub[TestTrait]("stub name")
+    getStubMethodName(myStub.noParams _) shouldBe "<stub name> TestTrait.noParams"
+  }
+
+  // NOTE: MockNamingTest contains more test cases related to mock naming
 }

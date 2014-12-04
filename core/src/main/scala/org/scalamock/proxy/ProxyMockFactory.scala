@@ -20,18 +20,18 @@
 
 package org.scalamock.proxy
 
-import org.scalamock.MockFactoryBase
-import scala.collection.mutable.Map
-import java.lang.reflect.{InvocationHandler, Method, Proxy => JavaProxy}
-import scala.reflect.{classTag, ClassTag}
+import java.lang.reflect.{InvocationHandler, Proxy => JavaProxy}
+import org.scalamock.context.MockContext
+
+import scala.reflect.{ClassTag, classTag}
 
 trait ProxyMockFactory {
 
-  protected def mock[T : ClassTag](implicit factory: MockFactoryBase) =
-    createProxy[T, Mock](new MockInvocationHandler(factory))
+  protected def mock[T : ClassTag](implicit mockContext: MockContext) =
+    createProxy[T, Mock](new MockInvocationHandler(mockContext))
 
-  protected def stub[T : ClassTag](implicit factory: MockFactoryBase) =
-    createProxy[T, Stub](new StubInvocationHandler(factory))
+  protected def stub[T : ClassTag](implicit mockContext: MockContext) =
+    createProxy[T, Stub](new StubInvocationHandler(mockContext))
 
   private def createProxy[T : ClassTag, F : ClassTag](handler: InvocationHandler) = {
     val classLoader = Thread.currentThread.getContextClassLoader
