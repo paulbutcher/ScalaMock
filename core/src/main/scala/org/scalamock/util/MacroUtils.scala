@@ -1,6 +1,6 @@
 package org.scalamock.util
 
-import scala.reflect.macros.blackbox.Context
+import scala.reflect.macros.Context
 
 /**
  * Helper functions to work with Scala macros and to create scala.reflect Trees.
@@ -28,6 +28,19 @@ private[scalamock] class MacroUtils[C <: Context](val ctx2: C) { // ctx2 to avoi
     case _ => Nil
   }
 
+  // missing in scala 2.10 reflect API
+  def typeParams(t:Type):List[Symbol] = {
+    t match  {
+      case PolyType(res, _) => res
+      case _ => List.empty
+    }
+  }
+
+  // missing in scala 2.10 reflect API
+  def typeArgs(t:Type):List[Type] = {
+    t.asInstanceOf[TypeRefApi].args
+  }
+
   def paramCount(methodType: Type): Int = methodType match {
     case MethodType(params, result) => params.length + paramCount(result)
     case PolyType(_, result) => paramCount(result)
@@ -41,12 +54,12 @@ private[scalamock] class MacroUtils[C <: Context](val ctx2: C) { // ctx2 to avoi
   // <|expr|>.asInstanceOf[<|t|>]
   def castTo(expr: Tree, t: Type): Tree = TypeApply(selectTerm(expr, "asInstanceOf"), List(TypeTree(t)))
 
-  val scalaPredef: Tree = selectTerm(Ident(TermName("scala")), "Predef")
-  val scalaSymbol: Tree = selectTerm(Ident(TermName("scala")), "Symbol")
-  val scalaString: Tree = Select(scalaPredef, TypeName("String"))
+  val scalaPredef: Tree = selectTerm(Ident(newTermName("scala")), "Predef")
+  val scalaSymbol: Tree = selectTerm(Ident(newTermName("scala")), "Symbol")
+  val scalaString: Tree = Select(scalaPredef, newTypeName("String"))
 
   def literal(str: String): Literal = Literal(Constant(str))
-  def selectTerm(qualifier: Tree, name: String): Tree = Select(qualifier, TermName(name))
+  def selectTerm(qualifier: Tree, name: String): Tree = Select(qualifier, newTermName(name))
   def applyListOn(qualifier: Tree, name: String, args: List[Tree]): Tree = Apply(selectTerm(qualifier, name), args)
   def applyOn(qualifier: Tree, name: String, args: Tree*): Tree = applyListOn(qualifier, name, args.toList)
   def callConstructor(obj: Tree, args: Tree*): Tree = Apply(selectTerm(obj, "<init>"), args.toList)

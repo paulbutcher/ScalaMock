@@ -6,7 +6,7 @@ import org.scalamock.function._
 import org.scalamock.util.Defaultable
 
 object MockImpl {
-  import scala.reflect.macros.blackbox.Context
+  import scala.reflect.macros.Context
 
   def mock[T: c.WeakTypeTag](c: Context)(mockContext: c.Expr[MockContext]): c.Expr[T] = {
     val maker = MockMaker[T](c)(mockContext, stub = false, mockName = None)

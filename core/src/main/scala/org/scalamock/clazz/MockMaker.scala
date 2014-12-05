@@ -4,7 +4,7 @@ import org.scalamock.context.MockContext
 import org.scalamock.function._
 import org.scalamock.util.MacroUtils
 
-import scala.reflect.macros.blackbox.Context
+import scala.reflect.macros.Context
 
 //! TODO - get rid of this nasty two-stage construction when https://issues.scala-lang.org/browse/SI-5521 is fixed
 class MockMaker[C <: Context](val ctx: C) {
@@ -59,9 +59,9 @@ class MockMaker[C <: Context](val ctx: C) {
      */
     def forwarderParamType(t: Type): Tree = t match {
       case TypeRef(pre, sym, args) if sym == JavaRepeatedParamClass =>
-        TypeTree(internal.typeRef(pre, RepeatedParamClass, args))
+        TypeTree(TypeRef(pre, RepeatedParamClass, args))
       case TypeRef(pre, sym, args) if isPathDependentThis(t) =>
-        AppliedTypeTree(Ident(TypeName(sym.name.toString)), args map TypeTree _)
+        AppliedTypeTree(Ident(newTypeName(sym.name.toString)), args map TypeTree _)
       case _ =>
         TypeTree(t)
     }
@@ -77,7 +77,7 @@ class MockMaker[C <: Context](val ctx: C) {
       case TypeRef(pre, sym, args) if sym == JavaRepeatedParamClass || sym == RepeatedParamClass =>
         AppliedTypeTree(Ident(typeOf[Seq[_]].typeSymbol), args map TypeTree _)
       case TypeRef(pre, sym, args) if isPathDependentThis(t) =>
-        AppliedTypeTree(Ident(TypeName(sym.name.toString)), args map TypeTree _)
+        AppliedTypeTree(Ident(newTypeName(sym.name.toString)), args map TypeTree _)
       case _ =>
         TypeTree(t)
     }
@@ -88,14 +88,14 @@ class MockMaker[C <: Context](val ctx: C) {
     //! TODO - This is a hack, but it's unclear what it should be instead. See
     //! https://groups.google.com/d/topic/scala-user/n11V6_zI5go/discussion
     def resolvedType(m: Symbol): Type =
-      m.typeSignatureIn(internal.superType(internal.thisType(typeToMock.typeSymbol), typeToMock))
+      m.typeSignatureIn(SuperType(ThisType(typeToMock.typeSymbol), typeToMock))
 
     def buildForwarderParams(methodType: Type) =
       paramss(methodType) map { params =>
         params map { p =>
           ValDef(
             Modifiers(PARAM | (if (p.isImplicit) IMPLICIT else NoFlags)),
-            TermName(p.name.toString),
+            newTermName(p.name.toString),
             forwarderParamType(p.typeSignature),
             EmptyTree)
         }
@@ -107,7 +107,7 @@ class MockMaker[C <: Context](val ctx: C) {
       DefDef(
         Modifiers(OVERRIDE),
         m.name,
-        m.typeParams map { p => internal.typeDef(p) },
+        m.typeParams map { p => TypeDef(p) },
         params,
         forwarderParamType(finalResultType(methodType)),
         body)
@@ -128,13 +128,13 @@ class MockMaker[C <: Context](val ctx: C) {
       if (m.isStable) {
         ValDef(
           Modifiers(),
-          TermName(m.name.toString),
+          newTermName(m.name.toString),
           TypeTree(mt),
           castTo(literal(null), mt))
       } else {
         val body = applyListOn(
           Select(This(anon), mockFunctionName(m)), "apply",
-          paramss(mt).flatten map { p => Ident(TermName(p.name.toString)) })
+          paramss(mt).flatten map { p => Ident(newTermName(p.name.toString)) })
         methodImpl(m, mt, body)
       }
     }
@@ -143,7 +143,7 @@ class MockMaker[C <: Context](val ctx: C) {
       val method = typeToMock.member(m.name).asTerm
       val index = method.alternatives.indexOf(m)
       assert(index >= 0)
-      TermName("mock$" + m.name + "$" + index)
+      newTermName("mock$" + m.name + "$" + index)
     }
 
     // val <|mockname|> = new MockFunctionN[T1, T2, ..., R](mockContext, '<|name|>)
@@ -165,12 +165,12 @@ class MockMaker[C <: Context](val ctx: C) {
     def initDef =
       DefDef(
         Modifiers(),
-        TermName("<init>"),
+        newTermName("<init>"),
         List(),
         List(List()),
         TypeTree(),
         Block(
-          List(callConstructor(Super(This(TypeName("")), TypeName("")))),
+          List(callConstructor(Super(This(newTypeName("")), newTypeName("")))),
           Literal(Constant(()))))
 
     // new <|typeToMock|> { <|members|> }
@@ -183,7 +183,7 @@ class MockMaker[C <: Context](val ctx: C) {
             List(),
             Template(
               List(TypeTree(typeToMock)),
-              noSelfType,
+              emptyValDef,
               initDef +: members))),
         callConstructor(New(Ident(anon))))
 
@@ -192,7 +192,7 @@ class MockMaker[C <: Context](val ctx: C) {
      * It either uses mock name specified by user or asks mockContext to generate new one.
      */
     class MockNameGenerator() {
-      private val mockNameValName = TermName("mock$special$mockName")
+      private val mockNameValName = newTermName("mock$special$mockName")
 
       /** Member of mock that holds mock name */
       val mockNameVal = {
@@ -211,12 +211,13 @@ class MockMaker[C <: Context](val ctx: C) {
       }
 
       def generateMockMethodName(method: MethodSymbol, methodType: Type): Tree = {
-        val mockType: Type = typeToMock.resultType
+
+        val mockType: Type = typeToMock
         val mockTypeNamePart: String = mockType.typeSymbol.name.toString
-        val mockTypeArgsPart: String = generateTypeArgsString(mockType.typeArgs)
+        val mockTypeArgsPart: String = generateTypeArgsString(typeArgs(mockType))
         val objectNamePart: Tree = Select(This(anon), mockNameValName)
 
-        val methodTypeParamsPart: String = generateTypeArgsString(methodType.typeParams map (_.name))
+        val methodTypeParamsPart: String = generateTypeArgsString(typeParams(methodType) map (_.name))
         val methodNamePart: String = method.name.toString
 
         // "<%s> %s%s.%s".format(objectNamePart, mockTypeNamePart, mockTypeArgsPart, methodNamePart, methodTypeParamsPart)
@@ -234,7 +235,7 @@ class MockMaker[C <: Context](val ctx: C) {
 
     val mockNameGenerator = new MockNameGenerator()
     val typeToMock = weakTypeOf[T]
-    val anon = TypeName("$anon")
+    val anon = newTypeName("$anon")
     val methodsToMock = methodsNotInObject.filter { m =>
       !m.isConstructor && !m.isPrivate && m.privateWithin == NoSymbol &&
         !m.asInstanceOf[reflect.internal.HasFlags].hasFlag(reflect.internal.Flags.BRIDGE) &&

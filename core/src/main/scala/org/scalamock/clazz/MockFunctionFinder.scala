@@ -4,7 +4,7 @@ import org.scalamock.util.MacroUtils
 
 object MockFunctionFinder {
 
-  import scala.reflect.macros.blackbox.Context
+  import scala.reflect.macros.Context
 
   /**
    * Given something of the structure <|o.m _|> where o is a mock object
@@ -31,12 +31,12 @@ object MockFunctionFinder {
       method.alternatives find { m =>
         val tpe = m.typeSignature
         val pts = {
-          if (targs.nonEmpty && tpe.typeParams.length == targs.length)
+          if (targs.nonEmpty && typeParams(tpe).length == targs.length)
             paramTypes(appliedType(tpe, targs))
           else
             paramTypes(tpe)
         }
-        pts.map(_.dealias) sameElements actuals.map(_.dealias) // see issue #34
+        pts.map(_.normalize) sameElements actuals.map(_.normalize) // see issue #34
       } getOrElse {
         reportError(s"Unable to resolve overloaded method ${method.name}")
       }
