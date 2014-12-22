@@ -106,4 +106,14 @@ class OverloadedMethodsTest extends IsolatedSpec {
     assertResult("non-polymorphic called") { m.overloaded(42) }
     assertResult("polymorphic called") { m.overloaded[Int](42) }
   }
+
+  they should "mock PrintStream.print(String)" in { // test for issue #39
+    import java.io.{ OutputStream, PrintStream }
+    class MockablePrintStream extends PrintStream(mock[OutputStream], false)
+
+    val m = mock[MockablePrintStream]
+    (m.print(_: String)) expects ("foo")
+    m.print("foo")
+  }
+
 }
