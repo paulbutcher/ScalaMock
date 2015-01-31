@@ -24,7 +24,7 @@ import sbt.inc.Analysis
 
 object BuildSettings {
   val buildVersion = "3.2.1"
-  val buildScalaVersion = "2.11.1"
+  val buildScalaVersion = "2.11.5"
 
   val buildSettings = Defaults.defaultSettings ++ Seq(
     organization := "org.scalamock",
@@ -34,6 +34,7 @@ object BuildSettings {
     scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++ Opts.doc.version(buildVersion) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
     resolvers += Resolver.sonatypeRepo("releases"),
     resolvers += Resolver.sonatypeRepo("snapshots"),
+    resolvers += "Scalaz Bintray Repo" at "http://dl.bintray.com/scalaz/releases",
 
     publishTo <<= version { v =>
       val nexus = "https://oss.sonatype.org/"
@@ -91,13 +92,13 @@ object ShellPrompt {
 }
 
 object Dependencies {
-  val scalatest =  "org.scalatest" %% "scalatest" % "2.1.3"
-  val specs2 = "org.specs2" %% "specs2" % "2.3.11"
+  val scalatest =  "org.scalatest" %% "scalatest" % "2.2.4"
+  val specs2 = "org.specs2" %% "specs2" % "2.4.16"
   val reflect = "org.scala-lang" % "scala-reflect" % BuildSettings.buildScalaVersion
 
   // Specs2 and ScalaTest use different scala-xml versions
   // and this caused problems with referencing class org.scalatest.events.Event
-  val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "1.0.2" % "test" 
+  val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "1.0.3" % "test" 
 }
 
 object ScalaMockBuild extends Build {
