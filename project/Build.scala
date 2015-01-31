@@ -26,7 +26,7 @@ object BuildSettings {
   val buildVersion = "3.2.1"
   val buildScalaVersion = "2.11.5"
 
-  val buildSettings = Defaults.defaultSettings ++ Seq(
+  val buildSettings = Defaults.coreDefaultSettings ++ Seq(
     organization := "org.scalamock",
     version := buildVersion,
     scalaVersion := buildScalaVersion,
