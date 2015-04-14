@@ -99,3 +99,107 @@ class FunctionAdapter9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R](f: (T1, T2, T3, T4
     f(args.productElement(0).asInstanceOf[T1], args.productElement(1).asInstanceOf[T2], args.productElement(2).asInstanceOf[T3], args.productElement(3).asInstanceOf[T4], args.productElement(4).asInstanceOf[T5], args.productElement(5).asInstanceOf[T6], args.productElement(6).asInstanceOf[T7], args.productElement(7).asInstanceOf[T8], args.productElement(8).asInstanceOf[T9])
   }
 }
+
+class FunctionAdapter10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) => R) extends Function1[Product, R] {
+
+  def apply(args: Product) = {
+    assert(args.productArity == 10)
+    f(args.productElement(0).asInstanceOf[T1], args.productElement(1).asInstanceOf[T2], args.productElement(2).asInstanceOf[T3], args.productElement(3).asInstanceOf[T4], args.productElement(4).asInstanceOf[T5], args.productElement(5).asInstanceOf[T6], args.productElement(6).asInstanceOf[T7], args.productElement(7).asInstanceOf[T8], args.productElement(8).asInstanceOf[T9], args.productElement(9).asInstanceOf[T10])
+  }
+}
+
+class FunctionAdapter11[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11) => R) extends Function1[Product, R] {
+
+  def apply(args: Product) = {
+    assert(args.productArity == 11)
+    f(args.productElement(0).asInstanceOf[T1], args.productElement(1).asInstanceOf[T2], args.productElement(2).asInstanceOf[T3], args.productElement(3).asInstanceOf[T4], args.productElement(4).asInstanceOf[T5], args.productElement(5).asInstanceOf[T6], args.productElement(6).asInstanceOf[T7], args.productElement(7).asInstanceOf[T8], args.productElement(8).asInstanceOf[T9], args.productElement(9).asInstanceOf[T10], args.productElement(10).asInstanceOf[T11])
+  }
+}
+
+class FunctionAdapter12[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, R](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12) => R) extends Function1[Product, R] {
+
+  def apply(args: Product) = {
+    assert(args.productArity == 12)
+    f(args.productElement(0).asInstanceOf[T1], args.productElement(1).asInstanceOf[T2], args.productElement(2).asInstanceOf[T3], args.productElement(3).asInstanceOf[T4], args.productElement(4).asInstanceOf[T5], args.productElement(5).asInstanceOf[T6], args.productElement(6).asInstanceOf[T7], args.productElement(7).asInstanceOf[T8], args.productElement(8).asInstanceOf[T9], args.productElement(9).asInstanceOf[T10], args.productElement(10).asInstanceOf[T11], args.productElement(11).asInstanceOf[T12])
+  }
+}
+
+class FunctionAdapter13[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, R](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13) => R) extends Function1[Product, R] {
+
+  def apply(args: Product) = {
+    assert(args.productArity == 13)
+    f(args.productElement(0).asInstanceOf[T1], args.productElement(1).asInstanceOf[T2], args.productElement(2).asInstanceOf[T3], args.productElement(3).asInstanceOf[T4], args.productElement(4).asInstanceOf[T5], args.productElement(5).asInstanceOf[T6], args.productElement(6).asInstanceOf[T7], args.productElement(7).asInstanceOf[T8], args.productElement(8).asInstanceOf[T9], args.productElement(9).asInstanceOf[T10], args.productElement(10).asInstanceOf[T11], args.productElement(11).asInstanceOf[T12], args.productElement(12).asInstanceOf[T13])
+  }
+}
+
+class FunctionAdapter14[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, R](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14) => R) extends Function1[Product, R] {
+
+  def apply(args: Product) = {
+    assert(args.productArity == 14)
+    f(args.productElement(0).asInstanceOf[T1], args.productElement(1).asInstanceOf[T2], args.productElement(2).asInstanceOf[T3], args.productElement(3).asInstanceOf[T4], args.productElement(4).asInstanceOf[T5], args.productElement(5).asInstanceOf[T6], args.productElement(6).asInstanceOf[T7], args.productElement(7).asInstanceOf[T8], args.productElement(8).asInstanceOf[T9], args.productElement(9).asInstanceOf[T10], args.productElement(10).asInstanceOf[T11], args.productElement(11).asInstanceOf[T12], args.productElement(12).asInstanceOf[T13], args.productElement(13).asInstanceOf[T14])
+  }
+}
+
+class FunctionAdapter15[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, R](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15) => R) extends Function1[Product, R] {
+
+  def apply(args: Product) = {
+    assert(args.productArity == 15)
+    f(args.productElement(0).asInstanceOf[T1], args.productElement(1).asInstanceOf[T2], args.productElement(2).asInstanceOf[T3], args.productElement(3).asInstanceOf[T4], args.productElement(4).asInstanceOf[T5], args.productElement(5).asInstanceOf[T6], args.productElement(6).asInstanceOf[T7], args.productElement(7).asInstanceOf[T8], args.productElement(8).asInstanceOf[T9], args.productElement(9).asInstanceOf[T10], args.productElement(10).asInstanceOf[T11], args.productElement(11).asInstanceOf[T12], args.productElement(12).asInstanceOf[T13], args.productElement(13).asInstanceOf[T14], args.productElement(14).asInstanceOf[T15])
+  }
+}
+
+class FunctionAdapter16[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, R](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16) => R) extends Function1[Product, R] {
+
+  def apply(args: Product) = {
+    assert(args.productArity == 16)
+    f(args.productElement(0).asInstanceOf[T1], args.productElement(1).asInstanceOf[T2], args.productElement(2).asInstanceOf[T3], args.productElement(3).asInstanceOf[T4], args.productElement(4).asInstanceOf[T5], args.productElement(5).asInstanceOf[T6], args.productElement(6).asInstanceOf[T7], args.productElement(7).asInstanceOf[T8], args.productElement(8).asInstanceOf[T9], args.productElement(9).asInstanceOf[T10], args.productElement(10).asInstanceOf[T11], args.productElement(11).asInstanceOf[T12], args.productElement(12).asInstanceOf[T13], args.productElement(13).asInstanceOf[T14], args.productElement(14).asInstanceOf[T15], args.productElement(15).asInstanceOf[T16])
+  }
+}
+
+class FunctionAdapter17[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, R](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17) => R) extends Function1[Product, R] {
+
+  def apply(args: Product) = {
+    assert(args.productArity == 17)
+    f(args.productElement(0).asInstanceOf[T1], args.productElement(1).asInstanceOf[T2], args.productElement(2).asInstanceOf[T3], args.productElement(3).asInstanceOf[T4], args.productElement(4).asInstanceOf[T5], args.productElement(5).asInstanceOf[T6], args.productElement(6).asInstanceOf[T7], args.productElement(7).asInstanceOf[T8], args.productElement(8).asInstanceOf[T9], args.productElement(9).asInstanceOf[T10], args.productElement(10).asInstanceOf[T11], args.productElement(11).asInstanceOf[T12], args.productElement(12).asInstanceOf[T13], args.productElement(13).asInstanceOf[T14], args.productElement(14).asInstanceOf[T15], args.productElement(15).asInstanceOf[T16], args.productElement(16).asInstanceOf[T17])
+  }
+}
+
+class FunctionAdapter18[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, R](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18) => R) extends Function1[Product, R] {
+
+  def apply(args: Product) = {
+    assert(args.productArity == 18)
+    f(args.productElement(0).asInstanceOf[T1], args.productElement(1).asInstanceOf[T2], args.productElement(2).asInstanceOf[T3], args.productElement(3).asInstanceOf[T4], args.productElement(4).asInstanceOf[T5], args.productElement(5).asInstanceOf[T6], args.productElement(6).asInstanceOf[T7], args.productElement(7).asInstanceOf[T8], args.productElement(8).asInstanceOf[T9], args.productElement(9).asInstanceOf[T10], args.productElement(10).asInstanceOf[T11], args.productElement(11).asInstanceOf[T12], args.productElement(12).asInstanceOf[T13], args.productElement(13).asInstanceOf[T14], args.productElement(14).asInstanceOf[T15], args.productElement(15).asInstanceOf[T16], args.productElement(16).asInstanceOf[T17], args.productElement(17).asInstanceOf[T18])
+  }
+}
+
+class FunctionAdapter19[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, R](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19) => R) extends Function1[Product, R] {
+
+  def apply(args: Product) = {
+    assert(args.productArity == 19)
+    f(args.productElement(0).asInstanceOf[T1], args.productElement(1).asInstanceOf[T2], args.productElement(2).asInstanceOf[T3], args.productElement(3).asInstanceOf[T4], args.productElement(4).asInstanceOf[T5], args.productElement(5).asInstanceOf[T6], args.productElement(6).asInstanceOf[T7], args.productElement(7).asInstanceOf[T8], args.productElement(8).asInstanceOf[T9], args.productElement(9).asInstanceOf[T10], args.productElement(10).asInstanceOf[T11], args.productElement(11).asInstanceOf[T12], args.productElement(12).asInstanceOf[T13], args.productElement(13).asInstanceOf[T14], args.productElement(14).asInstanceOf[T15], args.productElement(15).asInstanceOf[T16], args.productElement(16).asInstanceOf[T17], args.productElement(17).asInstanceOf[T18], args.productElement(18).asInstanceOf[T19])
+  }
+}
+
+class FunctionAdapter20[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, R](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20) => R) extends Function1[Product, R] {
+
+  def apply(args: Product) = {
+    assert(args.productArity == 20)
+    f(args.productElement(0).asInstanceOf[T1], args.productElement(1).asInstanceOf[T2], args.productElement(2).asInstanceOf[T3], args.productElement(3).asInstanceOf[T4], args.productElement(4).asInstanceOf[T5], args.productElement(5).asInstanceOf[T6], args.productElement(6).asInstanceOf[T7], args.productElement(7).asInstanceOf[T8], args.productElement(8).asInstanceOf[T9], args.productElement(9).asInstanceOf[T10], args.productElement(10).asInstanceOf[T11], args.productElement(11).asInstanceOf[T12], args.productElement(12).asInstanceOf[T13], args.productElement(13).asInstanceOf[T14], args.productElement(14).asInstanceOf[T15], args.productElement(15).asInstanceOf[T16], args.productElement(16).asInstanceOf[T17], args.productElement(17).asInstanceOf[T18], args.productElement(18).asInstanceOf[T19], args.productElement(19).asInstanceOf[T20])
+  }
+}
+
+class FunctionAdapter21[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, R](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21) => R) extends Function1[Product, R] {
+
+  def apply(args: Product) = {
+    assert(args.productArity == 21)
+    f(args.productElement(0).asInstanceOf[T1], args.productElement(1).asInstanceOf[T2], args.productElement(2).asInstanceOf[T3], args.productElement(3).asInstanceOf[T4], args.productElement(4).asInstanceOf[T5], args.productElement(5).asInstanceOf[T6], args.productElement(6).asInstanceOf[T7], args.productElement(7).asInstanceOf[T8], args.productElement(8).asInstanceOf[T9], args.productElement(9).asInstanceOf[T10], args.productElement(10).asInstanceOf[T11], args.productElement(11).asInstanceOf[T12], args.productElement(12).asInstanceOf[T13], args.productElement(13).asInstanceOf[T14], args.productElement(14).asInstanceOf[T15], args.productElement(15).asInstanceOf[T16], args.productElement(16).asInstanceOf[T17], args.productElement(17).asInstanceOf[T18], args.productElement(18).asInstanceOf[T19], args.productElement(19).asInstanceOf[T20], args.productElement(20).asInstanceOf[T21])
+  }
+}
+
+class FunctionAdapter22[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, R](f: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22) => R) extends Function1[Product, R] {
+
+  def apply(args: Product) = {
+    assert(args.productArity == 22)
+    f(args.productElement(0).asInstanceOf[T1], args.productElement(1).asInstanceOf[T2], args.productElement(2).asInstanceOf[T3], args.productElement(3).asInstanceOf[T4], args.productElement(4).asInstanceOf[T5], args.productElement(5).asInstanceOf[T6], args.productElement(6).asInstanceOf[T7], args.productElement(7).asInstanceOf[T8], args.productElement(8).asInstanceOf[T9], args.productElement(9).asInstanceOf[T10], args.productElement(10).asInstanceOf[T11], args.productElement(11).asInstanceOf[T12], args.productElement(12).asInstanceOf[T13], args.productElement(13).asInstanceOf[T14], args.productElement(14).asInstanceOf[T15], args.productElement(15).asInstanceOf[T16], args.productElement(16).asInstanceOf[T17], args.productElement(17).asInstanceOf[T18], args.productElement(18).asInstanceOf[T19], args.productElement(19).asInstanceOf[T20], args.productElement(20).asInstanceOf[T21], args.productElement(21).asInstanceOf[T22])
+  }
+}

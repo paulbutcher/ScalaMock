@@ -144,3 +144,159 @@ class StubFunction9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R: Defaultable](mockCont
   
   protected def onUnexpected(call: Call) = implicitly[Defaultable[R]].default
 }
+
+class StubFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R: Defaultable](mockContext: MockContext, name: Symbol)
+  extends FakeFunction10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](mockContext, name) {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10]) = mockContext.add((new CallHandler10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, Boolean]) = mockContext.add((new CallHandler10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10]) = mockContext.add(new CallHandler10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) with Verify)
+  def verify(matcher: FunctionAdapter10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, Boolean]) = mockContext.add(new CallHandler10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R](this, matcher) with Verify)
+
+  protected def onUnexpected(call: Call) = implicitly[Defaultable[R]].default
+}
+
+class StubFunction11[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R: Defaultable](mockContext: MockContext, name: Symbol)
+  extends FakeFunction11[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R](mockContext, name) {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11]) = mockContext.add((new CallHandler11[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter11[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, Boolean]) = mockContext.add((new CallHandler11[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11]) = mockContext.add(new CallHandler11[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) with Verify)
+  def verify(matcher: FunctionAdapter11[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, Boolean]) = mockContext.add(new CallHandler11[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R](this, matcher) with Verify)
+
+  protected def onUnexpected(call: Call) = implicitly[Defaultable[R]].default
+}
+
+class StubFunction12[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, R: Defaultable](mockContext: MockContext, name: Symbol)
+  extends FakeFunction12[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, R](mockContext, name) {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12]) = mockContext.add((new CallHandler12[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter12[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, Boolean]) = mockContext.add((new CallHandler12[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12]) = mockContext.add(new CallHandler12[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) with Verify)
+  def verify(matcher: FunctionAdapter12[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, Boolean]) = mockContext.add(new CallHandler12[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, R](this, matcher) with Verify)
+
+  protected def onUnexpected(call: Call) = implicitly[Defaultable[R]].default
+}
+
+class StubFunction13[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, R: Defaultable](mockContext: MockContext, name: Symbol)
+  extends FakeFunction13[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, R](mockContext, name) {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13]) = mockContext.add((new CallHandler13[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter13[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, Boolean]) = mockContext.add((new CallHandler13[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13]) = mockContext.add(new CallHandler13[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13) with Verify)
+  def verify(matcher: FunctionAdapter13[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, Boolean]) = mockContext.add(new CallHandler13[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, R](this, matcher) with Verify)
+
+  protected def onUnexpected(call: Call) = implicitly[Defaultable[R]].default
+}
+
+class StubFunction14[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, R: Defaultable](mockContext: MockContext, name: Symbol)
+  extends FakeFunction14[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, R](mockContext, name) {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14]) = mockContext.add((new CallHandler14[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter14[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, Boolean]) = mockContext.add((new CallHandler14[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14]) = mockContext.add(new CallHandler14[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14) with Verify)
+  def verify(matcher: FunctionAdapter14[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, Boolean]) = mockContext.add(new CallHandler14[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, R](this, matcher) with Verify)
+
+  protected def onUnexpected(call: Call) = implicitly[Defaultable[R]].default
+}
+
+class StubFunction15[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, R: Defaultable](mockContext: MockContext, name: Symbol)
+  extends FakeFunction15[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, R](mockContext, name) {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15]) = mockContext.add((new CallHandler15[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter15[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, Boolean]) = mockContext.add((new CallHandler15[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15]) = mockContext.add(new CallHandler15[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15) with Verify)
+  def verify(matcher: FunctionAdapter15[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, Boolean]) = mockContext.add(new CallHandler15[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, R](this, matcher) with Verify)
+
+  protected def onUnexpected(call: Call) = implicitly[Defaultable[R]].default
+}
+
+class StubFunction16[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, R: Defaultable](mockContext: MockContext, name: Symbol)
+  extends FakeFunction16[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, R](mockContext, name) {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16]) = mockContext.add((new CallHandler16[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter16[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, Boolean]) = mockContext.add((new CallHandler16[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16]) = mockContext.add(new CallHandler16[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16) with Verify)
+  def verify(matcher: FunctionAdapter16[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, Boolean]) = mockContext.add(new CallHandler16[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, R](this, matcher) with Verify)
+
+  protected def onUnexpected(call: Call) = implicitly[Defaultable[R]].default
+}
+
+class StubFunction17[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, R: Defaultable](mockContext: MockContext, name: Symbol)
+  extends FakeFunction17[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, R](mockContext, name) {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16], v17: MockParameter[T17]) = mockContext.add((new CallHandler17[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter17[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, Boolean]) = mockContext.add((new CallHandler17[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16], v17: MockParameter[T17]) = mockContext.add(new CallHandler17[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17) with Verify)
+  def verify(matcher: FunctionAdapter17[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, Boolean]) = mockContext.add(new CallHandler17[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, R](this, matcher) with Verify)
+
+  protected def onUnexpected(call: Call) = implicitly[Defaultable[R]].default
+}
+
+class StubFunction18[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, R: Defaultable](mockContext: MockContext, name: Symbol)
+  extends FakeFunction18[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, R](mockContext, name) {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16], v17: MockParameter[T17], v18: MockParameter[T18]) = mockContext.add((new CallHandler18[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter18[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, Boolean]) = mockContext.add((new CallHandler18[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16], v17: MockParameter[T17], v18: MockParameter[T18]) = mockContext.add(new CallHandler18[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18) with Verify)
+  def verify(matcher: FunctionAdapter18[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, Boolean]) = mockContext.add(new CallHandler18[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, R](this, matcher) with Verify)
+
+  protected def onUnexpected(call: Call) = implicitly[Defaultable[R]].default
+}
+
+class StubFunction19[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, R: Defaultable](mockContext: MockContext, name: Symbol)
+  extends FakeFunction19[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, R](mockContext, name) {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16], v17: MockParameter[T17], v18: MockParameter[T18], v19: MockParameter[T19]) = mockContext.add((new CallHandler19[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter19[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, Boolean]) = mockContext.add((new CallHandler19[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16], v17: MockParameter[T17], v18: MockParameter[T18], v19: MockParameter[T19]) = mockContext.add(new CallHandler19[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19) with Verify)
+  def verify(matcher: FunctionAdapter19[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, Boolean]) = mockContext.add(new CallHandler19[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, R](this, matcher) with Verify)
+
+  protected def onUnexpected(call: Call) = implicitly[Defaultable[R]].default
+}
+
+class StubFunction20[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, R: Defaultable](mockContext: MockContext, name: Symbol)
+  extends FakeFunction20[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, R](mockContext, name) {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16], v17: MockParameter[T17], v18: MockParameter[T18], v19: MockParameter[T19], v20: MockParameter[T20]) = mockContext.add((new CallHandler20[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter20[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, Boolean]) = mockContext.add((new CallHandler20[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16], v17: MockParameter[T17], v18: MockParameter[T18], v19: MockParameter[T19], v20: MockParameter[T20]) = mockContext.add(new CallHandler20[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20) with Verify)
+  def verify(matcher: FunctionAdapter20[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, Boolean]) = mockContext.add(new CallHandler20[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, R](this, matcher) with Verify)
+
+  protected def onUnexpected(call: Call) = implicitly[Defaultable[R]].default
+}
+
+class StubFunction21[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, R: Defaultable](mockContext: MockContext, name: Symbol)
+  extends FakeFunction21[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, R](mockContext, name) {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16], v17: MockParameter[T17], v18: MockParameter[T18], v19: MockParameter[T19], v20: MockParameter[T20], v21: MockParameter[T21]) = mockContext.add((new CallHandler21[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter21[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, Boolean]) = mockContext.add((new CallHandler21[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16], v17: MockParameter[T17], v18: MockParameter[T18], v19: MockParameter[T19], v20: MockParameter[T20], v21: MockParameter[T21]) = mockContext.add(new CallHandler21[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21) with Verify)
+  def verify(matcher: FunctionAdapter21[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, Boolean]) = mockContext.add(new CallHandler21[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, R](this, matcher) with Verify)
+
+  protected def onUnexpected(call: Call) = implicitly[Defaultable[R]].default
+}
+
+class StubFunction22[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, R: Defaultable](mockContext: MockContext, name: Symbol)
+  extends FakeFunction22[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, R](mockContext, name) {
+
+  def when(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16], v17: MockParameter[T17], v18: MockParameter[T18], v19: MockParameter[T19], v20: MockParameter[T20], v21: MockParameter[T21], v22: MockParameter[T22]) = mockContext.add((new CallHandler22[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22)).anyNumberOfTimes)
+  def when(matcher: FunctionAdapter22[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, Boolean]) = mockContext.add((new CallHandler22[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, R](this, matcher)).anyNumberOfTimes)
+
+  def verify(v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16], v17: MockParameter[T17], v18: MockParameter[T18], v19: MockParameter[T19], v20: MockParameter[T20], v21: MockParameter[T21], v22: MockParameter[T22]) = mockContext.add(new CallHandler22[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, R](this, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22) with Verify)
+  def verify(matcher: FunctionAdapter22[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, Boolean]) = mockContext.add(new CallHandler22[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, R](this, matcher) with Verify)
+
+  protected def onUnexpected(call: Call) = implicitly[Defaultable[R]].default
+}
