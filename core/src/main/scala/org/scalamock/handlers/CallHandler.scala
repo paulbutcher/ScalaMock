@@ -216,10 +216,127 @@ class CallHandler8[T1, T2, T3, T4, T5, T6, T7, T8, R: Defaultable](target: FakeF
 }
 
 class CallHandler9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
-  
+
   type Derived = CallHandler9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R]
 
   def this(target: FakeFunction, v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9]) = this(target, new ArgumentMatcher((v1, v2, v3, v4, v5, v6, v7, v8, v9)))
-  
+
   def onCall(handler: (T1, T2, T3, T4, T5, T6, T7, T8, T9) => R): CallHandler9[T1, T2, T3, T4, T5, T6, T7, T8, T9, R] = super.onCall(new FunctionAdapter9(handler))
+}
+
+class CallHandler10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+
+  type Derived = CallHandler10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R]
+
+  def this(target: FakeFunction, v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10]) = this(target, new ArgumentMatcher((v1, v2, v3, v4, v5, v6, v7, v8, v9, v10)))
+
+  def onCall(handler: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) => R): CallHandler10[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R] = super.onCall(new FunctionAdapter10(handler))
+}
+
+class CallHandler11[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+
+  type Derived = CallHandler11[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R]
+
+  def this(target: FakeFunction, v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11]) = this(target, new ArgumentMatcher((v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11)))
+
+  def onCall(handler: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11) => R): CallHandler11[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R] = super.onCall(new FunctionAdapter11(handler))
+}
+
+class CallHandler12[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+
+  type Derived = CallHandler12[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, R]
+
+  def this(target: FakeFunction, v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12]) = this(target, new ArgumentMatcher((v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12)))
+
+  def onCall(handler: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12) => R): CallHandler12[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, R] = super.onCall(new FunctionAdapter12(handler))
+}
+
+class CallHandler13[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+
+  type Derived = CallHandler13[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, R]
+
+  def this(target: FakeFunction, v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13]) = this(target, new ArgumentMatcher((v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13)))
+
+  def onCall(handler: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13) => R): CallHandler13[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, R] = super.onCall(new FunctionAdapter13(handler))
+}
+
+class CallHandler14[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+
+  type Derived = CallHandler14[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, R]
+
+  def this(target: FakeFunction, v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14]) = this(target, new ArgumentMatcher((v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14)))
+
+  def onCall(handler: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14) => R): CallHandler14[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, R] = super.onCall(new FunctionAdapter14(handler))
+}
+
+class CallHandler15[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+
+  type Derived = CallHandler15[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, R]
+
+  def this(target: FakeFunction, v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15]) = this(target, new ArgumentMatcher((v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15)))
+
+  def onCall(handler: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15) => R): CallHandler15[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, R] = super.onCall(new FunctionAdapter15(handler))
+}
+
+class CallHandler16[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+
+  type Derived = CallHandler16[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, R]
+
+  def this(target: FakeFunction, v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16]) = this(target, new ArgumentMatcher((v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16)))
+
+  def onCall(handler: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16) => R): CallHandler16[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, R] = super.onCall(new FunctionAdapter16(handler))
+}
+
+class CallHandler17[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+
+  type Derived = CallHandler17[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, R]
+
+  def this(target: FakeFunction, v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16], v17: MockParameter[T17]) = this(target, new ArgumentMatcher((v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17)))
+
+  def onCall(handler: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17) => R): CallHandler17[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, R] = super.onCall(new FunctionAdapter17(handler))
+}
+
+class CallHandler18[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+
+  type Derived = CallHandler18[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, R]
+
+  def this(target: FakeFunction, v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16], v17: MockParameter[T17], v18: MockParameter[T18]) = this(target, new ArgumentMatcher((v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18)))
+
+  def onCall(handler: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18) => R): CallHandler18[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, R] = super.onCall(new FunctionAdapter18(handler))
+}
+
+class CallHandler19[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+
+  type Derived = CallHandler19[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, R]
+
+  def this(target: FakeFunction, v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16], v17: MockParameter[T17], v18: MockParameter[T18], v19: MockParameter[T19]) = this(target, new ArgumentMatcher((v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19)))
+
+  def onCall(handler: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19) => R): CallHandler19[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, R] = super.onCall(new FunctionAdapter19(handler))
+}
+
+class CallHandler20[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+
+  type Derived = CallHandler20[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, R]
+
+  def this(target: FakeFunction, v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16], v17: MockParameter[T17], v18: MockParameter[T18], v19: MockParameter[T19], v20: MockParameter[T20]) = this(target, new ArgumentMatcher((v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20)))
+
+  def onCall(handler: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20) => R): CallHandler20[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, R] = super.onCall(new FunctionAdapter20(handler))
+}
+
+class CallHandler21[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+
+  type Derived = CallHandler21[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, R]
+
+  def this(target: FakeFunction, v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16], v17: MockParameter[T17], v18: MockParameter[T18], v19: MockParameter[T19], v20: MockParameter[T20], v21: MockParameter[T21]) = this(target, new ArgumentMatcher((v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21)))
+
+  def onCall(handler: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21) => R): CallHandler21[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, R] = super.onCall(new FunctionAdapter21(handler))
+}
+
+class CallHandler22[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {
+
+  type Derived = CallHandler22[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, R]
+
+  def this(target: FakeFunction, v1: MockParameter[T1], v2: MockParameter[T2], v3: MockParameter[T3], v4: MockParameter[T4], v5: MockParameter[T5], v6: MockParameter[T6], v7: MockParameter[T7], v8: MockParameter[T8], v9: MockParameter[T9], v10: MockParameter[T10], v11: MockParameter[T11], v12: MockParameter[T12], v13: MockParameter[T13], v14: MockParameter[T14], v15: MockParameter[T15], v16: MockParameter[T16], v17: MockParameter[T17], v18: MockParameter[T18], v19: MockParameter[T19], v20: MockParameter[T20], v21: MockParameter[T21], v22: MockParameter[T22]) = this(target, new ArgumentMatcher((v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22)))
+
+  def onCall(handler: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22) => R): CallHandler22[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, R] = super.onCall(new FunctionAdapter22(handler))
 }
