@@ -23,13 +23,13 @@ package org.scalamock.scalatest
 import org.scalamock.MockFactoryBase
 import org.scalamock.clazz.Mock
 import org.scalatest.exceptions.TestFailedException
-import org.scalatest.{SuiteMixin, Suite}
+import org.scalatest.{ SuiteMixin, Suite }
 
 /**
- * Trait that can be mixed into path.* specs (e.g. path.FunSpec).
+ * Trait that can be mixed into org.scalatest.path.* specs (e.g. path.FunSpec).
  *
- * MockFactory cannot be used because it overrides a final method.  If you use path.FunSpec you need to verify
- * expectations yourself... just add verifyExpectations at the end of the root-level suite.
+ * MockFactory cannot be used because it overrides a final method. If you use path.FunSpec you need to verify
+ * expectations yourself - just add verifyExpectations at the end of the root-level suite.
  *
  * See [[MockFactory]] for more information.
  */
@@ -42,7 +42,7 @@ trait PathMockFactory extends SuiteMixin with MockFactoryBase with Mock {
     new TestFailedException(_ => Some(message), None, failedCodeStackDepthFn(methodName))
 
   /**
-   * Verify all expectations.  This should be invoked at the end of the root suite.
+   * Verify all expectations.
    */
   protected def verifyExpectations(): Unit = withExpectations(())
 }
