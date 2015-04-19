@@ -21,34 +21,28 @@
 package org.scalamock.scalatest
 
 import org.scalamock.MockFactoryBase
+import org.scalamock.clazz.Mock
 import org.scalatest.exceptions.TestFailedException
-import org.scalatest.{Failed, Outcome, Suite, SuiteMixin}
+import org.scalatest.{SuiteMixin, Suite}
 
-trait AbstractMockFactory extends SuiteMixin with MockFactoryBase { this: Suite =>
-  
+/**
+ * Trait that can be mixed into path.* specs (e.g. path.FunSpec).
+ *
+ * MockFactory cannot be used because it overrides a final method.  If you use path.FunSpec you need to verify
+ * expectations yourself... just add verifyExpectations at the end of the root-level suite.
+ *
+ * See [[MockFactory]] for more information.
+ */
+trait PathMockFactory extends SuiteMixin with MockFactoryBase with Mock {
+  this: Suite =>
+
   type ExpectationException = TestFailedException
-  
-  abstract override def withFixture(test: NoArgTest): Outcome = {
-
-    if (autoVerify) {
-      withExpectations { 
-        val outcome = super.withFixture(test)
-        outcome match {
-          case Failed(throwable) => 
-            // MockFactoryBase does not know how to handle ScalaTest Outcome.
-            // Throw error that caused test failure to prevent hiding it by 
-            // "unsatisfied expectation" exception (see issue #72)
-            throw throwable 
-          case _ => outcome
-        }
-      }
-    } else {
-      super.withFixture(test)
-    }
-  }
 
   protected def newExpectationException(message: String, methodName: Option[Symbol]) =
     new TestFailedException(_ => Some(message), None, failedCodeStackDepthFn(methodName))
 
-  protected var autoVerify = true
+  /**
+   * Verify all expectations.  This should be invoked at the end of the root suite.
+   */
+  protected def verifyExpectations(): Unit = withExpectations(())
 }
