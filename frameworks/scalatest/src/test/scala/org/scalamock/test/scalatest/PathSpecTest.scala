@@ -19,35 +19,45 @@
 // THE SOFTWARE.
 
 package org.scalamock.test.scalatest
-import org.scalatest.events.{ Event, TestFailed }
-import org.scalatest.ShouldMatchers
-import org.scalatest.{ Args, Reporter, Suite }
 
-import scala.language.postfixOps
+import org.scalamock.scalatest.PathMockFactory
+import org.scalatest.exceptions.TestFailedException
+import org.scalatest.{ Matchers, path }
 
-trait TestSuiteRunner { this: ShouldMatchers =>
+class PathSpecTest extends path.FunSpec with Matchers with PathMockFactory {
 
-  /** Executes single ScalaTest test case and returns its outcome (i.e. either TestSucccess or TestFailure) */
-  def runTestCase[T <: Suite](suite: T): Event = {
-    class TestReporter extends Reporter {
-      var lastEvent: Option[Event] = None
-      override def apply(e: Event): Unit = { lastEvent = Some(e) }
+  describe("PathSpec") {
+    val mockFun = mockFunction[String, Unit]
+    mockFun expects "top-level"
+
+    describe("can handle stackable expectations") {
+      mockFun expects "mid-level"
+      mockFun("top-level")
+
+      it("does not throw exception if all expectations are met") {
+        mockFun("mid-level")
+        verifyExpectations()
+      }
+
+      it("fails if mid-level expectation is not met") {
+        an[TestFailedException] should be thrownBy verifyExpectations()
+      }
     }
 
-    val reporter = new TestReporter
-    suite.run(None, Args(reporter))
-    reporter.lastEvent.get
+    it("fails if top-level expectation is not met") {
+      an[TestFailedException] should be thrownBy verifyExpectations()
+    }
   }
 
-  def getThrowable[ExnT <: Throwable](event: Event)(implicit m: Manifest[ExnT]): ExnT = {
-    event shouldBe a[TestFailed]
+  describe("PathSpec") {
+    val mockFun = mockFunction[String, Unit]("mockFun")
 
-    val testCaseError = event.asInstanceOf[TestFailed].throwable.get
-    testCaseError shouldBe a[ExnT]
-    testCaseError.asInstanceOf[ExnT]
+    it("can have expectations checked at the end of root suite") {
+      mockFun expects "bottom-level"
+    }
+
+    val testFailedException = trap({ verifyExpectations() }).asInstanceOf[TestFailedException]
+    testFailedException.getMessage() should include("mockFun(bottom-level) once (never called - UNSATISFIED)")
   }
 
-  def getErrorMessage[ExnT <: Throwable](event: Event)(implicit m: Manifest[ExnT]): String = {
-    getThrowable[ExnT](event).getMessage()
-  }
 }

@@ -18,22 +18,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.paulbutcher.test
+package org.scalamock.scalatest
 
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.{ FlatSpec, ShouldMatchers, OneInstancePerTest }
+import org.scalamock.MockFactoryBase
+import org.scalamock.clazz.Mock
+import org.scalatest.exceptions.TestFailedException
+import org.scalatest.{ SuiteMixin, Suite }
 
-class IsolatedSpec extends FlatSpec with MockFactory with ShouldMatchers with OneInstancePerTest {
+/**
+ * Trait that can be mixed into org.scalatest.path.* specs (e.g. path.FunSpec).
+ *
+ * MockFactory cannot be used because it overrides a final method. If you use path.FunSpec you need to verify
+ * expectations yourself - just add verifyExpectations at the end of the root-level suite.
+ *
+ * See [[MockFactory]] for more information.
+ */
+trait PathMockFactory extends SuiteMixin with MockFactoryBase with Mock {
+  this: Suite =>
 
-  def repeat(n: Int)(what: => Unit) {
-    for (i <- 0 until n)
-      what
-  }
+  type ExpectationException = TestFailedException
 
-  def demandExpectationException(block: => Unit): Unit = {
-    intercept[ExpectationException](withExpectations {
-      block
-    })
-  }
+  protected def newExpectationException(message: String, methodName: Option[Symbol]) =
+    new TestFailedException(_ => Some(message), None, failedCodeStackDepthFn(methodName))
 
+  /**
+   * Verify all expectations.
+   */
+  protected def verifyExpectations(): Unit = withExpectations(())
 }

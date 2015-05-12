@@ -18,22 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.paulbutcher.test
+package org.scalamock
 
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.{ FlatSpec, ShouldMatchers, OneInstancePerTest }
+import org.scalatest.exceptions.StackDepthException
 
-class IsolatedSpec extends FlatSpec with MockFactory with ShouldMatchers with OneInstancePerTest {
-
-  def repeat(n: Int)(what: => Unit) {
-    for (i <- 0 until n)
-      what
+package object scalatest {
+  private[scalatest] def failedCodeStackDepthFn(methodName: Option[Symbol]): StackDepthException => Int = e => {
+    e.getStackTrace indexWhere { s =>
+      !s.getClassName.startsWith("org.scalamock") && !s.getClassName.startsWith("org.scalatest") &&
+        !(s.getMethodName == "newExpectationException") && !(s.getMethodName == "reportUnexpectedCall") &&
+        !(methodName.isDefined && s.getMethodName == methodName.get.name)
+    }
   }
-
-  def demandExpectationException(block: => Unit): Unit = {
-    intercept[ExpectationException](withExpectations {
-      block
-    })
-  }
-
 }

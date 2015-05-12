@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2012 Paul Butcher
+// Copyright (c) 2011-2015 ScalaMock Contributors (https://github.com/paulbutcher/ScalaMock/graphs/contributors)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -106,4 +106,14 @@ class OverloadedMethodsTest extends IsolatedSpec {
     assertResult("non-polymorphic called") { m.overloaded(42) }
     assertResult("polymorphic called") { m.overloaded[Int](42) }
   }
+
+  they should "mock PrintStream.print(String)" in { // test for issue #39
+    import java.io.{ OutputStream, PrintStream }
+    class MockablePrintStream extends PrintStream(mock[OutputStream], false)
+
+    val m = mock[MockablePrintStream]
+    (m.print(_: String)) expects ("foo")
+    m.print("foo")
+  }
+
 }

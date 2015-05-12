@@ -1,3 +1,23 @@
+// Copyright (c) 2011-2015 ScalaMock Contributors (https://github.com/paulbutcher/ScalaMock/graphs/contributors)
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 package org.scalamock.clazz
 
 import org.scalamock.context.MockContext
@@ -28,7 +48,20 @@ class MockMaker[C <: Context](val ctx: C) {
       case 7 => typeOf[MockFunction7[_, _, _, _, _, _, _, _]]
       case 8 => typeOf[MockFunction8[_, _, _, _, _, _, _, _, _]]
       case 9 => typeOf[MockFunction9[_, _, _, _, _, _, _, _, _, _]]
-      case _ => ctx.abort(ctx.enclosingPosition, "ScalaMock: Can't handle methods with more than 9 parameters (yet)")
+      case 10 => typeOf[MockFunction10[_, _, _, _, _, _, _, _, _, _, _]]
+      case 11 => typeOf[MockFunction11[_, _, _, _, _, _, _, _, _, _, _, _]]
+      case 12 => typeOf[MockFunction12[_, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 13 => typeOf[MockFunction13[_, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 14 => typeOf[MockFunction14[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 15 => typeOf[MockFunction15[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 16 => typeOf[MockFunction16[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 17 => typeOf[MockFunction17[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 18 => typeOf[MockFunction18[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 19 => typeOf[MockFunction19[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 20 => typeOf[MockFunction20[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 21 => typeOf[MockFunction21[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 22 => typeOf[MockFunction22[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case _ => ctx.abort(ctx.enclosingPosition, "ScalaMock: Can't handle methods with more than 22 parameters (yet)")
     }
 
     def stubFunctionClass(paramCount: Int): Type = paramCount match {
@@ -42,7 +75,20 @@ class MockMaker[C <: Context](val ctx: C) {
       case 7 => typeOf[StubFunction7[_, _, _, _, _, _, _, _]]
       case 8 => typeOf[StubFunction8[_, _, _, _, _, _, _, _, _]]
       case 9 => typeOf[StubFunction9[_, _, _, _, _, _, _, _, _, _]]
-      case _ => ctx.abort(ctx.enclosingPosition, "ScalaMock: Can't handle methods with more than 9 parameters (yet)")
+      case 10 => typeOf[StubFunction10[_, _, _, _, _, _, _, _, _, _, _]]
+      case 11 => typeOf[StubFunction11[_, _, _, _, _, _, _, _, _, _, _, _]]
+      case 12 => typeOf[StubFunction12[_, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 13 => typeOf[StubFunction13[_, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 14 => typeOf[StubFunction14[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 15 => typeOf[StubFunction15[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 16 => typeOf[StubFunction16[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 17 => typeOf[StubFunction17[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 18 => typeOf[StubFunction18[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 19 => typeOf[StubFunction19[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 20 => typeOf[StubFunction20[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 21 => typeOf[StubFunction21[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case 22 => typeOf[StubFunction22[_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _]]
+      case _ => ctx.abort(ctx.enclosingPosition, "ScalaMock: Can't handle methods with more than 22 parameters (yet)")
     }
 
     def classType(paramCount: Int) = if (stub) stubFunctionClass(paramCount) else mockFunctionClass(paramCount)

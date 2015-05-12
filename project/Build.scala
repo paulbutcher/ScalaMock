@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2012 Paul Butcher
+// Copyright (c) 2011-2015 ScalaMock Contributors (https://github.com/paulbutcher/ScalaMock/graphs/contributors)
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,10 @@ import Keys._
 import sbt.inc.Analysis
 
 object BuildSettings {
-  val buildVersion = "3.2.1"
+  val buildVersion = "3.2.2"
   val buildScalaVersion = "2.10.4"
 
-  val buildSettings = Defaults.defaultSettings ++ Seq(
+  val buildSettings = Defaults.coreDefaultSettings ++ Seq(
     organization := "org.scalamock",
     version := buildVersion,
     scalaVersion := buildScalaVersion,
@@ -34,6 +34,7 @@ object BuildSettings {
     scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++ Opts.doc.version(buildVersion) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
     resolvers += Resolver.sonatypeRepo("releases"),
     resolvers += Resolver.sonatypeRepo("snapshots"),
+    resolvers += "Scalaz Bintray Repo" at "http://dl.bintray.com/scalaz/releases",
 
     publishTo <<= version { v =>
       val nexus = "https://oss.sonatype.org/"
@@ -76,7 +77,7 @@ object ShellPrompt {
     def buffer[T] (f: => T): T = f
   }
   def currBranch = (
-    ("git status -sb" lines_! devnull headOption)
+    (("git status -sb" lines_! devnull).headOption)
       getOrElse "-" stripPrefix "## "
   )
 
@@ -91,8 +92,8 @@ object ShellPrompt {
 }
 
 object Dependencies {
-  val scalatest =  "org.scalatest" %% "scalatest" % "2.1.3"
-  val specs2 = "org.specs2" %% "specs2" % "2.3.11"
+  val scalatest =  "org.scalatest" %% "scalatest" % "2.2.4"
+  val specs2 = "org.specs2" %% "specs2" % "2.4.16"
   val reflect = "org.scala-lang" % "scala-reflect" % BuildSettings.buildScalaVersion
 }
 

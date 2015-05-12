@@ -55,14 +55,14 @@ To use ScalaMock in [sbt](http://www.scala-sbt.org/) with [ScalaTest](http://www
 
 ```scala
 libraryDependencies +=
-  "org.scalamock" %% "scalamock-scalatest-support" % "3.2" % "test"
+  "org.scalamock" %% "scalamock-scalatest-support" % "3.2.2" % "test"
 ```
 
 and with [Specs2](http://etorreborre.github.com/specs2/):
 
 ```scala
 libraryDependencies +=
-  "org.scalamock" %% "scalamock-specs2-support" % "3.2" % "test"
+  "org.scalamock" %% "scalamock-specs2-support" % "3.2.2" % "test"
 ```
 
 ## Documentation
