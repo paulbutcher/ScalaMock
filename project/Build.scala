@@ -93,7 +93,7 @@ object ShellPrompt {
 
 object Dependencies {
   val scalatest =  "org.scalatest" %% "scalatest" % "2.2.4"
-  val specs2 = "org.specs2" %% "specs2" % "2.4.16"
+  val specs2 = "org.specs2" %% "specs2-core" % "3.6.5"
   val reflect = "org.scala-lang" % "scala-reflect" % BuildSettings.buildScalaVersion
 
   // Specs2 and ScalaTest use different scala-xml versions

@@ -20,11 +20,9 @@
 
 package org.scalamock.specs2
 
-import org.specs2.execute.{ AsResult, Failure, FailureException, Result }
+import org.specs2.execute.{Result, AsResult, Failure, FailureException}
 import org.specs2.main.ArgumentsShortcuts
-import org.specs2.specification.{ AroundExample, Fragments, SpecificationStructure }
-import org.specs2.specification.Fragment
-import org.specs2.mutable.FragmentsBuilder
+import org.specs2.specification.AroundEach
 import org.specs2.mutable.Around
 import org.scalamock.MockFactoryBase
 
@@ -44,8 +42,8 @@ trait MockContextBase extends MockFactoryBase {
   protected override def newExpectationException(message: String, methodName: Option[Symbol]) =
     new ExpectationException(new Failure(message))
 
-  protected def wrapAsResult[T: AsResult](body: => T) = {
-    AsResult(withExpectations { body })
+  protected def wrapAsResult[T: AsResult](body: => T): Result = {
+    AsResult(withExpectations(body))
   }
 }
 
@@ -128,8 +126,8 @@ trait MockContextBase extends MockFactoryBase {
  */
 trait MockContext extends MockContextBase with Around {
 
-  override def around[T: AsResult](body: => T) = {
-    wrapAsResult[T] { body }
+  override def around[T: AsResult](body: => T): Result = {
+    wrapAsResult(body)
   }
 }
 
@@ -173,11 +171,11 @@ trait MockContext extends MockContextBase with Around {
  * }
  * }}}
  */
-trait IsolatedMockFactory extends AroundExample with MockContextBase { self: ArgumentsShortcuts =>
+trait IsolatedMockFactory extends AroundEach with MockContextBase { self: ArgumentsShortcuts =>
   isolated
 
-  override def around[T: AsResult](body: => T) = {
-    wrapAsResult[T] { body }
+  override def around[T: AsResult](body: => T): Result = {
+    wrapAsResult(body)
   }
 }
 
@@ -190,10 +188,10 @@ trait IsolatedMockFactory extends AroundExample with MockContextBase { self: Arg
  * $techniques
  */
 @deprecated("MockFactory is buggy. Please use IsolatedMockFactory or MockContext instead", "3.2")
-trait MockFactory extends AroundExample with MockContextBase { self: ArgumentsShortcuts =>
+trait MockFactory extends AroundEach with MockContextBase { self: ArgumentsShortcuts =>
 
-  override def around[T: AsResult](body: => T) = {
-    wrapAsResult[T] { body }
+  override def around[T: AsResult](body: => T): Result = {
+    wrapAsResult(body)
   }
 }
 
