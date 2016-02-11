@@ -19,13 +19,13 @@ You can find the ScalaMock repository and source code on [Github](https://github
 To use ScalaMock in [sbt](http://www.scala-sbt.org/) with [ScalaTest](http://www.scalatest.org/) add the following to your project file:
 
 ```scala
-libraryDependencies += "org.scalamock" %% "scalamock-scalatest-support" % "3.2" % "test"
+libraryDependencies += "org.scalamock" %% "scalamock-scalatest-support" % "3.2.2" % "test"
 ```
 
 To use ScalaMock with [Specs2](http://etorreborre.github.com/specs2/):
 
 ```scala
-libraryDependencies += "org.scalamock" %% "scalamock-specs2-support" % "3.2" % "test"
+libraryDependencies += "org.scalamock" %% "scalamock-specs2-support" % "3.2.2" % "test"
 ```
 
 ## Maven projects
