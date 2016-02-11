@@ -397,5 +397,9 @@ class MockTest extends FreeSpec with MockFactory with ShouldMatchers {
       (provider.find[User](_: Int)(_: ClassTag[User])) expects (13, *) returning (Failure[User](new Exception()))
       provider.find[User](13) shouldBe a[Failure[_]]
     }
+
+    "mock a trait which has a final method" in withExpectations {
+      val m = mock[FinalMethodTrait]  //test will not compile if the test fails (cannot override final member)
+    }
   }
 }
