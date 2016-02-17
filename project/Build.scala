@@ -24,7 +24,7 @@ import sbt.inc.Analysis
 
 object BuildSettings {
   val buildVersion = "3.2.2"
-  val buildScalaVersion = "2.11.5"
+  val buildScalaVersion = "2.11.7"
 
   val buildSettings = Defaults.coreDefaultSettings ++ Seq(
     organization := "org.scalamock",
@@ -92,13 +92,13 @@ object ShellPrompt {
 }
 
 object Dependencies {
-  val scalatest =  "org.scalatest" %% "scalatest" % "2.2.4"
-  val specs2 = "org.specs2" %% "specs2" % "2.4.16"
+  val scalatest =  "org.scalatest" %% "scalatest" % "2.2.6"
+  val specs2 = "org.specs2" %% "specs2-core" % "3.7.1"
   val reflect = "org.scala-lang" % "scala-reflect" % BuildSettings.buildScalaVersion
 
   // Specs2 and ScalaTest use different scala-xml versions
   // and this caused problems with referencing class org.scalatest.events.Event
-  val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "1.0.3" % "test" 
+  val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "1.0.5" % "test" 
 }
 
 object ScalaMockBuild extends Build {
