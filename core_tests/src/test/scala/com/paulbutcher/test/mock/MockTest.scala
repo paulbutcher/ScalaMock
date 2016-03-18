@@ -397,5 +397,11 @@ class MockTest extends FreeSpec with MockFactory with ShouldMatchers {
       (provider.find[User](_: Int)(_: ClassTag[User])) expects (13, *) returning (Failure[User](new Exception()))
       provider.find[User](13) shouldBe a[Failure[_]]
     }
+
+    "mock class with nonempty default constructor" in {
+      class TestNonEmptyDefaultConstructor(a: Int, b: String, c: AnyRef, d: Any)(aa: String)
+
+      val m = mock[TestNonEmptyDefaultConstructor]
+    }
   }
 }
