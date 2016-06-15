@@ -60,4 +60,14 @@ class PathSpecTest extends path.FunSpec with Matchers with PathMockFactory {
     testFailedException.getMessage() should include("mockFun(bottom-level) once (never called - UNSATISFIED)")
   }
 
+  describe("PathSpec") {
+    val mockFun = mockFunction[String, Unit]
+
+    it("throws an exception with good error message if the mock is called after expectations are verified") {
+      verifyExpectations()
+      val thrown = the [RuntimeException] thrownBy(mockFun("called after verification"))
+      thrown should not be a[NullPointerException]
+      thrown.getMessage should include ("have expectations been verified already?")
+    }
+  }
 }
