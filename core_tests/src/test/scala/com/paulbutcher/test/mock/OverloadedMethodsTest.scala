@@ -116,4 +116,22 @@ class OverloadedMethodsTest extends IsolatedSpec {
     m.print("foo")
   }
 
+  they should "handle type aliases correctly" in {
+    type X = Int
+    type Y = X
+
+    class GenericType[T]
+    type ConcreteType = GenericType[X]
+
+    class Foo {
+      def foo()(y: GenericType[Y]) = 42
+      def foo(a: Int)(y: GenericType[Y]) = 42
+    }
+
+    val m = mock[Foo]
+    (m.foo()(_: ConcreteType)) expects (*)
+
+    m.foo()(new ConcreteType())
+  }
 }
+
