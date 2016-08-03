@@ -25,14 +25,14 @@ import org.scalamock.test.mockable.TestTrait
 import org.scalatest._
 import org.scalatest.events.TestSucceeded
 
-class StackableSuitesTest extends FlatSpec with ShouldMatchers with TestSuiteRunner {
+class StackableSuitesTest extends FlatSpec with Matchers with TestSuiteRunner {
 
   object EventLogger {
     var events: List[String] = List.empty
     def logEvent(event: String) = { events = events :+ event }
   }
 
-  trait SuiteWrapper extends SuiteMixin { this: Suite =>
+  trait SuiteWrapper extends SuiteMixin with TestSuite {
     abstract override def withFixture(test: NoArgTest): Outcome = {
       EventLogger.logEvent("SuiteWrapper setup")
       val outcome = super.withFixture(test)
@@ -41,7 +41,7 @@ class StackableSuitesTest extends FlatSpec with ShouldMatchers with TestSuiteRun
     }
   }
 
-  class TestedSuite extends FunSuite with SuiteWrapper with MockFactory with ShouldMatchers {
+  class TestedSuite extends FunSuite with SuiteWrapper with MockFactory with Matchers {
     test("execute block of code") {
       val mockedTrait = mock[TestTrait]
       (mockedTrait.oneParamMethod _).expects(1).onCall { arg: Int =>
