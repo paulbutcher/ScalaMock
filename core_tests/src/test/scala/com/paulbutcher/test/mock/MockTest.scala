@@ -85,6 +85,15 @@ class MockTest extends FreeSpec with MockFactory with ShouldMatchers {
         assertResult("curried method called") { partial(1.23) }
       }
     }
+
+    "cope with curried function returning methods" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.curriedFuncReturn(_: Int)(_: Double)).expects(10, 1.23).returning("curried func return method called")
+        val partial = m.curriedFuncReturn(10)
+        assertResult("curried func return method called") { partial(1.23) }
+      }
+    }
     
     "cope with polymorphic methods" in {
       withExpectations {
