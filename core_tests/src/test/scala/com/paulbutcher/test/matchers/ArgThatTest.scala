@@ -21,9 +21,9 @@
 package com.paulbutcher.test.matchers
 
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.{ FlatSpec, ShouldMatchers }
+import org.scalatest.{ FlatSpec, Matchers }
 
-class ArgThatTest extends FlatSpec with ShouldMatchers with MockFactory {
+class ArgThatTest extends FlatSpec with Matchers with MockFactory {
 
   behavior of "ArgThat"
 

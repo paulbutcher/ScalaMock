@@ -22,12 +22,11 @@ package org.scalamock.scalatest.proxy
 
 import org.scalamock.proxy.ProxyMockFactory
 import org.scalamock.scalatest.AbstractMockFactory
-import org.scalatest.Suite
+import org.scalatest.TestSuite
 
 /** Trait that can be mixed into a [[http://www.scalatest.org/ ScalaTest]] suite to provide
   * proxy mocking support.
   *
   * See [[org.scalamock]] for overview documentation.
   */
-trait MockFactory extends AbstractMockFactory with ProxyMockFactory { this: Suite =>
-}
+trait MockFactory extends AbstractMockFactory with ProxyMockFactory with TestSuite

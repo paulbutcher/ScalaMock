@@ -22,7 +22,7 @@ package org.scalamock.test.scalatest
 
 import org.scalamock.scalatest.PathMockFactory
 import org.scalatest.exceptions.TestFailedException
-import org.scalatest.{ Matchers, path }
+import org.scalatest.{Matchers, path}
 
 class PathSpecTest extends path.FunSpec with Matchers with PathMockFactory {
 
@@ -47,17 +47,16 @@ class PathSpecTest extends path.FunSpec with Matchers with PathMockFactory {
     it("fails if top-level expectation is not met") {
       an[TestFailedException] should be thrownBy verifyExpectations()
     }
-  }
-
-  describe("PathSpec") {
-    val mockFun = mockFunction[String, Unit]("mockFun")
-
+  
     it("can have expectations checked at the end of root suite") {
+      val mockFun = mockFunction[String, Unit]("mockFun")
       mockFun expects "bottom-level"
+      val caught = intercept[TestFailedException] {
+        verifyExpectations()
+      }
+      caught.getMessage() should include("mockFun(bottom-level) once (never called - UNSATISFIED)")
     }
-
-    val testFailedException = trap({ verifyExpectations() }).asInstanceOf[TestFailedException]
-    testFailedException.getMessage() should include("mockFun(bottom-level) once (never called - UNSATISFIED)")
+    
   }
 
 }
