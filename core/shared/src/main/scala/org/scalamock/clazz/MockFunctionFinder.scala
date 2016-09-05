@@ -73,8 +73,9 @@ object MockFunctionFinder {
     // todo: JS implementation is needed here
     // mock.getClass().getMethod(name).invoke(obj).asInstanceOf[MockFunctionX[...]]
     def mockedFunctionGetter(obj: Tree, name: Name, targs: List[Type]): c.Expr[M] = {
-      val method = applyOn(applyOn(obj, "getClass"), "getMethod", literal(mockFunctionName(name, obj.tpe, targs)))
-      c.Expr(castTo(applyOn(method, "invoke", obj), weakTypeOf[M]))
+//      val method = applyOn(applyOn(obj, "getClass"), "getMethod", literal(mockFunctionName(name, obj.tpe, targs)))
+//      val r = c.Expr[M](castTo(applyOn(method, "invoke", obj), weakTypeOf[M]))
+      MockFunctionFinderImpl.mockedFunctionGetter[M](c)(obj, mockFunctionName(name, obj.tpe, targs))
     }
 
     def transcribeTree(tree: Tree, targs: List[Type] = Nil): c.Expr[M] = {

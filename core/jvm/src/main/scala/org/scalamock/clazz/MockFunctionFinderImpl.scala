@@ -18,34 +18,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock.test.scalatest
+package org.scalamock.clazz
 
-import org.scalamock.scalatest.MockFactory
-import org.scalamock.test.mockable.TestTrait
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalamock.util.MacroUtils
 
-/**
- *  Tests for mock defined in test case scope
- *
- *  Tests for issue #25
- */
-class BasicTest extends FlatSpec with Matchers with MockFactory {
+object MockFunctionFinderImpl {
+  import scala.reflect.macros.blackbox.Context
+  // mock.getClass().getMethod(name).invoke(obj).asInstanceOf[MockFunctionX[...]]
+  def mockedFunctionGetter[M: c.WeakTypeTag](c: Context)(obj: c.Tree, name: String): c.Expr[M] = {
+    import c.universe._
 
-  "ScalaTest suite" should "allow to use mock defined in test case scope" in {
-    val mockedTrait = mock[TestTrait]
-    (mockedTrait.oneParamMethod _).expects(1).returning("one")
-    (mockedTrait.oneParamMethod _).expects(2).returning("two")
-    mockedTrait.noParamMethod _ expects () returning "yey"
+    val utils = new MacroUtils[c.type](c)
+    import utils._
 
-    mockedTrait.oneParamMethod(1) shouldBe "one"
-    mockedTrait.oneParamMethod(2) shouldBe "two"
-    mockedTrait.noParamMethod() shouldBe "yey"
-  }
-
-  it should "use separate call logs for each test case" in {
-    val mockedTrait = mock[TestTrait]
-    (mockedTrait.oneParamMethod _).expects(3).returning("three")
-
-     mockedTrait.oneParamMethod(3) shouldBe "three"
+    val method = applyOn(applyOn(obj, "getClass"), "getMethod", literal(name))
+    c.Expr[M](castTo(applyOn(method, "invoke", obj), weakTypeOf[M]))
   }
 }
