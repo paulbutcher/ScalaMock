@@ -20,43 +20,33 @@
 
 package org.scalamock.test.scalatest
 
-import org.scalamock.scalatest.PathMockFactory
-import org.scalatest.exceptions.TestFailedException
-import org.scalatest.{Matchers, path}
+import org.scalamock.scalatest.MockFactory
+import org.scalamock.test.mockable.TestTrait
+import org.scalatest.{FlatSpec, Matchers, ParallelTestExecution}
 
-class PathSpecTest extends path.FunSpec with Matchers with PathMockFactory {
+/**
+ *  Tests for mocks defined in suite scope (i.e. outside test case scope)
+ *
+ *  Tests for issue #25
+ */
+class SuiteScopeMockParallelTest extends FlatSpec with Matchers with ParallelTestExecution with MockFactory {
+  // please note that this test suite mixes in ParallelTestExecution trait
 
-  describe("PathSpec") {
-    val mockFun = mockFunction[String, Unit]
-    mockFun expects "top-level"
+  override def newInstance = new SuiteScopeMockParallelTest
 
-    describe("can handle stackable expectations") {
-      mockFun expects "mid-level"
-      mockFun("top-level")
-
-      it("does not throw exception if all expectations are met") {
-        mockFun("mid-level")
-        verifyExpectations()
-      }
-
-      it("fails if mid-level expectation is not met") {
-        an[TestFailedException] should be thrownBy verifyExpectations()
-      }
-    }
-
-    it("fails if top-level expectation is not met") {
-      an[TestFailedException] should be thrownBy verifyExpectations()
-    }
+  val mockWithoutExpectationsPredefined = mock[TestTrait]
   
-    it("can have expectations checked at the end of root suite") {
-      val mockFun = mockFunction[String, Unit]("mockFun")
-      mockFun expects "bottom-level"
-      val caught = intercept[TestFailedException] {
-        verifyExpectations()
-      }
-      caught.getMessage() should include("mockFun(bottom-level) once (never called - UNSATISFIED)")
-    }
-    
+  "ScalaTest suite" should "allow to use mock defined suite scope" in {
+    (mockWithoutExpectationsPredefined.oneParamMethod _).expects(1).returning("one")
+    (mockWithoutExpectationsPredefined.oneParamMethod _).expects(2).returning("two")
+
+    mockWithoutExpectationsPredefined.oneParamMethod(1) shouldBe "one"
+    mockWithoutExpectationsPredefined.oneParamMethod(2) shouldBe "two"
   }
 
+  it should "allow to use mock defined suite scope in more than one test case" in {
+    (mockWithoutExpectationsPredefined.oneParamMethod _).expects(3).returning("three")
+
+    mockWithoutExpectationsPredefined.oneParamMethod(3) shouldBe "three"
+  }
 }

@@ -21,9 +21,9 @@
 package com.paulbutcher.test
 
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.{FlatSpec, Matchers, OneInstancePerTest}
+import org.scalatest.{FlatSpec, Matchers, OneInstancePerTest, Suite}
 
-class IsolatedSpec extends FlatSpec with MockFactory with Matchers with OneInstancePerTest {
+abstract class IsolatedSpec extends FlatSpec with MockFactory with Matchers with OneInstancePerTest {
 
   def repeat(n: Int)(what: => Unit) {
     for (i <- 0 until n)
@@ -36,4 +36,6 @@ class IsolatedSpec extends FlatSpec with MockFactory with Matchers with OneInsta
     })
   }
 
+  // made this method mandatory to override due to https://github.com/scalatest/scalatest/issues/965
+  override def newInstance: Suite with OneInstancePerTest
 }

@@ -60,4 +60,6 @@ class MockFunctionNamingTest extends IsolatedSpec {
     m2.toString shouldBe "MockFunction0-2"
     m3.toString shouldBe "MockFunction1-3"
   }
+
+  override def newInstance = new MockFunctionNamingTest
 }

@@ -73,4 +73,5 @@ class StubTest extends IsolatedSpec {
       (m.twoParams _).verify(42, 1.23).once
     }
   }
+  override def newInstance = new StubTest
 }

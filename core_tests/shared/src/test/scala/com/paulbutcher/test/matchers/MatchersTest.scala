@@ -123,4 +123,5 @@ class MatchersTest extends IsolatedSpec {
     expectation.toString() should include("UserDatabase.addUserAddress(UserMatcher(name=Alan), *)")
   }
 
+  override def newInstance = new MatchersTest
 }

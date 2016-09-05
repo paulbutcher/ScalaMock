@@ -110,4 +110,6 @@ class JavaMocksTest extends IsolatedSpec {
     m.overloadedGeneric("one") shouldBe "first"
     m.overloadedGeneric(2) shouldBe "second"
   }
+
+  override def newInstance = new JavaMocksTest
 }

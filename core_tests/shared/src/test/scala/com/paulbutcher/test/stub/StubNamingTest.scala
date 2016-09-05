@@ -40,4 +40,6 @@ class StubNamingTest extends IsolatedSpec {
   }
 
   // NOTE: MockNamingTest contains more test cases related to mock naming
+
+  override def newInstance = new StubNamingTest
 }

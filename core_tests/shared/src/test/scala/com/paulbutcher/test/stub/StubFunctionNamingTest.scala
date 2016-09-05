@@ -50,4 +50,6 @@ class StubFunctionNamingTest extends IsolatedSpec {
     val m = stubFunction[Symbol, String](functionName("a named stub"))
     m.toString shouldBe "a named stub"
   }
+
+  override def newInstance = new StubFunctionNamingTest
 }

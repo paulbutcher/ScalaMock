@@ -21,6 +21,7 @@
 package com.paulbutcher.test.features
 
 import com.paulbutcher.test.IsolatedSpec
+import org.scalatest.{OneInstancePerTest, Suite}
 
 class CallCountTest extends IsolatedSpec {
 
@@ -148,5 +149,8 @@ class CallCountTest extends IsolatedSpec {
     intFunMock(2)
     intFunMock(2)
   }
+
+  override def newInstance = new CallCountTest
 }
+
 

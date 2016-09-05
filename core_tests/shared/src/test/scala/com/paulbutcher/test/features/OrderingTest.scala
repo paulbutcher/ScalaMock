@@ -354,4 +354,6 @@ class OrderingTest extends IsolatedSpec {
       stringFunMock("1.2")
     }
   }
+
+  override def newInstance = new OrderingTest
 }

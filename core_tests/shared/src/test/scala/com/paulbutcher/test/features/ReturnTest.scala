@@ -123,4 +123,6 @@ class ReturnTest extends IsolatedSpec {
     intToStringMock(2) shouldBe ("2")
     intToStringMock(1) shouldBe ("1")
   }
+
+  override def newInstance = new ReturnTest
 }

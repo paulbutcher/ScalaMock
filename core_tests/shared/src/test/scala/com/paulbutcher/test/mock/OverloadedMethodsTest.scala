@@ -116,4 +116,5 @@ class OverloadedMethodsTest extends IsolatedSpec {
     m.print("foo")
   }
 
+  override def newInstance = new OverloadedMethodsTest
 }

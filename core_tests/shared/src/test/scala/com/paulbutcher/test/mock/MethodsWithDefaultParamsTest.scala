@@ -83,4 +83,6 @@ class MethodsWithDefaultParamsTest extends IsolatedSpec {
     m.withAllDefaultParams()
     m.withAllDefaultParams("other", CaseClass(99))
   }
+
+  override def newInstance = new MethodsWithDefaultParamsTest
 }

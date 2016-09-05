@@ -64,11 +64,6 @@ class MockNamingTest extends IsolatedSpec {
     getMockMethodName(myMock.method[Map[Int, String]] _) shouldBe "<mock-1> PolymorphicTrait[List[Int]].method[U]"
   }
 
-  it should "have a sensible method name when mocking Java polymorphic interface" in {
-    val myMock = mock[JavaGenericInterface[List[Int]]]
-    getMockMethodName(myMock.compare _) shouldBe "<mock-1> JavaGenericInterface[List[Int]].compare"
-  }
-
   it can "be named using string literal" in {
     val myMock = mock[TestTrait]("mock name")
     getMockMethodName(myMock.oneParam _) shouldBe "<mock name> TestTrait.oneParam"
@@ -100,4 +95,6 @@ class MockNamingTest extends IsolatedSpec {
     getMockMethodName(myMock2.oneParam _) shouldBe "<mock-2> TestTrait.oneParam"
     getMockMethodName(myMock1.oneParam _) shouldBe "<mock-1> TestTrait.oneParam"
   }
+
+  override def newInstance = new MockNamingTest
 }

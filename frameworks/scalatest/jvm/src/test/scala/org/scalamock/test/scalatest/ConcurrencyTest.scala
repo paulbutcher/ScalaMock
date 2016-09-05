@@ -25,8 +25,8 @@ import org.scalamock.test.mockable.TestTrait
 import org.scalatest.WordSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Await, Future}
 import scala.concurrent.duration.DurationInt
+import scala.concurrent.{Await, Future}
 
 class ConcurrencyTest extends WordSpec with MockFactory {
 

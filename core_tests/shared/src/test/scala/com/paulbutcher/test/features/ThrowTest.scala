@@ -53,4 +53,6 @@ class ThrowTest extends IsolatedSpec {
     intercept[AnotherTestException] { intFunMock(2) }
     intFunMock(3) shouldBe "Foo"
   }
+
+  override def newInstance = new ThrowTest
 }
