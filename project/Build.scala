@@ -18,57 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import sbt.Keys._
 import sbt._
-import Keys._
-import sbt.inc.Analysis
 
-object BuildSettings {
-  val buildVersion = "3.3.0"
-  val buildScalaVersion = "2.11.8"
-
-  val buildSettings = Defaults.coreDefaultSettings ++ Seq(
-    organization := "org.scalamock",
-    version := buildVersion,
-    scalaVersion := buildScalaVersion,
-    scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"),
-    scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++ Opts.doc.version(buildVersion) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
-    resolvers += Resolver.sonatypeRepo("releases"),
-    resolvers += Resolver.sonatypeRepo("snapshots"),
-    resolvers += "Scalaz Bintray Repo" at "http://dl.bintray.com/scalaz/releases",
-
-    publishTo <<= version { v =>
-      val nexus = "https://oss.sonatype.org/"
-      if (v.trim.endsWith("SNAPSHOT"))
-        Some("snapshots" at nexus + "content/repositories/snapshots") 
-      else
-        Some("releases" at nexus + "service/local/staging/deploy/maven2")
-    },
-    pomIncludeRepository := { _ => false },
-    publishArtifact in Test := false,
-    pomExtra := (
-      <url>http://scalamock.org/</url>
-      <licenses>
-        <license>
-          <name>BSD-style</name>
-          <url>http://www.opensource.org/licenses/bsd-license.php</url>
-          <distribution>repo</distribution>
-        </license>
-      </licenses>
-      <scm>
-        <url>git@github.com:paulbutcher/ScalaMock.git</url>
-        <connection>scm:git:git@github.com:paulbutcher/ScalaMock.git</connection>
-      </scm>
-      <developers>
-        <developer>
-          <id>paulbutcher</id>
-          <name>Paul Butcher</name>
-          <url>http://paulbutcher.com/</url>
-        </developer>
-      </developers>),
-  
-    shellPrompt := ShellPrompt.buildShellPrompt
-  )
-}
 
 object ShellPrompt {
   object devnull extends ProcessLogger {
@@ -85,76 +37,8 @@ object ShellPrompt {
     (state: State) => {
       val currProject = Project.extract (state).currentProject.id
       "%s:%s:%s> ".format (
-        currProject, currBranch, BuildSettings.buildVersion
+        currProject, currBranch, version
       )
     }
   }
-}
-
-object Dependencies {
-  val scalatest =  "org.scalatest" %% "scalatest" % "3.0.0"
-  val specs2 = "org.specs2" %% "specs2" % "2.4.16"
-  val reflect = "org.scala-lang" % "scala-reflect" % BuildSettings.buildScalaVersion
-
-  // Specs2 and ScalaTest use different scala-xml versions
-  // and this caused problems with referencing class org.scalatest.events.Event
-  val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "1.0.3" % "test" 
-}
-
-object ScalaMockBuild extends Build {
-  import BuildSettings._
-  import Dependencies._
-
-  lazy val scalamock = Project(
-    "ScalaMock", 
-    file("."),
-    settings = buildSettings ++ Seq(
-      compile in Compile := Analysis.Empty,
-      publishArtifact in (Compile, packageBin) := false,
-      publishArtifact in (Compile, packageSrc) := false,
-      sources in Compile <<= (Seq(core, scalatestSupport, specs2Support).map(sources in Compile in _).join).map(_.flatten),
-      libraryDependencies ++= Seq(reflect, scalatest, specs2)
-    )) aggregate(core, core_tests, scalatestSupport, specs2Support, examples)
-
-  lazy val core = Project(
-    "core", 
-    file("core"),
-    settings = buildSettings ++ Seq(
-      name := "ScalaMock Core",
-	  libraryDependencies ++= Seq(reflect)
-    ))
-
-  lazy val scalatestSupport = Project(
-    "scalatest", 
-    file("frameworks/scalatest"),
-    settings = buildSettings ++ Seq(
-      name := "ScalaMock ScalaTest Support",
-      libraryDependencies ++= Seq(scalatest, scalaXml)
-    )) dependsOn(core)
-
-  lazy val specs2Support = Project(
-    "specs2", 
-    file("frameworks/specs2"),
-    settings = buildSettings ++ Seq(
-      name := "ScalaMock Specs2 Support",
-      libraryDependencies += specs2
-    )) dependsOn(core)
-
-  lazy val core_tests = Project(
-    "core_tests", 
-    file("core_tests"),
-    settings = buildSettings ++ Seq(
-      name := "ScalaMock Core Tests",
-      publish := (),
-      publishLocal := ()
-    )) dependsOn(scalatestSupport)
-    
-  lazy val examples = Project(
-    "examples",
-    file("examples"),
-    settings = buildSettings ++ Seq(
-      name := "ScalaMock Examples",
-      publish := (),
-      publishLocal := ()
-    )) dependsOn(scalatestSupport, specs2Support)
 }

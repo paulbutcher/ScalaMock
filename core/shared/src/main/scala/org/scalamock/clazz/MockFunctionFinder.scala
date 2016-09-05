@@ -70,6 +70,7 @@ object MockFunctionFinder {
         "mock$" + name + "$0"
     }
 
+    // todo: JS implementation is needed here
     // mock.getClass().getMethod(name).invoke(obj).asInstanceOf[MockFunctionX[...]]
     def mockedFunctionGetter(obj: Tree, name: Name, targs: List[Type]): c.Expr[M] = {
       val method = applyOn(applyOn(obj, "getClass"), "getMethod", literal(mockFunctionName(name, obj.tpe, targs)))
