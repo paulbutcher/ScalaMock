@@ -119,3 +119,5 @@ lazy val examples = crossProject.settings(buildSettings:_*)
 lazy val jsExamples = examples.js
 
 lazy val jvmExamples = examples.jvm 
+
+publishArtifact := false
