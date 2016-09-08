@@ -35,6 +35,12 @@ object MockFunctionFinderImpl {
     import utils._
 
     // todo: elaborate on why we need + $1 here
-    c.Expr[M](castTo(selectTerm(castTo(obj, typeOf[js.Dynamic]), name + "$1"), weakTypeOf[M]))
+
+    val q = c.Expr[M](castTo(selectTerm(castTo(obj, typeOf[js.Dynamic]), name + "$1"), weakTypeOf[M]))
+    c.Expr[M](q"""{
+      import scala.scalajs.js
+      println(js.Object.getOwnPropertyNames($obj.asInstanceOf[js.Object]))
+      $q
+    }""")
   }
 }
