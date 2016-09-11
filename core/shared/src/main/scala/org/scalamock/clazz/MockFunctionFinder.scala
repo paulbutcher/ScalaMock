@@ -36,46 +36,12 @@ object MockFunctionFinder {
     val utils = new MacroUtils[c.type](c)
     import utils._
 
-    def reportError(message: String) = {
-      // Report with both info and abort so that the user still sees something, even if this is within an
-      // implicit conversion (see https://issues.scala-lang.org/browse/SI-5902)
-      c.info(c.enclosingPosition, message, true)
-      c.abort(c.enclosingPosition, message)
-    }
-
-    // This performs a ridiculously simple-minded overload resolution, but it works well enough for
-    // our purposes, and is much easier than trying to backport the implementation that was deleted
-    // from the macro API (c.f. https://groups.google.com/d/msg/scala-internals/R1iZXfotqds/3xytfX39U2wJ)
-    //! TODO - replace with official resolveOverloaded if/when it's reinstated
-    def resolveOverloaded(method: TermSymbol, targs: List[Type]): Symbol = {
-      method.alternatives find { m =>
-        val tpe = m.typeSignature
-        val pts = {
-          if (targs.nonEmpty && tpe.typeParams.length == targs.length)
-            paramTypes(appliedType(tpe, targs))
-          else
-            paramTypes(tpe)
-        }
-        pts.map(_.dealias) sameElements actuals.map(_.dealias) // see issue #34
-      } getOrElse {
-        reportError(s"Unable to resolve overloaded method ${method.name}")
-      }
-    }
-
-    def mockFunctionName(name: Name, t: Type, targs: List[Type]) = {
-      val method = t.member(name).asTerm
-      if (method.isOverloaded)
-        "mock$" + name + "$" + method.alternatives.indexOf(resolveOverloaded(method, targs))
-      else
-        "mock$" + name + "$0"
-    }
-
     // todo: JS implementation is needed here
     // mock.getClass().getMethod(name).invoke(obj).asInstanceOf[MockFunctionX[...]]
     def mockedFunctionGetter(obj: Tree, name: Name, targs: List[Type]): c.Expr[M] = {
 //      val method = applyOn(applyOn(obj, "getClass"), "getMethod", literal(mockFunctionName(name, obj.tpe, targs)))
 //      val r = c.Expr[M](castTo(applyOn(method, "invoke", obj), weakTypeOf[M]))
-      MockFunctionFinderImpl.mockedFunctionGetter[M](c)(obj, mockFunctionName(name, obj.tpe, targs))
+      MockFunctionFinderImpl.mockedFunctionGetter[M](c)(obj, name, targs, actuals)
     }
 
     def transcribeTree(tree: Tree, targs: List[Type] = Nil): c.Expr[M] = {
@@ -95,4 +61,26 @@ object MockFunctionFinder {
     transcribeTree(f.tree)
   }
 
+  // This performs a ridiculously simple-minded overload resolution, but it works well enough for
+  // our purposes, and is much easier than trying to backport the implementation that was deleted
+  // from the macro API (c.f. https://groups.google.com/d/msg/scala-internals/R1iZXfotqds/3xytfX39U2wJ)
+  //! TODO - replace with official resolveOverloaded if/when it's reinstated
+  def resolveOverloaded(c: Context)(method: c.universe.TermSymbol, targs: List[c.universe.Type], actuals: List[c.universe.Type]): c.universe.Symbol = {
+    import c.universe._
+    val utils = new MacroUtils[c.type](c)
+    import utils._
+
+    method.alternatives find { m =>
+      val tpe = m.typeSignature
+      val pts = {
+        if (targs.nonEmpty && tpe.typeParams.length == targs.length)
+          paramTypes(appliedType(tpe, targs))
+        else
+          paramTypes(tpe)
+      }
+      pts.map(_.dealias) sameElements actuals.map(_.dealias) // see issue #34
+    } getOrElse {
+      reportError(s"Unable to resolve overloaded method ${method.name}")
+    }
+  }
 }

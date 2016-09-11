@@ -70,4 +70,11 @@ private[scalamock] class MacroUtils[C <: Context](val ctx2: C) { // ctx2 to avoi
   def applyListOn(qualifier: Tree, name: String, args: List[Tree]): Tree = Apply(selectTerm(qualifier, name), args)
   def applyOn(qualifier: Tree, name: String, args: Tree*): Tree = applyListOn(qualifier, name, args.toList)
   def callConstructor(obj: Tree, args: Tree*): Tree = Apply(selectTerm(obj, "<init>"), args.toList)
+
+  def reportError(message: String) = {
+    // Report with both info and abort so that the user still sees something, even if this is within an
+    // implicit conversion (see https://issues.scala-lang.org/browse/SI-5902)
+    ctx2.info(ctx2.enclosingPosition, message, true)
+    ctx2.abort(ctx2.enclosingPosition, message)
+  }
 }

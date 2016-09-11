@@ -18,20 +18,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.paulbutcher.test.matchers
+package com.paulbutcher.test.mock
 
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalamock.function.MockFunction
 
-class ArgThatTest extends FlatSpec with Matchers with MockFactory {
+class MockNamingTest extends IsolatedSpec {
 
-  behavior of "ArgThat"
+  def getMockMethodName(method: MockFunction) = method.toString
+  val m = mock[TestTrait]("mock")
 
-  it should "check predicate while matching arguments" in {
-    val startsWithPredicate = argThat[String](x => x.startsWith("A"))
-    startsWithPredicate.equals("Alice") shouldBe true
-    startsWithPredicate.equals("Anna") shouldBe true
-    startsWithPredicate.equals("Bob") shouldBe false
-    intercept[ClassCastException] { startsWithPredicate.equals(55) } // 55 is not a String
+  behavior of "Mock"
+
+  it should "have a sensible method name when mocking an operator" in {
+    getMockMethodName(m.+ _) shouldBe "<mock> TestTrait.$plus" // TODO could be better
   }
+
+  override def newInstance = new MockNamingTest
 }

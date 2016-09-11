@@ -27,20 +27,45 @@ import scala.scalajs.js
 object MockFunctionFinderImpl {
   import scala.reflect.macros.blackbox.Context
 
-  // obj.asInstanceOf[js.Dynamic].{name + "$1"}.asInstanceOf[MockFunctionX[...]]
-  def mockedFunctionGetter[M: c.WeakTypeTag](c: Context)(obj: c.Tree, name: String): c.Expr[M] = {
+  // obj.asInstanceOf[js.Dynamic].{name}.asInstanceOf[MockFunctionX[...]]
+  def mockedFunctionGetter[M: c.WeakTypeTag](c: Context)
+                                            (obj: c.Tree, name: c.Name, targs: List[c.Type], actuals: List[c.universe.Type]): c.Expr[M] = {
     import c.universe._
+
+    // this somehow replicates postfix logic from scala-js, there have to be a better way
+    def privateSuffix(owner: Tree): String = {
+      val objectSymbol = c.typeOf[Object].typeSymbol
+      val idx = owner.tpe.baseClasses.count( symbol ⇒
+        symbol != objectSymbol && (symbol.isClass && !symbol.asClass.isTrait)
+      )
+      "$" + idx.toString
+    }
+
+    def mockFunctionName(name: Name, t: Type, targs: List[Type]) = {
+      val method = t.member(name).asTerm
+      val nameStr = name.toString
+
+      if (method.isOverloaded)
+        "mock$" + nameStr + "$" + method.alternatives.indexOf(MockFunctionFinder.resolveOverloaded(c)(method, targs, actuals))
+      else
+        "mock$" + nameStr + "$0"
+    }
 
     val utils = new MacroUtils[c.type](c)
     import utils._
 
-    // todo: elaborate on why we need + $1 here
+    //       println(js.Object.getOwnPropertyNames($obj.asInstanceOf[js.Object]))
 
-    val q = c.Expr[M](castTo(selectTerm(castTo(obj, typeOf[js.Dynamic]), name + "$1"), weakTypeOf[M]))
+    val fullName = mockFunctionName(name, obj.tpe, targs) + privateSuffix(obj)
+    val q = c.Expr[M](castTo(selectTerm(castTo(obj, typeOf[js.Dynamic]), fullName), weakTypeOf[M]))
     c.Expr[M](q"""{
       import scala.scalajs.js
-      println(js.Object.getOwnPropertyNames($obj.asInstanceOf[js.Object]))
       $q
     }""")
   }
+
+//  private def mangleJSName(name: String) =
+//    if (/*js.isKeyword(name) || */name(0).isDigit || name(0) == '$')
+//      "$" + name
+//    else name
 }

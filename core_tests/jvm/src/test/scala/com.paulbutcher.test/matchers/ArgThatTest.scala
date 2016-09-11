@@ -18,30 +18,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock.clazz
+package com.paulbutcher.test.matchers
 
-import org.scalamock.util.MacroUtils
+import org.scalamock.scalatest.MockFactory
+import org.scalatest.{FlatSpec, Matchers}
 
-object MockFunctionFinderImpl {
-  import scala.reflect.macros.blackbox.Context
-  // mock.getClass().getMethod(name).invoke(obj).asInstanceOf[MockFunctionX[...]]
-  def mockedFunctionGetter[M: c.WeakTypeTag](c: Context)
-                                            (obj: c.Tree, name: c.Name, targs: List[c.Type], actuals: List[c.universe.Type]): c.Expr[M] = {
-    import c.universe._
+class ArgThatTest extends FlatSpec with Matchers with MockFactory {
 
-    def mockFunctionName(name: Name, t: Type, targs: List[Type]) = {
-      val method = t.member(name).asTerm
-      if (method.isOverloaded)
-        "mock$" + name + "$" + method.alternatives.indexOf(MockFunctionFinder.resolveOverloaded(c)(method, targs, actuals))
-      else
-        "mock$" + name + "$0"
-    }
+  behavior of "ArgThat"
 
-    val utils = new MacroUtils[c.type](c)
-    import utils._
-
-    val fullName = mockFunctionName(name, obj.tpe, targs)
-    val method = applyOn(applyOn(obj, "getClass"), "getMethod", literal(fullName))
-    c.Expr[M](castTo(applyOn(method, "invoke", obj), weakTypeOf[M]))
+  it should "check predicate while matching arguments" in {
+    val startsWithPredicate = argThat[String](x => x.startsWith("A"))
+    startsWithPredicate.equals("Alice") shouldBe true
+    startsWithPredicate.equals("Anna") shouldBe true
+    startsWithPredicate.equals("Bob") shouldBe false
+    intercept[ClassCastException] { startsWithPredicate.equals(55) } // 55 is not a String
   }
 }

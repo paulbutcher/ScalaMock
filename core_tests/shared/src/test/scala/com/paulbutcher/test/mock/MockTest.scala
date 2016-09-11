@@ -20,15 +20,16 @@
 
 package com.paulbutcher.test.mock
 
-import com.paulbutcher.test._
 import org.scalamock.function.FunctionAdapter1
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.{Matchers, FreeSpec}
-import some.other.pkg._
+import org.scalatest.{FreeSpec, Matchers}
 
 import scala.reflect.ClassTag
-import scala.reflect.runtime.universe.{ TypeTag, typeTag }
-import scala.util.{Try, Failure}
+import scala.reflect.runtime.universe.{TypeTag, typeTag}
+import scala.util.{Failure, Try}
+
+import com.paulbutcher.test._
+import some.other.pkg._
 
 class MockTest extends FreeSpec with MockFactory with Matchers {
   
@@ -41,7 +42,7 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
         intercept[ExpectationException] { m.oneParam(42) }
       }
     }
-    
+
     "allow expectations to be set" in {
       withExpectations {
         val m = mock[TestTrait]
@@ -67,16 +68,6 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
       }
     }
 
-    "cope with infix operators" in {
-      withExpectations {
-        val m1 = mock[TestTrait]
-        val m2 = mock[TestTrait]
-        val m3 = mock[TestTrait]
-        (m1.+ _).expects(m2).returning(m3)
-        assertResult(m3) { m1 + m2 }
-      }
-    }
-    
     "cope with curried methods" in {
       withExpectations {
         val m = mock[TestTrait]
@@ -95,7 +86,7 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
         assertResult("called with strings") { m.polymorphic(List("foo", "bar")) }
       }
     }
-    
+
     "cope with curried polymorphic methods" in {
       withExpectations {
         val m = mock[TestTrait]
@@ -104,7 +95,7 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
         assertResult((123, "bar")) { partial("foo") }
       }
     }
-    
+
     "cope with parameters of polymorphic type" in {
       withExpectations {
         val m = mock[TestTrait]
@@ -147,7 +138,7 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
         assertResult("it worked") { m.byNameParam(42) }
       }
     }
-    
+
     //! TODO - find a way to make this less ugly
     "match methods with by name parameters" in {
       withExpectations {
@@ -185,7 +176,7 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
         assertResult(x) { m.otherPackageUpperBound(x) }
       }
     }
-    
+
     "cope with explicit references to another package" in {
       withExpectations {
         val m = mock[TestTrait]
@@ -204,16 +195,6 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
       }
     }
 
-    "cope with a var" in {
-      withExpectations {
-        val m = mock[TestTrait]
-        (m.aVar_= _).expects("foo")
-        (m.aVar _).expects().returning("bar")
-        m.aVar = "foo"
-        assertResult("bar") { m.aVar }
-      }
-    }
-    
     //! TODO - currently doesn't work because we can't override concrete vars
     "cope with a non-abstract var" ignore {
       withExpectations {
@@ -253,7 +234,7 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
         assertResult(1234) { m.withImplementation(42) }
       }
     }
-    
+
     "mock an embeddded trait" in {
       withExpectations {
         val m = mock[TestTrait]
@@ -275,7 +256,7 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
         assertResult(i) { e.innerTraitProjected }
       }
     }
-    
+
     "handle path-dependent types correctly" in {
       withExpectations {
         val m = mock[TestTrait]
@@ -288,15 +269,7 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
         assertResult(i) { e.innerTrait }
       }
     }
-    
-    "cope with upper bounds" in {
-      withExpectations {
-        val m = mock[TestTrait]
-        (m.upperBound _).expects((42, "foo")).returning(2)
-        assertResult(2) { m.upperBound((42, "foo")) }
-      }
-    }
-    
+
     "cope with lower bounds" in {
       withExpectations {
         val m = mock[TestTrait]
@@ -304,15 +277,7 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
         assertResult("it works") { m.lowerBound((1, 2), List[Product]()) }
       }
     }
-    
-    "cope with context bounds" in {
-      withExpectations {
-        val m = mock[TestTrait]
-        (m.contextBound(_: String)(_: TypeTag[String])).expects("foo", typeTag[java.lang.String]).returning("it works")
-        assertResult("it works") { m.contextBound("foo") }
-      }
-    }
-    
+
     //! TODO - fails in 2.11
     // "cope with view bounds" in {
     //   withExpectations {
@@ -350,27 +315,7 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
         assertResult((123, "bar")) { m.m(42, "foo") }
       }
     }
-    
-    "mock a specialized class" in {
-      withExpectations {
-        val m1 = mock[SpecializedClass[Int]]
-        (m1.identity _).expects(42).returning(43)
-        assertResult(43) { m1.identity(42) }
-        
-        val m2 = mock[SpecializedClass[List[String]]]
-        (m2.identity _).expects(List("one", "two", "three")).returning(List("four", "five", "six"))
-        assertResult(List("four", "five", "six")) { m2.identity(List("one", "two", "three")) }
-      }
-    }
 
-    "mock java.io.File" in {
-       class MyFile extends java.io.File("")
-
-       withExpectations {
-         val m = mock[MyFile]
-       }
-     }
-    
     "allow to be declared as var" in { // test for issue #62
       withExpectations {
         var m = mock[TestTrait]
