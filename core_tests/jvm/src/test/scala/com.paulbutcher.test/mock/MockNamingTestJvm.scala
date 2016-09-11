@@ -21,8 +21,9 @@
 package com.paulbutcher.test.mock
 
 import org.scalamock.function.MockFunction
+import com.paulbutcher.test._
 
-class MockNamingTest extends IsolatedSpec {
+class MockNamingTestJvm extends IsolatedSpec {
 
   def getMockMethodName(method: MockFunction) = method.toString
   val m = mock[TestTrait]("mock")
@@ -33,5 +34,5 @@ class MockNamingTest extends IsolatedSpec {
     getMockMethodName(m.+ _) shouldBe "<mock> TestTrait.$plus" // TODO could be better
   }
 
-  override def newInstance = new MockNamingTest
+  override def newInstance = new MockNamingTestJvm
 }
