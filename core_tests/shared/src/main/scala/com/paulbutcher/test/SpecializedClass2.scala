@@ -18,33 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.paulbutcher.test.mock
+package com.paulbutcher.test
 
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.{FreeSpec, Matchers}
-import com.paulbutcher.test._
-
-class MockTestJvm extends FreeSpec with MockFactory with Matchers {
-  
-  autoVerify = false
-  
-  "Mocks should" - {
-    "cope with a var" in {
-      withExpectations {
-        val m = mock[TestTrait]
-        (m.aVar_= _).expects("foo")
-        (m.aVar _).expects().returning("bar")
-        m.aVar = "foo"
-        assertResult("bar") { m.aVar }
-      }
-    }
-
-    "mock java.io.File" in {
-      class MyFile extends java.io.File("")
-
-      withExpectations {
-        val m = mock[MyFile]
-      }
-    }
-  }
+class SpecializedClass2[@specialized T1, @specialized T2] extends SpecializedClass[T1] {
+  def identity2(x: T1, y: T2) = (x,y)
 }

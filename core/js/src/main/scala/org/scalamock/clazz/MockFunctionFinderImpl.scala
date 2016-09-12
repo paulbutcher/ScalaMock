@@ -32,14 +32,34 @@ object MockFunctionFinderImpl {
                                             (obj: c.Tree, name: c.Name, targs: List[c.Type], actuals: List[c.universe.Type]): c.Expr[M] = {
     import c.universe._
 
+    def hasValueTypeArgs(baseSymbol: Symbol, owner: Type): Boolean = {
+      val baseType = owner.baseType(baseSymbol)
+      baseType.typeArgs.nonEmpty && baseType.typeArgs.forall(_ <:< typeOf[AnyVal])
+    }
+
     // this somehow replicates postfix logic from scala-js, there have to be a better way
     def privateSuffix(owner: Tree): String = {
       val objectSymbol = c.typeOf[Object].typeSymbol
-      val idx = owner.tpe.baseClasses.count( symbol ⇒
+
+      val tpe = owner.tpe
+
+      val baseNonInterfaceParentCount = tpe.baseClasses.count( symbol ⇒
         symbol != objectSymbol && (symbol.isClass && !symbol.asClass.isTrait)
       )
+
+      // this was found in experiments and should be considered as magical cosmological constant
+      val haveBaseClassWithValTypeArgs = tpe.typeSymbol.owner != null && tpe.typeSymbol.owner.isPackage &&
+        tpe.baseClasses.headOption.forall(hasValueTypeArgs(_, owner.tpe))
+
+      val idx = baseNonInterfaceParentCount + (if (haveBaseClassWithValTypeArgs) 1 else 0)
       "$" + idx.toString
     }
+
+//    def printTypeSymbol(t: Type): String = {
+//      t.toString + "[" + t.baseClasses.map( base ⇒
+//        t.baseType(base).toString
+//      ).mkString(",") + "]"
+//    }
 
     def mockFunctionName(name: Name, t: Type, targs: List[Type]) = {
       val method = t.member(name).asTerm
@@ -51,21 +71,20 @@ object MockFunctionFinderImpl {
         "mock$" + nameStr + "$0"
     }
 
-    val utils = new MacroUtils[c.type](c)
-    import utils._
-
-    //       println(js.Object.getOwnPropertyNames($obj.asInstanceOf[js.Object]))
-
     val fullName = mockFunctionName(name, obj.tpe, targs) + privateSuffix(obj)
-    val q = c.Expr[M](castTo(selectTerm(castTo(obj, typeOf[js.Dynamic]), fullName), weakTypeOf[M]))
-    c.Expr[M](q"""{
-      import scala.scalajs.js
-      $q
-    }""")
-  }
+    val fld = TermName(c.freshName("fld"))
 
-//  private def mangleJSName(name: String) =
-//    if (/*js.isKeyword(name) || */name(0).isDigit || name(0) == '$')
-//      "$" + name
-//    else name
+    val code = c.Expr[M](q"""{
+      import scala.scalajs.js
+      val $fld = js.Object.getOwnPropertyDescriptor($obj.asInstanceOf[js.Object], $fullName)
+      if (js.isUndefined($fld)) {
+        throw new IllegalArgumentException("Property '" + $fullName + "' is not defined in '" + $obj + "'. Available properties: " +
+          js.Object.getOwnPropertyNames($obj.asInstanceOf[js.Object]).mkString(",")
+        )
+      }
+      $fld.value.asInstanceOf[${weakTypeOf[M]}]
+    }""")
+    // println(code)
+    code
+  }
 }
