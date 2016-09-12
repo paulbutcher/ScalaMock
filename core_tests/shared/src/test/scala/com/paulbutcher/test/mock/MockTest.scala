@@ -36,6 +36,16 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
   autoVerify = false
   
   "Mocks should" - {
+    "cope with a var" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        (m.aVar_= _).expects("foo")
+        (m.aVar _).expects().returning("bar")
+        m.aVar = "foo"
+        assertResult("bar") { m.aVar }
+      }
+    }
+
     "fail if an unexpected method call is made" in {
       withExpectations {
         val m = mock[TestTrait]

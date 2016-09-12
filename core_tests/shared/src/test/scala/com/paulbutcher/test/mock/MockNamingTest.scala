@@ -42,6 +42,10 @@ class MockNamingTest extends IsolatedSpec {
     getMockMethodName(m.curried(_: Int)(_: Double)) shouldBe "<mock> TestTrait.curried"
   }
 
+  it should "have a sensible method name when mocking an operator" in {
+    getMockMethodName(m.+ _) shouldBe "<mock> TestTrait.$plus" // TODO could be better
+  }
+
   it should "have a sensible method name when mocking polymorphic method" in {
     getMockMethodName(m.polymorphic _) shouldBe "<mock> TestTrait.polymorphic[T]"
   }

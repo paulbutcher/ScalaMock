@@ -29,16 +29,6 @@ class MockTestJvm extends FreeSpec with MockFactory with Matchers {
   autoVerify = false
   
   "Mocks should" - {
-    "cope with a var" in {
-      withExpectations {
-        val m = mock[TestTrait]
-        (m.aVar_= _).expects("foo")
-        (m.aVar _).expects().returning("bar")
-        m.aVar = "foo"
-        assertResult("bar") { m.aVar }
-      }
-    }
-
     "mock java.io.File" in {
       class MyFile extends java.io.File("")
 

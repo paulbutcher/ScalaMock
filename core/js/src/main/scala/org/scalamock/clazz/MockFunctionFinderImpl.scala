@@ -55,6 +55,10 @@ object MockFunctionFinderImpl {
       "$" + idx.toString
     }
 
+    def encodeMemberNameInternal(s: String): String = {
+      s.replace("_", "$und")
+    }
+
 //    def printTypeSymbol(t: Type): String = {
 //      t.toString + "[" + t.baseClasses.map( base ⇒
 //        t.baseType(base).toString
@@ -63,7 +67,7 @@ object MockFunctionFinderImpl {
 
     def mockFunctionName(name: Name, t: Type, targs: List[Type]) = {
       val method = t.member(name).asTerm
-      val nameStr = name.toString
+      val nameStr = encodeMemberNameInternal(name.toString)
 
       if (method.isOverloaded)
         "mock$" + nameStr + "$" + method.alternatives.indexOf(MockFunctionFinder.resolveOverloaded(c)(method, targs, actuals))
