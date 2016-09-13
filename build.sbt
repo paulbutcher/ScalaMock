@@ -127,3 +127,4 @@ publishArtifact in Test := false
 publish := ()
 
 publishLocal := ()
+
