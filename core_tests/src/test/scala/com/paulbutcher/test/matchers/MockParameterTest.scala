@@ -21,9 +21,9 @@
 package com.paulbutcher.test.matchers
 
 import org.scalamock.matchers.{MatchAny, MatchEpsilon, MockParameter}
-import org.scalatest.{FreeSpec, ShouldMatchers}
+import org.scalatest.{FreeSpec, Matchers}
 
-class MockParameterTest extends FreeSpec with ShouldMatchers {
+class MockParameterTest extends FreeSpec with Matchers {
   
   "A mock parameter should" - {
     "be equal" - {

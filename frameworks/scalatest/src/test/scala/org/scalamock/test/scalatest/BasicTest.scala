@@ -22,15 +22,14 @@ package org.scalamock.test.scalatest
 
 import org.scalamock.scalatest.MockFactory
 import org.scalamock.test.mockable.TestTrait
-import org.scalatest.FlatSpec
-import org.scalatest.ShouldMatchers
+import org.scalatest.{FlatSpec, Matchers}
 
 /**
  *  Tests for mock defined in test case scope
  *
  *  Tests for issue #25
  */
-class BasicTest extends FlatSpec with ShouldMatchers with MockFactory {
+class BasicTest extends FlatSpec with Matchers with MockFactory {
 
   "ScalaTest suite" should "allow to use mock defined in test case scope" in {
     val mockedTrait = mock[TestTrait]

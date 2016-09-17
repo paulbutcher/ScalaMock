@@ -19,13 +19,12 @@
 // THE SOFTWARE.
 
 package org.scalamock.test.scalatest
-import org.scalatest.events.{ Event, TestFailed }
-import org.scalatest.ShouldMatchers
-import org.scalatest.{ Args, Reporter, Suite }
+import org.scalatest.events.{Event, TestFailed}
+import org.scalatest._
 
 import scala.language.postfixOps
 
-trait TestSuiteRunner { this: ShouldMatchers =>
+trait TestSuiteRunner { this: Matchers =>
 
   /** Executes single ScalaTest test case and returns its outcome (i.e. either TestSucccess or TestFailure) */
   def runTestCase[T <: Suite](suite: T): Event = {

@@ -24,7 +24,7 @@ import com.paulbutcher.test.{ManyParamsClass, ManyParamsTrait}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest._
 
-class MockTestManyParams extends FreeSpec with MockFactory with ShouldMatchers {
+class MockTestManyParams extends FreeSpec with MockFactory with Matchers {
   autoVerify = false
 
   "Mocks should" - {

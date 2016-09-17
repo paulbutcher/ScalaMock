@@ -21,9 +21,9 @@
 package com.paulbutcher.test
 
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.{ FlatSpec, ShouldMatchers, OneInstancePerTest }
+import org.scalatest.{FlatSpec, Matchers, OneInstancePerTest}
 
-class IsolatedSpec extends FlatSpec with MockFactory with ShouldMatchers with OneInstancePerTest {
+class IsolatedSpec extends FlatSpec with MockFactory with Matchers with OneInstancePerTest {
 
   def repeat(n: Int)(what: => Unit) {
     for (i <- 0 until n)
