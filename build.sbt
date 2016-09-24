@@ -63,7 +63,14 @@ lazy val core = crossProject.settings(buildSettings:_*)
     name := "ScalaMock Core",
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value
-    )
+    ) ++ {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2, 10)) =>
+          Seq(compilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
+            "org.scalamacros" %% "quasiquotes" % "2.1.0" cross CrossVersion.binary)
+        case _ ⇒ Seq.empty
+      }
+    }
   )
 
 lazy val jsCore = core.js

@@ -20,10 +20,11 @@
 
 package org.scalamock.clazz
 
-import org.scalamock.util.MacroUtils
+import org.scalamock.util.{MacroAdapter, MacroUtils}
 
 object MockFunctionFinderImpl {
-  import scala.reflect.macros.blackbox.Context
+  import MacroAdapter.Context
+
   // mock.getClass().getMethod(name).invoke(obj).asInstanceOf[MockFunctionX[...]]
   def mockedFunctionGetter[M: c.WeakTypeTag](c: Context)
                                             (obj: c.Tree, name: c.Name, targs: List[c.Type], actuals: List[c.universe.Type]): c.Expr[M] = {

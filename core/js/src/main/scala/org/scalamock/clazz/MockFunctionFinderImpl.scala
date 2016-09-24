@@ -20,17 +20,17 @@
 
 package org.scalamock.clazz
 
-import org.scalamock.util.MacroUtils
-
-import scala.scalajs.js
+import org.scalamock.util.{MacroAdapter, MacroUtils}
 
 object MockFunctionFinderImpl {
-  import scala.reflect.macros.blackbox.Context
+  import MacroAdapter.Context
 
   // obj.asInstanceOf[js.Dynamic].{name}.asInstanceOf[MockFunctionX[...]]
   def mockedFunctionGetter[M: c.WeakTypeTag](c: Context)
                                             (obj: c.Tree, name: c.Name, targs: List[c.Type], actuals: List[c.universe.Type]): c.Expr[M] = {
     import c.universe._
+    val utils = new MacroUtils[c.type](c)
+    import utils._
 
     def hasValueTypeArgs(baseSymbol: Symbol, owner: Type): Boolean = {
       val baseType = owner.baseType(baseSymbol)
@@ -76,7 +76,7 @@ object MockFunctionFinderImpl {
     }
 
     val fullName = mockFunctionName(name, obj.tpe, targs) + privateSuffix(obj)
-    val fld = TermName(c.freshName("fld"))
+    val fld = freshTerm("fld")
 
     val code = c.Expr[M](q"""{
       import scala.scalajs.js

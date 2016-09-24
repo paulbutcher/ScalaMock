@@ -23,10 +23,10 @@ package org.scalamock.clazz
 import org.scalamock.clazz.MockFunctionFinder.findMockFunction
 import org.scalamock.context.MockContext
 import org.scalamock.function._
-import org.scalamock.util.Defaultable
+import org.scalamock.util.{Defaultable, MacroAdapter}
 
 object MockImpl {
-  import scala.reflect.macros.blackbox.Context
+  import MacroAdapter.Context
 
   def mock[T: c.WeakTypeTag](c: Context)(mockContext: c.Expr[MockContext]): c.Expr[T] = {
     val maker = MockMaker[T](c)(mockContext, stub = false, mockName = None)

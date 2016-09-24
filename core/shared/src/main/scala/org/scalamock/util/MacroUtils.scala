@@ -20,12 +20,12 @@
 
 package org.scalamock.util
 
-import scala.reflect.macros.blackbox.Context
+import MacroAdapter.Context
 
 /**
  * Helper functions to work with Scala macros and to create scala.reflect Trees.
  */
-private[scalamock] class MacroUtils[C <: Context](val ctx2: C) { // ctx2 to avoid clash with ctx in MockMaker (eugh!)
+private[scalamock] class MacroUtils[C <: Context](ctx: C) extends MacroAdapter[C](ctx) { // ctx2 to avoid clash with ctx in MockMaker (eugh!)
   import ctx2.universe._
 
   // Convert a methodType into its ultimate result type

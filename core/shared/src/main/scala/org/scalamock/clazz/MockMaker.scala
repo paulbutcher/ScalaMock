@@ -22,9 +22,9 @@ package org.scalamock.clazz
 
 import org.scalamock.context.MockContext
 import org.scalamock.function._
-import org.scalamock.util.MacroUtils
+import org.scalamock.util.{MacroAdapter, MacroUtils}
+import MacroAdapter.Context
 
-import scala.reflect.macros.blackbox.Context
 
 //! TODO - get rid of this nasty two-stage construction when https://issues.scala-lang.org/browse/SI-5521 is fixed
 class MockMaker[C <: Context](val ctx: C) {
@@ -105,7 +105,7 @@ class MockMaker[C <: Context](val ctx: C) {
      */
     def forwarderParamType(t: Type): Tree = t match {
       case TypeRef(pre, sym, args) if sym == JavaRepeatedParamClass =>
-        TypeTree(internal.typeRef(pre, RepeatedParamClass, args))
+        TypeTree(internalTypeRef(pre, RepeatedParamClass, args))
       case TypeRef(pre, sym, args) if isPathDependentThis(t) =>
         AppliedTypeTree(Ident(TypeName(sym.name.toString)), args map TypeTree _)
       case _ =>
@@ -134,7 +134,7 @@ class MockMaker[C <: Context](val ctx: C) {
     //! TODO - This is a hack, but it's unclear what it should be instead. See
     //! https://groups.google.com/d/topic/scala-user/n11V6_zI5go/discussion
     def resolvedType(m: Symbol): Type =
-      m.typeSignatureIn(internal.superType(internal.thisType(typeToMock.typeSymbol), typeToMock))
+      m.typeSignatureIn(internalSuperType(internalThisType(typeToMock.typeSymbol), typeToMock))
 
     def buildForwarderParams(methodType: Type) =
       paramss(methodType) map { params =>
@@ -153,7 +153,7 @@ class MockMaker[C <: Context](val ctx: C) {
       DefDef(
         Modifiers(OVERRIDE),
         m.name,
-        m.typeParams map { p => internal.typeDef(p) },
+        m.typeParams map { p => internalTypeDef(p) },
         params,
         forwarderParamType(finalResultType(methodType)),
         body)

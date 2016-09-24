@@ -20,11 +20,10 @@
 
 package org.scalamock.clazz
 
-import org.scalamock.util.MacroUtils
+import org.scalamock.util.{MacroAdapter, MacroUtils}
 
-object MockFunctionFinder {
-
-  import scala.reflect.macros.blackbox.Context
+object MockFunctionFinder extends {
+  import MacroAdapter.Context
 
   /**
    * Given something of the structure <|o.m _|> where o is a mock object
@@ -66,9 +65,9 @@ object MockFunctionFinder {
   // from the macro API (c.f. https://groups.google.com/d/msg/scala-internals/R1iZXfotqds/3xytfX39U2wJ)
   //! TODO - replace with official resolveOverloaded if/when it's reinstated
   def resolveOverloaded(c: Context)(method: c.universe.TermSymbol, targs: List[c.universe.Type], actuals: List[c.universe.Type]): c.universe.Symbol = {
-    import c.universe._
     val utils = new MacroUtils[c.type](c)
     import utils._
+    import c.universe._
 
     method.alternatives find { m =>
       val tpe = m.typeSignature
