@@ -21,7 +21,7 @@
 package org.scalamock.scalatest
 
 import org.scalamock.clazz.Mock
-import org.scalatest.Suite
+import org.scalatest.TestSuite
 
 /**
  * Trait that can be mixed into a [[http://www.scalatest.org/ ScalaTest]] suite to provide
@@ -137,5 +137,4 @@ import org.scalatest.Suite
  * 
  * See [[org.scalamock]] for overview documentation.
  */
-trait MockFactory extends AbstractMockFactory with Mock { this: Suite =>
-}
+trait MockFactory extends AbstractMockFactory with Mock with TestSuite

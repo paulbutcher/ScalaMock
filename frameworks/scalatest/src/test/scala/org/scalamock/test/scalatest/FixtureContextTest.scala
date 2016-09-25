@@ -23,14 +23,14 @@ package org.scalamock.test.scalatest
 import org.scalamock.scalatest.MockFactory
 import org.scalamock.test.mockable.TestTrait
 import org.scalatest.FlatSpec
-import org.scalatest.ShouldMatchers
+import org.scalatest.Matchers
 
 /**
  *  Tests for mocks defined in fixture-contexts
  *
  *  Tests for issue #25
  */
-class FixtureContextTest extends FlatSpec with ShouldMatchers with MockFactory {
+class FixtureContextTest extends FlatSpec with Matchers with MockFactory {
 
   trait TestSetup {
     val mockedTrait = mock[TestTrait]

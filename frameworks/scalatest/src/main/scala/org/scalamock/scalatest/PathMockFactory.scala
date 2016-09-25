@@ -22,8 +22,8 @@ package org.scalamock.scalatest
 
 import org.scalamock.MockFactoryBase
 import org.scalamock.clazz.Mock
-import org.scalatest.exceptions.TestFailedException
-import org.scalatest.{ SuiteMixin, Suite }
+import org.scalatest.exceptions.{StackDepthException, TestFailedException}
+import org.scalatest.{Suite, SuiteMixin}
 
 /**
  * Trait that can be mixed into org.scalatest.path.* specs (e.g. path.FunSpec).
@@ -33,13 +33,12 @@ import org.scalatest.{ SuiteMixin, Suite }
  *
  * See [[MockFactory]] for more information.
  */
-trait PathMockFactory extends SuiteMixin with MockFactoryBase with Mock {
-  this: Suite =>
-
+trait PathMockFactory extends SuiteMixin with MockFactoryBase with Mock { this: Suite =>
+  
   type ExpectationException = TestFailedException
 
   protected def newExpectationException(message: String, methodName: Option[Symbol]) =
-    new TestFailedException(_ => Some(message), None, failedCodeStackDepthFn(methodName))
+    new TestFailedException((_: StackDepthException) => Some(message), None, failedCodeStackDepthFn(methodName))
 
   /**
    * Verify all expectations.

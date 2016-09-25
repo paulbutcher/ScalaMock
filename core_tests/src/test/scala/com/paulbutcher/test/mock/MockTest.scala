@@ -23,14 +23,14 @@ package com.paulbutcher.test.mock
 import com.paulbutcher.test._
 import org.scalamock.function.FunctionAdapter1
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.{ShouldMatchers, FreeSpec}
+import org.scalatest.{Matchers, FreeSpec}
 import some.other.pkg._
 
 import scala.reflect.ClassTag
 import scala.reflect.runtime.universe.{ TypeTag, typeTag }
 import scala.util.{Try, Failure}
 
-class MockTest extends FreeSpec with MockFactory with ShouldMatchers {
+class MockTest extends FreeSpec with MockFactory with Matchers {
   
   autoVerify = false
   
