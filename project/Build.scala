@@ -112,8 +112,8 @@ object ScalaMockBuild extends Build {
       compile in Compile := Analysis.Empty,
       publishArtifact in (Compile, packageBin) := false,
       publishArtifact in (Compile, packageSrc) := false,
-      sources in Compile <<= (Seq(core, scalatestSupport, specs2Support).map(sources in Compile in _).join).map(_.flatten),
-      libraryDependencies ++= Seq(reflect, scalatest, specs2)
+      sources in Compile <<= (Seq(core, scalatestSupport).map(sources in Compile in _).join).map(_.flatten),
+      libraryDependencies ++= Seq(reflect, scalatest)
     )) aggregate(core, core_tests, scalatestSupport, specs2Support, examples)
 
   lazy val core = Project(
