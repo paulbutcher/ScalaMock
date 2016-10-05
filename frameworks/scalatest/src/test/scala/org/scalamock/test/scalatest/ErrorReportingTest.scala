@@ -22,15 +22,15 @@ package org.scalamock.test.scalatest
 
 import org.scalamock.scalatest.MockFactory
 import org.scalamock.test.mockable.TestTrait
-import org.scalatest.{ Args, FlatSpec, FunSuite, Reporter, ShouldMatchers, Suite }
-import org.scalatest.events.{ Event, TestFailed }
+import org.scalatest._
 import org.scalatest.exceptions.TestFailedException
+
 import scala.language.postfixOps
 
 /**
  *  Tests that errors are reported correctly in ScalaTest suites
  */
-class ErrorReporting extends FlatSpec with ShouldMatchers with TestSuiteRunner {
+class ErrorReportingTest extends FlatSpec with Matchers with TestSuiteRunner {
 
   "ScalaTest suite" should "report unexpected call correctly" in {
     class TestedSuite extends FunSuite with MockFactory {

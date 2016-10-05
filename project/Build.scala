@@ -23,8 +23,8 @@ import Keys._
 import sbt.inc.Analysis
 
 object BuildSettings {
-  val buildVersion = "3.2.2"
-  val buildScalaVersion = "2.10.4"
+  val buildVersion = "3.3.0"
+  val buildScalaVersion = "2.10.6"
 
   val buildSettings = Defaults.coreDefaultSettings ++ Seq(
     organization := "org.scalamock",
@@ -92,7 +92,7 @@ object ShellPrompt {
 }
 
 object Dependencies {
-  val scalatest =  "org.scalatest" %% "scalatest" % "2.2.4"
+  val scalatest =  "org.scalatest" %% "scalatest" % "3.0.0"
   val specs2 = "org.specs2" %% "specs2" % "2.4.16"
   val reflect = "org.scala-lang" % "scala-reflect" % BuildSettings.buildScalaVersion
 }
