@@ -22,9 +22,7 @@ package org.scalamock.specs2
 
 import org.specs2.execute.{ AsResult, Failure, FailureException, Result }
 import org.specs2.main.ArgumentsShortcuts
-import org.specs2.specification.{ AroundExample, Fragments, SpecificationStructure }
-import org.specs2.specification.Fragment
-import org.specs2.mutable.FragmentsBuilder
+import org.specs2.specification._
 import org.specs2.mutable.Around
 import org.scalamock.MockFactoryBase
 
