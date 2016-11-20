@@ -23,8 +23,8 @@ import Keys._
 import sbt.inc.Analysis
 
 object BuildSettings {
-  val buildVersion = "3.3.0"
-  val buildScalaVersion = "2.11.8"
+  val buildVersion = "3.4.0"
+  val buildScalaVersion = "2.12.0"
 
   val buildSettings = Defaults.coreDefaultSettings ++ Seq(
     organization := "org.scalamock",
@@ -93,12 +93,12 @@ object ShellPrompt {
 
 object Dependencies {
   val scalatest =  "org.scalatest" %% "scalatest" % "3.0.0"
-  val specs2 = "org.specs2" %% "specs2" % "2.4.16"
+  val specs2 = "org.specs2" %% "specs2-core" % "3.8.6"
   val reflect = "org.scala-lang" % "scala-reflect" % BuildSettings.buildScalaVersion
 
   // Specs2 and ScalaTest use different scala-xml versions
   // and this caused problems with referencing class org.scalatest.events.Event
-  val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "1.0.3" % "test" 
+  val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "1.0.6" % "test" 
 }
 
 object ScalaMockBuild extends Build {
@@ -112,8 +112,8 @@ object ScalaMockBuild extends Build {
       compile in Compile := Analysis.Empty,
       publishArtifact in (Compile, packageBin) := false,
       publishArtifact in (Compile, packageSrc) := false,
-      sources in Compile <<= (Seq(core, scalatestSupport, specs2Support).map(sources in Compile in _).join).map(_.flatten),
-      libraryDependencies ++= Seq(reflect, scalatest, specs2)
+      sources in Compile <<= (Seq(core, scalatestSupport).map(sources in Compile in _).join).map(_.flatten),
+      libraryDependencies ++= Seq(reflect, scalatest)
     )) aggregate(core, core_tests, scalatestSupport, specs2Support, examples)
 
   lazy val core = Project(
