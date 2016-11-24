@@ -1,10 +1,9 @@
 scalaVersion in ThisBuild := "2.12.0"
 crossScalaVersions in ThisBuild := Seq("2.11.8", "2.12.0")
-bintrayOrganization in ThisBuild := Some("scalamock")
 
 lazy val scalatest =  "org.scalatest" %% "scalatest" % "3.0.1"
 lazy val specs2 = "org.specs2" %% "specs2-core" % "3.8.6"
-lazy val scalaReflect = ( libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value )
+lazy val scalaReflect = libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
 // Specs2 and ScalaTest use different scala-xml versions
 // and this caused problems with referencing class org.scalatest.events.Event
@@ -45,20 +44,20 @@ lazy val `scalamock-scalatest-support` = project in file("frameworks/scalatest")
     name := "ScalaMock ScalaTest Support",
     commonSettings,
     libraryDependencies ++= Seq(scalatest, scalaXml)
-  ) dependsOn(`scalamock-core`)
+  ) dependsOn `scalamock-core`
 
 lazy val `scalamock-specs2-support` = project in file("frameworks/specs2") settings(
     name := "ScalaMock Specs2 Support",
     commonSettings,
     libraryDependencies += specs2
-  ) dependsOn(`scalamock-core`)
+  ) dependsOn `scalamock-core`
 
 lazy val core_tests = project in file("core_tests") settings(
     name := "ScalaMock Core Tests",
     commonSettings,
     publish := (),
     publishLocal := ()
-  ) dependsOn(`scalamock-scalatest-support`)
+  ) dependsOn `scalamock-scalatest-support`
   
 lazy val examples = project in file("examples") settings(
     name := "ScalaMock Examples",
