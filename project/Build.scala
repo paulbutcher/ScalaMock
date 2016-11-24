@@ -23,7 +23,7 @@ import Keys._
 import sbt.inc.Analysis
 
 object BuildSettings {
-  val buildVersion = "3.4.0"
+  val buildVersion = "3.4.1"
   val buildScalaVersion = "2.12.0"
 
   val buildSettings = Defaults.coreDefaultSettings ++ Seq(
@@ -36,6 +36,7 @@ object BuildSettings {
     resolvers += Resolver.sonatypeRepo("snapshots"),
     resolvers += "Scalaz Bintray Repo" at "http://dl.bintray.com/scalaz/releases",
 
+	/*
     publishTo <<= version { v =>
       val nexus = "https://oss.sonatype.org/"
       if (v.trim.endsWith("SNAPSHOT"))
@@ -43,17 +44,12 @@ object BuildSettings {
       else
         Some("releases" at nexus + "service/local/staging/deploy/maven2")
     },
+	*/
     pomIncludeRepository := { _ => false },
     publishArtifact in Test := false,
+	licenses += (("BSD", url("http://www.opensource.org/licenses/bsd-license.php"))),
     pomExtra := (
       <url>http://scalamock.org/</url>
-      <licenses>
-        <license>
-          <name>BSD-style</name>
-          <url>http://www.opensource.org/licenses/bsd-license.php</url>
-          <distribution>repo</distribution>
-        </license>
-      </licenses>
       <scm>
         <url>git@github.com:paulbutcher/ScalaMock.git</url>
         <connection>scm:git:git@github.com:paulbutcher/ScalaMock.git</connection>
