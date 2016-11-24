@@ -282,6 +282,7 @@ class MockMaker[C <: Context](val ctx: C) {
     val typeToMock = weakTypeOf[T]
     val anon = TypeName("$anon")
     val methodsToMock = methodsNotInObject.filter { m =>
+      !m.isFinal &&
       !m.isConstructor && !m.isPrivate && m.privateWithin == NoSymbol &&
         !m.asInstanceOf[reflect.internal.HasFlags].hasFlag(reflect.internal.Flags.BRIDGE) &&
         !m.isParamWithDefault && // see issue #43
