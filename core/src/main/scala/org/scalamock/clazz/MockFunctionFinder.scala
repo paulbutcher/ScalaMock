@@ -43,6 +43,17 @@ object MockFunctionFinder {
       c.abort(c.enclosingPosition, message)
     }
 
+    def sameTypes(types1: List[Type], types2: List[Type]) = {
+      // see issue #34
+      var these = types1.map(_.dealias)
+      var those = types2.map(_.dealias)
+      while (!these.isEmpty && !those.isEmpty && these.head =:= those.head) {
+        these = these.tail
+        those = those.tail
+      }
+      these.isEmpty && those.isEmpty
+    }
+
     // This performs a ridiculously simple-minded overload resolution, but it works well enough for
     // our purposes, and is much easier than trying to backport the implementation that was deleted
     // from the macro API (c.f. https://groups.google.com/d/msg/scala-internals/R1iZXfotqds/3xytfX39U2wJ)
@@ -56,7 +67,7 @@ object MockFunctionFinder {
           else
             paramTypes(tpe)
         }
-        pts.map(_.dealias) sameElements actuals.map(_.dealias) // see issue #34
+        sameTypes(pts, actuals)
       } getOrElse {
         reportError(s"Unable to resolve overloaded method ${method.name}")
       }
