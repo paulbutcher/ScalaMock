@@ -70,6 +70,9 @@ lazy val examples = project in file("examples") settings(
 
 lazy val ScalaMock = project in file(".") settings(
     commonSettings,
-    publish := (),
-    publishLocal := ()
+    publishArtifact in (Compile, packageBin) := false,
+    publishArtifact in (Compile, packageSrc) := false,
+    scalaReflect,
+    libraryDependencies += scalatest,
+    sources in Compile <<= Seq(`scalamock-core`, `scalamock-scalatest-support`).map(sources in Compile in _).join.map(_.flatten)
   ) aggregate(`scalamock-core`, core_tests, `scalamock-scalatest-support`, `scalamock-specs2-support`, examples)
