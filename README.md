@@ -1,4 +1,4 @@
-# ScalaMock [![Build Status](https://travis-ci.org/paulbutcher/ScalaMock.svg?branch=master)](https://travis-ci.org/paulbutcher/ScalaMock)
+# ScalaMock [![Build Status](https://travis-ci.org/paulbutcher/ScalaMock.svg?branch=master)](https://travis-ci.org/paulbutcher/ScalaMock) [![Scaladex](https://index.scala-lang.org/paulbutcher/scalamock/scalamock-scalatest-support/latest.svg?color=orange)](https://index.scala-lang.org/paulbutcher/scalamock)
 
 Native Scala mocking.
 
