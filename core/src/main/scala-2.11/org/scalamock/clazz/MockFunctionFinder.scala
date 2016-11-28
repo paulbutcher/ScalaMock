@@ -21,10 +21,9 @@
 package org.scalamock.clazz
 
 import org.scalamock.util.MacroUtils
+import scala.reflect.macros.blackbox.Context
 
 object MockFunctionFinder {
-
-  import scala.reflect.macros.blackbox.Context
 
   /**
    * Given something of the structure <|o.m _|> where o is a mock object

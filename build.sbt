@@ -1,5 +1,5 @@
-scalaVersion in ThisBuild := "2.12.0"
-crossScalaVersions in ThisBuild := Seq("2.11.8", "2.12.0")
+scalaVersion in ThisBuild := "2.10.6"
+crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.8", "2.12.0")
 
 lazy val scalatest =  "org.scalatest" %% "scalatest" % "3.0.1"
 lazy val specs2 = "org.specs2" %% "specs2-core" % "3.8.6"
@@ -7,13 +7,14 @@ lazy val scalaReflect = libraryDependencies += "org.scala-lang" % "scala-reflect
 
 // Specs2 and ScalaTest use different scala-xml versions
 // and this caused problems with referencing class org.scalatest.events.Event
-lazy val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "1.0.6" % "test" 
+lazy val scalaXml = libraryDependencies ++= (
+  if (scalaVersion.value < "2.11") Nil else Seq("org.scala-lang.modules" %% "scala-xml" % "1.0.6" % "test")
+)
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
   organization := "org.scalamock",
   scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"),
   scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++ Opts.doc.version(version.value) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
-  resolvers += "Scalaz Bintray Repo" at "http://dl.bintray.com/scalaz/releases",
   pomIncludeRepository := { _ => false },
   publishArtifact in Test := false,
   licenses := Seq("BSD" -> url("http://www.opensource.org/licenses/bsd-license.php")),
@@ -43,7 +44,8 @@ lazy val `scalamock-core` = project in file("core") settings(
 lazy val `scalamock-scalatest-support` = project in file("frameworks/scalatest") settings(
     name := "ScalaMock ScalaTest Support",
     commonSettings,
-    libraryDependencies ++= Seq(scalatest, scalaXml)
+    libraryDependencies += scalatest,
+    scalaXml
   ) dependsOn `scalamock-core`
 
 lazy val `scalamock-specs2-support` = project in file("frameworks/specs2") settings(
