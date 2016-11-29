@@ -1,5 +1,9 @@
 # Release notes
 
+## New in ScalaMock 3.4.1
+
+- Scala 2.12 and 2.11 support
+
 ## New in ScalaMock 3.2.1
 
 - [new feature] support for custom parameter matchers (issue #42)
