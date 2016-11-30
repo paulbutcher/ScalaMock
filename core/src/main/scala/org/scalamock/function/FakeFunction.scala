@@ -37,9 +37,14 @@ abstract class FakeFunction(protected val mockContext: MockContext, private[scal
   private def expectationContext = mockContext.expectationContext
 
   def handle(arguments: Product): Any = {
-    val call = new Call(this, arguments)
-    callLog += call
-    expectationContext.handle(call) getOrElse onUnexpected(call)
+    if (callLog != null) {
+      val call = new Call(this, arguments)
+      callLog += call
+      expectationContext.handle(call) getOrElse onUnexpected(call)
+    } else {
+      val msg = "Can't log call to mock object, have expectations been verified already?"
+      throw new RuntimeException(msg)
+    }
   }
   
   protected def onUnexpected(call: Call): Any
