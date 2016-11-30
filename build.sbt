@@ -8,7 +8,7 @@ lazy val scalaReflect = libraryDependencies += "org.scala-lang" % "scala-reflect
 // Specs2 and ScalaTest use different scala-xml versions
 // and this caused problems with referencing class org.scalatest.events.Event
 lazy val scalaXml = libraryDependencies ++= (
-  if (scalaVersion.value < "2.11") Nil else Seq("org.scala-lang.modules" %% "scala-xml" % "1.0.6" % "test")
+  if (scalaVersion.value < "2.11") Nil else Seq("org.scala-lang.modules" %% "scala-xml" % "1.0.6" % Test)
 )
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
@@ -17,7 +17,7 @@ val commonSettings = Defaults.coreDefaultSettings ++ Seq(
   scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++ Opts.doc.version(version.value) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
   pomIncludeRepository := { _ => false },
   publishArtifact in Test := false,
-  licenses := Seq("BSD" -> url("http://www.opensource.org/licenses/bsd-license.php")),
+  licenses := Seq("MIT" -> url("https://opensource.org/licenses/MIT")),
   pomExtra := (
     <url>http://scalamock.org/</url>
     <scm>
@@ -73,6 +73,6 @@ lazy val ScalaMock = project in file(".") settings(
     publishArtifact in (Compile, packageBin) := false,
     publishArtifact in (Compile, packageSrc) := false,
     scalaReflect,
-    libraryDependencies += scalatest,
-    sources in Compile <<= Seq(`scalamock-core`, `scalamock-scalatest-support`).map(sources in Compile in _).join.map(_.flatten)
+    libraryDependencies ++= Seq(scalatest, specs2),
+    sources in Compile <<= Seq(`scalamock-core`, `scalamock-scalatest-support`, `scalamock-specs2-support`).map(sources in Compile in _).join.map(_.flatten)
   ) aggregate(`scalamock-core`, core_tests, `scalamock-scalatest-support`, `scalamock-specs2-support`, examples)
