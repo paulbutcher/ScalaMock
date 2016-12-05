@@ -49,28 +49,30 @@ def testTurtle {
 
 ## Downloading
 
-Download from [Sonatype](https://oss.sonatype.org/content/repositories/releases/org/scalamock/).
+Download from Maven Central or JCenter (synced via [Bintray](https://bintray.com/scalamock/maven))
 
-To use ScalaMock in [sbt](http://www.scala-sbt.org/) with [ScalaTest](http://www.scalatest.org/) add the following to your project file:
+To use ScalaMock in your Tests  add the following to your project file:
 
-sbt:
+### For [ScalaTest](http://www.scalatest.org/)
+
+- [sbt](http://www.scala-sbt.org/):
 ```scala
 libraryDependencies += "org.scalamock" %% "scalamock-scalatest-support" % "3.4.2" % Test
 ```
 
-gradle:
+- [gradle](https://gradle.org/):
 ```groovy
 testCompile 'org.scalamock:scalamock-scalatest-support_2.12:3.4.2'
 ```
 
-and with [Specs2](http://etorreborre.github.com/specs2/):
+### For [Specs2](http://etorreborre.github.com/specs2/):
 
-sbt:
+- [sbt](http://www.scala-sbt.org/):
 ```scala
 libraryDependencies += "org.scalamock" %% "scalamock-specs2-support" % "3.4.2" % Test
 ```
 
-gradle:
+- [gradle](https://gradle.org/):
 ```groovy
 testCompile 'org.scalamock:scalamock-specs2-support_2.12:3.4.2'
 ```
