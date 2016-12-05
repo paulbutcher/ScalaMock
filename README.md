@@ -1,6 +1,6 @@
 # ScalaMock [![Build Status](https://travis-ci.org/paulbutcher/ScalaMock.svg?branch=master)](https://travis-ci.org/paulbutcher/ScalaMock) [![Scaladex](https://index.scala-lang.org/paulbutcher/scalamock/scalamock-scalatest-support/latest.svg?color=orange)](https://index.scala-lang.org/paulbutcher/scalamock)
 
-Native Scala mocking.
+Native Scala mocking. For Scala 2.10, 2.11 and 2.12.
 
 Official website: [http://scalamock.org/](http://scalamock.org/)
 
@@ -53,16 +53,26 @@ Download from [Sonatype](https://oss.sonatype.org/content/repositories/releases/
 
 To use ScalaMock in [sbt](http://www.scala-sbt.org/) with [ScalaTest](http://www.scalatest.org/) add the following to your project file:
 
+sbt:
 ```scala
-libraryDependencies +=
-  "org.scalamock" %% "scalamock-scalatest-support" % "3.2.2" % "test"
+libraryDependencies += "org.scalamock" %% "scalamock-scalatest-support" % "3.4.2" % Test
+```
+
+gradle:
+```groovy
+testCompile 'org.scalamock:scalamock-scalatest-support_2.12:3.4.2'
 ```
 
 and with [Specs2](http://etorreborre.github.com/specs2/):
 
+sbt:
 ```scala
-libraryDependencies +=
-  "org.scalamock" %% "scalamock-specs2-support" % "3.2.2" % "test"
+libraryDependencies += "org.scalamock" %% "scalamock-specs2-support" % "3.4.2" % Test
+```
+
+gradle:
+```groovy
+testCompile 'org.scalamock:scalamock-specs2-support_2.12:3.4.2'
 ```
 
 ## Documentation
