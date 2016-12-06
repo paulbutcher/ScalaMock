@@ -25,7 +25,7 @@ val m = mockFunction[Int, String]
 A mock object that supports expectations-first style is created with `mock`. For example, to create a mock that implements the `Heater` trait:
 
 ```scala
-val heaterMock = mock[HeaterMock]
+val heaterMock = mock[Heater]
 ```
 
 Expectations can then be set using `expects`:
