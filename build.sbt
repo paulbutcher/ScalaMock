@@ -81,7 +81,7 @@ lazy val scalatestSupport = crossProject.settings(buildSettings:_*)
   .in(file("frameworks/scalatest"))
   .settings(
     name := "ScalaMock ScalaTest Support",
-    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.0"
+    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.1"
   )
   .dependsOn(core)
 
