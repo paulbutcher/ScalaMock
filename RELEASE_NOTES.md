@@ -1,5 +1,15 @@
 # Release notes
 
+## New in ScalaMock 3.4.2
+
+- Scala 2.10, 2.11, 2.12 crossbuild
+- log unepexcted calls after verifications were checked (removing an NPE)
+- published to JCenter and Maven Central
+
+## New in ScalaMock 3.4.1
+
+- Scala 2.12 and 2.11 support
+
 ## New in ScalaMock 3.2.1
 
 - [new feature] support for custom parameter matchers (issue #42)

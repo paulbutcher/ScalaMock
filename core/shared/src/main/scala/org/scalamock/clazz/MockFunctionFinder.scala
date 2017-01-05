@@ -22,7 +22,7 @@ package org.scalamock.clazz
 
 import org.scalamock.util.{MacroAdapter, MacroUtils}
 
-object MockFunctionFinder extends {
+object MockFunctionFinder {
   import MacroAdapter.Context
 
   /**

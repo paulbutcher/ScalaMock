@@ -20,13 +20,11 @@
 
 package org.scalamock.specs2
 
-import org.specs2.execute.{ AsResult, Failure, FailureException, Result }
-import org.specs2.main.ArgumentsShortcuts
-import org.specs2.specification.{ AroundExample, Fragments, SpecificationStructure }
-import org.specs2.specification.Fragment
-import org.specs2.mutable.FragmentsBuilder
-import org.specs2.mutable.Around
 import org.scalamock.MockFactoryBase
+import org.specs2.execute.{AsResult, Failure, FailureException}
+import org.specs2.main.ArgumentsShortcuts
+import org.specs2.mutable.Around
+import org.specs2.specification._
 
 /**
  * Base trait for MockContext and IsolatedMockFactory
@@ -42,7 +40,7 @@ trait MockContextBase extends MockFactoryBase {
   type ExpectationException = FailureException
 
   protected override def newExpectationException(message: String, methodName: Option[Symbol]) =
-    new ExpectationException(new Failure(message))
+    new ExpectationException(Failure(message))
 
   protected def wrapAsResult[T: AsResult](body: => T) = {
     AsResult(withExpectations { body })
@@ -173,7 +171,7 @@ trait MockContext extends MockContextBase with Around {
  * }
  * }}}
  */
-trait IsolatedMockFactory extends AroundExample with MockContextBase { self: ArgumentsShortcuts =>
+trait IsolatedMockFactory extends AroundEach with MockContextBase { self: ArgumentsShortcuts =>
   isolated
 
   override def around[T: AsResult](body: => T) = {
@@ -190,10 +188,9 @@ trait IsolatedMockFactory extends AroundExample with MockContextBase { self: Arg
  * $techniques
  */
 @deprecated("MockFactory is buggy. Please use IsolatedMockFactory or MockContext instead", "3.2")
-trait MockFactory extends AroundExample with MockContextBase { self: ArgumentsShortcuts =>
+trait MockFactory extends AroundEach with MockContextBase { self: ArgumentsShortcuts =>
 
   override def around[T: AsResult](body: => T) = {
     wrapAsResult[T] { body }
   }
 }
-

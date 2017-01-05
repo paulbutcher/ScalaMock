@@ -7,8 +7,7 @@ class MacroAdapter[C <: MacroAdapter.Context](val ctx2: C) {
 
   def TermName(s: String) = newTermName(s)
   def TypeName(s: String) = newTypeName(s)
-  def freshName(prefix: String) = ctx2.fresh(prefix)
-  def freshTerm(prefix: String): TermName = TermName(freshName(prefix))
+  def freshTerm(prefix: String): TermName = TermName(ctx2.fresh(prefix))
 
   val noSelfType = ValDef(Modifiers(Flag.PRIVATE), nme.WILDCARD, TypeTree(NoType), EmptyTree)
   def internalTypeRef(pre: Type, sym: Symbol, args: List[Type]) = TypeRef(pre, sym, args)

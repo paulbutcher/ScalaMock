@@ -1,137 +1,117 @@
-import sbt.Keys._
-import sbt.inc.Analysis
+scalaVersion in ThisBuild := "2.10.6"
+crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.8", "2.12.0")
 
-crossScalaVersions := Seq("2.11.8", "2.10.6")
+lazy val scalatest =  "org.scalatest" %% "scalatest" % "3.0.1"
+lazy val specs2 = "org.specs2" %% "specs2-core" % "3.8.6"
+lazy val scalaReflect = libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
+lazy val quasiquotes = libraryDependencies ++= {
+  CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((2, 10)) =>
+      Seq(compilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
+        "org.scalamacros" %% "quasiquotes" % "2.1.0" cross CrossVersion.binary)
+    case _ ⇒ Seq.empty
+  }
+}
 
-val buildVersion = "3.3.0"
+// Specs2 and ScalaTest use different scala-xml versions
+// and this caused problems with referencing class org.scalatest.events.Event
+lazy val scalaXml = libraryDependencies ++= (
+  if (scalaVersion.value < "2.11") Nil else Seq("org.scala-lang.modules" %% "scala-xml" % "1.0.6" % Test)
+)
 
-val buildScalaVersion = "2.11.8"
-
-val buildSettings = Defaults.coreDefaultSettings ++ Seq(
+val commonSettings = Defaults.coreDefaultSettings ++ Seq(
   organization := "org.scalamock",
-  version := buildVersion,
-  scalaVersion := buildScalaVersion,
   scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"),
-  scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++ Opts.doc.version(buildVersion) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
-  resolvers += Resolver.sonatypeRepo("releases"),
-  resolvers += Resolver.sonatypeRepo("snapshots"),
-  resolvers += "Scalaz Bintray Repo" at "http://dl.bintray.com/scalaz/releases",
-
-  publishTo <<= version { v =>
-    val nexus = "https://oss.sonatype.org/"
-    if (v.trim.endsWith("SNAPSHOT"))
-      Some("snapshots" at nexus + "content/repositories/snapshots")
-    else
-      Some("releases" at nexus + "service/local/staging/deploy/maven2")
-  },
+  scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++ Opts.doc.version(version.value) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
   pomIncludeRepository := { _ => false },
   publishArtifact in Test := false,
-  pomExtra := <url>http://scalamock.org/</url>
-    <licenses>
-      <license>
-        <name>BSD-style</name>
-        <url>http://www.opensource.org/licenses/bsd-license.php</url>
-        <distribution>repo</distribution>
-      </license>
-    </licenses>
+  licenses := Seq("MIT" -> url("https://opensource.org/licenses/MIT")),
+  pomExtra := (
+    <url>http://scalamock.org/</url>
     <scm>
       <url>git@github.com:paulbutcher/ScalaMock.git</url>
       <connection>scm:git:git@github.com:paulbutcher/ScalaMock.git</connection>
     </scm>
     <developers>
       <developer>
-        <id>paulbutcher</id>
-        <name>Paul Butcher</name>
-        <url>http://paulbutcher.com/</url>
-      </developer>
-    </developers>,
-
+          <id>paulbutcher</id>
+          <name>Paul Butcher</name>
+          <url>http://paulbutcher.com/</url>
+        </developer>
+    </developers>),
+  
   shellPrompt := ShellPrompt.buildShellPrompt
 )
 
-
-val specs2 = "org.specs2" %% "specs2" % "2.4.16"
-
-// Specs2 and ScalaTest use different scala-xml versions
-// and this caused problems with referencing class org.scalatest.events.Event
-// val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "1.0.3" % "test"
-
-
-lazy val core = crossProject.settings(buildSettings:_*)
-  .in(file("core"))
-  .settings(
+lazy val `scalamock-core` = crossProject in file("core") settings(
     name := "ScalaMock Core",
-    libraryDependencies ++= Seq(
-      "org.scala-lang" % "scala-reflect" % scalaVersion.value
-    ) ++ {
-      CrossVersion.partialVersion(scalaVersion.value) match {
-        case Some((2, 10)) =>
-          Seq(compilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
-            "org.scalamacros" %% "quasiquotes" % "2.1.0" cross CrossVersion.binary)
-        case _ ⇒ Seq.empty
-      }
-    }
+    commonSettings,
+    scalaReflect,
+    quasiquotes
   )
 
-lazy val jsCore = core.js
+lazy val `scalamock-core-js` = `scalamock-core`.js
 
-lazy val jvmCore = core.jvm  
+lazy val `scalamock-core-jvm` = `scalamock-core`.jvm
 
-lazy val scalatestSupport = crossProject.settings(buildSettings:_*)
-  .in(file("frameworks/scalatest"))
-  .settings(
+lazy val `scalamock-scalatest-support` = crossProject in file("frameworks/scalatest") settings(
     name := "ScalaMock ScalaTest Support",
-    libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.1"
-  )
-  .dependsOn(core)
+    commonSettings,
+    libraryDependencies += scalatest,
+    scalaXml
+  ) dependsOn `scalamock-core`
 
-lazy val jsScalatestSupport = scalatestSupport.js
+lazy val `scalamock-scalatest-support-js` = `scalamock-scalatest-support`.js
 
-lazy val jvmScalatestSupport = scalatestSupport.jvm
+lazy val `scalamock-scalatest-support-jvm` = `scalamock-scalatest-support`.jvm
 
-lazy val specs2Support = crossProject.settings(buildSettings:_*)
-  .in(file("frameworks/specs2"))
-  .settings(
+lazy val `scalamock-specs2-support` = crossProject in file("frameworks/specs2") settings(
     name := "ScalaMock Specs2 Support",
+    commonSettings,
     libraryDependencies += specs2
-  )
-  .dependsOn(core)
+  ) dependsOn `scalamock-core`
 
-lazy val jsSpecs2Support = specs2Support.js
+lazy val `scalamock-specs2-support-js` = `scalamock-specs2-support`.js
 
-lazy val jvmSpecs2Support = specs2Support.jvm
+lazy val `scalamock-specs2-support-jvm` = `scalamock-specs2-support`.jvm
 
-lazy val core_tests = crossProject.settings(buildSettings:_*)
-  .in(file("core_tests"))
-  .settings(
+lazy val core_tests = crossProject in file("core_tests") settings(
     name := "ScalaMock Core Tests",
+    commonSettings,
     publish := (),
     publishLocal := ()
-  )
-  .dependsOn(scalatestSupport)
-
-lazy val jscore_tests = core_tests.js
-
-lazy val jvmcore_tests = core_tests.jvm  
+  ) dependsOn `scalamock-scalatest-support`
   
-lazy val examples = crossProject.settings(buildSettings:_*)
-  .in(file("examples"))
-  .settings(
+lazy val `core_tests-js` = core_tests.js
+
+lazy val `core_tests-jvm` = core_tests.jvm
+
+lazy val examples = crossProject in file("examples") settings(
     name := "ScalaMock Examples",
+    commonSettings,
     publish := (),
     publishLocal := ()
+  ) dependsOn(`scalamock-scalatest-support`, `scalamock-specs2-support`)
+
+lazy val `examples-js` = examples.js
+
+lazy val `examples-jvm` = examples.jvm
+
+lazy val ScalaMock = crossProject in file(".") settings(
+    commonSettings,
+    publishArtifact in (Compile, packageBin) := false,
+    publishArtifact in (Compile, packageSrc) := false,
+    scalaReflect,
+    quasiquotes,
+    libraryDependencies ++= Seq(scalatest, specs2)
+  ) aggregate(
+    `scalamock-core`, core_tests, `scalamock-scalatest-support`, `scalamock-specs2-support`, examples
+  ) jsSettings (
+    sources in Compile <<= Seq(`scalamock-core`, `scalamock-scalatest-support`, `scalamock-specs2-support`).map(sources in Compile in _.js).join.map(_.flatten)
+  ) jvmSettings (
+    sources in Compile <<= Seq(`scalamock-core`, `scalamock-scalatest-support`, `scalamock-specs2-support`).map(sources in Compile in _.jvm).join.map(_.flatten)
   )
-  .dependsOn(scalatestSupport, specs2Support)
 
-lazy val jsExamples = examples.js
+lazy val `ScalaMock-js` = ScalaMock.js
 
-lazy val jvmExamples = examples.jvm
-
-publishArtifact := false
-
-publishArtifact in Test := false
-
-publish := ()
-
-publishLocal := ()
-
+lazy val `ScalaMock-jvm` = ScalaMock.jvm
