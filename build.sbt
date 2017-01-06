@@ -44,8 +44,8 @@ val commonSettings = Defaults.coreDefaultSettings ++ Seq(
 )
 
 lazy val `scalamock-core` = crossProject in file("core") settings(
-    name := "ScalaMock Core",
     commonSettings,
+    name := "ScalaMock Core",
     scalaReflect,
     quasiquotes
   )
@@ -55,8 +55,8 @@ lazy val `scalamock-core-js` = `scalamock-core`.js
 lazy val `scalamock-core-jvm` = `scalamock-core`.jvm
 
 lazy val `scalamock-scalatest-support` = crossProject in file("frameworks/scalatest") settings(
-    name := "ScalaMock ScalaTest Support",
     commonSettings,
+    name := "ScalaMock ScalaTest Support",
     libraryDependencies += scalatest,
     scalaXml
   ) dependsOn `scalamock-core`
@@ -66,8 +66,8 @@ lazy val `scalamock-scalatest-support-js` = `scalamock-scalatest-support`.js
 lazy val `scalamock-scalatest-support-jvm` = `scalamock-scalatest-support`.jvm
 
 lazy val `scalamock-specs2-support` = crossProject in file("frameworks/specs2") settings(
-    name := "ScalaMock Specs2 Support",
     commonSettings,
+    name := "ScalaMock Specs2 Support",
     libraryDependencies += specs2
   ) dependsOn `scalamock-core`
 
@@ -76,8 +76,8 @@ lazy val `scalamock-specs2-support-js` = `scalamock-specs2-support`.js
 lazy val `scalamock-specs2-support-jvm` = `scalamock-specs2-support`.jvm
 
 lazy val core_tests = crossProject in file("core_tests") settings(
-    name := "ScalaMock Core Tests",
     commonSettings,
+    name := "ScalaMock Core Tests",
     publish := (),
     publishLocal := ()
   ) dependsOn `scalamock-scalatest-support`
@@ -87,8 +87,8 @@ lazy val `core_tests-js` = core_tests.js
 lazy val `core_tests-jvm` = core_tests.jvm
 
 lazy val examples = crossProject in file("examples") settings(
-    name := "ScalaMock Examples",
     commonSettings,
+    name := "ScalaMock Examples",
     publish := (),
     publishLocal := ()
   ) dependsOn(`scalamock-scalatest-support`, `scalamock-specs2-support`)
