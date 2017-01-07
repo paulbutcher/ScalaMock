@@ -441,5 +441,16 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
 //        assertResult("curried func return method called") { partial(1.23) }
 //      }
 //    }
+
+
+    // issue 132
+    "mock a trait which has a final method" in withExpectations {
+      trait FinalMethodTrait {
+        def somePublicMethod(param: String)
+        final def someFinalMethod(param: Int) = "final method"
+      }
+
+      val m = mock[FinalMethodTrait]  //test will not compile if the test fails (cannot override final member)
+    }
   }
 }
