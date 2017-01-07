@@ -307,13 +307,14 @@ class MockMaker[C <: Context](val ctx: C) {
     val anon = TypeName("$anon")
     val methodsToMock = methodsNotInObject.filter { m =>
       !m.isConstructor && !m.isPrivate && m.privateWithin == NoSymbol &&
+      !m.isFinal &&
         !m.asInstanceOf[reflect.internal.HasFlags].hasFlag(reflect.internal.Flags.BRIDGE) &&
         !m.isParamWithDefault && // see issue #43
         (!(m.isStable || m.isAccessor) ||
           m.asInstanceOf[reflect.internal.HasFlags].isDeferred) //! TODO - stop using internal if/when this gets into the API
     }.toList
-    val forwarders = methodsToMock map forwarderImpl _
-    val mocks = methodsToMock map mockMethod _
+    val forwarders = methodsToMock map forwarderImpl
+    val mocks = methodsToMock map mockMethod
     val members = mockNameGenerator.mockNameVal :: forwarders ++ mocks
 
     def make() = {
