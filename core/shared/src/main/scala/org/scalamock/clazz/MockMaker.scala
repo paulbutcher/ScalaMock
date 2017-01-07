@@ -29,12 +29,14 @@ import MacroAdapter.Context
 //! TODO - get rid of this nasty two-stage construction when https://issues.scala-lang.org/browse/SI-5521 is fixed
 class MockMaker[C <: Context](val ctx: C) {
   class MockMakerInner[T: ctx.WeakTypeTag](mockContext: ctx.Expr[MockContext], stub: Boolean, mockName: Option[ctx.Expr[String]]) {
+
     import ctx.universe._
     import Flag._
     import definitions._
     import scala.language.reflectiveCalls
 
     val utils = new MacroUtils[ctx.type](ctx)
+
     import utils._
 
     def mockFunctionClass(paramCount: Int): Type = paramCount match {
@@ -100,9 +102,9 @@ class MockMaker[C <: Context](val ctx: C) {
     }
 
     /**
-     *  Translates forwarder parameters into Trees.
-     *  Also maps Java repeated params into Scala repeated params
-     */
+      * Translates forwarder parameters into Trees.
+      * Also maps Java repeated params into Scala repeated params
+      */
     def forwarderParamType(t: Type): Tree = t match {
       case TypeRef(pre, sym, args) if sym == JavaRepeatedParamClass =>
         TypeTree(internalTypeRef(pre, RepeatedParamClass, args))
@@ -208,16 +210,38 @@ class MockMaker[C <: Context](val ctx: C) {
     }
 
     // def <init>() = super.<init>()
-    def initDef =
+    def initDef = {
+      val primaryConstructorOpt = typeToMock.members.collectFirst {
+        case method: MethodSymbolApi if method.isPrimaryConstructor => method
+      }
+
+      val constructorArgumentsTypes = primaryConstructorOpt.map { constructor =>
+      val constructorTypeContext = constructor.typeSignatureIn(typeToMock)
+      val constructorArguments = constructor.paramss //constructorTypeContext.paramLists
+      constructorArguments.map {
+          symbols => symbols.map(_.typeSignatureIn(constructorTypeContext))
+        }
+      }
+
+      val tnEmpty = TypeName("") // typeNames.EMPTY
+      val tnConstructor = TermName("<init>") // termNames.CONSTRUCTOR
+      val superCall: Tree = Select(Super(This(tnEmpty), tnEmpty), tnConstructor)
+      val constructorCall = constructorArgumentsTypes.fold(Apply(superCall, Nil).asInstanceOf[Tree]) { symbols =>
+        symbols.foldLeft(superCall) {
+          case (acc, symbol) => Apply(acc, symbol.map(tpe => q"null.asInstanceOf[$tpe]"))
+        }
+      }
+
       DefDef(
         Modifiers(),
-        TermName("<init>"),
+        tnConstructor,
         List(),
         List(List()),
         TypeTree(),
         Block(
-          List(callConstructor(Super(This(TypeName("")), TypeName("")))),
+          List(constructorCall),
           Literal(Constant(()))))
+    }
 
     // new <|typeToMock|> { <|members|> }
     def anonClass(members: List[Tree]) =
