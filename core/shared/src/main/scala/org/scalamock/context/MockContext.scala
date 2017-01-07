@@ -39,13 +39,13 @@ private[scalamock] trait MockContext {
   }
 
   private[scalamock] def reportUnexpectedCall(call: Call) =
-    throw newExpectationException(s"Unexpected call: $call\n\n%s".format(errorContext(callLog, expectationContext)), Some(call.target.name))
+    throw newExpectationException(s"Unexpected call: $call\n\n${errorContext(callLog, expectationContext)}", Some(call.target.name))
 
   private[scalamock] def reportUnsatisfiedExpectation(callLog: CallLog, expectationContext: Handlers) =
-    throw newExpectationException(s"Unsatisfied expectation:\n\n%s".format(errorContext(callLog, expectationContext)))
+    throw newExpectationException(s"Unsatisfied expectation:\n\n${errorContext(callLog, expectationContext)}")
 
   private[scalamock] def errorContext(callLog: CallLog, expectationContext: Handlers) =
-    s"Expected:\n${expectationContext}\n\nActual:\n${callLog}"
+    s"Expected:\n$expectationContext\n\nActual:\n$callLog"
 
   /** Generates unique names for mocks, stubs, and mock functions */
   def generateMockDefaultName(prefix: String): Symbol = mockNameGenerator.generateMockName(prefix)
