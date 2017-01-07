@@ -1,5 +1,8 @@
 scalaVersion in ThisBuild := "2.10.6"
 crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.8", "2.12.0")
+// the default in scala.js is now node.js, and rhino will be unsupported in v1.0
+// update documentation to explain setup for this, then remove rhino for tests
+scalaJSUseRhino in ThisBuild := true
 
 lazy val scalatest =  "org.scalatest" %% "scalatest" % "3.0.1"
 lazy val specs2 = "org.specs2" %% "specs2-core" % "3.8.6"
