@@ -69,6 +69,17 @@ object MockFunctionFinder {
     import utils._
     import c.universe._
 
+    def sameTypes(types1: List[Type], types2: List[Type]) = {
+      // see issue #34
+      var these = types1.map(_.dealias)
+      var those = types2.map(_.dealias)
+      while (!these.isEmpty && !those.isEmpty && these.head =:= those.head) {
+        these = these.tail
+        those = those.tail
+      }
+      these.isEmpty && those.isEmpty
+    }
+
     method.alternatives find { m =>
       val tpe = m.typeSignature
       val pts = {
@@ -77,7 +88,7 @@ object MockFunctionFinder {
         else
           paramTypes(tpe)
       }
-      pts.map(_.dealias) sameElements actuals.map(_.dealias) // see issue #34
+      sameTypes(pts, actuals)
     } getOrElse {
       reportError(s"Unable to resolve overloaded method ${method.name}")
     }
