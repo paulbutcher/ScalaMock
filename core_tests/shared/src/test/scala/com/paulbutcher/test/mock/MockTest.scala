@@ -451,6 +451,23 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
       }
 
       val m = mock[FinalMethodTrait]  //test will not compile if the test fails (cannot override final member)
+      m.somePublicMethod _ expects * anyNumberOfTimes()
+      // next line will cause a runtime error and is not valid
+      // m.someFinalMethod _ expects * anyNumberOfTimes()
+    }
+
+    "mock a trait which has a protected method" in withExpectations {
+      trait FooTrait {
+        def somePublicMethod(param: String)
+        protected[mock] def protectedMethod() = ()
+        private[mock] def privateMethod() = ()
+      }
+
+      val m = mock[FooTrait]
+      m.somePublicMethod _ expects * anyNumberOfTimes()
+      // next lines will cause a runtime error and are not valid
+      // m.privateMethod _ expects() anyNumberOfTimes()
+      // m.protectedMethod _ expects() anyNumberOfTimes()
     }
   }
 }
