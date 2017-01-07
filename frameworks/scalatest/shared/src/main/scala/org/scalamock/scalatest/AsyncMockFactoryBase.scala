@@ -8,9 +8,6 @@ import org.scalamock.matchers.Matchers
 
 import scala.concurrent.{ExecutionContext, Future}
 
-/**
-  * Created by Luiz Guilherme D'Abruzzo Pereira <luiz290788@gmail.com> on 22/12/16.
-  */
 trait AsyncMockFactoryBase extends MockContext with Mock with MockFunctions with Matchers {
 
   //! TODO - https://issues.scala-lang.org/browse/SI-5831

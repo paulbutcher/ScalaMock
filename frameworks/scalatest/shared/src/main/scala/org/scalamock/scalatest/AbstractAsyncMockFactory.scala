@@ -5,9 +5,6 @@ import org.scalatest.exceptions.{StackDepthException, TestFailedException}
 
 import scala.concurrent.Future
 
-/**
-  * Created by Luiz Guilherme D'Abruzzo Pereira <luiz290788@gmail.com> on 22/12/16.
-  */
 trait AbstractAsyncMockFactory extends AsyncTestSuiteMixin with AsyncMockFactoryBase with AsyncTestSuite {
 
   type ExpectationException = TestFailedException

@@ -1,5 +1,5 @@
 scalaVersion in ThisBuild := "2.10.6"
-crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.8", "2.12.0")
+crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.8", "2.12.1")
 // the default in scala.js is now node.js, and rhino will be unsupported in v1.0
 // update documentation to explain setup for this, then remove rhino for tests
 scalaJSUseRhino in ThisBuild := true
@@ -12,7 +12,7 @@ lazy val quasiquotes = libraryDependencies ++= {
     case Some((2, 10)) =>
       Seq(compilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
         "org.scalamacros" %% "quasiquotes" % "2.1.0" cross CrossVersion.binary)
-    case _ ⇒ Seq.empty
+    case _ => Seq.empty
   }
 }
 
@@ -29,7 +29,7 @@ val commonSettings = Defaults.coreDefaultSettings ++ Seq(
   pomIncludeRepository := { _ => false },
   publishArtifact in Test := false,
   licenses := Seq("MIT" -> url("https://opensource.org/licenses/MIT")),
-  pomExtra := (
+  pomExtra := {
     <url>http://scalamock.org/</url>
     <scm>
       <url>git@github.com:paulbutcher/ScalaMock.git</url>
@@ -41,7 +41,8 @@ val commonSettings = Defaults.coreDefaultSettings ++ Seq(
           <name>Paul Butcher</name>
           <url>http://paulbutcher.com/</url>
         </developer>
-    </developers>),
+    </developers>
+  },
   
   shellPrompt := ShellPrompt.buildShellPrompt
 )
