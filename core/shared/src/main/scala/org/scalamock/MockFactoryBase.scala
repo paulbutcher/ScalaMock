@@ -33,6 +33,8 @@ trait AbstractMockFactoryBase extends Mock with MockFunctions with Matchers { th
 
   protected def inAnyOrder[T](what: => T): T
   protected def inSequence[T](what: => T): T
+  protected def inAnyOrderWithLogging[T](what: => T): T
+  protected def inSequenceWithLogging[T](what: => T): T
 }
 
 trait MockFactoryBase extends AbstractMockFactoryBase with MockContext {
@@ -67,6 +69,12 @@ trait MockFactoryBase extends AbstractMockFactoryBase with MockContext {
   override protected def inSequence[T](what: => T): T = {
     inContext(new OrderedHandlers)(what)
   }
+
+  override protected def inAnyOrderWithLogging[T](what: => T) =
+    inContext(new UnorderedHandlers(logging = true))(what)
+
+  override protected def inSequenceWithLogging[T](what: => T) =
+    inContext(new OrderedHandlers(logging = true))(what)
 
   //! TODO - https://issues.scala-lang.org/browse/SI-5831
   implicit val _factory = this
