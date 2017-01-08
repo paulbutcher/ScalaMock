@@ -469,5 +469,21 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
       // m.privateMethod _ expects() anyNumberOfTimes()
       // m.protectedMethod _ expects() anyNumberOfTimes()
     }
+
+    "log all calls" in withExpectations {
+      val m = mock[TestTrait]
+
+      inAnyOrderWithLogging {
+        m.oneParam _ expects * twice()
+      }
+      inSequenceWithLogging {
+        m.twoParams _ expects(*, *) once()
+        (m.overloaded(_: Int)) expects * once()
+      }
+      m.oneParam(5)
+      m.oneParam(42)
+      m.twoParams(1, 2)
+      m.overloaded(99)
+    }
   }
 }

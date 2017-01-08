@@ -22,7 +22,7 @@ package org.scalamock.handlers
 
 import org.scalamock.context.Call
 
-private[scalamock] class OrderedHandlers extends Handlers {
+private[scalamock] class OrderedHandlers(logging: Boolean = false) extends Handlers {
   
   val handleFn = new Function1[Call, Option[Any]] {
     
@@ -43,7 +43,10 @@ private[scalamock] class OrderedHandlers extends Handlers {
     var currentIndex = 0
   }
   
-  def handle(call: Call) = this.synchronized { handleFn(call) }
+  def handle(call: Call) = this.synchronized {
+    if (logging) println(s"handling call $call")
+    handleFn(call)
+  }
   
   val verifyFn = new Function1[Call, Boolean] {
     
@@ -61,7 +64,10 @@ private[scalamock] class OrderedHandlers extends Handlers {
     var currentIndex = 0
   }
  
-  def verify(call: Call) = this.synchronized { verifyFn(call) }
+  def verify(call: Call) = this.synchronized {
+    if (logging) println(s"verifying call $call")
+    verifyFn(call)
+  }
 
   protected val prefix = "inSequence"
 }
