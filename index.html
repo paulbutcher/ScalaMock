@@ -76,21 +76,23 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2">
                 <h3>Write better tests with</h3>
-                <h1>ScalaMock 3</h1>
+                <h1>ScalaMock</h1>
                 <h4>Simple yet powerful native Scala mocking framework.</h4>
             </div>
             <div class="col-lg-8 col-lg-offset-2 himg">
                 <pre><code class="language-scala">def testTurtle {
-  val mockedTurtle = mock[Turtle]                              // Create mock Turtle object
+  // Create mock Turtle object
+  val mockedTurtle = mock[Turtle]
  
-  (mockedTurtle.setPosition _).expects(10.0, 10.0)             //
-  (mockedTurtle.forward _).expects(5.0)                        // Set expectations
-  (mockedTurtle.getPosition _).expects().returning(15.0, 10.0) // 
+  // Set expectations
+  (mockedTurtle.setPosition _).expects(10.0, 10.0)
+  (mockedTurtle.forward _).expects(5.0)
+  (mockedTurtle.getPosition _).expects().returning(15.0, 10.0)
  
-  drawLine(mockedTurtle, (10.0, 10.0), (15.0, 10.0))           // Exercise System Under Test
+  // Exercise System Under Test
+  drawLine(mockedTurtle, (10.0, 10.0), (15.0, 10.0))
 }
 </code></pre>
-
             </div>
         </div><!-- /row -->
     </div> <!-- /container -->
@@ -122,6 +124,9 @@
             </div>		 				
         </div>
     </div><! --/container -->
+    <div class="row centered">
+        Also find us on <a href="https://scaladex.scala-lang.org/paulbutcher/scalamock">Scaladex</a>
+    </div>
 </div><! --/service -->
 
 
