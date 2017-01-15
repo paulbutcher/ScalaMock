@@ -11,7 +11,7 @@ This article describes how to use ScalaMock in your tests. Because it is just an
 To use ScalaMock in [sbt](http://www.scala-sbt.org/) with [ScalaTest](http://www.scalatest.org/) add the following to your project file:
 
 ```scala
-libraryDependencies += "org.scalamock" %% "scalamock-scalatest-support" % "3.2.2" % "test"
+libraryDependencies += "org.scalamock" %% "scalamock-scalatest-support" % "3.4.2" % Test
 ```
 
 If you don't use sbt or ScalaTest please check the [Installation](/user-guide/installation/) chapter in the User Guide.
