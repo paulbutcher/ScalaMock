@@ -4,6 +4,21 @@ crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.8", "2.12.1")
 // update documentation to explain setup for this, then remove rhino for tests
 scalaJSUseRhino in ThisBuild := true
 organization in ThisBuild := "org.scalamock"
+licenses in ThisBuild := Seq("MIT" -> url("https://opensource.org/licenses/MIT"))
+pomExtra in ThisBuild := {
+  <url>http://scalamock.org/</url>
+    <scm>
+      <url>git@github.com:paulbutcher/ScalaMock.git</url>
+      <connection>scm:git:git@github.com:paulbutcher/ScalaMock.git</connection>
+    </scm>
+    <developers>
+      <developer>
+        <id>paulbutcher</id>
+        <name>Paul Butcher</name>
+        <url>http://paulbutcher.com/</url>
+      </developer>
+    </developers>
+}
 
 lazy val scalatest =  "org.scalatest" %% "scalatest" % "3.0.1"
 lazy val specs2 = "org.specs2" %% "specs2-core" % "3.8.6"
@@ -28,22 +43,6 @@ val commonSettings = Defaults.coreDefaultSettings ++ Seq(
   scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++ Opts.doc.version(version.value) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
   pomIncludeRepository := { _ => false },
   publishArtifact in Test := false,
-  licenses := Seq("MIT" -> url("https://opensource.org/licenses/MIT")),
-  pomExtra := {
-    <url>http://scalamock.org/</url>
-    <scm>
-      <url>git@github.com:paulbutcher/ScalaMock.git</url>
-      <connection>scm:git:git@github.com:paulbutcher/ScalaMock.git</connection>
-    </scm>
-    <developers>
-      <developer>
-          <id>paulbutcher</id>
-          <name>Paul Butcher</name>
-          <url>http://paulbutcher.com/</url>
-        </developer>
-    </developers>
-  },
-  
   shellPrompt := ShellPrompt.buildShellPrompt
 )
 
