@@ -1,5 +1,13 @@
 # Release notes
 
+## New in ScalaMock 3.5.0
+
+- Support for Scala.JS
+- allow logging of all mock calls
+- allow mocking of classes that have final methods (but not the final method itself)
+- allow mocking of classes with non-default constructors
+- some fixes around AsyncMockFactory
+
 ## New in ScalaMock 3.4.2
 
 - Scala 2.10, 2.11, 2.12 crossbuild
