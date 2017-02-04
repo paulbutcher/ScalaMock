@@ -228,7 +228,7 @@ class MockMaker[C <: Context](val ctx: C) {
       val superCall: Tree = Select(Super(This(tnEmpty), tnEmpty), tnConstructor)
       val constructorCall: Tree = constructorArgumentsTypes.fold(Apply(superCall, Nil).asInstanceOf[Tree]) { symbols =>
         symbols.foldLeft(superCall) {
-          case (acc, symbol) => Apply(acc, symbol.map(tpe => q"null"))
+          case (acc, symbol) => Apply(acc, symbol.map(tpe => q"null.asInstanceOf[$tpe]"))
         }
       }
 
