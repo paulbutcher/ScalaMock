@@ -118,3 +118,21 @@ lazy val ScalaMock = crossProject in file(".") settings(
 lazy val `ScalaMock-js` = ScalaMock.js
 
 lazy val `ScalaMock-jvm` = ScalaMock.jvm
+
+releaseProcess := {
+  import ReleaseTransformations._
+  Seq[ReleaseStep](
+    checkSnapshotDependencies,
+    inquireVersions,
+    runClean,
+    runTest,
+    setReleaseVersion,
+    commitReleaseVersion,
+    tagRelease,
+    publishArtifacts,
+    setNextVersion,
+    commitNextVersion,
+    ReleaseStep(action = releaseStepTask(bintraySyncMavenCentral), enableCrossBuild = true)
+    //  pushChanges
+  )
+}
