@@ -216,10 +216,10 @@ class MockMaker[C <: Context](val ctx: C) {
       }
 
       val constructorArgumentsTypes = primaryConstructorOpt.map { constructor =>
-      val constructorTypeContext = constructor.typeSignatureIn(typeToMock)
-      val constructorArguments = constructor.paramss //constructorTypeContext.paramLists
-      constructorArguments.map {
-          symbols => symbols.map(_.typeSignatureIn(constructorTypeContext))
+        val constructorTypeContext = constructor.typeSignatureIn(typeToMock).dealias
+        val constructorArguments = constructor.paramss
+        constructorArguments.map { symbols =>
+          symbols.map(_.typeSignatureIn(constructorTypeContext).dealias)
         }
       }
 
@@ -305,7 +305,7 @@ class MockMaker[C <: Context](val ctx: C) {
     }
 
     val mockNameGenerator = new MockNameGenerator()
-    val typeToMock = weakTypeTag[T].tpe //weakTypeOf[T]
+    val typeToMock = weakTypeOf[T].dealias
     val anon = TypeName("$anon")
     val methodsToMock = methodsNotInObject.filter { m =>
       !m.isConstructor && !m.isPrivate && m.privateWithin == NoSymbol &&
@@ -325,7 +325,7 @@ class MockMaker[C <: Context](val ctx: C) {
 //              println("------------")
 //              println(showRaw(result))
 //              println("------------")
-//              println(show(result))
+              println(show(result))
 //              println("------------")
 
       ctx.Expr(result)
