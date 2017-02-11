@@ -23,7 +23,7 @@ package org.scalamock.handlers
 import org.scalamock.context.Call
 
 private[scalamock] class OrderedHandlers(logging: Boolean = false) extends Handlers {
-  
+
   val handleFn = new Function1[Call, Option[Any]] {
     
     def apply(call: Call): Option[Any] = {
@@ -47,23 +47,16 @@ private[scalamock] class OrderedHandlers(logging: Boolean = false) extends Handl
     if (logging) println(s"handling ordered call $call")
     handleFn(call)
   }
-  
-  val verifyFn = new Function1[Call, Boolean] {
-    
-    def apply(call: Call): Boolean = {
-      for (i <- currentIndex until handlers.length) {
-        val handler = handlers(i)
-        if (handler.verify(call)) {
-          currentIndex = i
-          return true
-        }
-      }
-      false
-    }
 
+  val verifyFn = {
     var currentIndex = 0
+    (call: Call) => {
+      val res = handlers.zipWithIndex.drop(currentIndex).find{ case (handler, i) => handler.verify(call) }.map(_._2)
+      res.foreach(currentIndex = _)
+      res.isDefined
+    }
   }
- 
+
   def verify(call: Call) = this.synchronized {
     if (logging) println(s"verifying ordered call $call")
     verifyFn(call)
