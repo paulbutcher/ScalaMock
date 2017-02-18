@@ -1,4 +1,5 @@
-# ScalaMock [![Build Status](https://travis-ci.org/paulbutcher/ScalaMock.svg?branch=master)](https://travis-ci.org/paulbutcher/ScalaMock) [![Scaladex](https://index.scala-lang.org/paulbutcher/scalamock/scalamock-scalatest-support/latest.svg?color=orange)](https://index.scala-lang.org/paulbutcher/scalamock)
+# ScalaMock 
+[![Build Status](https://travis-ci.org/paulbutcher/ScalaMock.svg?branch=master)](https://travis-ci.org/paulbutcher/ScalaMock) [![Scaladex](https://index.scala-lang.org/paulbutcher/scalamock/scalamock-scalatest-support/latest.svg?color=orange)](https://index.scala-lang.org/paulbutcher/scalamock) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d7250cea177b468c94bb07eb8d3366a4)](https://www.codacy.com/app/barkhorn/ScalaMock?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=paulbutcher/ScalaMock&amp;utm_campaign=Badge_Grade)
 
 Native Scala mocking. For Scala 2.10, 2.11 and 2.12.
 
