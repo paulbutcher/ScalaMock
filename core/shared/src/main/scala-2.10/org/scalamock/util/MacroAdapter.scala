@@ -25,10 +25,10 @@ class MacroAdapter[C <: MacroAdapter.Context](val ctx2: C) {
 
     def typeArgs: List[ctx2.universe.Type] = {
       t match {
-        case TypeRef(typ, tsym, typeParams) ⇒
+        case TypeRef(typ, tsym, typeParams) =>
           typeParams
 
-        case _ ⇒
+        case _ =>
           List.empty
       }
     }

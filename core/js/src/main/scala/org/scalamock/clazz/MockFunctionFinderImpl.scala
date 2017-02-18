@@ -43,7 +43,7 @@ object MockFunctionFinderImpl {
 
       val tpe = owner.tpe
 
-      val baseNonInterfaceParentCount = tpe.baseClasses.count( symbol ⇒
+      val baseNonInterfaceParentCount = tpe.baseClasses.count( symbol =>
         symbol != objectSymbol && (symbol.isClass && !symbol.asClass.isTrait)
       )
 

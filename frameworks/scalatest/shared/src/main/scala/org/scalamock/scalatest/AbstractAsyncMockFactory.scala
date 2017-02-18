@@ -4,6 +4,7 @@ import org.scalatest._
 import org.scalatest.exceptions.{StackDepthException, TestFailedException}
 
 import scala.concurrent.Future
+import scala.util.control.NonFatal
 
 trait AbstractAsyncMockFactory extends AsyncTestSuiteMixin with AsyncMockFactoryBase with AsyncTestSuite {
 
@@ -12,7 +13,7 @@ trait AbstractAsyncMockFactory extends AsyncTestSuiteMixin with AsyncMockFactory
   abstract override def withFixture(test: NoArgAsyncTest): FutureOutcome = {
     if (autoVerify) {
       new FutureOutcome(withExpectations(super.withFixture(test).toFuture).recoverWith({
-        case t: Throwable => Future.successful(Exceptional(t))
+        case NonFatal(ex) => Future.successful(Exceptional(ex))
       }))
     } else {
       super.withFixture(test)
