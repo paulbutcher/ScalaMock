@@ -21,10 +21,12 @@
 package org.scalamock
 
 import org.scalamock.clazz.Mock
-import org.scalamock.context.{MockContext, CallLog}
+import org.scalamock.context.{CallLog, MockContext}
 import org.scalamock.function._
-import org.scalamock.handlers.{ Handlers, OrderedHandlers, UnorderedHandlers }
+import org.scalamock.handlers.{Handlers, OrderedHandlers, UnorderedHandlers}
 import org.scalamock.matchers._
+
+import scala.util.control.NonFatal
 
 /** ScalaMock public interface */
 trait AbstractMockFactoryBase extends Mock with MockFunctions with Matchers { this: MockContext =>
@@ -54,7 +56,7 @@ trait MockFactoryBase extends AbstractMockFactoryBase with MockContext {
       verifyExpectations()
       result
     } catch {
-      case ex: Throwable =>
+      case NonFatal(ex) =>
         // do not verify expectations - just clear them. Throw original exception
         // see issue #72
         clearExpectations()
