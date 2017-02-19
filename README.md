@@ -1,7 +1,7 @@
 # ScalaMock 
 [![Build Status](https://travis-ci.org/paulbutcher/ScalaMock.svg?branch=master)](https://travis-ci.org/paulbutcher/ScalaMock) [![Scaladex](https://index.scala-lang.org/paulbutcher/scalamock/scalamock-scalatest-support/latest.svg?color=orange)](https://index.scala-lang.org/paulbutcher/scalamock) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d7250cea177b468c94bb07eb8d3366a4)](https://www.codacy.com/app/barkhorn/ScalaMock?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=paulbutcher/ScalaMock&amp;utm_campaign=Badge_Grade)
 
-Native Scala mocking. For Scala 2.10, 2.11 and 2.12.
+Native Scala mocking.
 
 Official website: [http://scalamock.org/](http://scalamock.org/)
 
@@ -10,33 +10,40 @@ Official website: [http://scalamock.org/](http://scalamock.org/)
 ### Expectations-First Style
 
 ```scala
-def testTurtle {
-  val m = mock[Turtle]                              // Create mock Turtle object
+test("drawline interaction with turtle") {
+  // Create mock Turtle object
+  val m = mock[Turtle]
+  
+  // Set expectations
+  (m.setPosition _).expects(10.0, 10.0)
+  (m.forward _).expects(5.0)
+  (m.getPosition _).expects().returning(15.0, 10.0)
 
-  (m.setPosition _).expects(10.0, 10.0)             //
-  (m.forward _).expects(5.0)                        // Set expectations
-  (m.getPosition _).expects().returning(15.0, 10.0) // 
-
-  drawLine(m, (10.0, 10.0), (15.0, 10.0))           // Exercise System Under Test
+  // Exercise System Under Test
+  drawLine(m, (10.0, 10.0), (15.0, 10.0))
 }
 ```
 
 ### Record-then-Verify (Mockito) Style
 
 ```scala
-def testTurtle {
-  val m = stub[Turtle]                              // Create stub Turtle
+test("drawline interaction with turtle") {
+  // Create stub Turtle
+  val m = stub[Turtle]
   
-  (m.getPosition _).when().returns(15.0, 10.0)      // Setup return values
+  // Setup return values
+  (m.getPosition _).when().returns(15.0, 10.0)
 
-  drawLine(m, (10.0, 10.0), (15.0, 10.0))           // Exercise System Under Test
+  // Exercise System Under Test
+  drawLine(m, (10.0, 10.0), (15.0, 10.0))
 
-  (m.setPosition _).verify(10.0, 10.0)              // Verify expectations met
-  (m.forward _).verify(5.0)                         //
+  // Verify expectations met
+  (m.setPosition _).verify(10.0, 10.0)
+  (m.forward _).verify(5.0)
 }
 ```
 
-[Full worked example](http://scalamock.org/quick-start/)
+A more complete example is on our [Quickstart](http://scalamock.org/quick-start/) page.
 
 ## Features
 
@@ -47,46 +54,25 @@ def testTurtle {
   * Overloaded methods
   * Type constraints
 * ScalaTest and Specs2 integration
+* Mock and Stub support
+* Macro Mocks and Proxy Mocks
+* Scala.js support
+* built for Scala 2.10, 2.11, 2.12
 
-## Downloading
+## Using ScalaMock
 
-Download from Maven Central or JCenter (synced via [Bintray](https://bintray.com/scalamock/maven))
+Artefacts are published to Maven Central and JCenter.
 
-To use ScalaMock in your Tests  add the following to your project file:
+For ScalaTest, to use ScalaMock in your Tests, add the following to your `build.sbt`:
 
-### For [ScalaTest](http://www.scalatest.org/)
-
-- [sbt](http://www.scala-sbt.org/):
 ```scala
-libraryDependencies += "org.scalamock" %% "scalamock-scalatest-support" % "3.4.2" % Test
-```
-
-- [gradle](https://gradle.org/):
-```groovy
-testCompile 'org.scalamock:scalamock-scalatest-support_2.12:3.4.2'
-```
-
-### For [Specs2](http://etorreborre.github.com/specs2/):
-
-- [sbt](http://www.scala-sbt.org/):
-```scala
-libraryDependencies += "org.scalamock" %% "scalamock-specs2-support" % "3.4.2" % Test
-```
-
-- [gradle](https://gradle.org/):
-```groovy
-testCompile 'org.scalamock:scalamock-specs2-support_2.12:3.4.2'
+libraryDependencies += "org.scalamock" %% "scalamock-scalatest-support" % "3.5.0" % Test
 ```
 
 ## Documentation
 
-* [Quick Start](http://scalamock.org/quick-start/)
-* [User Guide](http://scalamock.org/user-guide/)
-* [Scaladoc](http://scalamock.org/api/index.html#org.scalamock.package)
+For usage in Maven or Gradle, integration with Specs2, and more example examples see the [User Guide](http://scalamock.org/user-guide/)
 
-## Future Plans
-
-Check our [roadmap](http://scalamock.org/roadmap/).
 
 ### Acknowledgements
 
