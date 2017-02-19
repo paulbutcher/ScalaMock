@@ -7,15 +7,9 @@ scala:
 
 jdk:
   - oraclejdk8
-  - oraclejdk7
 
 node_js:
   - "6"
-
-matrix:
-  exclude:
-  - scala: "2.12.1" 
-    jdk: oraclejdk7
 
 cache:
   directories:
