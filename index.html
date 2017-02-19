@@ -1,77 +1,10 @@
-<!DOCTYPE html>
-<html>
+---
+title: Home
+layout: default
+permalink: /
+---
 
-    <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="shortcut icon" href="/assets/ico/favicon.ico">
-    <link rel="alternate" type="application/rss+xml" href="/feed.xml" title="RSS feed for this page"/>
-
-    <title>ScalaMock - Home</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="/assets/css/bootstrap.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="/assets/css/style.css" rel="stylesheet">
-    <link href="/assets/css/highligh-js-styles/default.css" rel="stylesheet" >
-    <link href="/assets/css/font-awesome.min.css" rel="stylesheet">
-    
-    <!-- Just for debugging purposes. Don't actually copy this line! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <script src="/assets/js/modernizr.js"></script>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-56676479-1', 'auto');
-      ga('send', 'pageview');
-   </script>
-</head>
-
-
-    <body>
-        <!-- Fixed navbar -->
-<div class="navbar navbar-default navbar-static-top" role="navigation">
-  <a href="https://github.com/paulbutcher/ScalaMock"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/">ScalaMock</a>
-    </div>
-    <div class="navbar-collapse collapse navbar-right">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="/">Home</a></li>
-        <li ><a href="/news/">News</a></li>
-        <li ><a href="/quick-start/">Quick Start</a></li>
-        <li ><a href="/user-guide/">User Guide</a></li>
-        <li ><a href="/roadmap/">Roadmap</a></li>
-        <li ><a href="/feedback/">Feedback</a></li>
-        <li><a href="http://github.com/paulbutcher/scalamock">Github</a></li>
-      </ul>
-    </div><!--/.nav-collapse -->
-  </div>
-</div>
-
-
-            <div id="headerwrap">
+<div id="headerwrap">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2">
@@ -80,7 +13,8 @@
                 <h4>Simple yet powerful native Scala mocking framework.</h4>
             </div>
             <div class="col-lg-8 col-lg-offset-2 himg">
-                <pre><code class="language-scala">def testTurtle {
+<pre>
+def testTurtle {
   // Create mock Turtle object
   val mockedTurtle = mock[Turtle]
  
@@ -92,11 +26,11 @@
   // Exercise System Under Test
   drawLine(mockedTurtle, (10.0, 10.0), (15.0, 10.0))
 }
-</code></pre>
+</pre>
             </div>
-        </div><!-- /row -->
-    </div> <!-- /container -->
-</div><!-- /headerwrap -->
+        </div>
+    </div>
+</div>
 
 <div id="service">
     <h2>Features</h2>
@@ -105,7 +39,7 @@
             <div class="col-md-4">
                 <i class="fa fa-line-chart"></i>
                 <h4>Simple yet powerful</h4>
-                <p>ScalaMock has very clean and concise syntax, reasonable defaults, powerful <a href="/user-guide/features">features</a> and is fully type-safe.</p>
+                <p>ScalaMock has very clean and concise syntax, reasonable defaults, powerful <a href="user-guide/features">features</a> and is fully type-safe.</p>
             </div>
             <div class="col-md-4">
                 <i class="fa fa-check-square-o"></i>
@@ -123,9 +57,8 @@
                 <p>ScalaMock can be easily used in ScalaTest and Specs2 testing frameworks.</p>
             </div>		 				
         </div>
-    </div><! --/container -->
-</div><! --/service -->
-
+    </div>
+</div>
 
 <div class="container" id="home_doc_section">
     <h2>Documentation</h2>
@@ -133,49 +66,32 @@
     <div class="container">
         <div class="row centered">
             <div class="col-md-4">
-                <a href="/quick-start">
+                <a href="quick-start">
                     <i class="fa fa-play-circle-o"></i>
                     <h4>Quick Start</h4>
                     <p>Quick introduction to ScalaMock describing basic usage of this mocking framework</p>
                 </a>
             </div>
             <div class="col-md-4">
-                <a href="/user-guide">
+                <a href="user-guide">
                     <i class="fa fa-book"></i>
                     <h4>User Guide</h4>
                     <p>Complete ScalaMock manual with lots of hints and examples</p>
                 </a>
             </div>
             <div class="col-md-4">
-                <a href="http://scalamock.org/api/index.html#org.scalamock.package">
+                <a href="https://www.javadoc.io/doc/org.scalamock/scalamock_2.12/">
                     <i class="fa fa-folder-open"></i>
                     <h4>API Reference</h4>
                     <p>Scaladoc API Reference of ScalaMock for people who like to dig deeper.</p>
                 </a>
             </div>		 				
         </div>
-    </div><! --/row -->
-</div><! --/container -->
+    </div>
+</div>
 
 <div class="container">
     <div class="row centered">
         <h2>Also find us on <a href="https://scaladex.scala-lang.org/paulbutcher/scalamock">Scaladex</a></h2>
     </div>
 </div>
-
-        <!--
-<div id="footerwrap">
-    <div class="container">
-        <p>ScalaMock - native Scala mocking framework</p>
-    </div>
-</div>
--->
-<!-- based on https://github.com/st4ple/solid-jekyll -->
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script src="/assets/js/bootstrap.min.js"></script>
-<script src="/assets/js/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-
-    </body>
-</html>

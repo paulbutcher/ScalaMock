@@ -1,0 +1,26 @@
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+
+  <a href="https://github.com/paulbutcher/ScalaMock"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{ "/" | prepend: site.baseurl }}">{{ site.title }}</a>
+    </div>
+    <div class="navbar-collapse collapse navbar-right">
+      <ul class="nav navbar-nav">
+        <li {% if page.title == "Home" %}class="active"{% endif %}><a href="{{"/" | prepend: site.baseurl }}">Home</a></li>
+        <li {% if page.title == "News" %}class="active"{% endif %}><a href="https://github.com/paulbutcher/ScalaMock/blob/master/RELEASE_NOTES.md">Release Notes</a></li>
+        <li {% if page.title == "Quick Start" %}class="active"{% endif %}><a href="{{"/quick-start/" | prepend: site.baseurl }}">Quick Start</a></li>
+        <li {% if page.title contains "User Guide" %}class="active"{% endif %}><a href="{{"/user-guide/" | prepend: site.baseurl }}">User Guide</a></li>
+        <li><a href="https://www.javadoc.io/doc/org.scalamock/scalamock_2.12/">Scaladoc</a></li>
+        <li {% if page.title == "Feedback" %}class="active"{% endif %}><a href="{{"/feedback/" | prepend: site.baseurl }}">Feedback</a></li>
+      </ul>
+    </div>
+  </div>
+</div>  
