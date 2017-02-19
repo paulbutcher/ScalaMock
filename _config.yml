@@ -1,7 +1,7 @@
 # Site settings
 title: ScalaMock
 description: "Native scala mocking"
-baseurl: "/" #important: start with /
+baseurl: "" #important: start with /
 url: "http://scalamock.org"
 
 # Build settings
