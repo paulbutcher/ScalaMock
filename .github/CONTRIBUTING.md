@@ -16,6 +16,8 @@ If you have a problem and want to ask questions or get help, the best places to 
 
 * Ensure the PR description clearly describes the problem and solution. Include the relevant issue number if applicable.
 
+* Improve the code quality - or - to quote Uncle Bob: "Leave the campground cleaner than the way you found it."
+
 #### **Do you have a request or idea for a new feature?**
 
 * Open a new issue to discuss your idea with others and get some feedback. Before doing do, please search the GitHub issues to find out if someone suggested something similar already.
