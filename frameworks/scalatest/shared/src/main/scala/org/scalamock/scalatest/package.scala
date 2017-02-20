@@ -27,7 +27,7 @@ package object scalatest {
     e.getStackTrace indexWhere { s =>
       !s.getClassName.startsWith("org.scalamock") && !s.getClassName.startsWith("org.scalatest") &&
         !(s.getMethodName == "newExpectationException") && !(s.getMethodName == "reportUnexpectedCall") &&
-        !(methodName.isDefined && s.getMethodName == methodName.get.name)
+        methodName.forall(s.getMethodName != _.name)
     }
   }
 }
