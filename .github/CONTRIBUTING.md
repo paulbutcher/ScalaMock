@@ -1,3 +1,7 @@
+## Are you looking for help?
+
+If you have a problem and want to ask questions or get help, the best places to start are [Stack Overflow](http://stackoverflow.com/questions/ask?tags=scalamock) or the [Scala Gitter chat](https://gitter.im/scala/scala).
+
 ## How to contribute to ScalaMock
 
 #### **Did you find a bug?**
