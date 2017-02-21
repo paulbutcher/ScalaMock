@@ -39,7 +39,8 @@ lazy val scalaXml = libraryDependencies ++= (
 )
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
-  scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature"),
+  scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature",
+    "-target:jvm-" + (if (scalaVersion.value < "2.11") "1.7" else "1.8")),
   scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++ Opts.doc.version(version.value) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
   pomIncludeRepository := { _ => false },
   publishArtifact in Test := false,
