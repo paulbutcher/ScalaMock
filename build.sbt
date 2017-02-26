@@ -111,9 +111,17 @@ lazy val ScalaMock = crossProject in file(".") settings(
   ) aggregate(
     `scalamock-core`, core_tests, `scalamock-scalatest-support`, `scalamock-specs2-support`, examples
   ) jsSettings (
-    sources in Compile <<= Seq(`scalamock-core`, `scalamock-scalatest-support`, `scalamock-specs2-support`).map(sources in Compile in _.js).join.map(_.flatten)
+    sources in Compile := (
+      (sources in Compile in `scalamock-core`.js).value
+      ++ (sources in Compile in `scalamock-scalatest-support`.js).value
+      ++ (sources in Compile in `scalamock-specs2-support`.js).value
+    )
   ) jvmSettings (
-    sources in Compile <<= Seq(`scalamock-core`, `scalamock-scalatest-support`, `scalamock-specs2-support`).map(sources in Compile in _.jvm).join.map(_.flatten)
+    sources in Compile := (
+      (sources in Compile in `scalamock-core`.jvm).value
+      ++ (sources in Compile in `scalamock-scalatest-support`.jvm).value
+      ++ (sources in Compile in `scalamock-specs2-support`.jvm).value
+    )
   )
 
 lazy val `ScalaMock-js` = ScalaMock.js
