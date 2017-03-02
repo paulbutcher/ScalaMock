@@ -27,6 +27,30 @@ class CoffeeMachineTest extends FlatSpec with ShouldMatchers with MockFactory {
 }
 ```
 
+When testing `Future`s with `AsyncTestSuite`s (eg. `AsyncFlatSpec`), mix in `org.scalamock.scalatest.AsyncMockFactory` instead:
+
+```scala
+class ExchangeRateListingTest extends AsyncFlatSpec with AsyncMockFactory {
+
+  val eur = Currency(id = "EUR", valueToUSD = 1.0531, change = -0.0016)
+  val gpb = Currency(id = "GPB", valueToUSD = 1.2280, change = -0.0012)
+  val aud = Currency(id = "AUD", valueToUSD = 0.7656, change = -0.0024)
+
+  "ExchangeRateListing" should "eventually return the exchange rate between passed Currencies when getExchangeRate is invoked" in {
+      val currencyDatabaseStub = stub[CurrencyDatabase]
+      (currencyDatabaseStub.getCurrency _).when(eur.id).returns(eur)
+      (currencyDatabaseStub.getCurrency _).when(gpb.id).returns(gpb)
+      (currencyDatabaseStub.getCurrency _).when(aud.id).returns(aud)
+      
+      val listing = new ExchangeRateListing(currencyDatabaseStub)
+      
+      val future: Future[Double] = listing.getExchangeRate(eur, gpb)
+      
+      future map (exchangeRate => assert(exchangeRate == eur.valueToUSD / gpb.valueToUSD))
+  }
+}
+```
+
 ## Specs2
 
 To use ScalaMock in Specs2 tests you should run each test case in a separate fixture context that implements `org.scalamock.specs2.MockContext`:
