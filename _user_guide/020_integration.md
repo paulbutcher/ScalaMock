@@ -44,7 +44,7 @@ class ExchangeRateListingTest extends AsyncFlatSpec with AsyncMockFactory {
       
       val listing = new ExchangeRateListing(currencyDatabaseStub)
       
-      val future: Future[Double] = listing.getExchangeRate(eur, gpb)
+      val future: Future[Double] = listing.getExchangeRate(eur.id, gpb.id)
       
       future map (exchangeRate => assert(exchangeRate == eur.valueToUSD / gpb.valueToUSD))
   }
