@@ -10,7 +10,7 @@ permalink: /user-guide/installation/
 
 You can download ScalaMock jars and sources from Maven Central or JCenter.
 
-Latest Release on Github is [![GitHub release](https://img.shields.io/github/release/paulbutcher/scalamock.svg)]().
+Latest Release on Github is [![GitHub release](https://img.shields.io/github/release/paulbutcher/scalamock.svg)](https://github.com/paulbutcher/ScalaMock/releases).
 
 We also have a group on [Bintray](https://bintray.com/scalamock) where you can subscribe to update notifications.
 
