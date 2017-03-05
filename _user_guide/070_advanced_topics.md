@@ -208,3 +208,33 @@ m expects 42 returning "foo" once()
 
 mp(42) shouldBe "foo"
 ```
+
+## Raw types
+
+### Example 1
+
+Try this solution if you get this error:
+
+`error: could not find implicit value for evidence parameter of type org.scalamock.Defaultable[SomeType]`
+
+e.g. like below for `Enumeration` and `Map`
+
+```java
+public interface RawTypeInterface {
+    java.util.Enumeration foo();
+    java.util.Map bar();
+}
+```
+
+```scala
+"mocking a java method with raw type" should "work" in {
+  implicit val d = new Defaultable[java.util.Enumeration[_]] {
+    override val default = null
+  }
+  implicit val d2 = new Defaultable[java.util.Map[_, _]] {
+    override val default = null
+  }
+  
+  val mockRequest = mock[RawTypeInterface]
+}
+```
