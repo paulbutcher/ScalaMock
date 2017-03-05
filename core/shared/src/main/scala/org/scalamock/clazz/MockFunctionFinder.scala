@@ -50,7 +50,8 @@ object MockFunctionFinder {
         case Typed(expr, tpt) => transcribeTree(expr)
         case Function(vparams, body) => transcribeTree(body)
         case Apply(fun, args) => transcribeTree(fun)
-        case TypeApply(fun, args) => transcribeTree(fun, args.map(_.tpe));
+        case TypeApply(fun, args) => transcribeTree(fun, args.map(_.tpe))
+        case Ident(fun) => reportError(s"please declare '$fun' as MockFunctionx or StubFunctionx (e.g val $fun: MockFunction1[X, R] = ... if it has 1 parameter)")
         case _ => reportError(
           s"ScalaMock: Unrecognised structure: ${showRaw(tree)}." +
             "Please open a ticket at https://github.com/paulbutcher/ScalaMock/issues")
