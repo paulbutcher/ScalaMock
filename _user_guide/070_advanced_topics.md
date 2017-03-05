@@ -238,3 +238,15 @@ public interface RawTypeInterface {
   val mockedRaw = mock[RawTypeInterface]
 }
 ```
+
+## Log Calls
+
+### Example 1
+
+```scala
+inAnyOrderWithLogging { // or inSequenceWithLogging
+  someMock.foo _ expects() returning 42 anyNumberOfTimes()
+}
+```
+
+This will print all invocations of call handlers and verifiers, with the corresponding calls.
