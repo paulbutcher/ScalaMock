@@ -233,9 +233,7 @@ a:focus {
 
 #headerwrap {
 	background-color: #00b3fe;
-	min-height: 500px;
-	padding-top: 40px;
-	padding-bottom: 0px;
+	padding-bottom: 20px;
 	text-align: center;
 }
 
@@ -261,7 +259,6 @@ a:focus {
 /* Features */
 #service {
 	margin-top: 40px;
-	margin-bottom: 70px;
 }
 
 #service h2 {
@@ -512,8 +509,6 @@ csmall {
 }
 
 #home_doc_section {
-    margin-top: 20px;
-    margin-bottom: 40px;
 }
 
 #home_doc_section h2 {
