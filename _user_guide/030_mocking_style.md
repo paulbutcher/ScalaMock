@@ -43,7 +43,7 @@ Expectations can then be set using `expects`:
 }
 ```
 
-In the above example `heaterMock.isReady` is expected be invoked without arguments (`.expects()`) and it will return `true` once invoked. The heater mock also expects to have its `setPowerState` method called twice, once with `PowerState.On` and once with `PowerState.Off`.  
+In the above example `heaterMock.isReady` is expected to be invoked without arguments (`.expects()`) and it will return `true` once invoked. The heater mock also expects to have its `setPowerState` method called twice, once with `PowerState.On` and once with `PowerState.Off`.  
 
 Of course, in order to increase test readability you can define expectations, then exercise tested code, define subsequent expectations, continue executing system under test and so on. For example:
 
@@ -111,7 +111,7 @@ Return values that are used by the system under test can be set up by using `whe
 
 In the above example `heaterStub.isReady` will return `true` every time is called. This is different from the *Expectations-first* style example, where `heaterMock.isReady` is expected to be called exactly once. However, `setPowerState(PowerState.On)` is verified to be called exactly once because we did not use modifiers like `.anyNumberOfTimes()` or `.twice()`.
 
-In the above example we don't care whether `heaterStub.isReady()` was called or not - we specify only return values. To verify that `isReady()` was called we would have to add third `verify` statement.
+In the above example we don't care whether `heaterStub.isReady()` was called or not - we specify only return values. To verify that `isReady()` was called we would have to add a third `verify` statement.
 
 In both examples we verify that `setPowerState` is called with `PowerState.On` and `PowerState.Off` parameters. We do not enforce order in which this method is called. See the [Ordering](/user-guide/ordering) chapter for more details about this topic.
 
