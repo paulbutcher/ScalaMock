@@ -192,3 +192,19 @@ intercept[RuntimeException] { fooMock.increment(5) }
 
 intercept[RuntimeException] { fooMock.increment(0) }
 ```
+
+## Partial Functions
+
+### Example 1
+
+```scala    
+val m = mockFunction[Int, String]
+val mp = new PartialFunction[Int, String] {
+  def isDefinedAt(x: Int) = true
+  def apply(v1: Int) = m(v1)
+}
+
+m expects 42 returning "foo" once()
+
+mp(42) shouldBe "foo"
+```
