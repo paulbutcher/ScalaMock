@@ -235,6 +235,6 @@ public interface RawTypeInterface {
     override val default = null
   }
   
-  val mockRequest = mock[RawTypeInterface]
+  val mockedRaw = mock[RawTypeInterface]
 }
 ```
