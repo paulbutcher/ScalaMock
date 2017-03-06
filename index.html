@@ -13,20 +13,7 @@ permalink: /
                 <h4>Simple yet powerful native Scala mocking framework, open-sourced under the MIT licence.</h4>
             </div>
             <div class="col-lg-8 col-lg-offset-2 himg">
-<pre>
-test("drawLine interaction with Turtle") {
-  // Create mock Turtle object
-  val mockedTurtle = mock[Turtle]
- 
-  // Set expectations
-  (mockedTurtle.setPosition _).expects(10.0, 10.0)
-  (mockedTurtle.forward _).expects(5.0)
-  (mockedTurtle.getPosition _).expects().returning(15.0, 10.0)
- 
-  // Exercise System Under Test
-  drawLine(mockedTurtle, (10.0, 10.0), (15.0, 10.0))
-}
-</pre>
+                <script src="https://gist.github.com/barkhorn/03d0f14a1510335873e87f47afd29497.js"></script>
             </div>
         </div>
     </div>
