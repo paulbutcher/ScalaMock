@@ -44,7 +44,7 @@ private[scalamock] class OrderedHandlers(logging: Boolean = false) extends Handl
   }
   
   def handle(call: Call) = this.synchronized {
-    if (logging) println(s"handling call $call")
+    if (logging) println(s"handling ordered call $call")
     handleFn(call)
   }
   
@@ -65,7 +65,7 @@ private[scalamock] class OrderedHandlers(logging: Boolean = false) extends Handl
   }
  
   def verify(call: Call) = this.synchronized {
-    if (logging) println(s"verifying call $call")
+    if (logging) println(s"verifying ordered call $call")
     verifyFn(call)
   }
 

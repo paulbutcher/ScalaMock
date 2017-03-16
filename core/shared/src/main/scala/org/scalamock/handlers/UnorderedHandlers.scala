@@ -25,7 +25,7 @@ import org.scalamock.context.Call
 private[scalamock] class UnorderedHandlers(logging: Boolean = false) extends Handlers {
   
   def handle(call: Call): Option[Any] = this.synchronized {
-    if (logging) println(s"handling call $call")
+    if (logging) println(s"handling unordered call $call")
     for (handler <- handlers) {
       val r = handler.handle(call)
       if (r.isDefined)
@@ -35,7 +35,7 @@ private[scalamock] class UnorderedHandlers(logging: Boolean = false) extends Han
   }
   
   def verify(call: Call): Boolean = this.synchronized {
-    if (logging) println(s"verifying call $call")
+    if (logging) println(s"verifying unordered call $call")
     for (handler <- handlers) {
       if (handler.verify(call))
         return true
