@@ -1,2 +1,2 @@
 
-bintrayOrganization in ThisBuild := Some("scalamock")
+//bintrayOrganization in ThisBuild := Some("scalamock")

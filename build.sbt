@@ -1,3 +1,5 @@
+import sbt.inc.Analysis
+
 scalaVersion in ThisBuild := "2.10.6"
 crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.8", "2.12.1")
 // the default in scala.js is now node.js, and rhino will be unsupported in v1.0
@@ -18,6 +20,12 @@ pomExtra in ThisBuild := {
         <url>http://paulbutcher.com/</url>
       </developer>
     </developers>
+    <contributors>
+      <contributor>
+        <name>ScalaMock Contributors</name>
+        <url>https://github.com/paulbutcher/ScalaMock/graphs/contributors</url>
+      </contributor>
+    </contributors>
 }
 
 lazy val scalatest =  "org.scalatest" %% "scalatest" % "3.0.1"
@@ -107,6 +115,7 @@ lazy val ScalaMock = crossProject in file(".") settings(
     publishArtifact in (Compile, packageSrc) := false,
     scalaReflect,
     quasiquotes,
+    compile in Compile := Analysis.Empty,
     libraryDependencies ++= Seq(scalatest, specs2)
   ) aggregate(
     `scalamock-core`, core_tests, `scalamock-scalatest-support`, `scalamock-specs2-support`, examples
@@ -128,6 +137,7 @@ lazy val `ScalaMock-js` = ScalaMock.js
 
 lazy val `ScalaMock-jvm` = ScalaMock.jvm
 
+releaseCrossBuild := true
 releaseProcess := {
   import ReleaseTransformations._
   Seq[ReleaseStep](
@@ -140,8 +150,16 @@ releaseProcess := {
     tagRelease,
     publishArtifacts,
     setNextVersion,
-    commitNextVersion,
-    ReleaseStep(action = releaseStepTask(bintraySyncMavenCentral), enableCrossBuild = true)
+    commitNextVersion//,
+//    ReleaseStep(action = releaseStepTask(bintraySyncMavenCentral), enableCrossBuild = true)
     //  pushChanges
   )
 }
+
+
+lazy val sonatypeCreds = for {
+  u <- Option(System.getenv().get("SONATYPE_USERNAME"))
+  p <- Option(System.getenv().get("SONATYPE_PASSWORD"))
+} yield Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", u, p)
+
+credentials ++= sonatypeCreds.toSeq

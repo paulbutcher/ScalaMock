@@ -16,3 +16,12 @@ cache:
   - "$HOME/.m2"
   - "$HOME/.ivy2"
   - "$HOME/.sbt"
+
+after_success:
+  - '[[ $TRAVIS_BRANCH == "master" ]] && { sbt  ++$TRAVIS_SCALA_VERSION publish; };'
+
+env:
+  global:
+  - secure: DW4OXvjLG04G/k4dPSvOoHOEZ081GLBXP45RbOqGTuC1Kkvi1mOZeOEgPWMfLhimwUxkn3p+6EoddXweXvrcbx7GxR0yazSGGMw8OEeHITPE9c9sfvxXcJkufL+JG+mWiNB5qofaYTogM6QxTlrpIiKY1qHOz/u+gqakGKp4GBM=
+  - secure: uWZPYz7Q02Vw7y1pHRKUiJ5oe20m1LJc7UIDQEEEjCxQ92pwlAwoCYWBzr0eaP7bmCJNpvLxIZWa6jPeYZ++HM++nQHewsHpqgVyw1WQ33jQZTlENe3raoPdFpyPrDPE7C2JMIp6QH5g+9zD3m4mdTvKcfTFdYLgKFZNhCWIAV8=
+
