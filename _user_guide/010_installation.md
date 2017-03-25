@@ -8,13 +8,28 @@ permalink: /user-guide/installation/
 
 ## Packages 
 
+### Releases
+
 You can download ScalaMock jars and sources from Maven Central or JCenter.
 
-Latest Release on Github is [![GitHub release](https://img.shields.io/github/release/paulbutcher/scalamock.svg)](https://github.com/paulbutcher/ScalaMock/releases).
+Latest released version is [![GitHub release](https://img.shields.io/github/release/paulbutcher/scalamock.svg)](https://github.com/paulbutcher/ScalaMock/releases).
 
-We also have a group on [Bintray](https://bintray.com/scalamock) where you can subscribe to update notifications.
+To see all released and published versions, search at [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.scalamock%22%20scalatest-support), or [Sonatype OSS Nexus](https://oss.sonatype.org/#nexus-search;quick~scalamock-scalatest-support).
 
-To see all published versions look [here](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.scalamock%22%20scalatest-support).
+Release versions are also in JFrog JCenter and [Bintray](https://bintray.com/scalamock),
+so your favourite resolver should be covered.
+
+### CI Builds
+
+If you want try a pre-release version, you can add Sonatype Snapshots to your resolvers. Travis publishes all commits to the Snapshot Repo.
+So if you need a fix urgently, you can try one of those CI builds. First, add the Snapshot Repo to your resolvers:
+
+```scala
+// e.g. for SBT:
+resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+```
+
+You can search for CI builds on [Sonatype OSS Nexus](https://oss.sonatype.org/#nexus-search;quick~scalamock-scalatest-support).
 
 ## Sources
 
