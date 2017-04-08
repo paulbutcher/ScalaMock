@@ -148,11 +148,11 @@ releaseProcess := {
     setReleaseVersion,
     commitReleaseVersion,
     tagRelease,
-    publishArtifacts,
+    ReleaseStep(action = Command.process("publishSigned", _), enableCrossBuild = true),
     setNextVersion,
-    commitNextVersion//,
-//    ReleaseStep(action = releaseStepTask(bintraySyncMavenCentral), enableCrossBuild = true)
-    //  pushChanges
+    commitNextVersion,
+    ReleaseStep(action = Command.process("sonatypeRelease", _)),
+    pushChanges
   )
 }
 
