@@ -7,26 +7,14 @@ crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.8", "2.12.1")
 scalaJSUseRhino in ThisBuild := true
 organization in ThisBuild := "org.scalamock"
 licenses in ThisBuild := Seq("MIT" -> url("https://opensource.org/licenses/MIT"))
-pomExtra in ThisBuild := {
-  <url>http://scalamock.org/</url>
-    <scm>
-      <url>git@github.com:paulbutcher/ScalaMock.git</url>
-      <connection>scm:git:git@github.com:paulbutcher/ScalaMock.git</connection>
-    </scm>
-    <developers>
-      <developer>
-        <id>paulbutcher</id>
-        <name>Paul Butcher</name>
-        <url>http://paulbutcher.com/</url>
-      </developer>
-    </developers>
-    <contributors>
-      <contributor>
-        <name>ScalaMock Contributors</name>
-        <url>https://github.com/paulbutcher/ScalaMock/graphs/contributors</url>
-      </contributor>
-    </contributors>
-}
+scmInfo in ThisBuild := Some(
+  ScmInfo(url("https://github.com/paulbutcher/ScalaMock"), "scm:git:git@github.com:paulbutcher/ScalaMock.git")
+)
+developers in ThisBuild := List(
+  Developer("paulbutcher", "Paul Butcher", "", url("http://paulbutcher.com/")),
+  Developer("backhorn", "Philipp Meyerhoefer", "", url("http://github.com/barkhorn"))
+)
+homepage in ThisBuild := Some(url("http://scalamock.org/"))
 
 lazy val scalatest =  "org.scalatest" %% "scalatest" % "3.0.1"
 lazy val specs2 = "org.specs2" %% "specs2-core" % "3.8.6"
@@ -52,7 +40,10 @@ val commonSettings = Defaults.coreDefaultSettings ++ Seq(
   scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++ Opts.doc.version(version.value) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
   pomIncludeRepository := { _ => false },
   publishArtifact in Test := false,
-  shellPrompt := ShellPrompt.buildShellPrompt
+  shellPrompt := ShellPrompt.buildShellPrompt//,
+//  libraryDependencies ++= (
+//    if (scalaVersion.value >= "2.11") Seq(compilerPlugin("ch.epfl.scala" %% "classpath-shrinker" % "0.1.1")) else Nil
+//  )
 )
 
 lazy val `scalamock-core` = crossProject in file("core") settings(
