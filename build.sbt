@@ -12,7 +12,7 @@ scmInfo in ThisBuild := Some(
 )
 developers in ThisBuild := List(
   Developer("paulbutcher", "Paul Butcher", "", url("http://paulbutcher.com/")),
-  Developer("backhorn", "Philipp Meyerhoefer", "", url("http://github.com/barkhorn"))
+  Developer("barkhorn", "Philipp Meyerhoefer", "", url("https://github.com/barkhorn"))
 )
 homepage in ThisBuild := Some(url("http://scalamock.org/"))
 
