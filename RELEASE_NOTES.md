@@ -1,5 +1,17 @@
 # Release notes
 
+## New in ScalaMock 3.6.0
+
+- feature: Fail fast for excessive mock calls feature low #55
+- fixed: Unrecognised structure: Ident(TermName("parseSentenceFn")) on refactoring #113
+- fixed: missing implicit Defaultables when constructing some mocks #29
+- fixed: Unable to mock val in a trait feature #148
+- fixed: Cannot access docs bug #181
+- fixed: Mixing MockFactory into AsyncFunSpec results in empty test suite #156
+- dropped support for JDK 7
+- publish to sonatype instead of bintray
+- publish snapshot builds to sonatype
+
 ## New in ScalaMock 3.5.0
 
 - Support for Scala.JS
