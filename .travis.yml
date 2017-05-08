@@ -17,6 +17,10 @@ cache:
   - "$HOME/.ivy2"
   - "$HOME/.sbt"
 
+# workaround for travis-ci #7703
+before_script:
+   - sudo chmod +x /usr/local/bin/sbt
+
 after_success:
   - '[[ $TRAVIS_BRANCH == "master" ]] && { sbt  ++$TRAVIS_SCALA_VERSION publish; };'
 
