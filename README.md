@@ -66,7 +66,7 @@ Artefacts are published to Maven Central and JCenter.
 For ScalaTest, to use ScalaMock in your Tests, add the following to your `build.sbt`:
 
 ```scala
-libraryDependencies += "org.scalamock" %% "scalamock-scalatest-support" % "3.5.0" % Test
+libraryDependencies += "org.scalamock" %% "scalamock-scalatest-support" % "3.6.0" % Test
 ```
 
 ## Documentation
