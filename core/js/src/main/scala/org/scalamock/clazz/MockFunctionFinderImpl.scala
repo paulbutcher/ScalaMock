@@ -34,7 +34,7 @@ object MockFunctionFinderImpl {
 
     def hasValueTypeArgs(baseSymbol: Symbol, owner: Type): Boolean = {
       val baseType = owner.baseType(baseSymbol)
-      baseType.typeArgs.nonEmpty && baseType.typeArgs.forall(_ <:< typeOf[AnyVal])
+      baseType.typeArgs.nonEmpty // && baseType.typeArgs.forall(_ <:< typeOf[AnyVal])
     }
 
     // this somehow replicates postfix logic from scala-js, there have to be a better way
@@ -49,7 +49,7 @@ object MockFunctionFinderImpl {
 
       // this was found in experiments and should be considered as magical cosmological constant
       val haveBaseClassWithValTypeArgs = tpe.typeSymbol.owner != null && tpe.typeSymbol.owner.isPackage &&
-        tpe.baseClasses.headOption.forall(hasValueTypeArgs(_, owner.tpe))
+        tpe.baseClasses.exists(hasValueTypeArgs(_, owner.tpe))
 
       val idx = baseNonInterfaceParentCount + (if (haveBaseClassWithValTypeArgs) 1 else 0)
       "$" + idx.toString
