@@ -178,18 +178,3 @@ trait IsolatedMockFactory extends AroundEach with MockContextBase { self: Argume
   }
 }
 
-/**
- * A trait that can be mixed into a [[http://etorreborre.github.com/specs2/ Specs2]] specification to provide
- * mocking support.
- *
- * MockFactory does not work well in with thread pools and futures. Fixture-contexts support is also broken.
- *
- * $techniques
- */
-@deprecated("MockFactory is buggy. Please use IsolatedMockFactory or MockContext instead", "3.2")
-trait MockFactory extends AroundEach with MockContextBase { self: ArgumentsShortcuts =>
-
-  override def around[T: AsResult](body: => T) = {
-    wrapAsResult[T] { body }
-  }
-}
