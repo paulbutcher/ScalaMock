@@ -16,8 +16,7 @@ Latest released version is [![GitHub release](https://img.shields.io/github/rele
 
 To see all released and published versions, search at [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.scalamock%22%20scalatest-support), or [Sonatype OSS Nexus](https://oss.sonatype.org/#nexus-search;quick~scalamock-scalatest-support).
 
-Release versions are also in JFrog JCenter and [Bintray](https://bintray.com/scalamock),
-so your favourite resolver should be covered.
+Release versions are also in JCenter, so your favourite resolver should be covered.
 
 ### CI Builds
 
