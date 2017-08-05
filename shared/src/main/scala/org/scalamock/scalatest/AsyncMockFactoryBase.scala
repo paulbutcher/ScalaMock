@@ -38,14 +38,11 @@ trait AsyncMockFactoryBase extends MockContext with Mock with MockFunctions with
       initializeExpectations()
     }
 
-    val testResult = test
-    testResult.onFailure({
-      case _ => clearExpectations()
-    })
-    testResult.map(result => {
+    test onComplete (_ => clearExpectations())
+    test map { result =>
       verifyExpectations()
       result
-    })
+    }
   }
 
   private def verifyExpectations() {
