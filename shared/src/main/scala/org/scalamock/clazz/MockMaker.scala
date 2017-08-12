@@ -198,7 +198,7 @@ class MockMaker[C <: Context](val ctx: C) {
     def mockMethod(m: MethodSymbol): ValDef = {
       val mt = resolvedType(m)
       val clazz = classType(paramCount(mt))
-      val types = (paramTypes(mt) map mockParamType _) :+ mockParamType(finalResultType(mt))
+      val types = (paramTypes(mt) map mockParamType) :+ mockParamType(finalResultType(mt))
       val name = applyOn(scalaSymbol, "apply", mockNameGenerator.generateMockMethodName(m, mt))
 
       ValDef(Modifiers(),
@@ -216,21 +216,23 @@ class MockMaker[C <: Context](val ctx: C) {
       }
 
       val constructorArgumentsTypes = primaryConstructorOpt.map { constructor =>
-      val constructorTypeContext = constructor.typeSignatureIn(typeToMock)
-      val constructorArguments = constructor.paramss //constructorTypeContext.paramLists
-      constructorArguments.map {
-          symbols => symbols.map(_.typeSignatureIn(constructorTypeContext))
+        val constructorTypeContext = constructor.typeSignatureIn(typeToMock).dealias
+        val constructorArguments = constructor.paramss
+        constructorArguments.map { symbols =>
+          symbols.map(_.typeSignatureIn(constructorTypeContext).dealias)
         }
       }
 
       val tnEmpty = TypeName("") // typeNames.EMPTY
       val tnConstructor = TermName("<init>") // termNames.CONSTRUCTOR
       val superCall: Tree = Select(Super(This(tnEmpty), tnEmpty), tnConstructor)
-      val constructorCall = constructorArgumentsTypes.fold(Apply(superCall, Nil).asInstanceOf[Tree]) { symbols =>
+      val constructorCall: Tree = constructorArgumentsTypes.fold(Apply(superCall, Nil).asInstanceOf[Tree]) { symbols =>
         symbols.foldLeft(superCall) {
-          case (acc, symbol) => Apply(acc, symbol.map(tpe => q"null.asInstanceOf[$tpe]"))
+          case (acc, symbol) => Apply(acc, symbol.map(tpe => q"null.asInstanceOf[${tpe.dealias}]"))
         }
       }
+
+      val old_constructorCall: Tree = callConstructor(Super(This(tnEmpty), tnEmpty))
 
       DefDef(
         Modifiers(),
@@ -303,7 +305,7 @@ class MockMaker[C <: Context](val ctx: C) {
     }
 
     val mockNameGenerator = new MockNameGenerator()
-    val typeToMock = weakTypeOf[T]
+    val typeToMock = weakTypeOf[T].dealias
     val anon = TypeName("$anon")
     val methodsToMock = methodsNotInObject.filter { m =>
       !m.isConstructor && !m.isPrivate && m.privateWithin == NoSymbol &&
@@ -320,11 +322,11 @@ class MockMaker[C <: Context](val ctx: C) {
     def make() = {
       val result = castTo(anonClass(members), typeToMock)
 
-      //        println("------------")
-      //        println(showRaw(result))
-      //        println("------------")
-      //        println(show(result))
-      //        println("------------")
+//              println("------------")
+//              println(showRaw(result))
+//              println("------------")
+//              println(show(result))
+//              println("------------")
 
       ctx.Expr(result)
     }

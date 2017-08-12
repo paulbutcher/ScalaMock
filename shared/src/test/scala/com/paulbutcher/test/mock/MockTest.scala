@@ -429,7 +429,7 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
 
     "mock class with nonempty default constructor" in {
       class TestNonEmptyDefaultConstructor(a: Int, b: String, c: AnyRef, d: Any)(aa: String)
-      val m = mock[TestNonEmptyDefaultConstructor]
+      "val m = mock[TestNonEmptyDefaultConstructor]" should compile
     }
 
     // TODO: issue 150 - causes a compiler error
@@ -485,5 +485,11 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
       m.twoParams(1, 2)
       m.overloaded(99)
     }
+  }
+
+  // issue 170
+  "fill in constructor args with type params" in withExpectations {
+    class Foo[T: ClassTag]
+    "val mf = mock[Foo[Int]]" should compile
   }
 }
