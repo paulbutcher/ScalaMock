@@ -26,7 +26,7 @@ val fooMock = mock[Foo]
 (fooMock.overloaded[Double] _).expects(1.23)
 ```
 
-You may also prefer to use slightly different syntax:
+You may also prefer to use this slightly different syntax:
 
 ```
 (fooMock.overloaded _: Int => String).expects(10)  // or
@@ -62,7 +62,7 @@ val fooMock = mock[Foo]
 
 ### Example 4 - Methods with implicit parameters 
 
-This case is very similar to curried methods - all you need to do is to help scala compiler know that `memcachedMock.get _` should be converted to `MockFunction2`. For example:
+This case is very similar to curried methods. All you need to do is to help the Scala compiler know that `memcachedMock.get _` should be converted to `MockFunction2`. For example:
 
 ```scala
 class Codec()
@@ -94,7 +94,7 @@ you can set an expectation with:
 
 ## Returning values (onCall)
 
-By default mocks and stubs return `null`. You can return predefined value using `returning()` method (or `returns()` in case of stubs). When returned value depends on function arguments, you can return the computed value (or throw a computed exception) with `onCall()`.
+By default mocks and stubs return `null`. You can return predefined value using the `returning()` method, or in the case of stubs, `returns()`. When the returned value depends on function arguments, you can return the computed value (or throw a computed exception) with `onCall()`. For example:
 
 ```scala
 trait Foo {
@@ -164,7 +164,7 @@ For a full list, see `org.scalamock.CallHandler`.
 
 ## Exceptions
 
-Instead of a return value, mocks and stubs can be instructed to throw. This can be achieved either by throwing exception in `onCall` handler or by using `throws` method.
+Instead of a return value, mocks and stubs can be instructed to throw an exception. This can be achieved either by throwing exception in the `onCall` handler or by using the `throws` method.
 
 
 ### Example 1 - throws method
@@ -181,7 +181,7 @@ val fooMock = mock[Foo]
 intercept[RuntimeException] { fooMock.increment(5) }
 ```
 
-### Example 2 - throwing from `onCall` handler
+### Example 2 - throwing from the `onCall` handler
 ```scala
 (fooMock.increment _) expects(*) onCall { arg: Int => 
   if (arg == 0) 
@@ -217,7 +217,7 @@ Try this solution if you get this error:
 
 `error: could not find implicit value for evidence parameter of type org.scalamock.Defaultable[SomeType]`
 
-e.g. like below for `Enumeration` and `Map`
+e.g., such as the following example for `Enumeration` and `Map`
 
 ```java
 public interface RawTypeInterface {
@@ -249,4 +249,4 @@ inAnyOrderWithLogging { // or inSequenceWithLogging
 }
 ```
 
-This will print all invocations of call handlers and verifiers, with the corresponding calls.
+This will print all invocations of call handlers and verifiers with the corresponding calls.

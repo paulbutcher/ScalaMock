@@ -4,7 +4,7 @@ title: Quick Start
 permalink: /quick-start/
 ---
 
-This article describes how to use ScalaMock in your tests. Because it is just an introduction to ScalaMock, it describes only the basic usage of this mocking framework. For more details please refer to the [User Guide](/user-guide/).
+This article describes how to use ScalaMock in your tests. Because it is just an introduction to ScalaMock, it describes only the basic usage of this mocking framework. For more details, please refer to the [User Guide](/user-guide/).
 
 ## Installation
 
@@ -66,9 +66,9 @@ trait PlayerDatabase {
 
 As mentioned before, the `MatchResultObserver` is the class we are going to test. We assume that all classes that implement `PlayerDatabase` and `CountryLeaderboard` traits are tested in different test suites.
 
-### Objects interacting with tested class
+### Objects interacting with a tested class
 
-`MatchResultObserver` is a very simple class and it should be easy to test it. Unfortunately the only available implementation of `PlayerDatabase` is one that uses some relational database to store and retrieve players:
+`MatchResultObserver` is a very simple class and it should be easy to test it. Unfortunately, the only available implementation of `PlayerDatabase` is one that uses a relational database to store and retrieve players:
 
 ```scala
 class RealPlayerDatabase(
@@ -99,7 +99,7 @@ In this case it does not look that bad. But implementing complex traits or havin
 
 This is where ScalaMock comes into play.
 
-### Stubbing objects interacting with tested class
+### Stubbing objects interacting with a tested class
 
 With ScalaMock you can create objects that pretend to implement some trait or interface. Then you can instruct that "faked" object how it should respond to all interactions with it. For example:
 
@@ -115,9 +115,9 @@ val fakeDb = stub[PlayerDatabase]
 assert(fakeDb.getPlayerById(222).nickname == "boris")
 ```
 
-### Mocking objects interacting with tested class
+### Mocking objects interacting with a tested class
 
-ScalaMock supports both two mocking styles: *Expectations-First Style* (mocks) and *Record-then-Verify* (stubs). 
+ScalaMock supports two mocking styles: *Expectations-First Style* (mocks) and *Record-then-Verify* (stubs).
 Previously we used a stub to create a fake `PlayerDatabase` and now we will use a mock `CountryLeaderboard` to set our test expectations:
 
 ```scala
@@ -132,7 +132,7 @@ countryLeaderBoardMock.addVictoryForCountry(Countries.Germany) // OK
 countryLeaderBoardMock.addVictoryForCountry(Countries.Russia)  // throws TestFailedException
 ```
 
-To read more about the differences between mocks and stubs please check [Choosing your mocking style](/user-guide/mocking_style/) chapter in the User Guide.
+To read more about the differences between mocks and stubs, please see the chapter [Choosing your mocking style](/user-guide/mocking_style/) in the User Guide.
 
 ### Testing with ScalaMock
 

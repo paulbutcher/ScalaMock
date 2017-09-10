@@ -13,14 +13,14 @@ Sometimes multiple test cases need to work with the same mocks (and more general
 
 ## Isolated test cases
 
-If you mix the `org.scalatest.OneInstancePerTest` trait into a `Suite`, each test case will run in its own instance of the suite class and therefore each test will get a fresh copy of the instance variables. 
+If you mix the `org.scalatest.OneInstancePerTest` trait into a `Suite`, each test case will run in its own instance of the suite class. This means each test will get a fresh copy of the instance variables.
 
-This way in the suite scope you can:
+Then in he suite scope you can:
 
-* declare instance variables (e.g. mocks) that will be used by multiple test cases and 
-* perform common test case setup (e.g. set up some mock expectations). 
+* declare instance variables (e.g., mocks) that will be used by multiple test cases and
+* perform common test case setup (e.g., set up some mock expectations).
 
-Because each test cases has fresh instance variables, different test cases do not interfere with each other.
+Because each test case has fresh instance variables, different test cases do not interfere with each other.
 
 ```scala
 import org.scalatest.OneInstancePerTest
@@ -33,7 +33,7 @@ class CoffeeMachineTest extends FlatSpec with ShouldMatchers with OneInstancePer
    val heaterMock = mock[Heater]
    val coffeeMachine = new CoffeeMachine(waterContainerMock, heaterMock)
    
-   // you can set common expectations in suite scope
+   // you can set common expectations in the suite scope
    (heaterMock.isReady _).expects().returning(true)
    
    // and perform common test setup
@@ -49,7 +49,7 @@ class CoffeeMachineTest extends FlatSpec with ShouldMatchers with OneInstancePer
    }
    
    it should "not turn on the heater when the water container is overfull" in {
-       // each test case uses separate, fresh Suite so the coffee machine is turned on 
+       // each test case uses a separate, fresh test suite so the coffee machine is turned on
        // even if previous test case turned it off
        coffeeMachine.isOn shouldBe true
        // ...
@@ -59,8 +59,7 @@ class CoffeeMachineTest extends FlatSpec with ShouldMatchers with OneInstancePer
 
 ## Fixture contexts
 
-You can also run each test case in a separate fixture context. Fixture contexts can be extended and combined and, since each test case uses a different instance of the fixture context, test cases do not
-interfere with each other while they can have shared mocks and expectations.
+You can also run each test case in a separate fixture context. Fixture contexts can be extended and combined. Since each test case uses a different instance of the fixture context, test cases do not interfere with each other and they have shared mocks and expectations.
 
 ```scala
 class CoffeeMachineTest extends FlatSpec with ShouldMatchers with MockFactory {
@@ -82,7 +81,7 @@ class CoffeeMachineTest extends FlatSpec with ShouldMatchers with MockFactory {
    
    // you can extend and combine fixture-contexts
    trait OverfullWaterContainerTest extends Test {
-       // you can set expectations and use mocks in fixture-context
+       // you can set expectations and use mocks in the fixture-context
        (waterContainerMock.isOverfull _).expects().returning(true)
    
        // and define helper functions
