@@ -12,7 +12,7 @@ permalink: /user-guide/installation/
 
 You can download ScalaMock jars and sources from Maven Central or JCenter.
 
-Latest released version is [![GitHub release](https://img.shields.io/github/release/paulbutcher/scalamock.svg)](https://github.com/paulbutcher/ScalaMock/releases).
+The latest released version is [![GitHub release](https://img.shields.io/github/release/paulbutcher/scalamock.svg)](https://github.com/paulbutcher/ScalaMock/releases).
 
 To see all released and published versions, search at [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.scalamock%22%20scalatest-support), or [Sonatype OSS Nexus](https://oss.sonatype.org/#nexus-search;quick~scalamock-scalatest-support).
 
@@ -24,7 +24,7 @@ If you want try a pre-release version, you can add Sonatype Snapshots to your re
 So if you need a fix urgently, you can try one of those CI builds. First, add the Snapshot Repo to your resolvers:
 
 ```scala
-// e.g. for SBT:
+// e.g., for SBT:
 resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
 ```
 
@@ -32,7 +32,7 @@ You can search for CI builds on [Sonatype OSS Nexus](https://oss.sonatype.org/#n
 
 ## Sources
 
-You can find the ScalaMock repository and source code on [Github](https://github.com/paulbutcher/ScalaMock).
+You can find the ScalaMock repository and source code on [Github](https://github.com/paulbutcher/ScalaMock). The documentation is available in the [gh-pages branch](https://github.com/paulbutcher/ScalaMock/tree/gh-pages).
 
 ## sbt projects
 
