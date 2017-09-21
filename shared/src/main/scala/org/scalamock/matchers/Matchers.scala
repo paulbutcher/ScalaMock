@@ -23,6 +23,8 @@ package org.scalamock.matchers
 import org.scalamock.context.MockContext
 import org.scalamock.function._
 
+import scala.reflect.ClassTag
+
 trait Matchers { this: MockContext =>
   import scala.language.implicitConversions
 
@@ -49,7 +51,18 @@ trait Matchers { this: MockContext =>
   protected def where[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21](matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21) => Boolean) = new FunctionAdapter21(matcher)
   protected def where[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22](matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22) => Boolean) = new FunctionAdapter22(matcher)
 
-  protected def argThat[T](predicate: T => Boolean) = new ArgThat[T](predicate)
+  protected def argThat[T](clue: String)(predicate: T => Boolean)
+    (implicit classTag: ClassTag[T]): MatcherBase = new ArgThat[T](predicate, clue = Some(clue))
+
+  protected def argThat[T](predicate: T => Boolean)
+    (implicit classTag: ClassTag[T]): MatcherBase = new ArgThat[T](predicate, clue = None)
+
+  protected def argAssert[T](clue: String)(assertions: T => Unit)
+    (implicit classTag: ClassTag[T]): MatcherBase = new ArgAssert[T](assertions, clue = Some(clue))
+
+  protected def argAssert[T](assertions: T => Unit)
+    (implicit classTag: ClassTag[T]): MatcherBase = new ArgAssert[T](assertions, clue = None)
+
 
   protected def * = new MatchAny
 

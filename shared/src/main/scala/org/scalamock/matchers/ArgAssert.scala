@@ -17,22 +17,23 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
+//
+// Original authors:
+// Jakub Chrobasik
+// Dominic Clifton
 
-package org.scalamock.jstests.matchers
+package org.scalamock.matchers
 
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.{ FlatSpec, Matchers }
+import scala.reflect.ClassTag
 
-class ArgThatTest extends FlatSpec with Matchers with MockFactory {
+/** Matcher that uses provided assertions block to perform matching */
+protected class ArgAssert[T](assertions: T => Unit, clue: Option[String])
+  (implicit classTag: ClassTag[T]) extends Matcher[T] {
 
-  behavior of "ArgThat"
-
-  it should "check predicate while matching arguments" in {
-    val startsWithPredicate = argThat((x: String) => x.startsWith("A"))
-    startsWithPredicate.equals("Alice") shouldBe true
-    startsWithPredicate.equals("Anna") shouldBe true
-    startsWithPredicate.equals("Bob") shouldBe false
-    // todo: do we need to do anything with this?
-    intercept[scala.scalajs.runtime.UndefinedBehaviorError] { startsWithPredicate.equals(55) } // 55 is not a String
+  override def safeEquals(that: T) = {
+    assertions(that)
+    true
   }
+
+  override def toString = "argAssert[" + classTag.runtimeClass.getSimpleName + "]" + clue.map(c => s" - $c").getOrElse("")
 }

@@ -20,8 +20,10 @@
 
 package org.scalamock.matchers
 
+import scala.reflect.ClassTag
+
 /** Matcher that uses provided predicate to perform matching */
-class ArgThat[T](predicate: T => Boolean) extends Matcher[T] {
-  override def toString: String = "<matcher>"
+class ArgThat[T](predicate: T => Boolean, clue: Option[String])(implicit classTag: ClassTag[T]) extends Matcher[T] {
+  override def toString = "argThat[" + classTag.runtimeClass.getSimpleName + "]" + clue.map(c => s" - $c").getOrElse("")
   override def safeEquals(obj: T): Boolean = predicate(obj)
 }
