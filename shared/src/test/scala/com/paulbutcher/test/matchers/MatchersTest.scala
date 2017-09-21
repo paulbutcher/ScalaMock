@@ -86,6 +86,25 @@ class MatchersTest extends IsolatedSpec {
     testMock.twoParams(50, 51.0) shouldBe "matched"
   }
 
+  behavior of "assertArgs matcher"
+
+  it can "be used to fail tests early (one parameter)" in withExpectations {
+    (userDatabaseMock.storeUser _).expects(assertArgs { user: User =>
+      user.age shouldBe 18
+      user.name should startWith("A")
+    }).returning("matched")
+
+    userDatabaseMock.storeUser(User("Adam", 18)) shouldBe "matched"
+  }
+
+  it can "be used to fail tests early (two parameters)" in withExpectations {
+    (testMock.twoParams _).expects(assertArgs { (x, y) =>
+      x + y shouldBe >(100.0)
+    }).returning("matched")
+
+    testMock.twoParams(99, 2.0) shouldBe "matched"
+  }
+
   behavior of "argThat matcher"
 
   it can "be used to create complex predicates" in withExpectations {
@@ -144,7 +163,6 @@ class MatchersTest extends IsolatedSpec {
     val expectation = (userDatabaseMock.addUserAddress _) expects (*, argAssert{( _: Address) => Unit}) never ()
     expectation.toString() should include("UserDatabase.addUserAddress(*, argAssert[Address])")
   }
-
 
   behavior of "custom matcher"
 
