@@ -22,6 +22,7 @@ package com.paulbutcher.test.matchers
 
 import com.paulbutcher.test._
 import org.scalamock.matchers.Matcher
+import org.scalatest.exceptions.TestFailedException
 
 /** Example Matcher */
 case class UserMatcher(name: Option[String] = None) extends Matcher[User] {
@@ -85,6 +86,25 @@ class MatchersTest extends IsolatedSpec {
     testMock.twoParams(50, 51.0) shouldBe "matched"
   }
 
+  behavior of "assertArgs matcher"
+
+  it can "be used to fail tests early (one parameter)" in withExpectations {
+    (userDatabaseMock.storeUser _).expects(assertArgs { user: User =>
+      user.age shouldBe 18
+      user.name should startWith("A")
+    }).returning("matched")
+
+    userDatabaseMock.storeUser(User("Adam", 18)) shouldBe "matched"
+  }
+
+  it can "be used to fail tests early (two parameters)" in withExpectations {
+    (testMock.twoParams _).expects(assertArgs { (x, y) =>
+      x + y shouldBe >(100.0)
+    }).returning("matched")
+
+    testMock.twoParams(99, 2.0) shouldBe "matched"
+  }
+
   behavior of "argThat matcher"
 
   it can "be used to create complex predicates" in withExpectations {
@@ -92,7 +112,7 @@ class MatchersTest extends IsolatedSpec {
       .expects(*, argThat { address: Address => address.city == "Berlin" })
       .returning("matched")
     (userDatabaseMock.addUserAddress _)
-      .expects(*, argThat[Address] { address => address.city == "London" })
+      .expects(*, argThat("Someone in London") { address: Address => address.city == "London" })
       .returning("matched")
     (userDatabaseMock.addUserAddress _).expects(*, *).returning("unmatched")
 
@@ -102,8 +122,46 @@ class MatchersTest extends IsolatedSpec {
   }
 
   it should "be displayed correctly" in withExpectations {
-    val expectation = (userDatabaseMock.addUserAddress _) expects (*, argThat[Address] { _ => true }) never ()
-    expectation.toString() should include("UserDatabase.addUserAddress(*, <matcher>)")
+    val expectation = (userDatabaseMock.addUserAddress _) expects (*, argThat {( _: Address) => true }) never ()
+    expectation.toString() should include("UserDatabase.addUserAddress(*, argThat[Address])")
+  }
+
+  behavior of "argAssert matcher"
+
+  it can "be used to fail tests early when assertions are not met" in withExpectations {
+    val testUser = User("John", 23)
+
+    (userDatabaseMock.addUserAddress _)
+      .expects(*, argAssert { address: Address =>
+        address.city shouldBe "Berlin" })
+      .returning("matched")
+    (userDatabaseMock.addUserAddress _)
+      .expects(*, argAssert("Someone in London") { address: Address =>
+        address.city shouldBe "London" })
+      .returning("matched")
+
+    userDatabaseMock.addUserAddress(testUser, Address("Berlin", "Turmstrasse 12")) shouldBe "matched"
+    userDatabaseMock.addUserAddress(testUser, Address("London", "Baker Street 221b")) shouldBe "matched"
+  }
+
+  it should "fail tests immediately when assertion fails" in withExpectations {
+    val testUser = User("John", 23)
+
+    (userDatabaseMock.addUserAddress _)
+      .expects(*, argAssert { address: Address =>
+        address.city shouldBe "London" })
+
+    a[TestFailedException] shouldBe thrownBy {
+      userDatabaseMock.addUserAddress(testUser, Address("Berlin", "Turmstrasse 12"))
+    }
+
+    // call mock again with correct parameters to satisfy the expectation
+    userDatabaseMock.addUserAddress(testUser, Address("London", "Baker Street 221b"))
+  }
+
+  it should "be displayed correctly" in withExpectations {
+    val expectation = (userDatabaseMock.addUserAddress _) expects (*, argAssert{( _: Address) => Unit}) never ()
+    expectation.toString() should include("UserDatabase.addUserAddress(*, argAssert[Address])")
   }
 
   behavior of "custom matcher"

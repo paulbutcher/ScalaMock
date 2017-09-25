@@ -28,7 +28,7 @@ class ArgThatTest extends FlatSpec with Matchers with MockFactory {
   behavior of "ArgThat"
 
   it should "check predicate while matching arguments" in {
-    val startsWithPredicate = argThat[String](x => x.startsWith("A"))
+    val startsWithPredicate = argThat((x: String) => x.startsWith("A"))
     startsWithPredicate.equals("Alice") shouldBe true
     startsWithPredicate.equals("Anna") shouldBe true
     startsWithPredicate.equals("Bob") shouldBe false
