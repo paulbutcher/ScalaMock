@@ -25,10 +25,7 @@ lazy val quasiquotes = libraryDependencies ++= {
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
   scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature",
-    "-target:jvm-" + (if (scalaVersion.value < "2.11") "1.7" else "1.8")),
-  scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++ Opts.doc.version(version.value) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
-  pomIncludeRepository := { _ => false },
-  publishArtifact in Test := false
+    "-target:jvm-" + (if (scalaVersion.value < "2.11") "1.7" else "1.8"))
 )
 
 lazy val examples = crossProject in file("examples") settings(
@@ -48,6 +45,13 @@ lazy val `examples-jvm` = examples.jvm
 lazy val scalamock = crossProject in file(".") settings(
     commonSettings,
     quasiquotes,
+    name := "scalamock",
+    publishArtifact in (Compile, packageBin) := true,
+    publishArtifact in (Compile, packageDoc) := true,
+    publishArtifact in (Compile, packageSrc) := true,
+    publishArtifact in Test := false,
+    scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++ Opts.doc.version(version.value) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
+    pomIncludeRepository := { _ => false },
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       scalatest % Optional,
