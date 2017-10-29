@@ -39,13 +39,19 @@ You can find the ScalaMock repository and source code on [Github](https://github
 To use ScalaMock in [sbt](http://www.scala-sbt.org/) with [ScalaTest](http://www.scalatest.org/) add the following to your project file:
 
 ```scala
-libraryDependencies += "org.scalamock" %% "scalamock-scalatest-support" % "(version)" % Test
+// for versions 4.0+ use this dependency:
+libraryDependencies += "org.scalamock" %% "scalamock" % "(version)" % Test
+// as ScalaTest is now an "optional" dependency, you should include that yourself:
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % Test
 ```
 
 To use ScalaMock with [Specs2](http://etorreborre.github.com/specs2/):
 
 ```scala
-libraryDependencies += "org.scalamock" %% "scalamock-specs2-support" % "(version)" % Test
+// for versions 4.0+ use this dependency:
+libraryDependencies += "org.scalamock" %% "scalamock" % "(version)" % Test
+// as Specs2 is now an "optional" dependency, you should include that yourself:
+libraryDependencies += "org.specs2" %% "specs2-core" % "3.9.1" % Test
 ```
 
 ## Maven projects
@@ -55,8 +61,14 @@ To include ScalaMock in your Maven project add the following to your `pom.xml`:
 ```xml
 <dependency>
     <groupId>org.scalamock</groupId>
-    <artifactId>scalamock-scalatest-support_2.11</artifactId>
+    <artifactId>scalamock_2.11</artifactId>
     <version>(version)</version>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.scalatest</groupId>
+    <artifactId>scalatest_2.11</artifactId>
+    <version>3.0.4</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -64,5 +76,11 @@ To include ScalaMock in your Maven project add the following to your `pom.xml`:
 ## Gradle
 
 ```groovy
-testCompile 'org.scalamock:scalamock-scalatest-support_2.12:(version)'
+testCompile 'org.scalamock:scalamock_2.11:(version)'
+testCompile 'org.scalatest:scalatest_2.11:3.0.4'
 ```
+
+## Upgrading from ScalaMock Version 3.x
+
+Before version 4.0, ScalaMock had different artefacts for ScalaTest and Specs2 (scalamock-scalatest-support and scalamock-specs2-support), which actually pulled in versions of ScalaTest and Spec2 respectively.
+Since ScalaMock version 4.0.0, this was changed to combine both these adaptors into the main jar file and make the transitive dependencies optional. When upgrading, make sure to include a new dependency to ScalaTest/Specs2 if your project doesn't have one already. See the examples above for guidance.
