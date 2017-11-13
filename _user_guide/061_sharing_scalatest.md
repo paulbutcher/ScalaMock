@@ -15,7 +15,7 @@ Sometimes multiple test cases need to work with the same mocks (and more general
 
 If you mix the `org.scalatest.OneInstancePerTest` trait into a `Suite`, each test case will run in its own instance of the suite class. This means each test will get a fresh copy of the instance variables.
 
-Then in he suite scope you can:
+Then in the suite scope you can:
 
 * declare instance variables (e.g., mocks) that will be used by multiple test cases and
 * perform common test case setup (e.g., set up some mock expectations).
