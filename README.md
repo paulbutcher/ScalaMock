@@ -75,7 +75,7 @@ For usage in Maven or Gradle, integration with Specs2, and more example examples
 
 ## Donations
 
-This project is run for fun as a hobby, but if you want to show your appreciation you can donate some Ξ to 0x6A34A63dbD851e4BEC2D25eC7d4E7b50e213C3A7 ([QR Code](https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=0x6A34A63dbD851e4BEC2D25eC7d4E7b50e213C3A7&choe=UTF-8)). Or other crypto currencies via Shapeshift [here](https://shapeshift.io/shifty.html?destination=0x6A34A63dbD851e4BEC2D25eC7d4E7b50e213C3A7&output=ETH). If you want to lean more about Ethereum, visit the [homepage](https://www.ethereum.org/) or [wikipedia](https://en.wikipedia.org/wiki/Ethereum).
+This project is run for fun as a hobby, but if you want to show your appreciation you can donate some Ξ to 0x6A34A63dbD851e4BEC2D25eC7d4E7b50e213C3A7 ([QR Code](https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=0x6A34A63dbD851e4BEC2D25eC7d4E7b50e213C3A7&choe=UTF-8)). Or other crypto currencies (Bitcoin, etc) via Shapeshift [here](https://shapeshift.io/shifty.html?destination=0x6A34A63dbD851e4BEC2D25eC7d4E7b50e213C3A7&output=ETH). If you want to lean more about Ethereum, visit the [homepage](https://www.ethereum.org/) or [wikipedia](https://en.wikipedia.org/wiki/Ethereum).
 
 ## Acknowledgements
 
