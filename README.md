@@ -1,5 +1,5 @@
 # ScalaMock 
-[![Build Status](https://travis-ci.org/paulbutcher/ScalaMock.svg?branch=master)](https://travis-ci.org/paulbutcher/ScalaMock) [![Scaladex](https://index.scala-lang.org/paulbutcher/scalamock/scalamock-scalatest-support/latest.svg?color=orange)](https://index.scala-lang.org/paulbutcher/scalamock) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d7250cea177b468c94bb07eb8d3366a4)](https://www.codacy.com/app/barkhorn/ScalaMock?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=paulbutcher/ScalaMock&amp;utm_campaign=Badge_Grade)
+[![Build Status](https://travis-ci.org/paulbutcher/ScalaMock.svg?branch=master)](https://travis-ci.org/paulbutcher/ScalaMock) [![Scaladex](https://index.scala-lang.org/paulbutcher/scalamock/scalamock/latest.svg?color=orange)](https://index.scala-lang.org/paulbutcher/scalamock) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/d7250cea177b468c94bb07eb8d3366a4)](https://www.codacy.com/app/barkhorn/ScalaMock?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=paulbutcher/ScalaMock&amp;utm_campaign=Badge_Grade)
 
 Native Scala mocking.
 
@@ -75,7 +75,7 @@ For usage in Maven or Gradle, integration with Specs2, and more example examples
 
 ## Donations
 
-This project is run for fun as a hobby, but if you want to show your appreciation you can donate some Ether to 0x6A34A63dbD851e4BEC2D25eC7d4E7b50e213C3A7 ([QR Code](https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=0x6A34A63dbD851e4BEC2D25eC7d4E7b50e213C3A7&choe=UTF-8)). Or other crypto currencies via Shapeshift [here](https://shapeshift.io/shifty.html?destination=0x6A34A63dbD851e4BEC2D25eC7d4E7b50e213C3A7&output=ETH).
+This project is run for fun as a hobby, but if you want to show your appreciation you can donate some Ξ to 0x6A34A63dbD851e4BEC2D25eC7d4E7b50e213C3A7 ([QR Code](https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=0x6A34A63dbD851e4BEC2D25eC7d4E7b50e213C3A7&choe=UTF-8)). Or other crypto currencies via Shapeshift [here](https://shapeshift.io/shifty.html?destination=0x6A34A63dbD851e4BEC2D25eC7d4E7b50e213C3A7&output=ETH). If you want to lean more about Ethereum, visit the [homepage](https://www.ethereum.org/) or [wikipedia](https://en.wikipedia.org/wiki/Ethereum).
 
 ## Acknowledgements
 
