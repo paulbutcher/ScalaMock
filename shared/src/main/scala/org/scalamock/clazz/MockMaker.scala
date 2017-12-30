@@ -107,7 +107,7 @@ class MockMaker[C <: Context](val ctx: C) {
       */
     def forwarderParamType(t: Type): Tree = t match {
       case TypeRef(pre, sym, args) if sym == JavaRepeatedParamClass =>
-        AppliedTypeTree(Ident(typeOf[Seq[_]].typeSymbol), args map TypeTree _)
+        TypeTree(internalTypeRef(pre, RepeatedParamClass, args))
       case TypeRef(pre, sym, args) if isPathDependentThis(t) =>
         AppliedTypeTree(Ident(TypeName(sym.name.toString)), args map TypeTree _)
       case _ =>
