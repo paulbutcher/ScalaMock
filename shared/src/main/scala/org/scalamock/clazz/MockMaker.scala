@@ -107,7 +107,7 @@ class MockMaker[C <: Context](val ctx: C) {
       */
     def forwarderParamType(t: Type): Tree = t match {
       case TypeRef(pre, sym, args) if sym == JavaRepeatedParamClass =>
-        TypeTree(internalTypeRef(pre, RepeatedParamClass, args))
+        AppliedTypeTree(Ident(typeOf[Seq[_]].typeSymbol), args map TypeTree _)
       case TypeRef(pre, sym, args) if isPathDependentThis(t) =>
         AppliedTypeTree(Ident(TypeName(sym.name.toString)), args map TypeTree _)
       case _ =>
@@ -317,7 +317,7 @@ class MockMaker[C <: Context](val ctx: C) {
     val mocks = methodsToMock map mockMethod
     val members = mockNameGenerator.mockNameVal :: forwarders ++ mocks
 
-    def make() = {
+    def make = {
       val result = castTo(anonClass(members), typeToMock)
 
       //        println("------------")

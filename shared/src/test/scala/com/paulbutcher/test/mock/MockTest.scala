@@ -226,6 +226,18 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
       }
     }
 
+    "cope with curried varargs" in {
+      withExpectations {
+        trait Foo {
+          def bar(i: Int)(what: Any*): String
+        }
+
+        val m = mock[Foo]
+        (m.bar(_: Int)(_: Seq[_])) expects (42, Seq("1", "2")) returning "baz" once()
+        m.bar(42)("1", "2") === "baz"
+      }
+    }
+
     "cope with a val" in {
       withExpectations {
         val m = mock[TestTrait]

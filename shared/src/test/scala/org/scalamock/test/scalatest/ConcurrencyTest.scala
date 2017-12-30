@@ -22,22 +22,23 @@ package org.scalamock.test.scalatest
 
 import org.scalamock.scalatest.MockFactory
 import org.scalamock.test.mockable.TestTrait
-import org.scalatest.WordSpec
+import org.scalatest.FlatSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}
 
-class ConcurrencyTest extends WordSpec with MockFactory {
+class ConcurrencyTest extends FlatSpec with MockFactory {
+  behavior of "ScalaMock"
 
-  "Futures should work" in {
+  it should "work with Futures" in {
     val s = stubFunction[Int]
     s.when().returns(1)
     assertResult(1) { Await.result(Future { s() }, 10.seconds) }
     s.verify().once()
   }
 
-  "Concurrent mock access should work" in {
+  it should "work with concurrent mock access" in {
     val m = mock[TestTrait]
     (m.oneParamMethod _).expects(42).repeated(500000).returning("a")
 
