@@ -94,7 +94,13 @@ class MatchersTest extends IsolatedSpec {
       user.name should startWith("A")
     }).returning("matched")
 
+    (userDatabaseMock.storeUser _).expects(assertArgs { user: User =>
+      user.age shouldBe 21
+      user.name should startWith("E")
+    }).returning("matched2")
+
     userDatabaseMock.storeUser(User("Adam", 18)) shouldBe "matched"
+    userDatabaseMock.storeUser(User("Eve", 21)) shouldBe "matched2"
   }
 
   it can "be used to fail tests early (two parameters)" in withExpectations {

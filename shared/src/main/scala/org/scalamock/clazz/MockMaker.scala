@@ -317,7 +317,7 @@ class MockMaker[C <: Context](val ctx: C) {
     val mocks = methodsToMock map mockMethod
     val members = mockNameGenerator.mockNameVal :: forwarders ++ mocks
 
-    def make() = {
+    def make = {
       val result = castTo(anonClass(members), typeToMock)
 
       //        println("------------")

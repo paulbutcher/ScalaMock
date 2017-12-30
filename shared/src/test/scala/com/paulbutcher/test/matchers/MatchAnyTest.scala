@@ -20,16 +20,15 @@
 
 package com.paulbutcher.test.matchers
 
-import org.scalamock._
 import org.scalamock.matchers.MatchAny
-import org.scalatest.FreeSpec
+import org.scalatest.FlatSpec
 
-class MatchAnyTest extends FreeSpec {
+class MatchAnyTest extends FlatSpec {
 
-  "MatchAny should match anything" in {
-    assert(new MatchAny == 1.0)
-    assert(new MatchAny == "")
-    assert(new MatchAny == (0, 42))
-    assert(new MatchAny == List(1, 2, 3))
+  "MatchAny" should "match anything" in {
+    assert(new MatchAny === 1.0)
+    assert(new MatchAny === "")
+    assert(new MatchAny === (0, 42))
+    assert(new MatchAny === List(1, 2, 3))
   }
 }
