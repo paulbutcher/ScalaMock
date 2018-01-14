@@ -44,6 +44,12 @@ lazy val `examples-jvm` = examples.jvm
 
 lazy val scalamock = crossProject in file(".") settings(
     commonSettings,
+    publishTo := Some(
+      if (isSnapshot.value)
+        Opts.resolver.sonatypeSnapshots
+      else
+        Opts.resolver.sonatypeStaging
+    ),
     quasiquotes,
     name := "scalamock",
     publishArtifact in (Compile, packageBin) := true,
@@ -74,10 +80,10 @@ releaseProcess := {
     setReleaseVersion,
     commitReleaseVersion,
     tagRelease,
-    ReleaseStep(action = Command.process("publishSigned", _), enableCrossBuild = true),
+    releaseStepCommand("publishSigned"),
     setNextVersion,
     commitNextVersion,
-    ReleaseStep(action = Command.process("sonatypeRelease", _)),
+    releaseStepCommand("sonatypeRelease"),
     pushChanges
   )
 }
