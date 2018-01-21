@@ -24,7 +24,7 @@ lazy val quasiquotes = libraryDependencies ++= {
 }
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
-  scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature",
+  scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-Xlint",
     "-target:jvm-" + (if (scalaVersion.value < "2.11") "1.7" else "1.8"))
 )
 
@@ -80,11 +80,7 @@ releaseProcess := {
     setReleaseVersion,
     commitReleaseVersion,
     tagRelease,
-    releaseStepCommand("publishSigned"),
-    setNextVersion,
-    commitNextVersion,
-    releaseStepCommand("sonatypeRelease"),
-    pushChanges
+    releaseStepCommand("publishSigned")
   )
 }
 
@@ -110,3 +106,13 @@ credentials ++= (
     Seq.empty[Def.Setting[_]]
   }
 }
+
+version in ThisBuild := {
+  val Snapshot = """(\d+)\.(\d+)\.(\d+)-\d+.*?""".r
+  git.gitDescribedVersion.value.getOrElse("0.0.0-1")match {
+    case Snapshot(maj, min, pat) => s"$maj.${min.toInt + 1}.$pat-SNAPSHOT"
+    case v => v
+  }
+}
+
+isSnapshot := version.value.endsWith("-SNAPSHOT")
