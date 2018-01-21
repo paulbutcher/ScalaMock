@@ -1,5 +1,10 @@
 language: scala
 
+# so travis finds the tags
+install:
+  - git config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
+  - git fetch --unshallow --tags
+
 scala:
   - "2.10.6"
   - "2.11.11"
