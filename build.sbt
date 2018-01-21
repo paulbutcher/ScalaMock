@@ -115,4 +115,4 @@ version in ThisBuild := {
   }
 }
 
-isSnapshot := version.value.endsWith("-SNAPSHOT")
+isSnapshot in ThisBuild := version.value.endsWith("-SNAPSHOT")
