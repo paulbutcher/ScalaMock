@@ -24,7 +24,7 @@ lazy val quasiquotes = libraryDependencies ++= {
 }
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
-  scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-Xlint",
+  scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature",
     "-target:jvm-" + (if (scalaVersion.value < "2.11") "1.7" else "1.8"))
 )
 
