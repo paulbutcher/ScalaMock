@@ -107,8 +107,6 @@ credentials ++= (
   }
 }
 
-skip in publish := true
-
 version in ThisBuild := {
   val Snapshot = """(\d+)\.(\d+)\.(\d+)-\d+.*?""".r
   git.gitDescribedVersion.value.getOrElse("0.0.0-1")match {
