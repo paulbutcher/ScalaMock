@@ -1,4 +1,4 @@
-scalaVersion in ThisBuild := "2.10.6"
+scalaVersion in ThisBuild := "2.11.11"
 crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.11", "2.12.3", "2.13.0-M1")
 scalaJSUseRhino in ThisBuild := true
 organization in ThisBuild := "org.scalamock"
@@ -31,7 +31,7 @@ val commonSettings = Defaults.coreDefaultSettings ++ Seq(
 lazy val examples = crossProject in file("examples") settings(
     commonSettings,
     name := "ScalaMock Examples",
-    publishArtifact := false,
+    skip in publish := true,
     libraryDependencies ++= Seq(
       scalatest % Test,
       specs2 % Test
@@ -107,10 +107,12 @@ credentials ++= (
   }
 }
 
+skip in publish := true
+
 version in ThisBuild := {
   val Snapshot = """(\d+)\.(\d+)\.(\d+)-\d+.*?""".r
   git.gitDescribedVersion.value.getOrElse("0.0.0-1")match {
-    case Snapshot(maj, min, pat) => s"$maj.${min.toInt + 1}.$pat-SNAPSHOT"
+    case Snapshot(maj, min, _) => s"$maj.${min.toInt + 1}.0-SNAPSHOT"
     case v => v
   }
 }
