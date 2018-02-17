@@ -14,7 +14,7 @@ You can download ScalaMock jars and sources from Maven Central or JCenter.
 
 The latest released version is [![GitHub release](https://img.shields.io/github/release/paulbutcher/scalamock.svg)](https://github.com/paulbutcher/ScalaMock/releases).
 
-To see all released and published versions, search at [Maven Central](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22scalamock_2.11%22), or [Sonatype OSS Nexus](https://oss.sonatype.org/#nexus-search;quick~scalamock_2.11).
+To see all released and published versions, search at [Maven Central](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22org.scalamock%22%20AND%20a%3A%22scalamock_2.11%22), or [Sonatype OSS Nexus](https://oss.sonatype.org/#nexus-search;quick~scalamock_2.11).
 
 Release versions are also in JCenter, so your favourite resolver should be covered.
 
