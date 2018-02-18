@@ -31,12 +31,12 @@ class StubNamingTest extends IsolatedSpec {
 
   it should "have a sensible method name when mocking a method without parameters" in {
     val myStub = stub[TestTrait]
-    getStubMethodName(myStub.noParams _) shouldBe "<stub-1> TestTrait.noParams"
+    getStubMethodName(() => myStub.noParams) shouldBe "<stub-1> TestTrait.noParams"
   }
 
   it can "be named using string literal" in {
     val myStub = stub[TestTrait]("stub name")
-    getStubMethodName(myStub.noParams _) shouldBe "<stub name> TestTrait.noParams"
+    getStubMethodName(() => myStub.noParams) shouldBe "<stub name> TestTrait.noParams"
   }
 
   // NOTE: MockNamingTest contains more test cases related to mock naming

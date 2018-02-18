@@ -31,7 +31,7 @@ class MockNamingTest extends IsolatedSpec {
   behavior of "Mock"
 
   it should "have a sensible method name when mocking a method without parameters" in {
-    getMockMethodName(m.noParams _) shouldBe "<mock> TestTrait.noParams"
+    getMockMethodName(() => m.noParams) shouldBe "<mock> TestTrait.noParams"
   }
 
   it should "have a sensible method name when mocking one parameter method" in {
@@ -80,12 +80,12 @@ class MockNamingTest extends IsolatedSpec {
 
   it should "have sensible default name assigned" in {
     val myMock = mock[TestTrait]
-    getMockMethodName(myMock.noParams _) shouldBe "<mock-1> TestTrait.noParams"
+    getMockMethodName(() => myMock.noParams) shouldBe "<mock-1> TestTrait.noParams"
   }
 
   it should "have consistent names of mocked methods" in {
     val myMock = mock[TestTrait]
-    getMockMethodName(myMock.noParams _) shouldBe "<mock-1> TestTrait.noParams"
+    getMockMethodName(() => myMock.noParams) shouldBe "<mock-1> TestTrait.noParams"
     getMockMethodName(myMock.twoParams _) shouldBe "<mock-1> TestTrait.twoParams" // not <mock-2>
   }
 

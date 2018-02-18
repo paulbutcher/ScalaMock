@@ -47,7 +47,7 @@ class ControllerTest extends FunSuite with MockFactory {
       (mockTurtle.turn _) verify ~(Pi / 4)
       (mockTurtle.forward _) verify ~sqrt(2.0)
       (mockTurtle.turn _) verify ~(-Pi / 4)
-      (mockTurtle.penDown _) verify ()
+      (() => mockTurtle.penDown) verify ()
       (mockTurtle.forward _) verify 1.0
     }
   }

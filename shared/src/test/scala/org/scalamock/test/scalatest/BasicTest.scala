@@ -35,7 +35,7 @@ class BasicTest extends FlatSpec with Matchers with MockFactory {
     val mockedTrait = mock[TestTrait]
     (mockedTrait.oneParamMethod _).expects(1).returning("one")
     (mockedTrait.oneParamMethod _).expects(2).returning("two")
-    mockedTrait.noParamMethod _ expects () returning "yey"
+    (() => mockedTrait.noParamMethod) expects () returning "yey"
 
     mockedTrait.oneParamMethod(1) shouldBe "one"
     mockedTrait.oneParamMethod(2) shouldBe "two"

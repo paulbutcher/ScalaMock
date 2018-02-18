@@ -1,5 +1,5 @@
 scalaVersion in ThisBuild := "2.11.11"
-crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.11", "2.12.3", "2.13.0-M1")
+crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.11", "2.12.3", "2.13.0-M3")
 scalaJSUseRhino in ThisBuild := true
 organization in ThisBuild := "org.scalamock"
 licenses in ThisBuild := Seq("MIT" -> url("https://opensource.org/licenses/MIT"))
@@ -12,8 +12,16 @@ developers in ThisBuild := List(
 )
 homepage in ThisBuild := Some(url("http://scalamock.org/"))
 
-lazy val scalatest = "org.scalatest" %% "scalatest" % "3.0.3"
-lazy val specs2 = "org.specs2" %% "specs2-core" % "3.9.1"
+lazy val scalatest = "org.scalatest" %% "scalatest" % "3.0.5-M1"
+lazy val specs2 = Def.setting {
+  val v = CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((2, 10)) =>
+      "3.9.1" // specs2 4.x does not support Scala 2.10
+    case _ =>
+      "4.0.2"
+  }
+  "org.specs2" %% "specs2-core" % v
+}
 lazy val quasiquotes = libraryDependencies ++= {
   CrossVersion.partialVersion(scalaVersion.value) match {
     case Some((2, 10)) =>
@@ -34,7 +42,7 @@ lazy val examples = crossProject in file("examples") settings(
     skip in publish := true,
     libraryDependencies ++= Seq(
       scalatest % Test,
-      specs2 % Test
+      specs2.value % Test
     )
   ) dependsOn scalamock
 
@@ -61,7 +69,7 @@ lazy val scalamock = crossProject in file(".") settings(
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       scalatest % Optional,
-      specs2 % Optional
+      specs2.value % Optional
     )
   )
 

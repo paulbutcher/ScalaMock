@@ -271,7 +271,7 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
       withExpectations {
         val m = mock[TestTrait]
         val e = mock[m.Embedded]
-        (m.referencesEmbedded _).expects().returning(e)
+        (() => m.referencesEmbedded).expects().returning(e)
         assertResult(e) { m.referencesEmbedded }
       }
     }
@@ -282,8 +282,8 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
         val e = mock[m.Embedded]
         val o = mock[m.ATrait]
         val i = mock[e.ATrait]
-        (e.innerTraitProjected _).expects().returning(i)
-        (e.outerTraitProjected _).expects().returning(o)
+        (() => e.innerTraitProjected).expects().returning(i)
+        (() => e.outerTraitProjected).expects().returning(o)
         assertResult(o) { e.outerTraitProjected }
         assertResult(i) { e.innerTraitProjected }
       }
@@ -295,8 +295,8 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
         val e = mock[m.Embedded]
         val o = mock[m.ATrait]
         val i = mock[e.ATrait]
-        (e.innerTrait _).expects().returning(i)
-        (e.outerTrait _).expects().returning(o)
+        (() => e.innerTrait).expects().returning(i)
+        (() => e.outerTrait).expects().returning(o)
         assertResult(o) { e.outerTrait }
         assertResult(i) { e.innerTrait }
       }

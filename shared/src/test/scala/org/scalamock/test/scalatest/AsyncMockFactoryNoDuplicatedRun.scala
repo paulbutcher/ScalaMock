@@ -47,7 +47,7 @@ class AsyncMockFactoryNoDuplicatedRun extends AsyncFlatSpec with Matchers with A
   "AsyncMockFactory" should "run test case provided successfully" in {
     val mockTrait = mock[TestTrait]
     val returnVal = 100
-    mockTrait.mockMethod _ expects () returning returnVal
+    (() => mockTrait.mockMethod) expects () returning returnVal
     val classUnderTest = new ClassUnderTest(mockTrait)
     classUnderTest.methodUnderTest().map(_ shouldBe returnVal)
   }
