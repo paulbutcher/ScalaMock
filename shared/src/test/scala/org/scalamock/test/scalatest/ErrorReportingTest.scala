@@ -103,7 +103,7 @@ class ErrorReportingTest extends FlatSpec with Matchers with TestSuiteRunner {
   it should "report unexpected calls in readable manner" in {
     class TestedSuite extends FunSuite with MockFactory {
       val suiteScopeMock = mock[TestTrait]("suite mock")
-      (suiteScopeMock.noParamMethod _) expects () returning ("two") twice
+      (() => suiteScopeMock.noParamMethod) expects () returning ("two") twice
 
       test("execute block of code") {
         val mockedTrait = mock[TestTrait]
