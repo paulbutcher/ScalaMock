@@ -16,6 +16,8 @@ trait AsyncMockFactoryBase extends MockContext with Mock with MockFunctions with
 
   implicit def executionContext: ExecutionContext
 
+  initializeExpectations()
+
   private def initializeExpectations() {
     val initialHandlers = new UnorderedHandlers
     callLog = new CallLog
