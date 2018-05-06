@@ -120,7 +120,9 @@ mockIncrement(10) shouldBe  11
 
 ## Call count
 
-By default, mocks and stubs expect exactly one call. Alternative constraints can be set with `repeat()`:
+By default, mocks expect exactly one call while stubs allow any number of calls.
+For stubs, an exact number of calls can be specified in the verification phase.
+For mocks, alternative constraints can be set with `repeat()`:
 
 ```scala
 mockedFunction.expects(42).returns(42).repeat(3 to 7)
