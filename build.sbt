@@ -1,3 +1,5 @@
+import sbtcrossproject.crossProject
+
 scalaVersion in ThisBuild := "2.11.11"
 crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.11", "2.12.3", "2.13.0-M3")
 scalaJSUseRhino in ThisBuild := true
@@ -36,7 +38,7 @@ val commonSettings = Defaults.coreDefaultSettings ++ Seq(
     "-target:jvm-" + (if (scalaVersion.value < "2.11") "1.7" else "1.8"))
 )
 
-lazy val examples = crossProject in file("examples") settings(
+lazy val examples = crossProject(JSPlatform, JVMPlatform) in file("examples") settings(
     commonSettings,
     name := "ScalaMock Examples",
     skip in publish := true,
@@ -50,7 +52,7 @@ lazy val `examples-js` = examples.js
 
 lazy val `examples-jvm` = examples.jvm
 
-lazy val scalamock = crossProject in file(".") settings(
+lazy val scalamock = crossProject(JSPlatform, JVMPlatform) in file(".") settings(
     commonSettings,
     publishTo := Some(
       if (isSnapshot.value)
