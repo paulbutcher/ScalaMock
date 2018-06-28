@@ -27,7 +27,7 @@ class StubFunctionTest extends FreeSpec with MockFactory {
   
   autoVerify = false
   
-  def repeat(n: Int)(what: => Unit) {
+  def repeat(n: Int)(what: => Unit): Unit = {
     for (i <- 0 until n)
       what
   }

@@ -24,7 +24,7 @@ import scala.collection.mutable.ListBuffer
 
 private[scalamock] abstract class Handlers extends Handler {
   
-  def add(handler: Handler) {
+  def add(handler: Handler): Unit = {
     handlers += handler
   }
   

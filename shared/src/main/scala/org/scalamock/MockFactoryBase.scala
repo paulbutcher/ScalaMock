@@ -81,7 +81,7 @@ trait MockFactoryBase extends AbstractMockFactoryBase with MockContext {
   //! TODO - https://issues.scala-lang.org/browse/SI-5831
   implicit val _factory = this
 
-  private def initializeExpectations() {
+  private def initializeExpectations(): Unit = {
     val initialHandlers = new UnorderedHandlers
     callLog = new CallLog
 
@@ -96,7 +96,7 @@ trait MockFactoryBase extends AbstractMockFactoryBase with MockContext {
     currentExpectationContext = null
   }
 
-  private def verifyExpectations() {
+  private def verifyExpectations(): Unit = {
     callLog foreach expectationContext.verify _
 
     val oldCallLog = callLog
