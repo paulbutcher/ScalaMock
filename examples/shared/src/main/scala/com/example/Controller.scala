@@ -24,7 +24,7 @@ import scala.math.{atan2, sqrt}
  
 class Controller(turtle: Turtle) {
  
-  def drawLine(start: (Double, Double), end: (Double, Double)) {
+  def drawLine(start: (Double, Double), end: (Double, Double)): Unit = {
     moveTo(start)
  
     val initialAngle = turtle.getAngle
@@ -44,7 +44,7 @@ class Controller(turtle: Turtle) {
   def angle(delta: (Double, Double)) = 
     atan2(delta._2, delta._1)
  
-  def moveTo(pos: (Double, Double)) {
+  def moveTo(pos: (Double, Double)): Unit = {
     val initialPos = turtle.getPosition
     val initialAngle = turtle.getAngle
  

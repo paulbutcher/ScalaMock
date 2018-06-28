@@ -18,7 +18,7 @@ trait AsyncMockFactoryBase extends MockContext with Mock with MockFunctions with
 
   initializeExpectations()
 
-  private def initializeExpectations() {
+  private def initializeExpectations(): Unit = {
     val initialHandlers = new UnorderedHandlers
     callLog = new CallLog
 
@@ -54,7 +54,7 @@ trait AsyncMockFactoryBase extends MockContext with Mock with MockFunctions with
     testResult
   }
 
-  private def verifyExpectations() {
+  private def verifyExpectations(): Unit = {
     callLog.foreach(expectationContext.verify(_))
 
     val oldCallLog = callLog

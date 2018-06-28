@@ -22,7 +22,7 @@ package com.example
 
 class Order(product: String, quantity: Int) {
   
-  def fill(warehouse: Warehouse) {
+  def fill(warehouse: Warehouse): Unit = {
     if (warehouse.hasInventory(product, quantity)) {
       warehouse.remove(product, quantity)
       filled = true

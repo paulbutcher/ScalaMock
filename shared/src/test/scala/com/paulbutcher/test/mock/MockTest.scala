@@ -458,7 +458,7 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
     // issue 132
     "mock a trait which has a final method" in withExpectations {
       trait FinalMethodTrait {
-        def somePublicMethod(param: String)
+        def somePublicMethod(param: String): Unit
         final def someFinalMethod(param: Int) = "final method"
       }
 
@@ -470,7 +470,7 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
 
     "mock a trait which has a protected method" in withExpectations {
       trait FooTrait {
-        def somePublicMethod(param: String)
+        def somePublicMethod(param: String): Unit
         protected[mock] def protectedMethod() = ()
         private[mock] def privateMethod() = ()
       }

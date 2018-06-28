@@ -47,7 +47,7 @@ class HigherOrderFunctionsTest extends FreeSpec with MockFactory {
     }
 
     "testRepeat" in {
-      def repeat(n: Int)(what: => Unit) {
+      def repeat(n: Int)(what: => Unit): Unit = {
         for (i <- 0 until n)
           what
       }
