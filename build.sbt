@@ -34,6 +34,14 @@ lazy val quasiquotes = libraryDependencies ++= {
 }
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
+  unmanagedSourceDirectories in Compile ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2L, minor)) =>
+        Some(baseDirectory.value.getParentFile / s"shared/src/main/scala-2.$minor")
+      case _ =>
+        None
+    }
+  },
   scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-Xcheckinit",
     "-target:jvm-" + (if (scalaVersion.value < "2.11") "1.7" else "1.8"))
 )
