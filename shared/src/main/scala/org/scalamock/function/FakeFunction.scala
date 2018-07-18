@@ -21,12 +21,13 @@
 package org.scalamock.function
 
 import org.scalamock.context.{MockContext, Call}
+import scala.reflect.NameTransformer
 
 // This has to be a separate trait, not a method in MockFunction, because
 // otherwise linearization will choose the MockFunctionN toString
 trait NiceToString { self: FakeFunction =>
 
-  override def toString = name.name.toString
+  override def toString = NameTransformer.decode(name.name.toString)
 }
 
 abstract class FakeFunction(protected val mockContext: MockContext, private[scalamock] val name: Symbol) {
