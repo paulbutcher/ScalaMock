@@ -14,7 +14,7 @@ developers in ThisBuild := List(
 )
 homepage in ThisBuild := Some(url("http://scalamock.org/"))
 
-lazy val scalatest = "org.scalatest" %% "scalatest" % "3.0.5-M1"
+lazy val scalatest = "org.scalatest" %% "scalatest" % "3.0.5"
 lazy val specs2 = Def.setting {
   val v = CrossVersion.partialVersion(scalaVersion.value) match {
     case Some((2, 10)) =>
