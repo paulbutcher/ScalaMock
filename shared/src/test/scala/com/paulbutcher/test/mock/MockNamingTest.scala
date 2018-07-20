@@ -43,7 +43,7 @@ class MockNamingTest extends IsolatedSpec {
   }
 
   it should "have a sensible method name when mocking an operator" in {
-    getMockMethodName(m.+ _) shouldBe "<mock> TestTrait.$plus" // TODO could be better
+    getMockMethodName(m.+ _) shouldBe "<mock> TestTrait.+"
   }
 
   it should "have a sensible method name when mocking polymorphic method" in {
