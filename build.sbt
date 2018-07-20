@@ -1,7 +1,7 @@
 import sbtcrossproject.crossProject
 
-scalaVersion in ThisBuild := "2.11.11"
-crossScalaVersions in ThisBuild := Seq("2.10.6", "2.11.11", "2.12.3", "2.13.0-M3")
+scalaVersion in ThisBuild := "2.11.12"
+crossScalaVersions in ThisBuild := Seq("2.10.7", "2.11.12", "2.12.6", "2.13.0-M3")
 scalaJSUseRhino in ThisBuild := true
 organization in ThisBuild := "org.scalamock"
 licenses in ThisBuild := Seq("MIT" -> url("https://opensource.org/licenses/MIT"))
