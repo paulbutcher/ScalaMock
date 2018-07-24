@@ -22,6 +22,7 @@ package org.scalamock.matchers
 
 import org.scalamock.context.MockContext
 import org.scalamock.function._
+import org.scalamock.matchers.ArgCapture.{Capture, CaptureMatcher}
 
 import scala.reflect.ClassTag
 
@@ -174,6 +175,7 @@ trait Matchers { this: MockContext =>
   protected def argAssert[T](assertions: T => Unit)
     (implicit classTag: ClassTag[T]): MatcherBase = new ArgAssert[T](assertions, clue = None)
 
+  protected def capture[T](cap: Capture[T]) = new CaptureMatcher[T](cap)
 
   protected def * = new MatchAny
 
