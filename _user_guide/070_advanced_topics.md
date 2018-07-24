@@ -252,3 +252,31 @@ inAnyOrderWithLogging { // or inSequenceWithLogging
 ```
 
 This will print all invocations of call handlers and verifiers with the corresponding calls.
+
+## Argument Capture
+
+Using the Capture feature in `org.scalamock.matchers.ArgCapture`, it is easy and convenient to allow wildcard matches but assert on the results later on.
+It is possible to store either a single value in a `CaptureOne`, or a `Seq` or values with a `CaptureAll`. Note that the call to `.value` will throw if nothing was captured. Also, the `CaptureOne` will only keep the last value captured, should it be invoked multiple times.
+
+```scala
+  "ScalaMock" can "capture the arguments of mocks - capture one" in {
+    val m = mock[TestTrait]
+    val c1 = CaptureOne[Int]()
+
+    m.oneParam _ expects capture(c1) once()
+    m.oneParam(42)
+    c1.value should be (42)
+  }
+
+  "ScalaMock" can "capture the arguments of mocks - capture all" in {
+    val m = mock[TestTrait]
+    val c = CaptureAll[Int]()
+
+    m.oneParam _ expects capture(c) repeat 3
+    m.oneParam(99)
+    m.oneParam(17)
+    m.oneParam(583)
+    c.value should be (583)
+    c.values should be (Seq(99, 17, 583))
+  }
+```
