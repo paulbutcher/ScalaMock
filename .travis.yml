@@ -12,7 +12,8 @@ scala:
   - "2.13.0-M3"
 
 jdk:
-  - oraclejdk8
+  - openjdk8
+  - openjdk11
 
 node_js:
   - "6"
