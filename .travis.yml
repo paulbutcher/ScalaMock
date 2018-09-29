@@ -1,3 +1,6 @@
+sudo: false
+dist: trusty
+
 language: scala
 
 # so travis finds the tags
@@ -12,7 +15,8 @@ scala:
   - "2.13.0-M3"
 
 jdk:
-  - oraclejdk8
+  - openjdk8
+  - openjdk11
 
 node_js:
   - "6"
@@ -24,11 +28,11 @@ cache:
   - "$HOME/.sbt"
 
 # workaround for travis-ci #7703
-before_script:
-   - sudo chmod +x /usr/local/bin/sbt
+# before_script:
+#   - sudo chmod +x /usr/local/bin/sbt
 
 after_success:
-  - '[[ $TRAVIS_BRANCH == "master" ]] && { sbt  ++$TRAVIS_SCALA_VERSION publish; };'
+  - '[[ $TRAVIS_BRANCH == "master" ]] && [[ $TRAVIS_JDK_VERSION == "openjdk8" ]] && { sbt  ++$TRAVIS_SCALA_VERSION publish; };'
 
 env:
   global:
