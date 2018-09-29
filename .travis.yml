@@ -28,8 +28,7 @@ cache:
   - "$HOME/.sbt"
 
 # workaround for travis-ci #7703
-before_script:
-  - echo "TRAVIS_JDK_VERSION --- $TRAVIS_JDK_VERSION"
+# before_script:
 #   - sudo chmod +x /usr/local/bin/sbt
 
 after_success:
