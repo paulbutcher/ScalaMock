@@ -255,6 +255,7 @@ This will print all invocations of call handlers and verifiers with the correspo
 
 ## Argument Capture
 
+(since ScalaMock 4.2.0)
 Using the Capture feature in `org.scalamock.matchers.ArgCapture`, it is easy and convenient to allow wildcard matches but assert on the results later on.
 It is possible to store either a single value in a `CaptureOne`, or a `Seq` or values with a `CaptureAll`. Note that the call to `.value` will throw if nothing was captured. Also, the `CaptureOne` will only keep the last value captured, should it be invoked multiple times.
 
