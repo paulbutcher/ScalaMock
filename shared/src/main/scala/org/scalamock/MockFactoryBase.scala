@@ -42,13 +42,13 @@ trait AbstractMockFactoryBase extends Mock with MockFunctions with Matchers { th
 trait MockFactoryBase extends AbstractMockFactoryBase with MockContext {
   import scala.language.implicitConversions
 
-  initializeExpectations
+  initializeExpectations()
 
   override protected def withExpectations[T](what: => T): T = {
     if (expectationContext == null) {
       // we don't reset expectations for the first test case to allow
       // defining expectations in Suite scope and writing tests in OneInstancePerTest/isolated style 
-      initializeExpectations
+      initializeExpectations()
     }
 
     try {
@@ -84,6 +84,7 @@ trait MockFactoryBase extends AbstractMockFactoryBase with MockContext {
   private def initializeExpectations(): Unit = {
     val initialHandlers = new UnorderedHandlers
     callLog = new CallLog
+    unexpectedCallLog = new CallLog
 
     expectationContext = initialHandlers
     currentExpectationContext = initialHandlers
@@ -92,6 +93,7 @@ trait MockFactoryBase extends AbstractMockFactoryBase with MockContext {
   private def clearExpectations(): Unit = {
     // to forbid setting expectations after verification is done 
     callLog = null
+    unexpectedCallLog = null
     expectationContext = null
     currentExpectationContext = null
   }
@@ -100,12 +102,18 @@ trait MockFactoryBase extends AbstractMockFactoryBase with MockContext {
     callLog foreach expectationContext.verify _
 
     val oldCallLog = callLog
+    val oldUnexpectedCallLog = unexpectedCallLog
     val oldExpectationContext = expectationContext
 
-    clearExpectations()
+    try {
+      doVerifyExpectations(oldCallLog,oldUnexpectedCallLog, oldExpectationContext)
+    } finally {
+      clearExpectations()
+    }
+  }
 
-    if (!oldExpectationContext.isSatisfied)
-      reportUnsatisfiedExpectation(oldCallLog, oldExpectationContext)
+  protected def doVerifyExpectations(callLog: CallLog, unexpectedCallLog: CallLog, expectationContext: Handlers): Unit = {
+    if (!expectationContext.isSatisfied) reportUnsatisfiedExpectation(callLog, expectationContext)
   }
 
   private def inContext[T](context: Handlers)(what: => T): T = {
@@ -117,4 +125,13 @@ trait MockFactoryBase extends AbstractMockFactoryBase with MockContext {
     r
   }
 
+}
+
+trait MockFactoryRecordingUnexpectedCalls extends MockFactoryBase {
+
+  override protected def doVerifyExpectations( callLog: CallLog, unexpectedCallLog: CallLog, expectationContext: Handlers ) = {
+    if (!expectationContext.isSatisfied || unexpectedCallLog.nonEmpty) {
+      reportUnsatisfiedExpectationAndUnexpectedCalls(callLog, unexpectedCallLog, expectationContext)
+    }
+  }
 }
