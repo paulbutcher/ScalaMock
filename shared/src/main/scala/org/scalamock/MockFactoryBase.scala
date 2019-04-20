@@ -42,13 +42,13 @@ trait AbstractMockFactoryBase extends Mock with MockFunctions with Matchers { th
 trait MockFactoryBase extends AbstractMockFactoryBase with MockContext {
   import scala.language.implicitConversions
 
-  initializeExpectations
+  initializeExpectations()
 
   override protected def withExpectations[T](what: => T): T = {
     if (expectationContext == null) {
       // we don't reset expectations for the first test case to allow
       // defining expectations in Suite scope and writing tests in OneInstancePerTest/isolated style 
-      initializeExpectations
+      initializeExpectations()
     }
 
     try {
@@ -78,7 +78,7 @@ trait MockFactoryBase extends AbstractMockFactoryBase with MockContext {
   override protected def inSequenceWithLogging[T](what: => T) =
     inContext(new OrderedHandlers(logging = true))(what)
 
-  //! TODO - https://issues.scala-lang.org/browse/SI-5831
+  // https://issues.scala-lang.org/browse/SI-5831
   implicit val _factory = this
 
   private def initializeExpectations(): Unit = {
