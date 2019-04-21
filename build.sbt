@@ -1,26 +1,11 @@
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
 scalaVersion in ThisBuild := "2.11.12"
-crossScalaVersions in ThisBuild := Seq("2.10.7", "2.11.12", "2.12.6", "2.13.0-M3")
+crossScalaVersions in ThisBuild := Seq("2.11.12", "2.12.6", "2.13.0-M3")
 scalaJSUseRhino in ThisBuild := true
 
 lazy val scalatest = "org.scalatest" %% "scalatest" % "3.0.5-M1"
-lazy val specs2 = Def.setting {
-  val v = CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, 10)) => "3.9.1" // specs2 4.x does not support Scala 2.10
-    case _ => "4.0.2"
-  }
-  "org.specs2" %% "specs2-core" % v
-}
-
-lazy val withQuasiquotes = libraryDependencies ++= {
-  CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((2, 10)) =>
-      Seq(compilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
-        "org.scalamacros" %% "quasiquotes" % "2.1.0" cross CrossVersion.binary)
-    case _ => Seq.empty
-  }
-}
+lazy val specs2 = "org.specs2" %% "specs2-core" % "4.0.2"
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
   unmanagedSourceDirectories in Compile ++= {
@@ -31,8 +16,7 @@ val commonSettings = Defaults.coreDefaultSettings ++ Seq(
         None
     }
   },
-  scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-Xcheckinit",
-    "-target:jvm-" + (if (scalaVersion.value < "2.11") "1.7" else "1.8"))
+  scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-Xcheckinit", "-target:jvm-1.8")
 )
 
 lazy val scalamock = crossProject(JSPlatform, JVMPlatform) in file(".") settings(
@@ -47,9 +31,8 @@ lazy val scalamock = crossProject(JSPlatform, JVMPlatform) in file(".") settings
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
       scalatest % Optional,
-      specs2.value % Optional
-    ),
-    withQuasiquotes
+      specs2 % Optional
+    )
   )
 
 lazy val `scalamock-js` = scalamock.js
@@ -61,7 +44,7 @@ lazy val examples = crossProject(JSPlatform, JVMPlatform) in file("examples") se
   skip in publish := true,
   libraryDependencies ++= Seq(
     scalatest % Test,
-    specs2.value % Test
+    specs2 % Test
   )
 ) dependsOn scalamock
 
