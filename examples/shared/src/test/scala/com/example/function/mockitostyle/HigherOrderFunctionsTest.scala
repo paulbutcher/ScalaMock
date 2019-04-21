@@ -58,7 +58,7 @@ class HigherOrderFunctionsTest extends FreeSpec with MockFactory {
         f()
       }
 
-      f verify() repeated 4 times
+      f.verify().repeated(4).times()
     }
 
     "testFoldLeft" in {

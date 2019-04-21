@@ -47,7 +47,7 @@ class MockNamingTest extends IsolatedSpec {
   }
 
   it should "have a sensible method name when mocking polymorphic method" in {
-    getMockMethodName(m.polymorphic _) shouldBe "<mock> TestTrait.polymorphic[T]"
+    getMockMethodName(m.polymorphic(_: List[_])) shouldBe "<mock> TestTrait.polymorphic[T]"
   }
 
   it should "have a sensible method name when mocking overloaded method" in {

@@ -166,7 +166,7 @@ class MatchersTest extends IsolatedSpec {
   }
 
   it should "be displayed correctly" in withExpectations {
-    val expectation = (userDatabaseMock.addUserAddress _).expects(*, argAssert{ _: Address => Unit}).never()
+    val expectation = (userDatabaseMock.addUserAddress _).expects(*, argAssert{ _: Address => ()}).never()
     expectation.toString() should include("UserDatabase.addUserAddress(*, argAssert[Address])")
   }
 
