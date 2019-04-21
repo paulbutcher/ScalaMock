@@ -50,7 +50,7 @@ class HigherOrderFunctionsTest extends FreeSpec with MockFactory {
       }
 
       val f = mockFunction[Unit]
-      f expects() repeated 4 times
+      f.expects().repeated(4).times()
 
       repeat(4) {
         f()

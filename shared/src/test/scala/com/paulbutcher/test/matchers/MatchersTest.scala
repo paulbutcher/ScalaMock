@@ -128,7 +128,7 @@ class MatchersTest extends IsolatedSpec {
   }
 
   it should "be displayed correctly" in withExpectations {
-    val expectation = (userDatabaseMock.addUserAddress _) expects (*, argThat {( _: Address) => true }) never ()
+    val expectation = (userDatabaseMock.addUserAddress _).expects(*, argThat { _: Address => true }).never()
     expectation.toString() should include("UserDatabase.addUserAddress(*, argThat[Address])")
   }
 
@@ -166,16 +166,16 @@ class MatchersTest extends IsolatedSpec {
   }
 
   it should "be displayed correctly" in withExpectations {
-    val expectation = (userDatabaseMock.addUserAddress _) expects (*, argAssert{( _: Address) => Unit}) never ()
+    val expectation = (userDatabaseMock.addUserAddress _).expects(*, argAssert{ _: Address => ()}).never()
     expectation.toString() should include("UserDatabase.addUserAddress(*, argAssert[Address])")
   }
 
   behavior of "custom matcher"
 
   it can "be used to create complex predicates" in withExpectations {
-    (userDatabaseMock.addUserAddress _) expects (UserMatcher().withName("Alan"), *) returning "matched"
-    (userDatabaseMock.addUserAddress _) expects (UserMatcher().withName("Bob"), *) returning "matched"
-    (userDatabaseMock.addUserAddress _) expects (*, *) returning "unmatched"
+    (userDatabaseMock.addUserAddress _).expects(UserMatcher().withName("Alan"), *).returning("matched")
+    (userDatabaseMock.addUserAddress _).expects(UserMatcher().withName("Bob"), *).returning("matched")
+    (userDatabaseMock.addUserAddress _).expects(*, *).returning("unmatched")
 
     userDatabaseMock.addUserAddress(User("Alan", 23), Address("Berlin", "Turmstrasse 12")) shouldBe "matched"
     userDatabaseMock.addUserAddress(User("Craig", 23), Address("Warsaw", "Marszalkowska 123")) shouldBe "unmatched"
@@ -183,7 +183,7 @@ class MatchersTest extends IsolatedSpec {
   }
 
   it should "be displayed correctly" in withExpectations {
-    val expectation = (userDatabaseMock.addUserAddress _) expects (UserMatcher().withName("Alan"), *) never ()
+    val expectation = (userDatabaseMock.addUserAddress _).expects(UserMatcher().withName("Alan"), *).never()
     expectation.toString() should include("UserDatabase.addUserAddress(UserMatcher(name=Alan), *)")
   }
 

@@ -35,20 +35,20 @@ class ControllerTest extends FunSuite with MockFactory {
 
     inSequence {
       inAnyOrder {
-        (mockTurtle.getPosition _) when () returns (0.0, 0.0)
-        (mockTurtle.getAngle _) when () returns 0.0 once
+        (mockTurtle.getPosition _).when().returns(0.0, 0.0)
+        (mockTurtle.getAngle _).when().returns(0.0).once()
       }
-      (mockTurtle.getAngle _) when () returns Pi / 4
+      (mockTurtle.getAngle _).when().returns(Pi / 4)
     }
  
     controller.drawLine((1.0, 1.0), (2.0, 1.0))
     
     inSequence {
-      (mockTurtle.turn _) verify ~(Pi / 4)
-      (mockTurtle.forward _) verify ~sqrt(2.0)
-      (mockTurtle.turn _) verify ~(-Pi / 4)
-      (() => mockTurtle.penDown) verify ()
-      (mockTurtle.forward _) verify 1.0
+      (mockTurtle.turn _).verify(~(Pi / 4))
+      (mockTurtle.forward _).verify(~sqrt(2.0))
+      (mockTurtle.turn _).verify(~(-Pi / 4))
+      (() => mockTurtle.penDown()).verify()
+      (mockTurtle.forward _).verify(1.0)
     }
   }
 }
