@@ -27,7 +27,7 @@ publishConfiguration in ThisBuild := publishConfiguration.value.withOverwrite(tr
 publishLocalConfiguration in ThisBuild := publishLocalConfiguration.value.withOverwrite(true)
 
 addCommandAlias("ci-all",  ";+clean ;+compile ;+test ;+package")
-addCommandAlias("release", ";+publishSigned ;sonatypeReleaseAll")
+addCommandAlias("release", ";+scalamockJVM/publishSigned ;+scalamockJS/publishSigned ;sonatypeReleaseAll")
 
 credentials ++= (
   for {
