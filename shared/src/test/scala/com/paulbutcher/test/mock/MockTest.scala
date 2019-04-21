@@ -233,7 +233,7 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
         }
 
         val m = mock[Foo]
-        (m.bar(_: Int)(_: Seq[_])) expects (42, Seq("1", "2")) returning "baz" once()
+        (m.bar(_: Int)(_: Seq[_])).expects(42, Seq("1", "2")).returning("baz").once()
         m.bar(42)("1", "2") === "baz"
       }
     }
@@ -463,7 +463,7 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
       }
 
       val m = mock[FinalMethodTrait]  //test will not compile if the test fails (cannot override final member)
-      m.somePublicMethod _ expects * anyNumberOfTimes()
+      (m.somePublicMethod _).expects(*).anyNumberOfTimes()
       // next line will cause a runtime error and is not valid
       // m.someFinalMethod _ expects * anyNumberOfTimes()
     }
@@ -476,7 +476,7 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
       }
 
       val m = mock[FooTrait]
-      m.somePublicMethod _ expects * anyNumberOfTimes()
+      (m.somePublicMethod _).expects(*).anyNumberOfTimes()
       // next lines will cause a runtime error and are not valid
       // m.privateMethod _ expects() anyNumberOfTimes()
       // m.protectedMethod _ expects() anyNumberOfTimes()
@@ -486,11 +486,11 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
       val m = mock[TestTrait]
 
       inAnyOrderWithLogging {
-        m.oneParam _ expects * twice()
+        (m.oneParam _).expects(*).twice()
       }
       inSequenceWithLogging {
-        m.twoParams _ expects(*, *) once()
-        (m.overloaded(_: Int)) expects * once()
+        (m.twoParams _).expects(*, *).once()
+        (m.overloaded(_: Int)).expects(*).once()
       }
       m.oneParam(5)
       m.oneParam(42)
