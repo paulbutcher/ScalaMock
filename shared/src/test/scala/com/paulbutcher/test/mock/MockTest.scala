@@ -497,5 +497,13 @@ class MockTest extends FreeSpec with MockFactory with Matchers {
       m.twoParams(1, 2)
       m.overloaded(99)
     }
+
+    "be able to mock notify(Int)" in withExpectations {
+      trait HasNotifyMethod {
+        def notify(x: Int): Int
+      }
+
+      "stub[HasNotifyMethod]" should compile
+    }
   }
 }
