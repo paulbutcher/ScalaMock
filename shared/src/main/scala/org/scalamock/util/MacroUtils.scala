@@ -56,7 +56,10 @@ private[scalamock] class MacroUtils[C <: Context](ctx: C) extends MacroAdapter[C
 
   def paramTypes(methodType: Type): List[Type] = paramss(methodType).flatten map { _.typeSignature }
 
-  def isMemberOfObject(m: Symbol) = TypeTag.Object.tpe.member(m.name) != NoSymbol
+  def isMemberOfObject(s: Symbol) = {
+    val res = TypeTag.Object.tpe.member(s.name)
+    res != NoSymbol && res.typeSignature == s.typeSignature
+  }
 
   // <|expr|>.asInstanceOf[<|t|>]
   def castTo(expr: Tree, t: Type): Tree = TypeApply(selectTerm(expr, "asInstanceOf"), List(TypeTree(t)))
