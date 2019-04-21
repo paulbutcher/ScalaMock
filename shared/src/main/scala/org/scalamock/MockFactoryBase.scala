@@ -20,24 +20,10 @@
 
 package org.scalamock
 
-import org.scalamock.clazz.Mock
 import org.scalamock.context.{CallLog, MockContext}
-import org.scalamock.function._
 import org.scalamock.handlers.{Handlers, OrderedHandlers, UnorderedHandlers}
-import org.scalamock.matchers._
 
 import scala.util.control.NonFatal
-
-/** ScalaMock public interface */
-trait AbstractMockFactoryBase extends Mock with MockFunctions with Matchers { this: MockContext =>
-
-  protected def withExpectations[T](what: => T): T
-
-  protected def inAnyOrder[T](what: => T): T
-  protected def inSequence[T](what: => T): T
-  protected def inAnyOrderWithLogging[T](what: => T): T
-  protected def inSequenceWithLogging[T](what: => T): T
-}
 
 trait MockFactoryBase extends AbstractMockFactoryBase with MockContext {
   import scala.language.implicitConversions
