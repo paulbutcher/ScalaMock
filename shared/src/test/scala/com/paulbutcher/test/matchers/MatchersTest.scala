@@ -25,13 +25,10 @@ import org.scalamock.matchers.Matcher
 import org.scalatest.exceptions.TestFailedException
 
 /** Example Matcher */
-case class UserMatcher(name: Option[String] = None) extends Matcher[User] {
-  def withName(name: String): UserMatcher = copy(name = Some(name))
-  override def toString() = "UserMatcher(name=%s)".format(name.getOrElse(""))
+case class UserMatcher(expectedName: String) extends Matcher[User] {
+  override def toString = s"UserMatcher(name=$expectedName)"
 
-  override def safeEquals(that: User): Boolean = {
-    name.forall(expectedName => that.name == expectedName)
-  }
+  override def safeEquals(that: User): Boolean = that.name == expectedName
 }
 
 class MatchersTest extends IsolatedSpec {
@@ -173,8 +170,8 @@ class MatchersTest extends IsolatedSpec {
   behavior of "custom matcher"
 
   it can "be used to create complex predicates" in withExpectations {
-    (userDatabaseMock.addUserAddress _).expects(UserMatcher().withName("Alan"), *).returning("matched")
-    (userDatabaseMock.addUserAddress _).expects(UserMatcher().withName("Bob"), *).returning("matched")
+    (userDatabaseMock.addUserAddress _).expects(UserMatcher("Alan"), *).returning("matched")
+    (userDatabaseMock.addUserAddress _).expects(UserMatcher("Bob"), *).returning("matched")
     (userDatabaseMock.addUserAddress _).expects(*, *).returning("unmatched")
 
     userDatabaseMock.addUserAddress(User("Alan", 23), Address("Berlin", "Turmstrasse 12")) shouldBe "matched"
@@ -183,7 +180,7 @@ class MatchersTest extends IsolatedSpec {
   }
 
   it should "be displayed correctly" in withExpectations {
-    val expectation = (userDatabaseMock.addUserAddress _).expects(UserMatcher().withName("Alan"), *).never()
+    val expectation = (userDatabaseMock.addUserAddress _).expects(UserMatcher("Alan"), *).never()
     expectation.toString() should include("UserDatabase.addUserAddress(UserMatcher(name=Alan), *)")
   }
 
