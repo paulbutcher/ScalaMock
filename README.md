@@ -3,7 +3,7 @@
 
 Native Scala mocking.
 
-Official website: [http://scalamock.org/](http://scalamock.org/)
+Official website: [scalamock.org](https://scalamock.org/)
 
 ## Examples
 
