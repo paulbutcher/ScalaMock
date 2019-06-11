@@ -57,7 +57,7 @@ A more complete example is on our [Quickstart](http://scalamock.org/quick-start/
 * Mock and Stub support
 * Macro Mocks and JVM Proxy Mocks
 * Scala.js support
-* built for Scala 2.11, 2.12, 2.13.0-RC1
+* built for Scala 2.11, 2.12, 2.13
 * Scala 2.10 support up to ScalaMock 4.2.0
 
 ## Using ScalaMock
