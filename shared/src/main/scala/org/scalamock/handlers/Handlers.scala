@@ -23,19 +23,17 @@ package org.scalamock.handlers
 import scala.collection.mutable.ListBuffer
 
 private[scalamock] abstract class Handlers extends Handler {
+
+  def add(handler: Handler): Unit = handlers += handler
   
-  def add(handler: Handler): Unit = {
-    handlers += handler
-  }
+  def isSatisfied: Boolean = handlers forall (_.isSatisfied)
+
+  override def toString = handlers.flatMap { h =>
+      // see https://github.com/scala/bug/issues/11125. linesIterator would be better but we crossbuild with 2.11
+      scala.Predef.augmentString(h.toString).lines.toArray.map { l => "  " + l }
+    }.mkString(s"$prefix {\n", "\n", "\n}")
   
-  def isSatisfied = handlers forall (_.isSatisfied)
-  
-  override def toString = 
-    handlers.map { h =>
-      h.toString.lines.toArray.map { l => "  " + l}
-    }.flatten.mkString(s"$prefix {\n", "\n", "\n}")
-  
-  protected val handlers = new ListBuffer[Handler]
-  
+  protected var handlers = new ListBuffer[Handler]
+
   protected val prefix: String
 }
