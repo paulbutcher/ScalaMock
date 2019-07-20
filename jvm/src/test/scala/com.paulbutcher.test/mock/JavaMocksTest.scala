@@ -35,15 +35,15 @@ class JavaMocksTest extends IsolatedSpec {
   it should "mock classes with bridged methods" in {
     val m = mock[JavaClassWithBridgeMethod]
 
-    (m.compare _).expects(new Integer(5)).returning(1)
-    (m.compare _).expects(new Integer(6)).returning(2)
+    (m.compare _).expects(Integer.valueOf(5)).returning(1)
+    (m.compare _).expects(Integer.valueOf(6)).returning(2)
 
     def useBridgeMethod[T](gen: JavaGenericInterface[T], x: T) = {
       gen.compare(x)
     }
 
-    assertResult(1) { m.compare(new Integer(5)) } // calls: int compare(Integer)
-    assertResult(2) { useBridgeMethod(m, new Integer(6)) } // calls: int compare(Object)
+    assertResult(1) { m.compare(Integer.valueOf(5)) } // calls: int compare(Integer)
+    assertResult(2) { useBridgeMethod(m, Integer.valueOf(6)) } // calls: int compare(Object)
   }
 
   //! TODO - this is going to have to wait for macro types for a proper solution
@@ -87,7 +87,7 @@ class JavaMocksTest extends IsolatedSpec {
   it should "mock a Java class with an overloaded method (the same param count)" in { // test for issue #73
     val m = mock[JavaClassWithOverloadedMethod]
     (m.overloadedSameParamCount(_: String)).expects("one").returning("first")
-    (m.overloadedSameParamCount(_: Integer)).expects(new Integer(2)).returning(2)
+    (m.overloadedSameParamCount(_: Integer)).expects(Integer.valueOf(2)).returning(2)
 
     m.overloadedSameParamCount("one") shouldBe "first"
     m.overloadedSameParamCount(2) shouldBe 2
