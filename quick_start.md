@@ -12,7 +12,7 @@ To use ScalaMock in [sbt](http://www.scala-sbt.org/) with [ScalaTest](http://www
 
 ```scala
 // Add the ScalaMock library (versions 4.0.0 onwards)
-libraryDependencies += "org.scalamock" %% "scalamock" % "4.1.0" % Test
+libraryDependencies += "org.scalamock" %% "scalamock" % "4.4.0" % Test
 // also add ScalaTest as a framework to run the tests
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % Test
 ```
