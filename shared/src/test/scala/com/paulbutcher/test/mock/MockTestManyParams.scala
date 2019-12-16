@@ -23,8 +23,10 @@ package com.paulbutcher.test.mock
 import com.paulbutcher.test.{ManyParamsClass, ManyParamsTrait}
 import org.scalamock.scalatest.MockFactory
 import org.scalatest._
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
 
-class MockTestManyParams extends FreeSpec with MockFactory with Matchers {
+class MockTestManyParams extends AnyFreeSpec with MockFactory with Matchers {
   autoVerify = false
 
   "Mocks should" - {

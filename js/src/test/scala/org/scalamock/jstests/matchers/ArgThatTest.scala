@@ -21,9 +21,10 @@
 package org.scalamock.jstests.matchers
 
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.{ FlatSpec, Matchers }
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ArgThatTest extends FlatSpec with Matchers with MockFactory {
+class ArgThatTest extends AnyFlatSpec with Matchers with MockFactory {
 
   behavior of "ArgThat"
 

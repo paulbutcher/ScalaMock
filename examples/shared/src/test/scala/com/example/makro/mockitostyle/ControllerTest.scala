@@ -22,11 +22,11 @@ package com.example.makro.mockitostyle
 
 import com.example.{Controller, Turtle}
 
-import org.scalatest.FunSuite
 import org.scalamock.scalatest.MockFactory
 import scala.math.{Pi, sqrt}
+import org.scalatest.funsuite.AnyFunSuite
  
-class ControllerTest extends FunSuite with MockFactory {
+class ControllerTest extends AnyFunSuite with MockFactory {
   import scala.language.postfixOps
  
   test("draw line") {

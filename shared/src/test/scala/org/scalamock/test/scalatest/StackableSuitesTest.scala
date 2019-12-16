@@ -24,8 +24,11 @@ import org.scalamock.scalatest.MockFactory
 import org.scalamock.test.mockable.TestTrait
 import org.scalatest._
 import org.scalatest.events.TestSucceeded
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class StackableSuitesTest extends FlatSpec with Matchers with TestSuiteRunner {
+class StackableSuitesTest extends AnyFlatSpec with Matchers with TestSuiteRunner {
 
   object EventLogger {
     var events: List[String] = List.empty
@@ -41,7 +44,7 @@ class StackableSuitesTest extends FlatSpec with Matchers with TestSuiteRunner {
     }
   }
 
-  class TestedSuite extends FunSuite with SuiteWrapper with MockFactory with Matchers {
+  class TestedSuite extends AnyFunSuite with SuiteWrapper with MockFactory with Matchers {
     test("execute block of code") {
       val mockedTrait = mock[TestTrait]
       (mockedTrait.oneParamMethod _).expects(1).onCall { arg: Int =>

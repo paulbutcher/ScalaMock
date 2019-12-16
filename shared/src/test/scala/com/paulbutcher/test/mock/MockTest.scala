@@ -22,7 +22,6 @@ package com.paulbutcher.test.mock
 
 import org.scalamock.function.FunctionAdapter1
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.{FreeSpec, Matchers}
 
 import scala.reflect.ClassTag
 import scala.reflect.runtime.universe.{TypeTag, typeTag}
@@ -30,8 +29,10 @@ import scala.util.{Failure, Try}
 
 import com.paulbutcher.test._
 import some.other.pkg._
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
 
-class MockTest extends FreeSpec with MockFactory with Matchers {
+class MockTest extends AnyFreeSpec with MockFactory with Matchers {
   
   autoVerify = false
   

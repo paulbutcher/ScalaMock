@@ -22,12 +22,12 @@ package com.example.makro.mockitostyle
 
 import com.example.{Order, Warehouse}
 
-import org.scalatest.WordSpec
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.wordspec.AnyWordSpec
 
 // This is a reworked version of the example from Martin Fowler's article
 // Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
-class OrderTest extends WordSpec with MockFactory {
+class OrderTest extends AnyWordSpec with MockFactory {
   import language.postfixOps
   
   "An order" when {

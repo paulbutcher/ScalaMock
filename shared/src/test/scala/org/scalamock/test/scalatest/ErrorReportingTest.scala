@@ -26,14 +26,17 @@ import org.scalatest._
 import org.scalatest.exceptions.TestFailedException
 
 import scala.language.postfixOps
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
 /**
  *  Tests that errors are reported correctly in ScalaTest suites
  */
-class ErrorReportingTest extends FlatSpec with Matchers with TestSuiteRunner {
+class ErrorReportingTest extends AnyFlatSpec with Matchers with TestSuiteRunner {
 
   "ScalaTest suite" should "report unexpected call correctly" in {
-    class TestedSuite extends FunSuite with MockFactory {
+    class TestedSuite extends AnyFunSuite with MockFactory {
       test("execute block of code") {
         val mockedTrait = mock[TestTrait]
         mockedTrait.oneParamMethod(3)
@@ -46,7 +49,7 @@ class ErrorReportingTest extends FlatSpec with Matchers with TestSuiteRunner {
   }
 
   it should "report unexpected call correctly when expectations are set" in {
-    class TestedSuite extends FunSuite with MockFactory {
+    class TestedSuite extends AnyFunSuite with MockFactory {
       test("execute block of code") {
         val mockedTrait = mock[TestTrait]
         (mockedTrait.oneParamMethod _).expects(1).returning("one")
@@ -61,7 +64,7 @@ class ErrorReportingTest extends FlatSpec with Matchers with TestSuiteRunner {
   }
 
   it should "not hide NullPointerException" in {
-    class TestedSuite extends FunSuite with MockFactory {
+    class TestedSuite extends AnyFunSuite with MockFactory {
       test("execute block of code") {
         val mockedTrait = mock[TestTrait]
         (mockedTrait.oneParamMethod _).expects(1).returning("one")
@@ -75,7 +78,7 @@ class ErrorReportingTest extends FlatSpec with Matchers with TestSuiteRunner {
   }
 
   it should "report default mock names" in {
-    class TestedSuite extends FunSuite with MockFactory {
+    class TestedSuite extends AnyFunSuite with MockFactory {
       test("execute block of code") {
         val mockA = mock[TestTrait]
         val mockB = mock[TestTrait]
@@ -101,7 +104,7 @@ class ErrorReportingTest extends FlatSpec with Matchers with TestSuiteRunner {
   }
 
   it should "report unexpected calls in readable manner" in {
-    class TestedSuite extends FunSuite with MockFactory {
+    class TestedSuite extends AnyFunSuite with MockFactory {
       val suiteScopeMock = mock[TestTrait]("suite mock")
       (() => suiteScopeMock.noParamMethod()).expects().returning("two").twice()
 

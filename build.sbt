@@ -4,7 +4,7 @@ scalaVersion in ThisBuild := "2.11.12"
 crossScalaVersions in ThisBuild := Seq("2.11.12", "2.12.8", "2.13.0")
 scalaJSUseRhino in ThisBuild := true
 
-lazy val scalatest = "org.scalatest" %% "scalatest" % "3.0.8"
+lazy val scalatest = "org.scalatest" %% "scalatest" % "3.1.0"
 lazy val specs2 = "org.specs2" %% "specs2-core" % "4.5.1"
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
@@ -50,3 +50,7 @@ lazy val examples = crossProject(JSPlatform, JVMPlatform) in file("examples") se
 
 lazy val `examples-js` = examples.js
 lazy val `examples-jvm` = examples.jvm
+
+scalafixDependencies in ThisBuild += "org.scalatest" %% "autofix" % "3.1.0.0"
+scalacOptions += "-Yrangepos"
+addCompilerPlugin(scalafixSemanticdb) // enable SemanticDB

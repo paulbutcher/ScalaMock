@@ -22,13 +22,13 @@ package org.scalamock.test.scalatest
 
 import org.scalamock.scalatest.MockFactory
 import org.scalamock.test.mockable.TestTrait
-import org.scalatest.FlatSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}
+import org.scalatest.flatspec.AnyFlatSpec
 
-class ConcurrencyTest extends FlatSpec with MockFactory {
+class ConcurrencyTest extends AnyFlatSpec with MockFactory {
   behavior of "ScalaMock"
 
   it should "work with Futures" in {
