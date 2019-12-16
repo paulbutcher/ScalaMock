@@ -50,7 +50,3 @@ lazy val examples = crossProject(JSPlatform, JVMPlatform) in file("examples") se
 
 lazy val `examples-js` = examples.js
 lazy val `examples-jvm` = examples.jvm
-
-scalafixDependencies in ThisBuild += "org.scalatest" %% "autofix" % "3.1.0.0"
-scalacOptions += "-Yrangepos"
-addCompilerPlugin(scalafixSemanticdb) // enable SemanticDB
