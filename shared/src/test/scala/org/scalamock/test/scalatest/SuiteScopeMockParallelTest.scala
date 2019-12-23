@@ -22,14 +22,16 @@ package org.scalamock.test.scalatest
 
 import org.scalamock.scalatest.MockFactory
 import org.scalamock.test.mockable.TestTrait
-import org.scalatest.{FlatSpec, Matchers, ParallelTestExecution}
+import org.scalatest.ParallelTestExecution
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
  *  Tests for mocks defined in suite scope (i.e. outside test case scope)
  *
  *  Tests for issue #25
  */
-class SuiteScopeMockParallelTest extends FlatSpec with Matchers with ParallelTestExecution with MockFactory {
+class SuiteScopeMockParallelTest extends AnyFlatSpec with Matchers with ParallelTestExecution with MockFactory {
   // please note that this test suite mixes in ParallelTestExecution trait
 
   override def newInstance = new SuiteScopeMockParallelTest

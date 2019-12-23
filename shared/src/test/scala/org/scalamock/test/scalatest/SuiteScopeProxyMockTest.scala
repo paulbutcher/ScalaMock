@@ -23,13 +23,15 @@ package org.scalamock.test.scalatest
 import org.scalamock.scalatest.proxy.MockFactory
 import org.scalamock.test.mockable.TestTrait
 import org.scalatest._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
 /**
  *  Tests for proxy mocks defined in suite scope (i.e. outside test case scope)
  *
  *  Test for issue #35
  */
-class SuiteScopeProxyMockTest extends FlatSpec with Matchers with OneInstancePerTest with MockFactory {
+class SuiteScopeProxyMockTest extends AnyFlatSpec with Matchers with OneInstancePerTest with MockFactory {
   // please note that this test suite mixes in OneInstancePerTest trait
 
   override def newInstance = new SuiteScopeProxyMockTest

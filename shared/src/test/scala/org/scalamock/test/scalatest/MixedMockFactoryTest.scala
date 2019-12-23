@@ -1,9 +1,10 @@
 package org.scalamock.test.scalatest
 
 import org.scalamock.scalatest.MixedMockFactory
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class MixedMockFactoryTest extends FlatSpec with MixedMockFactory with Matchers {
+class MixedMockFactoryTest extends AnyFlatSpec with MixedMockFactory with Matchers {
   "mixed mocks" should "work" in {
     trait Foo {
       def getI: Int

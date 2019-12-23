@@ -22,9 +22,9 @@ package com.paulbutcher.test.proxy
 
 import com.paulbutcher.test.TestTrait
 import org.scalamock.scalatest.proxy.MockFactory
-import org.scalatest.FreeSpec
+import org.scalatest.freespec.AnyFreeSpec
 
-class ProxyMockTest extends FreeSpec with MockFactory {
+class ProxyMockTest extends AnyFreeSpec with MockFactory {
   
   autoVerify = false
   

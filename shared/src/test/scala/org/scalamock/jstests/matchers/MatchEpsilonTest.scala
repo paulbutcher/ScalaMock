@@ -22,9 +22,9 @@ package org.scalamock.jstests.matchers
 
 import org.scalamock._
 import org.scalamock.matchers.MatchEpsilon
-import org.scalatest.FreeSpec
+import org.scalatest.freespec.AnyFreeSpec
 
-class MatchEpsilonTest extends FreeSpec {
+class MatchEpsilonTest extends AnyFreeSpec {
 
   "MatchEpsilon should" - {
     "match anything that's close to the given value" in {

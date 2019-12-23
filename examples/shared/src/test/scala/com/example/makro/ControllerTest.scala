@@ -20,12 +20,12 @@
 
 package com.example.makro
 
-import org.scalatest.FunSuite
 import org.scalamock.scalatest.MockFactory
 import scala.math.{Pi, sqrt}
 import com.example.{Controller, Turtle}
+import org.scalatest.funsuite.AnyFunSuite
  
-class ControllerTest extends FunSuite with MockFactory {
+class ControllerTest extends AnyFunSuite with MockFactory {
  
   test("draw line") {
     val mockTurtle = mock[Turtle]

@@ -19,8 +19,9 @@
 // THE SOFTWARE.
 
 package org.scalamock.test.scalatest
-import org.scalatest.events.{Event, TestFailed}
 import org.scalatest._
+import org.scalatest.events.{Event, TestFailed}
+import org.scalatest.matchers.should.Matchers
 
 import scala.language.postfixOps
 

@@ -21,9 +21,9 @@
 package com.paulbutcher.test.stub
 
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.FreeSpec
+import org.scalatest.freespec.AnyFreeSpec
 
-class StubFunctionTest extends FreeSpec with MockFactory {
+class StubFunctionTest extends AnyFreeSpec with MockFactory {
   
   autoVerify = false
   

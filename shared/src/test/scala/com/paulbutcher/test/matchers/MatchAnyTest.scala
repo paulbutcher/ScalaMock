@@ -21,9 +21,9 @@
 package com.paulbutcher.test.matchers
 
 import org.scalamock.matchers.MatchAny
-import org.scalatest.FlatSpec
+import org.scalatest.flatspec.AnyFlatSpec
 
-class MatchAnyTest extends FlatSpec {
+class MatchAnyTest extends AnyFlatSpec {
 
   "MatchAny" should "match anything" in {
     assert(new MatchAny === 1.0)

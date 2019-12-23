@@ -22,9 +22,11 @@ package org.scalamock.test.scalatest
 
 import org.scalamock.scalatest.PathMockFactory
 import org.scalatest.exceptions.TestFailedException
-import org.scalatest.{Matchers, path}
+import org.scalatest.path
+import org.scalatest.funspec
+import org.scalatest.matchers.should.Matchers
 
-class PathSpecTest extends path.FunSpec with Matchers with PathMockFactory {
+class PathSpecTest extends funspec.PathAnyFunSpec with Matchers with PathMockFactory {
   override def newInstance = new PathSpecTest
 
   describe("PathSpec") {

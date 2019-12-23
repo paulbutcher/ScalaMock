@@ -21,9 +21,9 @@
 package com.example.function
 
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.FreeSpec
+import org.scalatest.freespec.AnyFreeSpec
 
-class HigherOrderFunctionsTest extends FreeSpec with MockFactory {
+class HigherOrderFunctionsTest extends AnyFreeSpec with MockFactory {
 
   import language.postfixOps
 

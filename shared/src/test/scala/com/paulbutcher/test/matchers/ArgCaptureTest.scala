@@ -22,10 +22,11 @@ package com.paulbutcher.test.matchers
 
 import com.paulbutcher.test.TestTrait
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.{FlatSpec, Matchers}
 import org.scalamock.matchers.ArgCapture._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers
 
-class ArgCaptureTest extends FlatSpec with Matchers with MockFactory {
+class ArgCaptureTest extends AnyFlatSpec with Matchers with MockFactory {
   behavior of "CaptureOne"
 
   it should "capture arguments - string" in {

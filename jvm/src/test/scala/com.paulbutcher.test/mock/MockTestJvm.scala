@@ -21,10 +21,11 @@
 package com.paulbutcher.test.mock
 
 import org.scalamock.scalatest.MockFactory
-import org.scalatest.{FreeSpec, Matchers}
 import com.paulbutcher.test._
+import org.scalatest.freespec.AnyFreeSpec
+import org.scalatest.matchers.should.Matchers
 
-class MockTestJvm extends FreeSpec with MockFactory with Matchers {
+class MockTestJvm extends AnyFreeSpec with MockFactory with Matchers {
   
   autoVerify = false
   
