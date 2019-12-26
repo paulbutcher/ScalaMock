@@ -18,42 +18,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.example.proxy.mockitostyle
+package com.example
 
-import com.example.{Order, Warehouse}
-
-import org.scalatest.WordSpec
-import org.scalamock.scalatest.proxy.MockFactory
-
-// This is a reworked version of the example from Martin Fowler's article
-// Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
-class OrderTest extends WordSpec with MockFactory {
-  
-  "An order" when {
-    "in stock" should {
-      "remove inventory" in {
-        val mockWarehouse = stub[Warehouse]
-        
-        mockWarehouse.when('hasInventory)("Talisker", 50).returns(true)
-        
-        val order = new Order("Talisker", 50)
-        order.fill(mockWarehouse)
-        
-        assert(order.isFilled)
-        mockWarehouse.verify('remove)("Talisker", 50).once
-      }
-    }
-    
-    "out of stock" should {
-      "remove nothing" in {
-        val mockWarehouse = stub[Warehouse]
-        mockWarehouse.when('hasInventory)(*, *).returns(false)
-        
-        val order = new Order("Talisker", 50)
-        order.fill(mockWarehouse)
-        
-        assert(!order.isFilled)
-      }
-    }
+import scala.math.{atan2, sqrt}
+ 
+class Controller(turtle: Turtle) {
+ 
+  def drawLine(start: (Double, Double), end: (Double, Double)): Unit = {
+    moveTo(start)
+ 
+    val initialAngle = turtle.getAngle
+    val deltaPos = delta(start, end)
+ 
+    turtle.turn(angle(deltaPos) - initialAngle)
+    turtle.penDown()
+    turtle.forward(distance(deltaPos))
+  }
+ 
+  def delta(pos1: (Double, Double), pos2: (Double, Double)) = 
+    (pos2._1 - pos1._1, pos2._2 - pos1._2)
+ 
+  def distance(delta: (Double, Double)) = 
+    sqrt(delta._1 * delta._1 + delta._2 * delta._2)
+ 
+  def angle(delta: (Double, Double)) = 
+    atan2(delta._2, delta._1)
+ 
+  def moveTo(pos: (Double, Double)): Unit = {
+    val initialPos = turtle.getPosition
+    val initialAngle = turtle.getAngle
+ 
+    val deltaPos = delta(initialPos, pos)
+ 
+    turtle.penUp()
+    turtle.turn(angle(deltaPos) - initialAngle)
+    turtle.forward(distance(deltaPos))
   }
 }

@@ -1,15 +1,15 @@
 // Copyright (c) 2011-2015 ScalaMock Contributors (https://github.com/paulbutcher/ScalaMock/graphs/contributors)
-// 
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be included in
 // all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,38 +18,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package com.example.makro
+package com.example
 
-import org.scalamock.specs2.MockContext
-import org.specs2.mutable.Specification
+import org.scalamock.scalatest.MockFactory
+import org.scalatest.funsuite.AnyFunSuite
 
-import com.example.Order
-import com.example.Warehouse
-
-/**
- * This is a demonstration and test of the Specs2 integration, using the example from
- * Martin Fowler's article Mocks Aren't Stubs http://martinfowler.com/articles/mocksArentStubs.html
- */
-class OrderSpecification extends Specification {
-
-  "An order" should {
-    "remove inventory when in stock" in new MockContext {
-      val mockWarehouse = mock[Warehouse]
-      inSequence {
-        (mockWarehouse.hasInventory _).expects("Talisker", 50).returning(true).once
-        (mockWarehouse.remove _).expects("Talisker", 50).once
+import scala.math.{Pi, sqrt}
+ 
+class ControllerTest extends AnyFunSuite with MockFactory {
+ 
+  test("draw line") {
+    val mockTurtle = mock[Turtle]
+    val controller = new Controller(mockTurtle)
+ 
+    inSequence {
+      inAnyOrder {
+        (() => mockTurtle.penUp()).expects()
+        (mockTurtle.getPosition _).expects().returning(0.0, 0.0)
+        (mockTurtle.getAngle _).expects().returning(0.0)
       }
-      val order = new Order("Talisker", 50)
-      order.fill(mockWarehouse)
-      order.isFilled must beTrue
+      (mockTurtle.turn _).expects(~(Pi / 4))
+      (mockTurtle.forward _).expects(~sqrt(2.0))
+      (mockTurtle.getAngle _).expects().returning(Pi / 4)
+      (mockTurtle.turn _).expects(~(-Pi / 4))
+      (() => mockTurtle.penDown()).expects()
+      (mockTurtle.forward _).expects(1.0)
     }
-
-    "remove nothing when out of stock" in new MockContext {
-      val mockWarehouse = mock[Warehouse]
-      (mockWarehouse.hasInventory _).expects(*, *).returns(false).once
-      val order = new Order("Talisker", 50)
-      order.fill(mockWarehouse)
-      order.isFilled must beFalse
-    }
+ 
+    controller.drawLine((1.0, 1.0), (2.0, 1.0))
   }
 }

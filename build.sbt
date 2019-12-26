@@ -38,7 +38,7 @@ lazy val scalamock = crossProject(JSPlatform, JVMPlatform) in file(".") settings
 lazy val `scalamock-js` = scalamock.js
 lazy val `scalamock-jvm` = scalamock.jvm
 
-lazy val examples = crossProject(JSPlatform, JVMPlatform) in file("examples") settings(
+lazy val examples = project in file("examples") settings(
   commonSettings,
   name := "ScalaMock Examples",
   skip in publish := true,
@@ -46,7 +46,4 @@ lazy val examples = crossProject(JSPlatform, JVMPlatform) in file("examples") se
     scalatest % Test,
     specs2 % Test
   )
-) dependsOn scalamock
-
-lazy val `examples-js` = examples.js
-lazy val `examples-jvm` = examples.jvm
+) dependsOn scalamock.jvm
