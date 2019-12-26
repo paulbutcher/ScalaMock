@@ -332,7 +332,6 @@ a:focus {
 }
 
 #home-news {
-    background: url(../img/t-back.jpg) no-repeat center top;
     position: relative;
     margin-top: 0px;
 	padding-top:10px;
@@ -450,7 +449,6 @@ csmall {
 
 /* Contact Page */
 #contactwrap {
-	background: url(../img/contact.jpg) no-repeat center top;
 	margin-top: -60px;
 	padding-top:0px;
 	text-align:center;
