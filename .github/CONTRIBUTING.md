@@ -10,9 +10,13 @@ If you have a problem and want to ask questions or get help, the best places to 
 
 * If you're unable to find an open issue addressing the problem, open a new one. Be sure to include a **title and clear description**, as much relevant information as possible, and a **code sample** or an **executable test case** demonstrating the expected behavior that is not occurring.
 
-#### **Did you write a patch that fixes a bug?**
+#### **Help with the ScalaMock source code**
 
-* Open a new GitHub pull request with the patch.
+* Have a look at the open issues to see what needs improving.
+
+* Fork the ScalaMock repository to get a copy of the repo that you can push back to
+
+* Once you have your code and tests working, open a new GitHub pull request back to the main repository with the patch.
 
 * Ensure the PR description clearly describes the problem and solution. Include the relevant issue number if applicable.
 
