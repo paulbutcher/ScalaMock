@@ -15,21 +15,8 @@
     {% for chapter in chapters %}
         {% if chapter.relative_path contains "/index.html" %}
         {% else %}
-            <li> <a href="{{ chapter.permalink | prepend: site.baseurl }}">{{ chapter.title | remove_first: collectionTitle | remove_first: ' - ' }} </a>
-            <!--
-            {% if page.permalink == chapter.permalink %}
-                {{ chapter.content | extract_toc }}
-            {% endif %}
-            -->
-            </li>
+            <li><a href="{{ chapter.permalink | prepend: site.baseurl }}">{{ chapter.title | remove_first: collectionTitle | remove_first: ' - ' }}</a></li>
         {% endif %}
     {% endfor %}
     </ul>
-
-<!--
-    {% if showPageToc %}
-        {{ page.content | markdownify | extract_toc }}
-    {% endif %}
--->
-
 </div>
