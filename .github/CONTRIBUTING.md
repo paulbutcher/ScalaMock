@@ -24,7 +24,7 @@ If you have a problem and want to ask questions or get help, the best places to 
 
 #### **Do you want to contribute to the documentation?**
 
-* http://scalamock.org is automatically generated from the `gh-pages` [branch](https://github.com/paulbutcher/ScalaMock/tree/gh-pages). You can submit a Pull Request against it if you want to contribute.
+* https://scalamock.org is automatically generated from the `gh-pages` [branch](https://github.com/paulbutcher/ScalaMock/tree/gh-pages). You can submit a Pull Request against it if you want to contribute.
 
 </br>
 ScalaMock is a volunteer effort. So sometimes, problems can take a while to get resolved as we can only work on the project in our spare time.
