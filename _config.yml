@@ -2,7 +2,7 @@
 title: ScalaMock
 description: "Native scala mocking"
 baseurl: "" #important: start with /
-url: "http://scalamock.org"
+url: "https://scalamock.org"
 
 # Build settings
 markdown: kramdown
