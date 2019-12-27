@@ -416,9 +416,9 @@ a:focus {
 #blue {
 	background: #00b3fe;
 /*	margin-top: 60px; */
-	margin-bottom: 30px;
-	padding-top: 25px;
-	padding-bottom: 25px;
+	margin-bottom: 15px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 
 #blue h3 {
