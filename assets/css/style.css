@@ -42,10 +42,10 @@ ol ol, ul ol {
 }
 
 body { 
-	background: #ffffff; 
+	background: #2d2d2d; 
 	margin: 0; 
 	height: 100%; 
-	color: #384452;
+	color: #ffffff;
 	font-family: 'Lato', sans-serif;
 	font-weight: 400;
 	}
@@ -62,7 +62,7 @@ p {
 	font-weight: 400;
 	font-size: 14px; 
 	line-height: 24px;
-	color: #384452; 
+	color: #ffffff; 
 	margin-top: 10px; 
 }
 
@@ -542,7 +542,7 @@ ul.page-index {
 
 #main-content em {
     margin-right: 2px;
-    color: #111;
+    color: #eaff7d;
 }
 
 #main-content strong {
@@ -591,7 +591,7 @@ ul.page-index {
 
 ul.page-index li, 
 ul.page-index li a { 
-    color: #125b9a;
+    color: #00b3fe;
 }
 
 ul.page-index li li {
@@ -603,10 +603,10 @@ ul.page-index li li a {
 }
 
 #sidebar h4 a {
-	color: #384452;
+	color: #00b3fe;
 }
 
 pre {
-    background-color: #f0f0f0;
+    background-color: #565656;
 }
 
