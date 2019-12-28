@@ -48,7 +48,7 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest.funsuite.AnyFunSuite
 
 class ReallySimpleExampleTest extends AnyFunSuite with MockFactory {
-  def testHello(): Unit = {
+  test("sayHello") {
     val mockFormatter = mock[Formatter]
 
     (mockFormatter.format _).expects("Mr Bond").returning("Ah, Mr Bond. I've been expecting you").once()
@@ -128,8 +128,8 @@ Here we just use inAnyOrder, but inSequence is available too. These two imperati
 val mockFormatter = mock[Formatter]
 
 inAnyOrder {
-  (mockFormatter.format _).when("Mr Bond").returns("Ah, Mr Bond. I've been expecting you")
-  (mockFormatter.format _).when("Natsu").returns("Not now Natsu!").atLeastTwice()
+  (mockFormatter.format _).expects("Mr Bond").returns("Ah, Mr Bond. I've been expecting you")
+  (mockFormatter.format _).expects("Natsu").returns("Not now Natsu!").atLeastTwice()
 }
 
 Greetings.sayHello("Natsu", mockFormatter)
