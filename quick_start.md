@@ -19,7 +19,7 @@ If you don't use sbt or ScalaTest please check the [Installation](/user-guide/in
 
 ## Really quick and easy example
 
-The code for this really quick example is at https://github.com/paulbutcher/ScalaMock/blob/master/examples/src/test/scala/com/example/ReallySimpleExampleTest.scala and shows a few of the basic features of ScalaMock to get you started.
+The full code for this really quick example is on [Github](https://github.com/paulbutcher/ScalaMock/blob/master/examples/src/test/scala/com/example/ReallySimpleExampleTest.scala) and shows a few of the basic features of ScalaMock to get you started.
 
 Let's assume we have a Greetings functionality that we want to test.
 For simplicity's sake, this has only one method called `sayHello` which can format a name and prints a greeting.
