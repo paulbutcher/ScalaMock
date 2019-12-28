@@ -25,7 +25,7 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest.funsuite.AnyFunSuite
 
 class ReallySimpleExampleTest extends AnyFunSuite with MockFactory {
-  def testHello(): Unit = {
+  test("Hello") {
     val mockFormatter = mock[Formatter]
 
     (mockFormatter.format _).expects("Mr Bond").returning("Ah, Mr Bond. I've been expecting you").once()
@@ -33,7 +33,7 @@ class ReallySimpleExampleTest extends AnyFunSuite with MockFactory {
     Greetings.sayHello("Mr Bond", mockFormatter)
   }
 
-  def testHelloMockitoStyle(): Unit = {
+  test("MockitoStyle") {
     val mockFormatter = stub[Formatter]
     val bond = "Mr Bond"
 
@@ -44,7 +44,7 @@ class ReallySimpleExampleTest extends AnyFunSuite with MockFactory {
     (mockFormatter.format _).verify(bond).once()
   }
 
-  def testHelloWithVariableParameters(): Unit = {
+  test("WithVariableParameters") {
     val australianFormat = mock[Formatter]
 
     (australianFormat.format _).expects(*).onCall { s: String => s"G'day $s" }.twice()
@@ -53,7 +53,7 @@ class ReallySimpleExampleTest extends AnyFunSuite with MockFactory {
     Greetings.sayHello("Gray", australianFormat)
   }
 
-  def testHelloWithParamAssertion(): Unit = {
+  test("WithParamAssertion") {
     val teamNatsu = Set("Natsu", "Lucy", "Happy", "Erza", "Gray", "Wendy", "Carla")
     val formatter = mock[Formatter]
 
@@ -72,7 +72,7 @@ class ReallySimpleExampleTest extends AnyFunSuite with MockFactory {
     Greetings.sayHello("Lucy", formatter)
   }
 
-  def testHelloWithBrokenGreeter(): Unit = {
+  test("WithBrokenGreeter") {
     val brokenFormatter = mock[Formatter]
 
     (brokenFormatter.format _).expects(*).throwing(new NullPointerException).anyNumberOfTimes()
@@ -82,7 +82,7 @@ class ReallySimpleExampleTest extends AnyFunSuite with MockFactory {
     }
   }
 
-  def testHelloWithOrder(): Unit = {
+  test("WithOrder") {
     val mockFormatter = mock[Formatter]
 
     inAnyOrder {
