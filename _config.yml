@@ -20,7 +20,7 @@ colors:  #in hex code if not noted else
   
 kramdown:
     input: GFM 
-    enable_coderay: false # it does not support scala syntax highlighting
+    enable_coderay: true
 
 collections:
   user_guide:
