@@ -37,15 +37,28 @@ object Greetings {
 }
 ```
 
-With ScalaMock, we can test the interactions between this method and a given `Formatter`. For example, we can check that the name is actually used in the call to our formatter, and that it is called once (and only once):
+With ScalaMock, we can test the interactions between this method and a given `Formatter`.
+
+To be able to mock things, you need to mix-in the `org.scalamock.scalatest.MockFactory` into your test class.
+
+For example, we can check that the name is actually used in the call to our formatter, and that it is called once (and only once):
 
 ```scala
-val mockFormatter = mock[Formatter]
+import org.scalamock.scalatest.MockFactory
+import org.scalatest.funsuite.AnyFunSuite
 
-(mockFormatter.format _).expects("Mr Bond").returning("Ah, Mr Bond. I've been expecting you").once()
+class ReallySimpleExampleTest extends AnyFunSuite with MockFactory {
+  def testHello(): Unit = {
+    val mockFormatter = mock[Formatter]
 
-Greetings.sayHello("Mr Bond", mockFormatter)
+    (mockFormatter.format _).expects("Mr Bond").returning("Ah, Mr Bond. I've been expecting you").once()
+
+    Greetings.sayHello("Mr Bond", mockFormatter)
+  }
+}
 ```
+
+For all other examples, we did omit the text names and just show the relevant calls to the ScalaMock API.
 
 If you are used to Mockito, ScalaMock can defer verifications for you too.
 Just use a stub instead:
