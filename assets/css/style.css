@@ -610,3 +610,21 @@ pre {
     background-color: #565656;
 }
 
+div.language-scala pre.highlight .n {
+	color: #428bca
+}
+div.language-scala pre.highlight .o {
+	color: #014581
+}
+div.language-scala pre.highlight .s {
+	color: #428bca
+}
+div.language-scala pre.highlight .kt {
+	color: #428bca
+}
+div.language-scala pre.highlight .k {
+	color: #428bca
+}
+div.language-scala pre.highlight span.mi {
+	color: #ca5242
+}
