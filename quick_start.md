@@ -8,18 +8,123 @@ This article describes how to use ScalaMock in your tests. Because it is just an
 
 ## Installation
 
-To use ScalaMock in [sbt](http://www.scala-sbt.org/) with [ScalaTest](http://www.scalatest.org/) add the following to your build.sbt:
+To use ScalaMock in [sbt](http://www.scala-sbt.org/) with [ScalaTest](http://www.scalatest.org/) add the following to your build.sbt. ScalaMock also supports Specs2 as a test framework.
 
 ```scala
-// Add the ScalaMock library
 libraryDependencies += "org.scalamock" %% "scalamock" % "4.4.0" % Test
-// also add ScalaTest as a framework to run the tests
-libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.4" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.0" % Test
 ```
 
-If you don't use sbt or ScalaTest please check the [Installation](/user-guide/installation/) chapter in the User Guide.
+If you don't use sbt or ScalaTest please check the [Installation](/user-guide/installation/) chapter in the User Guide for more information.
 
-The sample code described in this article is available on [GitHub](https://github.com/scalamock/scalamock-examples).
+## Really quick and easy example
+
+The code for this really quick example is at https://github.com/paulbutcher/ScalaMock/blob/master/examples/src/test/scala/com/example/ReallySimpleExampleTest.scala and shows a few of the basic features of ScalaMock to get you started.
+
+Let's assume we have a Greetings functionality that we want to test.
+For simplicity's sake, this has only one method called `sayHello` which can format a name and prints a greeting.
+
+```scala
+object Greetings {
+  trait Formatter { def format(s: String): String }
+  object EnglishFormatter { def format(s: String): String = s"Hello $s" }
+  object GermanFormatter { def format(s: String): String = s"Hallo $s" }
+  object JapaneseFormatter { def format(s: String): String =  s"こんにちは $s" }
+
+  def sayHello(name: String, formatter: Formatter): Unit = {
+    println(formatter.format(name))
+  }
+}
+```
+
+With ScalaMock, we can test the interactions between this method and a given `Formatter`. For example, we can check that the name is actually used in the call to our formatter, and that it is called once (and only once):
+
+```scala
+val mockFormatter = mock[Formatter]
+
+(mockFormatter.format _).expects("Mr Bond").returning("Ah, Mr Bond. I've been expecting you").once()
+
+Greetings.sayHello("Mr Bond", mockFormatter)
+```
+
+If you are used to Mockito, ScalaMock can defer verifications for you too.
+Just use a stub instead:
+
+```scala
+val mockFormatter = stub[Formatter]
+val bond = "Mr Bond"
+
+(mockFormatter.format _).when(bond).returns("Ah, Mr Bond. I've been expecting you")
+
+Greetings.sayHello(bond, mockFormatter)
+
+(mockFormatter.format _).verify(bond).once()
+```
+
+Some other features:
+
+- throwing an exception in a mock
+
+```scala
+val brokenFormatter = mock[Formatter]
+
+(brokenFormatter.format _).expects(*).throwing(new NullPointerException).anyNumberOfTimes()
+
+intercept[NullPointerException] {
+  Greetings.sayHello("Erza", brokenFormatter)
+}
+```
+
+- dynamically responding to a parameter with `onCall`
+
+```scala
+val australianFormat = mock[Formatter]
+
+(australianFormat.format _).expects(*).onCall { s: String => s"G'day $s" }.twice()
+
+Greetings.sayHello("Wendy", australianFormat)
+Greetings.sayHello("Gray", australianFormat)
+```
+
+- verifying parameters dynamically (two flavours)
+
+```scala
+val teamNatsu = Set("Natsu", "Lucy", "Happy", "Erza", "Gray", "Wendy", "Carla")
+val formatter = mock[Formatter]
+
+def assertTeamNatsu(s: String): Unit = {
+  assert(teamNatsu.contains(s))
+}
+
+// argAssert fails early
+(formatter.format _).expects(argAssert(assertTeamNatsu _)).onCall { s: String => s"Yo $s" }.once()
+
+// 'where' verifies at the end of the test
+(formatter.format _).expects(where { s: String => teamNatsu contains(s) }).onCall { s: String => s"Yo $s" }.twice()
+
+Greetings.sayHello("Carla", formatter)
+Greetings.sayHello("Happy", formatter)
+Greetings.sayHello("Lucy", formatter)
+```
+
+- call ordering
+
+Here we just use inAnyOrder, but inSequence is available too. These two imperatives can also be nested to make the order of calls really expressive!
+
+```
+val mockFormatter = mock[Formatter]
+
+inAnyOrder {
+  (mockFormatter.format _).when("Mr Bond").returns("Ah, Mr Bond. I've been expecting you")
+  (mockFormatter.format _).when("Natsu").returns("Not now Natsu!").atLeastTwice()
+}
+
+Greetings.sayHello("Natsu", mockFormatter)
+Greetings.sayHello("Natsu", mockFormatter)
+Greetings.sayHello("Mr Bond", mockFormatter)
+Greetings.sayHello("Natsu", mockFormatter)
+```
+
 
 ## Leaderboad example 
 
