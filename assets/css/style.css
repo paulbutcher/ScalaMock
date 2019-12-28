@@ -627,11 +627,9 @@ div.language-scala pre.highlight .s {
 	color: #22e400
 }
 
+div.language-java pre.highlight .kd,
 div.language-java pre.highlight .kt,
-div.language-scala pre.highlight .kt {
-	color: #49aaff
-}
-
+div.language-scala pre.highlight .kt,
 div.language-java pre.highlight .k,
 div.language-scala pre.highlight .k {
 	color: #49aaff
