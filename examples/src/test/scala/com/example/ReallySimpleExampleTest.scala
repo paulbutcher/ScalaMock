@@ -77,7 +77,7 @@ class ReallySimpleExampleTest extends AnyFunSuite with MockFactory {
   }
 
   def testHelloWithOrder(): Unit = {
-    val mockGreeter = stub[Greeter]
+    val mockGreeter = mock[Greeter]
 
     inAnyOrder {
       (mockGreeter _).when("Mr Bond").returns("Ah, Mr Bond. I've been expecting you")
