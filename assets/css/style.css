@@ -612,6 +612,8 @@ pre {
 
 /* code fragments */
 
+div.language-groovy pre.highlight .n,
+div.language-xml pre.highlight .nt,
 div.language-java pre.highlight .n,
 div.language-scala pre.highlight .n {
 	color: #49aaff
@@ -622,6 +624,8 @@ div.language-scala pre.highlight .o {
 	color: #ff9e01
 }
 
+div.language-groovy pre.highlight .s1,
+div.language-xml pre.highlight code,
 div.language-java pre.highlight .s,
 div.language-scala pre.highlight .s {
 	color: #22e400
