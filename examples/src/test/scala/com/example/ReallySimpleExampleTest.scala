@@ -20,81 +20,80 @@
 
 package com.example
 
-import com.example.Greetings.Greeter
+import com.example.Greetings.Formatter
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.funsuite.AnyFunSuite
 
 class ReallySimpleExampleTest extends AnyFunSuite with MockFactory {
   def testHello(): Unit = {
-    val mockGreeter = mock[Greeter]
+    val mockFormatter = mock[Formatter]
 
-    (mockGreeter _).expects("Mr Bond").returning("Ah, Mr Bond. I've been expecting you").once()
+    (mockFormatter.format _).expects("Mr Bond").returning("Ah, Mr Bond. I've been expecting you").once()
 
-    Greetings.sayHello("Mr Bond", mockGreeter)
+    Greetings.sayHello("Mr Bond", mockFormatter)
   }
 
   def testHelloMockitoStyle(): Unit = {
-    val mockGreeter = stub[Greeter]
+    val mockFormatter = stub[Formatter]
     val bond = "Mr Bond"
 
-    (mockGreeter _).when(bond).returns("Ah, Mr Bond. I've been expecting you")
+    (mockFormatter.format _).when(bond).returns("Ah, Mr Bond. I've been expecting you")
 
-    Greetings.sayHello(bond, mockGreeter)
+    Greetings.sayHello(bond, mockFormatter)
 
-    (mockGreeter _).verify(bond).once()
+    (mockFormatter.format _).verify(bond).once()
   }
 
   def testHelloWithVariableParameters(): Unit = {
-    val australianGreeting = mock[Greeter]
+    val australianFormat = mock[Formatter]
 
-    (australianGreeting _).expects(*).onCall { s: String => s"G'day $s" }.twice()
+    (australianFormat.format _).expects(*).onCall { s: String => s"G'day $s" }.twice()
 
-    Greetings.sayHello("Wendy", australianGreeting)
-    Greetings.sayHello("Gray", australianGreeting)
+    Greetings.sayHello("Wendy", australianFormat)
+    Greetings.sayHello("Gray", australianFormat)
   }
 
   def testHelloWithParamAssertion(): Unit = {
     val teamNatsu = Set("Natsu", "Lucy", "Happy", "Erza", "Gray", "Wendy", "Carla")
-    val someGreeting = mock[String => String]
+    val formatter = mock[Formatter]
 
     def assertTeamNatsu(s: String): Unit = {
       assert(teamNatsu.contains(s))
     }
 
     // argAssert fails early
-    (someGreeting _).expects(argAssert(assertTeamNatsu _)).onCall { s: String => s"Yo $s" }.once()
+    (formatter.format _).expects(argAssert(assertTeamNatsu _)).onCall { s: String => s"Yo $s" }.once()
 
     // 'where' verifies at the end of the test
-    val w = where(teamNatsu contains(_: String))
-    (someGreeting _).expects(where { s: String => teamNatsu contains(s) }).onCall { s: String => s"Yo $s" }.twice()
+    (formatter.format _).expects(where { s: String => teamNatsu contains(s) }).onCall { s: String => s"Yo $s" }.twice()
 
-    Greetings.sayHello("Carla", someGreeting)
-    Greetings.sayHello("Happy", someGreeting)
-    Greetings.sayHello("Lucy", someGreeting)
+    Greetings.sayHello("Carla", formatter)
+    Greetings.sayHello("Happy", formatter)
+    Greetings.sayHello("Lucy", formatter)
   }
 
   def testHelloWithBrokenGreeter(): Unit = {
-    val brokenGreeter = mock[String => String]
+    val brokenFormatter = mock[Formatter]
 
-    (brokenGreeter _).expects(*).throwing(new NullPointerException).anyNumberOfTimes()
+    (brokenFormatter.format _).expects(*).throwing(new NullPointerException).anyNumberOfTimes()
 
     intercept[NullPointerException] {
-      Greetings.sayHello("Erza", brokenGreeter)
+      Greetings.sayHello("Erza", brokenFormatter)
     }
   }
 
   def testHelloWithOrder(): Unit = {
-    val mockGreeter = mock[Greeter]
+    val mockFormatter = mock[Formatter]
 
     inAnyOrder {
-      (mockGreeter _).when("Mr Bond").returns("Ah, Mr Bond. I've been expecting you")
-      (mockGreeter _).when("Natsu").returns("Not now Natsu!").atLeastTwice()
+      (mockFormatter.format _).when("Mr Bond").returns("Ah, Mr Bond. I've been expecting you")
+      (mockFormatter.format _).when("Natsu").returns("Not now Natsu!").atLeastTwice()
     }
 
-    Greetings.sayHello("Natsu", mockGreeter)
-    Greetings.sayHello("Natsu", mockGreeter)
-    Greetings.sayHello("Mr Bond", mockGreeter)
-    Greetings.sayHello("Natsu", mockGreeter)
+    Greetings.sayHello("Natsu", mockFormatter)
+    Greetings.sayHello("Natsu", mockFormatter)
+    Greetings.sayHello("Mr Bond", mockFormatter)
+    Greetings.sayHello("Natsu", mockFormatter)
   }
 
 }
@@ -105,12 +104,12 @@ class ReallySimpleExampleTest extends AnyFunSuite with MockFactory {
   illustrate a working example for easy reading
  */
 object Greetings {
-  type Greeter = String => String
-  def EnglishGreeter(name: String) = s"Hello $name"
-  def GermanGreeter(name: String) = s"Hallo $name"
-  def JapaneseGreeter(name: String) = s"こんにちは $name"
+  trait Formatter { def format(s: String): String }
+  object EnglishFormatter { def format(s: String): String = s"Hello $s" }
+  object GermanFormatter { def format(s: String): String = s"Hallo $s" }
+  object JapaneseFormatter { def format(s: String): String =  s"こんにちは $s" }
 
-  def sayHello(name: String, formatter: Greeter): Unit = {
-    println(formatter(name))
+  def sayHello(name: String, formatter: Formatter): Unit = {
+    println(formatter.format(name))
   }
 }
