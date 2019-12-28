@@ -47,22 +47,29 @@ class ReallySimpleExampleTest extends AnyFunSuite with MockFactory {
   def testHelloWithVariableParameters(): Unit = {
     val australianGreeting = mock[Greeter]
 
-    (australianGreeting _).expects(*).onCall(s: String => s"G'day $s").twice()
+    (australianGreeting _).expects(*).onCall { s: String => s"G'day $s" }.twice()
 
     Greetings.sayHello("Wendy", australianGreeting)
     Greetings.sayHello("Gray", australianGreeting)
   }
 
   def testHelloWithParamAssertion(): Unit = {
+    val teamNatsu = Set("Natsu", "Lucy", "Happy", "Erza", "Gray", "Wendy", "Carla")
     val someGreeting = mock[String => String]
 
     def assertTeamNatsu(s: String): Unit = {
-      assert(Set("Natsu", "Lucy", "Happy", "Erza", "Gray", "Wendy", "Carla") contains(s))
+      assert(teamNatsu.contains(s))
     }
 
-    (someGreeting _).expects(argAssert(assertTeamNatsu _)).onCall(s: String => s"Yo $s").twice()
+    // argAssert fails early
+    (someGreeting _).expects(argAssert(assertTeamNatsu _)).onCall { s: String => s"Yo $s" }.once()
 
-    Greetings.sayHello("Natsu", someGreeting)
+    // 'where' verifies at the end of the test
+    val w = where(teamNatsu contains(_: String))
+    (someGreeting _).expects(where { s: String => teamNatsu contains(s) }).onCall { s: String => s"Yo $s" }.twice()
+
+    Greetings.sayHello("Carla", someGreeting)
+    Greetings.sayHello("Happy", someGreeting)
     Greetings.sayHello("Lucy", someGreeting)
   }
 
