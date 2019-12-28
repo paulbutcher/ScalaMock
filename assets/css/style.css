@@ -639,7 +639,12 @@ div.language-scala pre.highlight .k {
 	color: #49aaff
 }
 
+div.language-scala pre.highlight .kc {
+	color: #d5fa03
+}
+
 div.language-java pre.highlight .mi,
+div.language-scala pre.highlight .mf,
 div.language-scala pre.highlight .mi {
 	color: #fa2003
 }
