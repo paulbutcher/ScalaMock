@@ -610,24 +610,39 @@ pre {
     background-color: #3d3d3d;
 }
 
+/* code fragments */
+
+div.language-java pre.highlight .n,
 div.language-scala pre.highlight .n {
 	color: #49aaff
 }
+
+div.language-java pre.highlight .o,
 div.language-scala pre.highlight .o {
 	color: #ff9e01
 }
+
+div.language-java pre.highlight .s,
 div.language-scala pre.highlight .s {
 	color: #22e400
 }
+
+div.language-java pre.highlight .kt,
 div.language-scala pre.highlight .kt {
 	color: #49aaff
 }
+
+div.language-java pre.highlight .k,
 div.language-scala pre.highlight .k {
 	color: #49aaff
 }
+
+div.language-java pre.highlight .mi,
 div.language-scala pre.highlight .mi {
 	color: #fa2003
 }
+
+div.language-java pre.highlight .c1,
 div.language-scala pre.highlight .c1 {
 	color: #8b8b8b
 }
