@@ -607,24 +607,27 @@ ul.page-index li li a {
 }
 
 pre {
-    background-color: #565656;
+    background-color: #3d3d3d;
 }
 
 div.language-scala pre.highlight .n {
-	color: #428bca
+	color: #49aaff
 }
 div.language-scala pre.highlight .o {
-	color: #014581
+	color: #ff9e01
 }
 div.language-scala pre.highlight .s {
-	color: #428bca
+	color: #22e400
 }
 div.language-scala pre.highlight .kt {
-	color: #428bca
+	color: #49aaff
 }
 div.language-scala pre.highlight .k {
-	color: #428bca
+	color: #49aaff
 }
-div.language-scala pre.highlight span.mi {
-	color: #ca5242
+div.language-scala pre.highlight .mi {
+	color: #fa2003
+}
+div.language-scala pre.highlight .c1 {
+	color: #8b8b8b
 }

@@ -79,7 +79,7 @@ Now imagine that we want to set an expectation that `addPointsForPlayer` is call
 
 To achieve that in ScalaMock we can use `where` as follows:
 
-```
+```scala
 (leaderBoardMock.addPointsForPlayer _) expects (where {
   (player: Player, points: Int) => player.id == 789 && points == 100
 }) 

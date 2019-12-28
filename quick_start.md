@@ -124,7 +124,7 @@ Greetings.sayHello("Lucy", formatter)
 
 Here we just use inAnyOrder, but inSequence is available too. These two imperatives can also be nested to make the order of calls really expressive!
 
-```
+```scala
 val mockFormatter = mock[Formatter]
 
 inAnyOrder {
@@ -206,7 +206,7 @@ It would be a nightmare to setup a database, fill it with sample players, create
 
 Fortunately, mocking is useful in this kind of situation because instead of testing `MatchResultObserver` with `RealPlayerDatabase` we can test it with a much simpler `PlayerDatabase` implementation. We could directly implement `PlayerDatabase`, for example:
 
-```
+```scala
 class FakePlayerDatabase extends PlayerDatabase {
     override def getPlayerById(playerId: PlayerId) : Player = {
         if (playerId == 222) return Player(222, "boris", Countries.Russia)

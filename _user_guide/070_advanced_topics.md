@@ -28,7 +28,7 @@ val fooMock = mock[Foo]
 
 You may also prefer to use this slightly different syntax:
 
-```
+```scala
 (fooMock.overloaded _: Int => String).expects(10)  // or
 (fooMock.overloaded _: Int => String) expects (10) // or
 (fooMock.overloaded(_: Int)) expects (10)

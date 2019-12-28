@@ -95,7 +95,7 @@ val heaterStub = stub[Heater]
 
 Return values that are used by the system under test can be set up by using `when` before running the tested system. Calls are verified using `verify`:
 
-```
+```scala
 "CoffeeMachine" should "turn off the heater after coffee making is finished" in {
   val heaterStub = stub[Heater]
   val coffeeMachine = new CoffeeMachine(heaterStub)
