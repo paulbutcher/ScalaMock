@@ -1,5 +1,5 @@
 sudo: false
-dist: trusty
+dist: bionic
 
 language: scala
 
@@ -24,10 +24,6 @@ cache:
   - "$HOME/.sbt"
   - "$HOME/.cache/coursier"
 
-# workaround for travis-ci #7703
-# before_script:
-#   - sudo chmod +x /usr/local/bin/sbt
-
 after_success:
   - '[[ $TRAVIS_BRANCH == "master" ]] && [[ $TRAVIS_JDK_VERSION == "openjdk11" ]] && [[ $SONATYPE_USERNAME != "" ]] && { sbt  ++$TRAVIS_SCALA_VERSION publish; };'
 
@@ -35,4 +31,3 @@ env:
   global:
   - secure: DW4OXvjLG04G/k4dPSvOoHOEZ081GLBXP45RbOqGTuC1Kkvi1mOZeOEgPWMfLhimwUxkn3p+6EoddXweXvrcbx7GxR0yazSGGMw8OEeHITPE9c9sfvxXcJkufL+JG+mWiNB5qofaYTogM6QxTlrpIiKY1qHOz/u+gqakGKp4GBM=
   - secure: uWZPYz7Q02Vw7y1pHRKUiJ5oe20m1LJc7UIDQEEEjCxQ92pwlAwoCYWBzr0eaP7bmCJNpvLxIZWa6jPeYZ++HM++nQHewsHpqgVyw1WQ33jQZTlENe3raoPdFpyPrDPE7C2JMIp6QH5g+9zD3m4mdTvKcfTFdYLgKFZNhCWIAV8=
-
