@@ -14,8 +14,8 @@ scala:
   - "2.13.0"
 
 jdk:
-  - openjdk8
   - openjdk11
+  - openjdk8
 
 node_js:
   - "6"
