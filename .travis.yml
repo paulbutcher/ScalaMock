@@ -19,6 +19,10 @@ jdk:
 node_js:
   - "6"
 
+script:
+  - "sbt ++$TRAVIS_SCALA_VERSION scalamockJVM/test"
+  - "sbt ++$TRAVIS_SCALA_VERSION scalamockJS/test"
+
 cache:
   directories:
   - "$HOME/.sbt"
