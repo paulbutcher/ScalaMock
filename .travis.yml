@@ -15,16 +15,14 @@ scala:
 
 jdk:
   - openjdk11
-  - openjdk8
 
 node_js:
   - "6"
 
 cache:
   directories:
-  - "$HOME/.m2"
-  - "$HOME/.ivy2"
   - "$HOME/.sbt"
+  - "$HOME/.cache/coursier"
 
 # workaround for travis-ci #7703
 # before_script:
