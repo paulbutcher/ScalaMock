@@ -281,3 +281,47 @@ It is possible to store either a single value in a `CaptureOne`, or a `Seq` or v
     c.values should be (Seq(99, 17, 583))
   }
 ```
+
+## Using ScalaMock without ScalaTest/Specs2
+
+You just need to implement your own subtype of `MockFactoryBase`. Technically you can adapt ScalaMock to be used inside JUnit, µTest, etc this way, or any other framework really.
+
+```scala
+import org.scalamock.MockFactoryBase
+import org.scalamock.clazz.Mock
+
+object NoScalaTestExample extends Mock {
+  trait Cat {
+    def meow(): Unit
+    def isHungry: Boolean
+  }
+
+  class MyMockFactoryBase extends MockFactoryBase {
+    override type ExpectationException = Exception
+    override protected def newExpectationException(message: String, methodName: Option[Symbol]): Exception =
+      throw new Exception(s"$message, $methodName")
+
+    def verifyAll(): Unit = withExpectations(() => ())
+  }
+
+  implicit var mc: MyMockFactoryBase = _
+  var cat: Cat = _
+
+  def main(args: Array[String]): Unit = {
+    // given: I have a mock context
+    mc = new MyMockFactoryBase
+    // and am mocking a cat
+    cat = mc.mock[Cat]
+    // and the cat meows
+    cat.meow _ expects() once()
+    // and the cat is always hungry
+    cat.isHungry _ expects() returning true anyNumberOfTimes()
+
+    // then the cat needs feeding
+    assert(cat.isHungry)
+
+    // and the mock verifies
+    mc.verifyAll()
+  }
+}
+```
