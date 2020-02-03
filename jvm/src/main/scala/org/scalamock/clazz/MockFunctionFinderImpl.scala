@@ -20,12 +20,11 @@
 
 package org.scalamock.clazz
 
-import org.scalamock.util.{MacroAdapter, MacroUtils}
+import org.scalamock.util.MacroAdapter
 
 object MockFunctionFinderImpl {
   import MacroAdapter.Context
 
-  // mock.getClass().getMethod(name).invoke(obj).asInstanceOf[MockFunctionX[...]]
   def mockedFunctionGetter[M: c.WeakTypeTag](c: Context)
                                             (obj: c.Tree, name: c.Name, targs: List[c.Type], actuals: List[c.universe.Type]): c.Expr[M] = {
     import c.universe._
@@ -38,11 +37,9 @@ object MockFunctionFinderImpl {
         "mock$" + name + "$0"
     }
 
-    val utils = new MacroUtils[c.type](c)
-    import utils._
-
-    val fullName = mockFunctionName(name, obj.tpe, targs)
-    val method = applyOn(applyOn(obj, "getClass"), "getMethod", literal(fullName))
-    c.Expr[M](castTo(applyOn(method, "invoke", obj), weakTypeOf[M]))
+    val code = c.Expr[M](q"""
+        $obj.getClass().getMethod(${mockFunctionName(name, obj.tpe, targs)}).invoke($obj).asInstanceOf[${weakTypeOf[M]}]
+       """)
+    code
   }
 }
