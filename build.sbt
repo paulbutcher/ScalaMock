@@ -6,6 +6,7 @@ crossScalaVersions in ThisBuild := Seq("2.11.12", "2.12.8", "2.13.0")
 
 lazy val scalatest = "org.scalatest" %% "scalatest" % "3.1.0"
 lazy val specs2 = "org.specs2" %% "specs2-core" % "4.8.3"
+lazy val scalameta = "org.scalameta" %% "scalameta" % "4.2.3"
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
   unmanagedSourceDirectories in Compile ++= {
@@ -30,6 +31,7 @@ lazy val scalamock = crossProject(JSPlatform, JVMPlatform) in file(".") settings
       Opts.doc.version(version.value) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
+      scalameta,
       scalatest % Optional,
       specs2 % Optional
     )
