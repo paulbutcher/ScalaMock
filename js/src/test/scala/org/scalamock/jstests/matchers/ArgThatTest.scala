@@ -33,7 +33,5 @@ class ArgThatTest extends AnyFlatSpec with Matchers with MockFactory {
     startsWithPredicate.equals("Alice") shouldBe true
     startsWithPredicate.equals("Anna") shouldBe true
     startsWithPredicate.equals("Bob") shouldBe false
-    // todo: do we need to do anything with this?
-    intercept[scala.scalajs.runtime.UndefinedBehaviorError] { startsWithPredicate.equals(55) } // 55 is not a String
   }
 }
