@@ -5,7 +5,7 @@ crossScalaVersions in ThisBuild := Seq("2.11.12", "2.12.8", "2.13.0")
 //scalaJSUseRhino in ThisBuild := true
 
 lazy val scalatest = "org.scalatest" %% "scalatest" % "3.1.1"
-lazy val specs2 = "org.specs2" %% "specs2-core" % "4.8.3"
+lazy val specs2 = "org.specs2" %% "specs2-core" % "4.9.1"
 lazy val scalameta = "org.scalameta" %% "scalameta" % "4.3.0"
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
