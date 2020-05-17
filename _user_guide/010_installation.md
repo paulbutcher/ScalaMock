@@ -20,15 +20,24 @@ Release versions are also in JCenter, so your favourite resolver should be cover
 
 ### CI Builds
 
-If you want try a pre-release version, you can add Sonatype Snapshots to your resolvers. Travis publishes all commits to the Snapshot Repo.
-So if you need a fix urgently, you can try one of those CI builds. First, add the Snapshot Repo to your resolvers:
+A nice option where you can pick the latest snapshot, or a specific tag or commit hash is jitpack.
+Fetching the library this way may take a minute if this is the first time it was requested, as builds are kicked off just in time. Subsequent downloads are cached. To get the latest and freshest, use this:
 
 ```scala
-// e.g., for SBT:
-resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+resolvers += "jitpack" at "https://jitpack.io"
+libraryDependencies += "com.github.barkhorn" % "ScalaMock" % "master-SNAPSHOT"
 ```
 
-You can search for CI builds on [Sonatype OSS Nexus](https://oss.sonatype.org/#nexus-search;quick~scalamock_2.11).
+Read more here: https://jitpack.io/#barkhorn/ScalaMock/master-SNAPSHOT
+
+Our CI (Travis) also publishes builds to the Sonatype Snapshot Repo.
+
+```scala
+resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+libraryDependencies += "org.scalamock" % "ScalaMock" % "x.y.z-SNAPSHOT"
+```
+
+You can search for snapshot builds on [Sonatype OSS Nexus](https://oss.sonatype.org/#nexus-search;quick~scalamock_2.11).
 
 ## Sources
 
