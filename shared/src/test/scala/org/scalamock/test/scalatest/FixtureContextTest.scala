@@ -54,7 +54,7 @@ class FixtureContextTest extends AnyFlatSpec with Matchers with MockFactory {
     mockedTrait.oneParamMethod(2) shouldBe "two"
   }
 
-  it should "allow to use mock defined in fixture-context with expecations predefined" in new TestSetupWithExpectationsPredefined {
+  it should "allow to use mock defined in fixture-context with expectations predefined" in new TestSetupWithExpectationsPredefined {
     (mockedTrait.oneParamMethod _).expects(2).returning("two")
 
     mockedTrait.oneParamMethod(input) shouldBe output
