@@ -69,7 +69,7 @@ For ScalaTest, to use ScalaMock in your Tests, add the following to your `build.
 
 ```scala
 libraryDependencies += Seq("org.scalamock" %% "scalamock" % "4.4.0" % Test,
-    "org.scalatest" %% "scalatest" % "3.0.8" % Test)
+    "org.scalatest" %% "scalatest" % "3.2.0" % Test)
 ```
 
 ## Documentation
