@@ -54,7 +54,7 @@ class FixtureContextTest extends Specification {
       mockedTrait.oneParamMethod(2) must_== "two"
     }
 
-    "allow to use mock defined in fixture-context with expecations predefined" in new TestSetupWithExpectationsPredefined {
+    "allow to use mock defined in fixture-context with expectations predefined" in new TestSetupWithExpectationsPredefined {
       (mockedTrait.oneParamMethod _).expects(2).returning("two")
 
       mockedTrait.oneParamMethod(input) must_== output
