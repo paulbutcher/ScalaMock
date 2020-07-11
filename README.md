@@ -1,7 +1,5 @@
 # ScalaMock 
 
-[![Build Status](https://travis-ci.org/paulbutcher/ScalaMock.svg?branch=master)](https://travis-ci.org/paulbutcher/ScalaMock) [![Scaladex](https://index.scala-lang.org/paulbutcher/scalamock/scalamock/latest.svg?color=orange)](https://index.scala-lang.org/paulbutcher/scalamock) [![Scala Steward badge](https://img.shields.io/badge/Scala_Steward-helping-blue.svg?style=flat&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAMAAAARSr4IAAAAVFBMVEUAAACHjojlOy5NWlrKzcYRKjGFjIbp293YycuLa3pYY2LSqql4f3pCUFTgSjNodYRmcXUsPD/NTTbjRS+2jomhgnzNc223cGvZS0HaSD0XLjbaSjElhIr+AAAAAXRSTlMAQObYZgAAAHlJREFUCNdNyosOwyAIhWHAQS1Vt7a77/3fcxxdmv0xwmckutAR1nkm4ggbyEcg/wWmlGLDAA3oL50xi6fk5ffZ3E2E3QfZDCcCN2YtbEWZt+Drc6u6rlqv7Uk0LdKqqr5rk2UCRXOk0vmQKGfc94nOJyQjouF9H/wCc9gECEYfONoAAAAASUVORK5CYII=)](https://scala-steward.org)
-
 Native Scala mocking.
 
 Official website: [scalamock.org](https://scalamock.org/)
@@ -88,5 +86,7 @@ Java and .NET applications. Take a look at YourKit's leading software products:
 [YourKit Java Profiler](http://www.yourkit.com/java/profiler/index.jsp) and
 [YourKit .NET Profiler](http://www.yourkit.com/.net/profiler/index.jsp).
 
-Also many thanks to Jetbrains for providing us with an OSS licence for their fine development 
+Many thanks to Jetbrains for providing us with an OSS licence for their fine development 
 tools such as [IntelliJ IDEA](https://www.jetbrains.com/idea/).
+
+Also, thanks to https://github.com/fthomas/scala-steward we are keeping dependencies updated automatically, and to https://travis-ci.org/ running CI/CD automatically for every commit and PR.
