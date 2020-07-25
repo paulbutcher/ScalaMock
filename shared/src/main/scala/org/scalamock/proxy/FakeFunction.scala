@@ -35,9 +35,9 @@ abstract class FakeFunction(mockContext: MockContext, name: Symbol)
     def apply(args: MockParameter[Any]*) =
       mockContext.add(makeHandler(new ArgumentMatcher(seq2Product(args))))
 
-    def apply(matcher: (Product) => Boolean) = mockContext.add(makeHandler(matcher))
+    def apply(matcher: Product => Boolean) = mockContext.add(makeHandler(matcher))
 
-    def makeHandler(matcher: (Product) => Boolean) =
+    def makeHandler(matcher: Product => Boolean) =
       new CallHandler[Any](FakeFunction.this, matcher)
   }
 

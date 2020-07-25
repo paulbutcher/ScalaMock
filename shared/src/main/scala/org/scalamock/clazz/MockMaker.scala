@@ -198,7 +198,7 @@ class MockMaker[C <: Context](val ctx: C) {
     def mockMethod(m: MethodSymbol): ValDef = {
       val mt = resolvedType(m)
       val clazz = classType(paramCount(mt))
-      val types = (paramTypes(mt) map mockParamType _) :+ mockParamType(finalResultType(mt))
+      val types = (paramTypes(mt) map mockParamType) :+ mockParamType(finalResultType(mt))
       val name = applyOn(scalaSymbol, "apply", mockNameGenerator.generateMockMethodName(m, mt))
 
       ValDef(Modifiers(),

@@ -22,6 +22,7 @@ package org.scalamock.proxy
 
 import java.lang.reflect.{InvocationHandler, Method}
 
+import scala.collection.mutable
 import scala.collection.mutable.Map
 
 abstract class InvocationHandlerBase[T <: FakeFunction] extends InvocationHandler {
@@ -30,9 +31,9 @@ abstract class InvocationHandlerBase[T <: FakeFunction] extends InvocationHandle
     val name = Symbol(method.getName)
     lazy val fake = getFake(args(0).asInstanceOf[Symbol])
     (handle(name, fake).getOrElse(name match {
-      case 'toString => s"proxy mock object ${System.identityHashCode(proxy)}"
-      case 'hashCode => System.identityHashCode(proxy)
-      case 'equals => (args(0) eq proxy)
+      case Symbol("toString") => s"proxy mock object ${System.identityHashCode(proxy)}"
+      case Symbol("hashCode") => System.identityHashCode(proxy)
+      case Symbol("equals") => (args(0) eq proxy)
       case _ => getFake(name).handle(args)
     })).asInstanceOf[AnyRef]
   }
@@ -43,5 +44,5 @@ abstract class InvocationHandlerBase[T <: FakeFunction] extends InvocationHandle
 
   private def getFake(name: Symbol): T = fakes.getOrElseUpdate(name, makeFake(name))
 
-  private val fakes = Map[Symbol, T]()
+  private val fakes = mutable.Map[Symbol, T]()
 }

@@ -48,6 +48,6 @@ trait TestSuiteRunner { this: Matchers =>
   }
 
   def getErrorMessage[ExnT <: Throwable](event: Event)(implicit m: Manifest[ExnT]): String = {
-    getThrowable[ExnT](event).getMessage()
+    getThrowable[ExnT](event).getMessage
   }
 }

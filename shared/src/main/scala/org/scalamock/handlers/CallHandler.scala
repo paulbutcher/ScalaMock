@@ -112,9 +112,9 @@ object CallHandler {
   private[scalamock] val ONCE = 1 to 1
   private[scalamock] val TWICE = 2 to 2
   
-  private[scalamock] val ANY_NUMBER_OF_TIMES = 0 to scala.Int.MaxValue - 1
-  private[scalamock] val AT_LEAST_ONCE = 1 to scala.Int.MaxValue - 1
-  private[scalamock] val AT_LEAST_TWICE = 2 to scala.Int.MaxValue - 1
+  private[scalamock] val ANY_NUMBER_OF_TIMES = 0 until scala.Int.MaxValue
+  private[scalamock] val AT_LEAST_ONCE = 1 until scala.Int.MaxValue
+  private[scalamock] val AT_LEAST_TWICE = 2 until scala.Int.MaxValue
 
   private[scalamock] val NO_MORE_THAN_ONCE = 0 to 1
   private[scalamock] val NO_MORE_THAN_TWICE = 0 to 2
@@ -149,7 +149,7 @@ class CallHandler1[T1, R: Defaultable](target: FakeFunction, argumentMatcher: Pr
 
   def this(target: FakeFunction, v1: MockParameter[T1]) = this(target, new ArgumentMatcher(new Tuple1(v1)))
   
-  def onCall(handler: (T1) => R): CallHandler1[T1, R] = super.onCall(new FunctionAdapter1(handler))
+  def onCall(handler: T1 => R): CallHandler1[T1, R] = super.onCall(new FunctionAdapter1(handler))
 }
 
 class CallHandler2[T1, T2, R: Defaultable](target: FakeFunction, argumentMatcher: Product => Boolean) extends CallHandler[R](target, argumentMatcher) {

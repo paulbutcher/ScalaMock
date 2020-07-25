@@ -34,7 +34,7 @@ class OrderTest extends AnyWordSpec with MockFactory {
         val mockWarehouse = mock[Warehouse]
         inSequence {
           (mockWarehouse.hasInventory _) expects ("Talisker", 50) returning true
-          (mockWarehouse.remove _) expects ("Talisker", 50) once
+          (mockWarehouse.remove _) expects("Talisker", 50) once()
         }
         
         val order = new Order("Talisker", 50)
