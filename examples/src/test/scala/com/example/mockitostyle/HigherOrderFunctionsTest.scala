@@ -40,9 +40,9 @@ class HigherOrderFunctionsTest extends AnyFreeSpec with MockFactory {
       }
 
       inSequence {
-        f verify 1 once()
-        f verify 2 once()
-        f verify 3 once()
+        f.verify(1).once()
+        f.verify(2).once()
+        f.verify(3).once()
       }
     }
 
@@ -74,10 +74,10 @@ class HigherOrderFunctionsTest extends AnyFreeSpec with MockFactory {
       }
 
       inSequence {
-        f verify("initial", 0) once()
-        f verify("intermediate one", 1) once()
-        f verify("intermediate two", 2) once()
-        f verify("intermediate three", 3) once()
+        f.verify("initial", 0).once()
+        f.verify("intermediate one", 1).once()
+        f.verify("intermediate two", 2).once()
+        f.verify("intermediate three", 3).once()
       }
     }
   }
