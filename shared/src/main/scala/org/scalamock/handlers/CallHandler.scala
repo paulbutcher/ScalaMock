@@ -147,7 +147,7 @@ class CallHandler1[T1, R: Defaultable](target: FakeFunction, argumentMatcher: Pr
   
   type Derived = CallHandler1[T1, R]
 
-  def this(target: FakeFunction, v1: MockParameter[T1]) = this(target, new ArgumentMatcher(new Tuple1(v1)))
+  def this(target: FakeFunction, v1: MockParameter[T1]) = this(target, new ArgumentMatcher(Tuple1(v1)))
   
   def onCall(handler: T1 => R): CallHandler1[T1, R] = super.onCall(new FunctionAdapter1(handler))
 }
