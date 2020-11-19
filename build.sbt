@@ -19,14 +19,15 @@ val commonSettings = Defaults.coreDefaultSettings ++ Seq(
   scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-Xcheckinit", "-target:jvm-1.8")
 )
 
-lazy val scalamock = crossProject(JSPlatform, JVMPlatform) in file(".") settings(
+lazy val scalamock = crossProject(JSPlatform, JVMPlatform).in(file("."))
+  .settings(
     commonSettings,
     name := "scalamock",
-    publishArtifact in (Compile, packageBin) := true,
-    publishArtifact in (Compile, packageDoc) := true,
-    publishArtifact in (Compile, packageSrc) := true,
+    publishArtifact in(Compile, packageBin) := true,
+    publishArtifact in(Compile, packageDoc) := true,
+    publishArtifact in(Compile, packageSrc) := true,
     publishArtifact in Test := false,
-    scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++ 
+    scalacOptions in(Compile, doc) ++= Opts.doc.title("ScalaMock") ++
       Opts.doc.version(version.value) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
@@ -34,6 +35,7 @@ lazy val scalamock = crossProject(JSPlatform, JVMPlatform) in file(".") settings
       specs2.value % Optional
     )
   )
+  .jvmSettings(libraryDependencies += "org.scala-js" %% "scalajs-stubs" % "1.0.0" % "provided")
 
 lazy val `scalamock-js` = scalamock.js
 lazy val `scalamock-jvm` = scalamock.jvm
