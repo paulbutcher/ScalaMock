@@ -24,6 +24,12 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
+import scala.scalajs.js.annotation.JSName
+
+trait MockedTrait {
+  def mockedMethod(): Unit
+}
+
 class ArgThatTest extends AnyFlatSpec with Matchers with MockFactory {
 
   behavior of "ArgThat"
@@ -33,5 +39,12 @@ class ArgThatTest extends AnyFlatSpec with Matchers with MockFactory {
     startsWithPredicate.equals("Alice") shouldBe true
     startsWithPredicate.equals("Anna") shouldBe true
     startsWithPredicate.equals("Bob") shouldBe false
+  }
+
+  it should "work" in {
+    val x = mock[MockedTrait]
+    (x.mockedMethod _).expects().once().returning(())
+    x.mockedMethod()
+    println("done")
   }
 }

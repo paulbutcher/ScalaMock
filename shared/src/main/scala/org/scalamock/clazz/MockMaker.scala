@@ -200,13 +200,10 @@ class MockMaker[C <: Context](val ctx: C) {
       val clazz = classType(paramCount(mt))
       val types = (paramTypes(mt) map mockParamType _) :+ mockParamType(finalResultType(mt))
       val name = applyOn(scalaSymbol, "apply", mockNameGenerator.generateMockMethodName(m, mt))
-
-      ValDef(Modifiers(),
-        mockFunctionName(m),
-        AppliedTypeTree(Ident(clazz.typeSymbol), types), // see issue #24
-        callConstructor(
-          New(AppliedTypeTree(Ident(clazz.typeSymbol), types)),
-          mockContext.tree, name))
+      val termName = mockFunctionName(m)
+      val tpt = AppliedTypeTree(Ident(clazz.typeSymbol), types)
+      val call = callConstructor(New(AppliedTypeTree(Ident(clazz.typeSymbol), types)), mockContext.tree, name)
+      q"@scala.scalajs.js.annotation.JSExport(${termName.encodedName.toString}) val $termName: $tpt = $call".asInstanceOf[ValDef]
     }
 
     // def <init>() = super.<init>()
