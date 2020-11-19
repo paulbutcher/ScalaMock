@@ -1,12 +1,11 @@
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
-scalaVersion in ThisBuild := "2.11.12"
+scalaVersion in ThisBuild := "2.12.12"
 crossScalaVersions in ThisBuild := Seq("2.11.12", "2.12.12", "2.13.3")
 //scalaJSUseRhino in ThisBuild := true
 
-lazy val scalatest = "org.scalatest" %% "scalatest" % "3.2.2"
-lazy val specs2 = "org.specs2" %% "specs2-core" % "4.10.5"
-lazy val scalameta = "org.scalameta" %% "scalameta" % "4.3.24"
+lazy val scalatest = Def.setting("org.scalatest" %%% "scalatest" % "3.2.2")
+lazy val specs2 = Def.setting("org.specs2" %%% "specs2-core" % "4.10.5")
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
   unmanagedSourceDirectories in Compile ++= {
@@ -31,9 +30,8 @@ lazy val scalamock = crossProject(JSPlatform, JVMPlatform) in file(".") settings
       Opts.doc.version(version.value) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-      scalameta,
-      scalatest % Optional,
-      specs2 % Optional
+      scalatest.value % Optional,
+      specs2.value % Optional
     )
   )
 
@@ -45,7 +43,7 @@ lazy val examples = project in file("examples") settings(
   name := "ScalaMock Examples",
   skip in publish := true,
   libraryDependencies ++= Seq(
-    scalatest % Test,
-    specs2 % Test
+    scalatest.value % Test,
+    specs2.value % Test
   )
 ) dependsOn scalamock.jvm
