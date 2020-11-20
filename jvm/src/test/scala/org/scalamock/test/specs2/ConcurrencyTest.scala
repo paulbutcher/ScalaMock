@@ -20,13 +20,15 @@
 
 package org.scalamock.test.specs2
 
+import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.concurrent.duration.SECONDS
+
 import org.scalamock.specs2.MockContext
 import org.scalamock.test.mockable.TestTrait
 import org.specs2.mutable.Specification
-
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration.{Duration, SECONDS}
 
 class ConcurrencyTest extends Specification {
 

@@ -1,6 +1,6 @@
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
-scalaVersion in ThisBuild := "2.12.12"
+scalaVersion in ThisBuild := "2.11.12"
 crossScalaVersions in ThisBuild := Seq("2.11.12", "2.12.12", "2.13.3")
 //scalaJSUseRhino in ThisBuild := true
 

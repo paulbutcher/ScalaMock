@@ -22,11 +22,11 @@ package org.scalamock.test.scalatest
 
 import org.scalamock.scalatest.MockFactory
 import org.scalamock.test.mockable.TestTrait
-import org.scalatest.flatspec.AnyFlatSpec
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, Future}
+import org.scalatest.flatspec.AnyFlatSpec
 
 class ConcurrencyTest extends AnyFlatSpec with MockFactory {
   behavior of "ScalaMock"

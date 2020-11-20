@@ -208,7 +208,8 @@ class MockMaker[C <: Context](val ctx: C) {
         AppliedTypeTree(Ident(clazz.typeSymbol), types), // see issue #24
         callConstructor(
           New(AppliedTypeTree(Ident(clazz.typeSymbol), types)),
-          mockContext.tree, name)
+          mockContext.tree, name
+        )
       )
     }
 

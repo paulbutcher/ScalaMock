@@ -20,8 +20,8 @@
 
 package org.scalamock.test.specs2
 
-import org.scalamock.specs2.IsolatedMockFactory
 import org.scalamock.test.mockable.TestTrait
+import org.scalamock.specs2.IsolatedMockFactory
 import org.specs2.mutable.Specification
 
 /**
