@@ -221,7 +221,7 @@ class MockMaker[C <: Context](val ctx: C) {
 
       val constructorArgumentsTypes = primaryConstructorOpt.map { constructor =>
       val constructorTypeContext = constructor.typeSignatureIn(typeToMock)
-      val constructorArguments = constructor.paramss //constructorTypeContext.paramLists
+      val constructorArguments = constructor.paramLists
       constructorArguments.map {
           symbols => symbols.map(_.typeSignatureIn(constructorTypeContext))
         }
