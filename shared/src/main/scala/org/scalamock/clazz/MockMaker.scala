@@ -200,13 +200,17 @@ class MockMaker[C <: Context](val ctx: C) {
       val clazz = classType(paramCount(mt))
       val types = (paramTypes(mt) map mockParamType _) :+ mockParamType(finalResultType(mt))
       val name = applyOn(scalaSymbol, "apply", mockNameGenerator.generateMockMethodName(m, mt))
-
-      ValDef(Modifiers(),
+      val termName = mockFunctionName(m)
+      val additionalAnnotations = if(isScalaJs) List(jsExport(termName.encodedName.toString)) else Nil
+      ValDef(
+        Modifiers().mapAnnotations(additionalAnnotations ::: _),
         mockFunctionName(m),
         AppliedTypeTree(Ident(clazz.typeSymbol), types), // see issue #24
         callConstructor(
           New(AppliedTypeTree(Ident(clazz.typeSymbol), types)),
-          mockContext.tree, name))
+          mockContext.tree, name
+        )
+      )
     }
 
     // def <init>() = super.<init>()
@@ -217,7 +221,7 @@ class MockMaker[C <: Context](val ctx: C) {
 
       val constructorArgumentsTypes = primaryConstructorOpt.map { constructor =>
       val constructorTypeContext = constructor.typeSignatureIn(typeToMock)
-      val constructorArguments = constructor.paramss //constructorTypeContext.paramLists
+      val constructorArguments = constructor.paramLists
       constructorArguments.map {
           symbols => symbols.map(_.typeSignatureIn(constructorTypeContext))
         }
