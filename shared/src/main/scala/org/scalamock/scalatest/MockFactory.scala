@@ -61,7 +61,7 @@ import org.scalatest.TestSuite
  * 
  * This way in the suite scope you can declare instance variables (e.g. mocks) that will be used by
  * multiple test cases and perform common test case setup (e.g. set up some mock expectations).
- * Because each test cases has fresh instance variables different test cases do not interfere with each
+ * Because each test case has fresh instance variables different test cases do not interfere with each
  * other.
  * 
  * {{{
