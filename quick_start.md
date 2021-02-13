@@ -11,7 +11,7 @@ This article describes how to use ScalaMock in your tests. Because it is just an
 To use ScalaMock in [sbt](http://www.scala-sbt.org/) with [ScalaTest](http://www.scalatest.org/) add the following to your build.sbt. ScalaMock also supports Specs2 as a test framework.
 
 ```scala
-libraryDependencies += "org.scalamock" %% "scalamock" % "4.4.0" % Test
+libraryDependencies += "org.scalamock" %% "scalamock" % "5.1.0" % Test
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.1.0" % Test
 ```
 
