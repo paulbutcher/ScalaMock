@@ -1,7 +1,7 @@
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
-scalaVersion in ThisBuild := "2.11.12"
-crossScalaVersions in ThisBuild := Seq("2.11.12", "2.12.12", "2.13.3")
+scalaVersion in ThisBuild := "2.13.5"
+crossScalaVersions in ThisBuild := Seq("2.13.5", "2.12.12", "2.13.3")
 //scalaJSUseRhino in ThisBuild := true
 
 lazy val scalatest = Def.setting("org.scalatest" %%% "scalatest" % "3.2.2")
