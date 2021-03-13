@@ -44,4 +44,4 @@ jobs:
       with:
         java-version: 11
     - name: Run tests
-      run: sbt ++2.13.3 test
+      run: sbt ++2.13.5 test
