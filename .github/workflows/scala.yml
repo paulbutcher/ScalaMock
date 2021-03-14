@@ -31,7 +31,7 @@ jobs:
       with:
         java-version: 11
     - name: Run tests
-      run: sbt ++2.12.12 test
+      run: sbt ++2.12.13 test
       
   scala_2_13:
 
