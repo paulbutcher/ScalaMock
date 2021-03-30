@@ -1,4 +1,4 @@
-name: Scala CI
+name: SBT CI Build
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  scala_2_11:
 
     runs-on: ubuntu-latest
 
@@ -18,4 +18,30 @@ jobs:
       with:
         java-version: 11
     - name: Run tests
-      run: sbt test
+      run: sbt ++2.11.12 test
+      
+  scala_2_12:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: Run tests
+      run: sbt ++2.12.13 test
+      
+  scala_2_13:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: Run tests
+      run: sbt ++2.13.5 test

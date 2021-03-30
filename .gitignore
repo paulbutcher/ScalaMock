@@ -16,3 +16,4 @@ target/
 .settings/
 *.sublime-workspace
 sonatype.sbt
+.bsp/

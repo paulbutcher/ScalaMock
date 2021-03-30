@@ -1,11 +1,10 @@
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
-scalaVersion in ThisBuild := "2.13.3"
-crossScalaVersions in ThisBuild := Seq("2.11.12", "2.12.12", "2.13.3")
+scalaVersion in ThisBuild := "2.13.5"
+crossScalaVersions in ThisBuild := Seq("2.11.12", "2.12.13", "2.13.5")
 
-lazy val scalatest = "org.scalatest" %% "scalatest" % "3.2.0"
-lazy val specs2 = "org.specs2" %% "specs2-core" % "4.10.0"
-lazy val scalameta = "org.scalameta" %% "scalameta" % "4.3.20"
+lazy val scalatest = Def.setting("org.scalatest" %%% "scalatest" % "3.2.6")
+lazy val specs2 = Def.setting("org.specs2" %%% "specs2-core" % "4.10.6")
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
   unmanagedSourceDirectories in Compile ++= {
@@ -26,13 +25,12 @@ lazy val scalamock = crossProject(JSPlatform, JVMPlatform) in file(".") settings
     publishArtifact in (Compile, packageDoc) := true,
     publishArtifact in (Compile, packageSrc) := true,
     publishArtifact in Test := false,
-    scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++ 
+    scalacOptions in (Compile, doc) ++= Opts.doc.title("ScalaMock") ++
       Opts.doc.version(version.value) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-      scalameta,
-      scalatest % Optional,
-      specs2 % Optional
+      scalatest.value % Optional,
+      specs2.value % Optional
     )
   )
 
@@ -44,7 +42,7 @@ lazy val examples = project in file("examples") settings(
   name := "ScalaMock Examples",
   skip in publish := true,
   libraryDependencies ++= Seq(
-    scalatest % Test,
-    specs2 % Test
+    scalatest.value % Test,
+    specs2.value % Test
   )
 ) dependsOn scalamock.jvm

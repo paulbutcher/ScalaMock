@@ -24,6 +24,7 @@ import org.scalatest.events.{Event, TestFailed}
 import org.scalatest.matchers.should.Matchers
 
 import scala.language.postfixOps
+import scala.reflect.ClassTag
 
 trait TestSuiteRunner { this: Matchers =>
 
@@ -39,7 +40,7 @@ trait TestSuiteRunner { this: Matchers =>
     reporter.lastEvent.get
   }
 
-  def getThrowable[ExnT <: Throwable](event: Event)(implicit m: Manifest[ExnT]): ExnT = {
+  def getThrowable[ExnT <: Throwable : ClassTag](event: Event): ExnT = {
     event shouldBe a[TestFailed]
 
     val testCaseError = event.asInstanceOf[TestFailed].throwable.get

@@ -25,8 +25,13 @@ import MacroAdapter.Context
 /**
  * Helper functions to work with Scala macros and to create scala.reflect Trees.
  */
-private[scalamock] class MacroUtils[C <: Context](ctx: C) extends MacroAdapter[C](ctx) { // ctx2 to avoid clash with ctx in MockMaker (eugh!)
-  import ctx2.universe._
+private[scalamock] class MacroUtils[C <: Context](protected val ctx: C) extends MacroAdapter {
+  import ctx.universe._
+
+  final lazy val isScalaJs =
+    ctx.compilerSettings.exists(o => o.startsWith("-Xplugin:") && o.contains("scalajs-compiler"))
+
+  def jsExport(name: String) = q"new _root_.scala.scalajs.js.annotation.JSExport($name)"
 
   // Convert a methodType into its ultimate result type
   // For nullary and normal methods, this is just the result type
@@ -77,7 +82,7 @@ private[scalamock] class MacroUtils[C <: Context](ctx: C) extends MacroAdapter[C
   def reportError(message: String) = {
     // Report with both info and abort so that the user still sees something, even if this is within an
     // implicit conversion (see https://issues.scala-lang.org/browse/SI-5902)
-    ctx2.info(ctx2.enclosingPosition, message, force = true)
-    ctx2.abort(ctx2.enclosingPosition, message)
+    ctx.info(ctx.enclosingPosition, message, force = true)
+    ctx.abort(ctx.enclosingPosition, message)
   }
 }
