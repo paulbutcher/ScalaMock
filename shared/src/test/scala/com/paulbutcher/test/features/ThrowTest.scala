@@ -44,8 +44,8 @@ class ThrowTest extends IsolatedSpec {
 
   it should "throw computed exception" in {
     intFunMock.expects(*).repeat(3 to 3).onCall({ arg: Int =>
-      if (arg == 1) throw new TestException()
-      else if (arg == 2) throw new AnotherTestException()
+      if (arg == 1) throw TestException()
+      else if (arg == 2) throw AnotherTestException()
       else "Foo"
     })
 

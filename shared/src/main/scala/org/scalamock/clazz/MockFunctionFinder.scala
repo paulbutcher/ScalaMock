@@ -74,7 +74,7 @@ object MockFunctionFinder {
       // see issue #34
       var these = types1.map(_.dealias)
       var those = types2.map(_.dealias)
-      while (!these.isEmpty && !those.isEmpty && these.head =:= those.head) {
+      while (these.nonEmpty && those.nonEmpty && these.head =:= those.head) {
         these = these.tail
         those = those.tail
       }

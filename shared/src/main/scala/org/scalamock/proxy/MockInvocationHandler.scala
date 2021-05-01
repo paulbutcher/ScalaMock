@@ -26,7 +26,7 @@ class MockInvocationHandler(mockContext: MockContext) extends InvocationHandlerB
 
   protected override def handle(name: Symbol, fake: => MockFunction) =
     name match {
-      case 'expects => Some(fake.expectationHandler)
+      case Symbol("expects") => Some(fake.expectationHandler())
       case _ => None
     }
 

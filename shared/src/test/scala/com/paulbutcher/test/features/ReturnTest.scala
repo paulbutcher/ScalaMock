@@ -83,7 +83,7 @@ class ReturnTest extends IsolatedSpec {
   }
 
   it should "handle stacked expectations (onCall) and call count" in {
-    intToStringMock.expects(*).onCall({ _: Int => "1" }).twice
+    intToStringMock.expects(*).onCall({ _: Int => "1" }).twice()
     intToStringMock.expects(*).onCall({ _: Int => "2" })
 
     intToStringMock(1) shouldBe ("1")

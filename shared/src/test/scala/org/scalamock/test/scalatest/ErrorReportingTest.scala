@@ -68,7 +68,7 @@ class ErrorReportingTest extends AnyFlatSpec with Matchers with TestSuiteRunner 
       test("execute block of code") {
         val mockedTrait = mock[TestTrait]
         (mockedTrait.oneParamMethod _).expects(1).returning("one")
-        throw new NullPointerException;
+        throw new NullPointerException
       }
     }
 

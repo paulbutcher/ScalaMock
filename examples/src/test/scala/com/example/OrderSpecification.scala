@@ -33,8 +33,8 @@ class OrderSpecification extends Specification {
     "remove inventory when in stock" in new MockContext {
       val mockWarehouse = mock[Warehouse]
       inSequence {
-        (mockWarehouse.hasInventory _).expects("Talisker", 50).returning(true).once
-        (mockWarehouse.remove _).expects("Talisker", 50).once
+        (mockWarehouse.hasInventory _).expects("Talisker", 50).returning(true).once()
+        (mockWarehouse.remove _).expects("Talisker", 50).once()
       }
       val order = new Order("Talisker", 50)
       order.fill(mockWarehouse)
@@ -43,7 +43,7 @@ class OrderSpecification extends Specification {
 
     "remove nothing when out of stock" in new MockContext {
       val mockWarehouse = mock[Warehouse]
-      (mockWarehouse.hasInventory _).expects(*, *).returns(false).once
+      (mockWarehouse.hasInventory _).expects(*, *).returns(false).once()
       val order = new Order("Talisker", 50)
       order.fill(mockWarehouse)
       order.isFilled must beFalse

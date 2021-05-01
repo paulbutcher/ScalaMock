@@ -48,7 +48,7 @@ trait TestSuiteRunner { this: Matchers =>
     testCaseError.asInstanceOf[ExnT]
   }
 
-  def getErrorMessage[ExnT <: Throwable : ClassTag](event: Event): String = {
-    getThrowable[ExnT](event).getMessage()
+  def getErrorMessage[ExnT <: Throwable](event: Event)(implicit m: Manifest[ExnT]): String = {
+    getThrowable[ExnT](event).getMessage
   }
 }

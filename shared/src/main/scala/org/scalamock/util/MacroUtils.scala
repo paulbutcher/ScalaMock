@@ -82,7 +82,7 @@ private[scalamock] class MacroUtils[C <: Context](protected val ctx: C) extends 
   def reportError(message: String) = {
     // Report with both info and abort so that the user still sees something, even if this is within an
     // implicit conversion (see https://issues.scala-lang.org/browse/SI-5902)
-    ctx.info(ctx.enclosingPosition, message, true)
+    ctx.info(ctx.enclosingPosition, message, force = true)
     ctx.abort(ctx.enclosingPosition, message)
   }
 }

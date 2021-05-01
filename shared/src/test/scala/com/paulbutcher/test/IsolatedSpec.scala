@@ -28,7 +28,7 @@ import org.scalatest.matchers.should.Matchers
 abstract class IsolatedSpec extends AnyFlatSpec with MockFactory with Matchers with OneInstancePerTest {
 
   def repeat(n: Int)(what: => Unit): Unit = {
-    for (i <- 0 until n)
+    for (_ <- 0 until n)
       what
   }
 
