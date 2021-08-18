@@ -173,7 +173,7 @@ package org
  * 
  * {{{
  * val mockIncrement = mockFunction[Int, Int]
- * m expects (*) onCall { _ + 1 }
+ * mockIncrement expects (*) onCall { _ + 1 }
  * }}}
  * 
  * ===Overloaded, curried and polymorphic methods===
