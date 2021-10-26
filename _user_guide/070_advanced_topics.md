@@ -325,3 +325,18 @@ object NoScalaTestExample extends Mock {
   }
 }
 ```
+
+
+## Mocking 0-parameter function and parameterless function 
+
+```scala
+trait Foo {
+  def bar(): Int
+  def buz: Int
+}
+
+val fooMock = mock[Foo]
+
+(() => fooMock.bar()).expects(10)
+(() => fooMock.buz).expects(10)
+```
