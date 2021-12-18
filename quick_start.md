@@ -27,9 +27,9 @@ For simplicity's sake, this has only one method called `sayHello` which can form
 ```scala
 object Greetings {
   trait Formatter { def format(s: String): String }
-  object EnglishFormatter { def format(s: String): String = s"Hello $s" }
-  object GermanFormatter { def format(s: String): String = s"Hallo $s" }
-  object JapaneseFormatter { def format(s: String): String =  s"こんにちは $s" }
+  object EnglishFormatter extends Formatter { def format(s: String): String = s"Hello $s" }
+  object GermanFormatter extends Formatter { def format(s: String): String = s"Hallo $s" }
+  object JapaneseFormatter extends Formatter { def format(s: String): String =  s"こんにちは $s" }
 
   def sayHello(name: String, formatter: Formatter): Unit = {
     println(formatter.format(name))
