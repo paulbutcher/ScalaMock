@@ -1,16 +1,16 @@
-organization in ThisBuild := "org.scalamock"
-licenses in ThisBuild := Seq("MIT" -> url("https://opensource.org/licenses/MIT"))
-scmInfo in ThisBuild := Some(
+ThisBuild / organization := "org.scalamock"
+ThisBuild / licenses := Seq("MIT" -> url("https://opensource.org/licenses/MIT"))
+ThisBuild / scmInfo := Some(
   ScmInfo(url("https://github.com/paulbutcher/ScalaMock"), "scm:git:git@github.com:paulbutcher/ScalaMock.git")
 )
-developers in ThisBuild := List(
+ThisBuild / developers := List(
   Developer("paulbutcher", "Paul Butcher", "", url("http://paulbutcher.com/")),
   Developer("barkhorn", "Philipp Meyerhoefer", "", url("https://github.com/barkhorn"))
 )
-homepage in ThisBuild := Some(url("http://scalamock.org/"))
-pomIncludeRepository in ThisBuild := { _ => false }
+ThisBuild / homepage := Some(url("http://scalamock.org/"))
+//ThisBuild / pomIncludeRepository := { _ => false }
 
-version in ThisBuild := {
+ThisBuild / version := {
   val Snapshot = """(\d+)\.(\d+)\.(\d+)-\d+.*?""".r
   git.gitDescribedVersion.value.getOrElse("0.0.0-1")match {
     case Snapshot(maj, min, _) => s"$maj.${min.toInt + 1}.0-SNAPSHOT"
@@ -18,13 +18,13 @@ version in ThisBuild := {
   }
 }
 
-isSnapshot in ThisBuild := version.value.endsWith("-SNAPSHOT")
+ThisBuild / isSnapshot := version.value.endsWith("-SNAPSHOT")
 
-publishTo in ThisBuild := Some(
+ThisBuild / publishTo := Some(
   if (isSnapshot.value) Opts.resolver.sonatypeSnapshots else Opts.resolver.sonatypeStaging
 )
-publishConfiguration in ThisBuild := publishConfiguration.value.withOverwrite(true)
-publishLocalConfiguration in ThisBuild := publishLocalConfiguration.value.withOverwrite(true)
+ThisBuild / publishConfiguration := publishConfiguration.value.withOverwrite(true)
+ThisBuild / publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
 
 addCommandAlias("ci-all",  ";+clean ;+compile ;+test ;+package")
 addCommandAlias("release", ";+scalamockJVM/publishSigned ;+scalamockJS/publishSigned ;sonatypeReleaseAll")
