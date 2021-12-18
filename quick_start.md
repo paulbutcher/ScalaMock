@@ -257,7 +257,8 @@ To read more about the differences between mocks and stubs, please see the chapt
 
 ### Testing with ScalaMock
 
-To provide mocking support in ScalaTest suites just mix your suite with `org.scalamock.scalatest.MockFactory`:
+To provide mocking support in ScalaTest suites just mix your suite with `org.scalamock.scalatest.MockFactory`.
+Note: You must use AsyncMockFactory instead of regular MockFactory with ScalaTest async specs - more on how to do that is in the User Guide.
 
 ```scala
 import org.scalamock.scalatest.MockFactory
