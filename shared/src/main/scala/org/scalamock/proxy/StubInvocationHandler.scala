@@ -26,8 +26,8 @@ class StubInvocationHandler(mockContext: MockContext) extends InvocationHandlerB
 
   protected override def handle(name: Symbol, fake: => StubFunction) =
     name match {
-      case 'when => Some(fake.whenHandler)
-      case 'verify => Some(fake.verifyHandler)
+      case Symbol("when") => Some(fake.whenHandler())
+      case Symbol("verify") => Some(fake.verifyHandler())
       case _ => None
     }
 

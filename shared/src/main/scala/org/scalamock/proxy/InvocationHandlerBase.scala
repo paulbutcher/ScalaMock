@@ -30,9 +30,9 @@ abstract class InvocationHandlerBase[T <: FakeFunction] extends InvocationHandle
     val name = Symbol(method.getName)
     lazy val fake = getFake(args(0).asInstanceOf[Symbol])
     (handle(name, fake).getOrElse(name match {
-      case 'toString => s"proxy mock object ${System.identityHashCode(proxy)}"
-      case 'hashCode => System.identityHashCode(proxy)
-      case 'equals => (args(0) eq proxy)
+      case Symbol("toString") => s"proxy mock object ${System.identityHashCode(proxy)}"
+      case Symbol("hashCode") => System.identityHashCode(proxy)
+      case Symbol("equals") => (args(0) eq proxy)
       case _ => getFake(name).handle(args)
     })).asInstanceOf[AnyRef]
   }

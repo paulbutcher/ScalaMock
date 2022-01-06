@@ -1,7 +1,7 @@
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
 ThisBuild / scalaVersion := "2.11.12"
-ThisBuild / crossScalaVersions := Seq("2.11.12", "2.12.15", "2.13.7")
+ThisBuild / crossScalaVersions := Seq("2.11.12", "2.12.15", "2.13.7", "3.0.1")
 //ThisBuild / scalaJSUseRhino := true
 
 lazy val scalatest = Def.setting("org.scalatest" %%% "scalatest" % "3.2.10")
@@ -29,10 +29,15 @@ lazy val scalamock = crossProject(JSPlatform, JVMPlatform) in file(".") settings
     Compile / doc / scalacOptions ++= Opts.doc.title("ScalaMock") ++
       Opts.doc.version(version.value) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
     libraryDependencies ++= Seq(
-      "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-      scalatest.value % Optional,
-      specs2.value % Optional
-    )
+      scalatest.value % Optional
+    ),
+    libraryDependencies ++= {
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((2L, minor)) =>
+          Seq("org.scala-lang" % "scala-reflect" % scalaVersion.value, specs2.value % Optional)
+        case _ => Nil
+      }
+    }
   )
 
 lazy val `scalamock-js` = scalamock.js
@@ -43,7 +48,13 @@ lazy val examples = project in file("examples") settings(
   name := "ScalaMock Examples",
   publish / skip := true,
   libraryDependencies ++= Seq(
-    scalatest.value % Test,
-    specs2.value % Test
-  )
+    scalatest.value % Test
+  ),
+  libraryDependencies ++= {
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2L, minor)) =>
+        Seq(specs2.value % Test)
+      case _ => Nil
+    }
+  }
 ) dependsOn scalamock.jvm

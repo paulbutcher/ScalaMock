@@ -180,7 +180,7 @@ trait Matchers { this: MockContext =>
   protected def * = new MatchAny
 
   protected class EpsilonMatcher(d: Double) {
-    def unary_~() = new MatchEpsilon(d)
+    def unary_~ = new MatchEpsilon(d)
   }
 
   protected implicit def doubleToEpsilon(d: Double) = new EpsilonMatcher(d)
