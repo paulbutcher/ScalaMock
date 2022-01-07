@@ -12,7 +12,7 @@ class MixedMockFactoryTest extends AnyFlatSpec with MixedMockFactory with Matche
     val m = mock[Foo]
     val p = Proxy.mock[Foo]
 
-    p.expects('getI)().returning(5).once()
+    p.expects(Symbol("getI"))().returning(5).once()
     (m.getI _).expects().returns(42).anyNumberOfTimes()
 
     m.getI should be(42)
