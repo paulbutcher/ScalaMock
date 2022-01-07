@@ -29,12 +29,15 @@ package org.scalamock.matchers
 
 class MockParameter[T] protected (private[scalamock] val value: AnyRef, dummy: Boolean = false) {
   
-  def this(v: T) = this(v.asInstanceOf[AnyRef])
-  def this(v: MatcherBase) = this(v.asInstanceOf[AnyRef])
 
   override def hashCode() = value.##
 
   override def equals(that: Any) = value equals that
 
   override def toString = value.toString
+}
+
+object MockParameter{
+  def apply[T](v: T): MockParameter[T] = new MockParameter(v.asInstanceOf[AnyRef])
+  def apply[T](v: MatcherBase): MockParameter[T] = new MockParameter(v.asInstanceOf[AnyRef])
 }

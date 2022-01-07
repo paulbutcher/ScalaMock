@@ -25,6 +25,7 @@ import org.scalamock.function._
 import org.scalamock.matchers.ArgCapture.{Capture, CaptureMatcher}
 
 import scala.reflect.ClassTag
+import org.scalamock.matchers.Matchers.EpsilonMatcher
 
 trait Matchers { this: MockContext =>
   import scala.language.implicitConversions
@@ -179,11 +180,14 @@ trait Matchers { this: MockContext =>
 
   protected def * = new MatchAny
 
+
+  protected implicit def doubleToEpsilon(d: Double): EpsilonMatcher = new EpsilonMatcher(d)
+  protected implicit def toMockParameter[T](v: T): MockParameter[T] = MockParameter(v)
+  protected implicit def matcherBaseToMockParameter[T](m: MatcherBase): MockParameter[T] = MockParameter[T](m)
+}
+
+object Matchers {
   protected class EpsilonMatcher(d: Double) {
     def unary_~ = new MatchEpsilon(d)
   }
-
-  protected implicit def doubleToEpsilon(d: Double) = new EpsilonMatcher(d)
-  protected implicit def toMockParameter[T](v: T) = new MockParameter(v)
-  protected implicit def matcherBaseToMockParameter[T](m: MatcherBase) = new MockParameter[T](m)
 }

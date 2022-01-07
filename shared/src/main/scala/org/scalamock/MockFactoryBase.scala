@@ -65,7 +65,7 @@ trait MockFactoryBase extends AbstractMockFactoryBase with MockContext {
     inContext(new OrderedHandlers(logging = true))(what)
 
   // https://issues.scala-lang.org/browse/SI-5831
-  implicit val _factory = this
+  implicit val _factory: MockFactoryBase = this
 
   private def initializeExpectations(): Unit = {
     val initialHandlers = new UnorderedHandlers
