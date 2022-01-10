@@ -5,7 +5,7 @@ ThisBuild / crossScalaVersions := Seq("2.11.12", "2.12.15", "2.13.7", "3.0.1")
 //ThisBuild / scalaJSUseRhino := true
 
 lazy val scalatest = Def.setting("org.scalatest" %%% "scalatest" % "3.2.10")
-lazy val specs2 = Def.setting("org.specs2" %%% "specs2-core" % "4.10.6")
+lazy val specs2 = Def.setting("org.specs2" %%% "specs2-core" % "5.0.0-RC-22")
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
   Compile / unmanagedSourceDirectories ++= {
@@ -29,7 +29,8 @@ lazy val scalamock = crossProject(JSPlatform, JVMPlatform) in file(".") settings
     Compile / doc / scalacOptions ++= Opts.doc.title("ScalaMock") ++
       Opts.doc.version(version.value) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
     libraryDependencies ++= Seq(
-      scalatest.value % Optional
+      scalatest.value % Optional,
+      specs2.value % Optional
     ),
     libraryDependencies ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
@@ -48,13 +49,7 @@ lazy val examples = project in file("examples") settings(
   name := "ScalaMock Examples",
   publish / skip := true,
   libraryDependencies ++= Seq(
-    scalatest.value % Test
-  ),
-  libraryDependencies ++= {
-    CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2L, minor)) =>
-        Seq(specs2.value % Test)
-      case _ => Nil
-    }
-  }
+    scalatest.value % Test,
+    specs2.value % Test
+  )
 ) dependsOn scalamock.jvm
