@@ -24,21 +24,21 @@ import org.scalamock.MockFactoryBase
 import org.scalatest.exceptions.{StackDepthException, TestFailedException}
 import org.scalatest._
 
-trait AbstractMockFactory extends TestSuiteMixin with MockFactoryBase with TestSuite {
-  
+trait AbstractMockFactory extends TestSuiteMixin with MockFactoryBase { this: TestSuite =>
+
   type ExpectationException = TestFailedException
-  
+
   abstract override def withFixture(test: NoArgTest): Outcome = {
 
     if (autoVerify) {
-      withExpectations { 
+      withExpectations {
         val outcome = super.withFixture(test)
         outcome match {
-          case Failed(throwable) => 
+          case Failed(throwable) =>
             // MockFactoryBase does not know how to handle ScalaTest Outcome.
-            // Throw error that caused test failure to prevent hiding it by 
+            // Throw error that caused test failure to prevent hiding it by
             // "unsatisfied expectation" exception (see issue #72)
-            throw throwable 
+            throw throwable
           case _ => outcome
         }
       }

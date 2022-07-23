@@ -2,6 +2,7 @@ package org.scalamock.scalatest
 
 import org.scalamock.clazz.{Mock => MacroMock}
 import org.scalamock.proxy.ProxyMockFactory
+import org.scalatest.TestSuite
 
 import scala.reflect.ClassTag
 
@@ -12,7 +13,7 @@ import scala.reflect.ClassTag
   * val proxyMock = Proxy.mock[Bar]
   * }}}
   */
-trait MixedMockFactory extends AbstractMockFactory with MacroMock {
+trait MixedMockFactory extends AbstractMockFactory with MacroMock { this: TestSuite =>
 
   object Proxy extends ProxyMockFactory {
     import org.scalamock.proxy._

@@ -29,4 +29,6 @@ import org.scalatest.TestSuite
   *
   * See [[org.scalamock]] for overview documentation.
   */
-trait MockFactory extends AbstractMockFactory with ProxyMockFactory with TestSuite
+trait MockFactory extends AbstractMockFactory with ProxyMockFactory { this: TestSuite =>
+
+}
