@@ -6,7 +6,7 @@ import org.scalatest.exceptions.{StackDepthException, TestFailedException}
 import scala.concurrent.Future
 import scala.util.control.NonFatal
 
-trait AbstractAsyncMockFactory extends AsyncTestSuiteMixin with AsyncMockFactoryBase with AsyncTestSuite {
+trait AbstractAsyncMockFactory extends AsyncTestSuiteMixin with AsyncMockFactoryBase { this: AsyncTestSuite =>
 
   type ExpectationException = TestFailedException
 

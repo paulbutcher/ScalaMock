@@ -18,17 +18,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock.scalatest.proxy
+package org.scalamock.test.scalatest
 
-import org.scalamock.proxy.ProxyMockFactory
-import org.scalamock.scalatest.AbstractMockFactory
-import org.scalatest.TestSuite
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.flatspec.AsyncFlatSpec
+import org.scalamock.scalatest.MockFactory
+import org.scalamock.scalatest.AsyncMockFactory
 
-/** Trait that can be mixed into a [[http://www.scalatest.org/ ScalaTest]] suite to provide
-  * proxy mocking support.
-  *
-  * See [[org.scalamock]] for overview documentation.
-  */
-trait MockFactory extends AbstractMockFactory with ProxyMockFactory { this: TestSuite =>
+/**
+ *  Tests for issue #371
+ */
+class AsyncSyncMixinTest extends AnyFlatSpec {
+
+  "MockFactory" should "be mixed only with Any*Spec and not Async*Spec traits" in {
+    assertCompiles("new AnyFlatSpec with MockFactory")
+    assertDoesNotCompile("new AsyncFlatSpec with MockFactory")
+  }
+
+  "AsyncMockFactory" should "be mixed only with Async*Spec and not Any*Spec traits" in {
+    assertCompiles("new AsyncFlatSpec with AsyncMockFactory")
+    assertDoesNotCompile("new AnyFlatSpec with AsyncMockFactory")
+  }
 
 }
