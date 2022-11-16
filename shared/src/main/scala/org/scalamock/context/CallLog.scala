@@ -34,9 +34,13 @@ private[scalamock] class CallLog {
     log += call
   }
   
-  def foreach(f: Call => Unit) = log foreach f
+  def foreach(f: Call => Unit) = this.synchronized {
+    log.foreach(f)
+  }
   
-  override def toString = log mkString("  ", "\n  ", "")
+  override def toString = this.synchronized {
+    log.mkString("  ", "\n  ", "")
+  }
   
   private val log = new ListBuffer[Call]
 }
