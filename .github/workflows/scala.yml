@@ -12,36 +12,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up JDK
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v3
       with:
         java-version: 11
+        distribution: 'adopt'
     - name: Run tests
       run: sbt ++2.11.12 test
-      
+
   scala_2_12:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up JDK
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v3
       with:
         java-version: 11
+        distribution: 'adopt'
     - name: Run tests
-      run: sbt ++2.12.13 test
+      run: sbt ++2.12.17 test
       
   scala_2_13:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up JDK
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v3
       with:
         java-version: 11
+        distribution: 'adopt'
     - name: Run tests
-      run: sbt ++2.13.5 test
+      run: sbt ++2.13.8 test
