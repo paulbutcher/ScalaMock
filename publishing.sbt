@@ -20,9 +20,9 @@ ThisBuild / version := {
 
 ThisBuild / isSnapshot := version.value.endsWith("-SNAPSHOT")
 
-ThisBuild / publishTo := Some(
-  if (isSnapshot.value) Opts.resolver.sonatypeSnapshots else Opts.resolver.sonatypeStaging
-)
+ThisBuild / publishTo := {
+  if (isSnapshot.value) Opts.resolver.sonatypeOssSnapshots.headOption else Some(Opts.resolver.sonatypeStaging)
+}
 ThisBuild / publishConfiguration := publishConfiguration.value.withOverwrite(true)
 ThisBuild / publishLocalConfiguration := publishLocalConfiguration.value.withOverwrite(true)
 
