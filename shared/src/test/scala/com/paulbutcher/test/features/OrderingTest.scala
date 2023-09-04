@@ -72,8 +72,8 @@ class OrderingTest extends IsolatedSpec {
     def setupExpectations(): Unit = {
       inSequence {
         intFunMock.expects(1).returning(1).repeated(3 to 7)
-        intFunMock.expects(2).returning(2).once
-        intFunMock.expects(3).returning(3).twice
+        intFunMock.expects(2).returning(2).once()
+        intFunMock.expects(3).returning(3).twice()
       }
     }
   }
@@ -141,8 +141,8 @@ class OrderingTest extends IsolatedSpec {
 
   it should "not match a previous item in the sequence" in withExpectations {
     inSequence {
-      intFunMock.expects(1).returning(1).anyNumberOfTimes
-      intFunMock.expects(2).returning(2).once
+      intFunMock.expects(1).returning(1).anyNumberOfTimes()
+      intFunMock.expects(2).returning(2).once()
     }
 
     intFunMock(1) shouldBe 1
@@ -153,8 +153,8 @@ class OrderingTest extends IsolatedSpec {
   it should "fail if unexpected call is made" in {
     demandExpectationException {
       inSequence {
-        intFunMock.expects(1).returning(1).anyNumberOfTimes
-        intFunMock.expects(2).returning(2).once
+        intFunMock.expects(1).returning(1).anyNumberOfTimes()
+        intFunMock.expects(2).returning(2).once()
       }
 
       intFunMock(1) shouldBe 1
@@ -235,10 +235,10 @@ class OrderingTest extends IsolatedSpec {
   it should "handle a sequence in which functions are called zero times" in withExpectations {
     val m = mockFunction[Int, Unit]
     inSequence {
-      m.expects(1).once
-      m.expects(2).never
-      m.expects(3).anyNumberOfTimes
-      m.expects(4).once
+      m.expects(1).once()
+      m.expects(2).never()
+      m.expects(3).anyNumberOfTimes()
+      m.expects(4).once()
     }
     m(1)
     m(4)
@@ -257,7 +257,7 @@ class OrderingTest extends IsolatedSpec {
             m.expects("2.2.2.1")
             m.expects("2.2.2.2")
           }
-          m.expects("2.2.3").anyNumberOfTimes
+          m.expects("2.2.3").anyNumberOfTimes()
         }
         m.expects("2.3")
       }

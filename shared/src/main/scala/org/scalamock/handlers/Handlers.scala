@@ -30,7 +30,7 @@ private[scalamock] abstract class Handlers extends Handler {
 
   override def toString = handlers.flatMap { h =>
       // see https://github.com/scala/bug/issues/11125. linesIterator would be better but we crossbuild with 2.11
-      scala.Predef.augmentString(h.toString).lines.toArray.map { l => "  " + l }
+      scala.Predef.augmentString(h.toString).linesIterator.toArray.map { l => "  " + l }
     }.mkString(s"$prefix {\n", "\n", "\n}")
   
   protected var handlers = new ListBuffer[Handler]

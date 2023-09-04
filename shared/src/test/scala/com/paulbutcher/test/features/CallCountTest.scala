@@ -21,7 +21,6 @@
 package com.paulbutcher.test.features
 
 import com.paulbutcher.test.IsolatedSpec
-import org.scalatest.{OneInstancePerTest, Suite}
 
 class CallCountTest extends IsolatedSpec {
 
@@ -37,17 +36,17 @@ class CallCountTest extends IsolatedSpec {
   }
 
   it should "fail if a method isn't called often enough (once)" in withExpectations {
-    intFunMock.expects(42).once
+    intFunMock.expects(42).once()
     intFunMock(42)
   }
 
   it should "not fail if a method is called once (once)" in withExpectations {
-    intFunMock.expects(42).once
+    intFunMock.expects(42).once()
     intFunMock(42)
   }
 
   it should "fail if a method is called too often (once)" in withExpectations {
-    intFunMock.expects(42).twice
+    intFunMock.expects(42).twice()
 
     intFunMock(42)
     intFunMock(42)
@@ -57,14 +56,14 @@ class CallCountTest extends IsolatedSpec {
   it should "fail if a method isn't called often enough (twice)" in {
     intercept[ExpectationException] {
       withExpectations {
-        intFunMock.expects(42).twice
+        intFunMock.expects(42).twice()
         intFunMock(42)
       }
     }
   }
 
   it should "fail if a method is called too often (twice)" in withExpectations {
-    intFunMock.expects(42).twice
+    intFunMock.expects(42).twice()
 
     intFunMock(42)
     intFunMock(42)
@@ -72,22 +71,22 @@ class CallCountTest extends IsolatedSpec {
   }
 
   it should "handle noMoreThanTwice call count (zero)" in withExpectations {
-    intFunMock.expects(2).noMoreThanTwice
+    intFunMock.expects(2).noMoreThanTwice()
   }
 
   it should "handle noMoreThanTwice call count (one)" in withExpectations {
-    intFunMock.expects(2).noMoreThanTwice
+    intFunMock.expects(2).noMoreThanTwice()
     intFunMock(2)
   }
 
   it should "handle noMoreThanTwice call count (two)" in withExpectations {
-    intFunMock.expects(2).noMoreThanTwice
+    intFunMock.expects(2).noMoreThanTwice()
     intFunMock(2)
     intFunMock(2)
   }
 
   it should "handle noMoreThanTwice call count (three)" in withExpectations {
-    intFunMock.expects(2).noMoreThanTwice
+    intFunMock.expects(2).noMoreThanTwice()
     intFunMock(2)
     intFunMock(2)
     intercept[ExpectationException] { intFunMock(42) }
@@ -111,7 +110,7 @@ class CallCountTest extends IsolatedSpec {
   }
 
   it should "handle repeated(3).times call count (3)" in withExpectations {
-    intFunMock.expects(2).repeated(3).times
+    intFunMock.expects(2).repeated(3).times()
 
     intFunMock(2)
     intFunMock(2)

@@ -40,7 +40,7 @@ class OrderTest extends AnyWordSpec with MockFactory {
         order.fill(mockWarehouse)
         
         assert(order.isFilled)
-        (mockWarehouse.remove _) verify ("Talisker", 50) once
+        (mockWarehouse.remove _).verify("Talisker", 50).once()
       }
     }
     
