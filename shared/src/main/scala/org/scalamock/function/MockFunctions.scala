@@ -27,8 +27,8 @@ trait MockFunctions { this: MockContext =>
   import scala.language.implicitConversions
 
   protected case class FunctionName(name: Symbol)
-  protected implicit def functionName(name: Symbol) = FunctionName(name)
-  protected implicit def functionName(name: String) = FunctionName(Symbol(name))
+  protected implicit def functionName(name: Symbol): FunctionName = FunctionName(name)
+  protected implicit def functionName(name: String): FunctionName = FunctionName(Symbol(name))
 
   protected def mockFunction[R: Defaultable](name: FunctionName) = new MockFunction0[R](this, name.name)
   protected def mockFunction[T1, R: Defaultable](name: FunctionName) = new MockFunction1[T1, R](this, name.name)

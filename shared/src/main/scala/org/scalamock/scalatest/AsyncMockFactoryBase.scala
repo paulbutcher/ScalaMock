@@ -12,7 +12,7 @@ import scala.util.{Failure, Success}
 trait AsyncMockFactoryBase extends MockContext with Mock with MockFunctions with Matchers {
 
   //! TODO - https://issues.scala-lang.org/browse/SI-5831
-  implicit val _factory = this
+  implicit val _factory: AsyncMockFactoryBase = this
 
   implicit def executionContext: ExecutionContext
 

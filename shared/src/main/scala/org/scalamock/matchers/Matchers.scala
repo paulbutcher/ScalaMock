@@ -183,7 +183,7 @@ trait Matchers { this: MockContext =>
     def unary_~ = new MatchEpsilon(d)
   }
 
-  protected implicit def doubleToEpsilon(d: Double) = new EpsilonMatcher(d)
-  protected implicit def toMockParameter[T](v: T) = new MockParameter(v)
-  protected implicit def matcherBaseToMockParameter[T](m: MatcherBase) = new MockParameter[T](m)
+  protected implicit def doubleToEpsilon(d: Double): EpsilonMatcher = new EpsilonMatcher(d)
+  protected implicit def toMockParameter[T](v: T): MockParameter[T] = new MockParameter(v)
+  protected implicit def matcherBaseToMockParameter[T](m: MatcherBase): MockParameter[T] = new MockParameter[T](m)
 }
