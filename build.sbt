@@ -3,7 +3,7 @@ import sbtcrossproject.CrossPlugin.autoImport.crossProject
 //ThisBuild / scalaJSUseRhino := true
 
 lazy val scalatest = Def.setting("org.scalatest" %%% "scalatest" % "3.2.16")
-lazy val specs2 = Def.setting("org.specs2" %%% "specs2-core" % "4.10.6")
+lazy val specs2 = Def.setting("org.specs2" %%% "specs2-core" % "4.20.2")
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
   scalaVersion := "2.13.11",
@@ -48,7 +48,7 @@ def crossScalaSettings = {
       }
     }
   Seq(
-    crossScalaVersions := Seq("2.11.12", "2.12.17", "2.13.8"),
+    crossScalaVersions := Seq("2.12.17", "2.13.8"),
     Compile / unmanagedSourceDirectories ++= addDirsByScalaVersion("src/main").value,
     Test / unmanagedSourceDirectories ++= addDirsByScalaVersion("src/test").value,
     libraryDependencies ++= {

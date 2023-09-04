@@ -67,8 +67,8 @@ object MockFunctionFinder {
   //! TODO - replace with official resolveOverloaded if/when it's reinstated
   def resolveOverloaded(c: Context)(method: c.universe.TermSymbol, targs: List[c.universe.Type], actuals: List[c.universe.Type]): c.universe.Symbol = {
     val utils = new MacroUtils[c.type](c)
-    import utils._
     import c.universe._
+    import utils._
 
     def sameTypes(types1: List[Type], types2: List[Type]) = {
       // see issue #34

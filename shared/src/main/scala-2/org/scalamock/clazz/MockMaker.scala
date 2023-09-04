@@ -22,8 +22,8 @@ package org.scalamock.clazz
 
 import org.scalamock.context.MockContext
 import org.scalamock.function._
+import org.scalamock.util.MacroAdapter.Context
 import org.scalamock.util.{MacroAdapter, MacroUtils}
-import MacroAdapter.Context
 
 
 //! TODO - get rid of this nasty two-stage construction when https://issues.scala-lang.org/browse/SI-5521 is fixed
@@ -33,6 +33,7 @@ class MockMaker[C <: Context](val ctx: C) {
     import ctx.universe._
     import Flag._
     import definitions._
+
     import scala.language.reflectiveCalls
 
     val utils = new MacroUtils[ctx.type](ctx)

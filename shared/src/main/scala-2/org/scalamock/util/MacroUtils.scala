@@ -20,7 +20,7 @@
 
 package org.scalamock.util
 
-import MacroAdapter.Context
+import org.scalamock.util.MacroAdapter.Context
 
 /**
  * Helper functions to work with Scala macros and to create scala.reflect Trees.
