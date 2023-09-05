@@ -48,7 +48,7 @@ def crossScalaSettings = {
       }
     }
   Seq(
-    crossScalaVersions := Seq("2.12.17", "2.13.8"),
+    crossScalaVersions := Seq("2.12.17", scalaVersion.value),
     Compile / unmanagedSourceDirectories ++= addDirsByScalaVersion("src/main").value,
     Test / unmanagedSourceDirectories ++= addDirsByScalaVersion("src/test").value,
     libraryDependencies ++= {
