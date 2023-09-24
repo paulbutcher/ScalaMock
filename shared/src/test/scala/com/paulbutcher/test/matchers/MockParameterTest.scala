@@ -29,15 +29,15 @@ class MockParameterTest extends AnyFreeSpec with Matchers {
   "A mock parameter should" - {
     "be equal" - {
       "if its value is equal" in {
-        new MockParameter(42) shouldBe 42
+        new MockParameter(42) shouldEqual 42
       }
     
       "with a wildcard" in {
-        new MockParameter[Int](new MatchAny) shouldBe 123
+        new MockParameter[Int](new MatchAny) shouldEqual 123
       }
     
       "with an epsilon" in {
-        new MockParameter[Double](new MatchEpsilon(1.0)) shouldBe 1.0001
+        new MockParameter[Double](new MatchEpsilon(1.0)) shouldEqual 1.0001
       }
     }
     

@@ -47,7 +47,7 @@ class StackableSuitesTest extends AnyFlatSpec with Matchers with TestSuiteRunner
   class TestedSuite extends AnyFunSuite with SuiteWrapper with MockFactory with Matchers {
     test("execute block of code") {
       val mockedTrait = mock[TestTrait]
-      (mockedTrait.oneParamMethod _).expects(1).onCall { arg: Int =>
+      (mockedTrait.oneParamMethod _).expects(1).onCall { (arg: Int) =>
         EventLogger.logEvent("mock method called")
         "one"
       }

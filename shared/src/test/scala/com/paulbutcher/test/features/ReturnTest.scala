@@ -45,7 +45,7 @@ class ReturnTest extends IsolatedSpec {
   }
 
   it should "return a calculated return value" in {
-    intToIntMock.expects(*).onCall({ arg: Int => arg + 1 })
+    intToIntMock.expects(*).onCall({ (arg: Int) => arg + 1 })
     intToIntMock(42) shouldBe (43)
   }
 
@@ -75,16 +75,16 @@ class ReturnTest extends IsolatedSpec {
   }
 
   it should "handle stacked expectations (onCall)" in {
-    intToStringMock.expects(*).onCall({ _: Int => "1" })
-    intToStringMock.expects(*).onCall({ _: Int => "2" })
+    intToStringMock.expects(*).onCall({ (_: Int) => "1" })
+    intToStringMock.expects(*).onCall({ (_: Int) => "2" })
 
     intToStringMock(1) shouldBe ("1")
     intToStringMock(2) shouldBe ("2")
   }
 
   it should "handle stacked expectations (onCall) and call count" in {
-    intToStringMock.expects(*).onCall({ _: Int => "1" }).twice()
-    intToStringMock.expects(*).onCall({ _: Int => "2" })
+    intToStringMock.expects(*).onCall({ (_: Int) => "1" }).twice()
+    intToStringMock.expects(*).onCall({ (_: Int) => "2" })
 
     intToStringMock(1) shouldBe ("1")
     intToStringMock(1) shouldBe ("1")
@@ -92,8 +92,8 @@ class ReturnTest extends IsolatedSpec {
   }
 
   it should "match return value to provided arguments (returning)" in {
-    intToStringMock.expects(1).onCall({ _: Int => "1" })
-    intToStringMock.expects(2).onCall({ _: Int => "2" })
+    intToStringMock.expects(1).onCall({ (_: Int) => "1" })
+    intToStringMock.expects(2).onCall({ (_: Int) => "2" })
 
     intToStringMock(2) shouldBe ("2")
     intToStringMock(1) shouldBe ("1")

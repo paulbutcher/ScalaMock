@@ -27,7 +27,7 @@ package org.scalamock.matchers
 import scala.reflect.ClassTag
 
 /** Matcher that uses provided assertions block to perform matching */
-protected class ArgAssert[T](assertions: T => Unit, clue: Option[String])
+protected class ArgAssert[T](assertions: T => Any, clue: Option[String])
   (implicit classTag: ClassTag[T]) extends Matcher[T] {
 
   override def safeEquals(that: T) = {

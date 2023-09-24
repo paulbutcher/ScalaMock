@@ -52,12 +52,12 @@ trait Matchers { this: MockContext =>
   protected def where[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21](matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21) => Boolean) = new FunctionAdapter21(matcher)
   protected def where[T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22](matcher: (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22) => Boolean) = new FunctionAdapter22(matcher)
 
-  protected def assertArgs[T1](matcher: (T1) => Unit): FunctionAdapter1[T1, Boolean] = {
+  protected def assertArgs[T1](matcher: (T1) => Any): FunctionAdapter1[T1, Boolean] = {
     val f: (T1) => Boolean = (t1) => { matcher(t1); true }
     new FunctionAdapter1[T1, Boolean](f)
   }
 
-  protected def assertArgs[T1, T2](matcher: (T1, T2) => Unit): FunctionAdapter2[T1, T2, Boolean] = {
+  protected def assertArgs[T1, T2](matcher: (T1, T2) => Any): FunctionAdapter2[T1, T2, Boolean] = {
     val f: (T1, T2) => Boolean = (t1, t2) => { matcher(t1, t2); true }
     new FunctionAdapter2[T1, T2, Boolean](f)
   }
@@ -169,10 +169,10 @@ trait Matchers { this: MockContext =>
   protected def argThat[T](predicate: T => Boolean)
     (implicit classTag: ClassTag[T]): MatcherBase = new ArgThat[T](predicate, clue = None)
 
-  protected def argAssert[T](clue: String)(assertions: T => Unit)
+  protected def argAssert[T](clue: String)(assertions: T => Any)
     (implicit classTag: ClassTag[T]): MatcherBase = new ArgAssert[T](assertions, clue = Some(clue))
 
-  protected def argAssert[T](assertions: T => Unit)
+  protected def argAssert[T](assertions: T => Any)
     (implicit classTag: ClassTag[T]): MatcherBase = new ArgAssert[T](assertions, clue = None)
 
   protected def capture[T](cap: Capture[T]) = new CaptureMatcher[T](cap)
