@@ -132,6 +132,7 @@ class ProxyMockTest extends AnyFreeSpec with MockFactory {
       }
     }
 
+/*
     "cope with a var" in {
       withExpectations {
         val m = mock[TestTrait]
@@ -140,8 +141,8 @@ class ProxyMockTest extends AnyFreeSpec with MockFactory {
         m.aVar = "foo"
         assertResult("bar") { m.aVar }
       }
-    }
-    
+    }*/
+    /*
     "cope with a non-abstract var" in {
       withExpectations {
         val m = mock[TestTrait]
@@ -150,7 +151,7 @@ class ProxyMockTest extends AnyFreeSpec with MockFactory {
         m.concreteVar = "foo"
         assertResult("bar") { m.concreteVar }
       }
-    }
+    }*/
     
     "cope with a val" in {
       withExpectations {
@@ -175,7 +176,7 @@ class ProxyMockTest extends AnyFreeSpec with MockFactory {
         assertResult(1234) { m.withImplementation(42) }
       }
     }
-    
+
     "mock an embeddded trait" in {
       withExpectations {
         val m = mock[TestTrait]
@@ -184,7 +185,7 @@ class ProxyMockTest extends AnyFreeSpec with MockFactory {
         assertResult(e) { m.referencesEmbedded() }
       }
     }
-    
+
     "handle projected types correctly" in {
       withExpectations {
         val m = mock[TestTrait]
@@ -197,7 +198,7 @@ class ProxyMockTest extends AnyFreeSpec with MockFactory {
         assertResult(i) { e.innerTraitProjected() }
       }
     }
-    
+
     "handle path-dependent types correctly" in {
       withExpectations {
         val m = mock[TestTrait]

@@ -42,8 +42,8 @@ abstract class FakeFunction(mockContext: MockContext, name: Symbol)
   }
 
   private[proxy] def seq2Product(seq: Seq[AnyRef]): Product = seq match {
-    case List() => None
     case null => None
+    case Seq() => None
     case Seq(v1) => Tuple1(v1)
     case Seq(v1, v2) => (v1, v2)
     case Seq(v1, v2, v3) => (v1, v2, v3)

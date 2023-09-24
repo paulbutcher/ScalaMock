@@ -18,28 +18,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-package org.scalamock.test.scalatest
+package org.scalamock.proxy
 
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest.flatspec.AsyncFlatSpec
-import org.scalamock.scalatest.MockFactory
-import org.scalamock.scalatest.AsyncMockFactory
+import org.scalamock.context.MockContext
 
-/**
- *  Tests for issue #371
- */
-class AsyncSyncMixinTest extends AnyFlatSpec {
+import java.lang.reflect.{InvocationHandler, Proxy as JavaProxy}
+import scala.reflect.{ClassTag, classTag}
 
-  // scalatest bug with assertDoesNotCompile https://github.com/scalatest/scalatest/issues/2283
+trait ProxyMockFactory {
 
-  "MockFactory" should "be mixed only with Any*Spec and not Async*Spec traits" in {
-    assertCompiles("new AnyFlatSpec with MockFactory")
-    //assertDoesNotCompile("new AsyncFlatSpec with MockFactory")
+  protected def mock[T : ClassTag](implicit mockContext: MockContext) =
+    createProxy[T, Mock](new MockInvocationHandler(mockContext))
+
+  protected def stub[T : ClassTag](implicit mockContext: MockContext) =
+    createProxy[T, Stub](new StubInvocationHandler(mockContext))
+
+  private def createProxy[T : ClassTag, F : ClassTag](handler: InvocationHandler) = {
+    val classLoader = Thread.currentThread.getContextClassLoader
+    val interfaces = Array[Class[_]](classTag[T].runtimeClass, classTag[F].runtimeClass)
+    try {
+      JavaProxy.newProxyInstance(classLoader, interfaces, handler).asInstanceOf[T & F & scala.reflect.Selectable]
+    } catch {
+      case e: IllegalArgumentException => 
+        throw new IllegalArgumentException("Unable to create proxy - possible classloader issue?", e)
+    }
   }
-
-  "AsyncMockFactory" should "be mixed only with Async*Spec and not Any*Spec traits" in {
-    assertCompiles("new AsyncFlatSpec with AsyncMockFactory")
-    //assertDoesNotCompile("new AnyFlatSpec with AsyncMockFactory")
-  }
-
 }

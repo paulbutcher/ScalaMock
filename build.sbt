@@ -6,8 +6,8 @@ lazy val scalatest = Def.setting("org.scalatest" %%% "scalatest" % "3.2.16")
 lazy val specs2 = Def.setting("org.specs2" %%% "specs2-core" % "4.20.2")
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
-  scalaVersion := "2.13.11",
-  scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-Xcheckinit", "-release:8")
+  scalaVersion := "3.3.0",
+  scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-release:8")
 )
 
 lazy val scalamock = crossProject(JSPlatform, JVMPlatform) in file(".") settings(
@@ -48,7 +48,7 @@ def crossScalaSettings = {
       }
     }
   Seq(
-    crossScalaVersions := Seq("2.12.17", scalaVersion.value),
+    crossScalaVersions := Seq("2.12.17", "2.13.11", scalaVersion.value),
     Compile / unmanagedSourceDirectories ++= addDirsByScalaVersion("src/main").value,
     Test / unmanagedSourceDirectories ++= addDirsByScalaVersion("src/test").value,
     libraryDependencies ++= {
