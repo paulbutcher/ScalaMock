@@ -21,7 +21,6 @@
 package org.scalamock.clazz
 
 import org.scalamock.context.MockContext
-import org.scalamock.util.Defaultable
 
 import scala.quoted.*
 import scala.reflect.Selectable

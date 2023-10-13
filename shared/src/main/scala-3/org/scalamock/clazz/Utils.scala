@@ -126,7 +126,7 @@ private[clazz] class Utils(using val quotes: Quotes):
 
     def apply(tpe: TypeRepr): List[MockableDefinition] =
       val methods = (tpe.typeSymbol.methodMembers.toSet -- TypeRepr.of[Object].typeSymbol.methodMembers).toList
-        .filter(sym => !sym.flags.is(Flags.Private) && !sym.flags.is(Flags.Final))
+        .filter(sym => !sym.flags.is(Flags.Private) && !sym.flags.is(Flags.Final) && !sym.flags.is(Flags.Mutable))
         .filterNot(sym => tpe.memberType(sym) match
           case defaultParam @ ByNameType(AnnotatedType(_, Apply(Select(New(Inferred()), "<init>"), Nil))) => true
           case _ => false

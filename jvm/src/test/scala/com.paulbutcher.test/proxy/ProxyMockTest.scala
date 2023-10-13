@@ -133,6 +133,10 @@ class ProxyMockTest extends AnyFreeSpec with MockFactory {
     }
 
 /*
+
+    //! TODO - in scala 3 we can't distinguish abstract var setters with non abstract vars setters
+    //  TODO   and override modifier is not allowed when overriding abstract vars
+
     "cope with a var" in {
       withExpectations {
         val m = mock[TestTrait]

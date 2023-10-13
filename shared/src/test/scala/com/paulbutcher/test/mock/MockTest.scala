@@ -35,17 +35,20 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
   
   autoVerify = false
   
-  "Mocks should" - {/*
-    "cope with a var" in {
+  "Mocks should" - {
+    //! TODO - in scala 3 we can't distinguish abstract var setters with non abstract vars setters
+    //  TODO   and override modifier is not allowed when overriding abstract vars
+   /*
+   "cope with a var" in {
       withExpectations {
         val m = mock[TestTrait]
         (m.aVar_= _).expects("foo")
         (() => m.aVar).expects().returning("bar")
         m.aVar = "foo"
-        assertResult("bar") { m.aVar }
+        assertResult(null) { m.aVar }
       }
-    }
-  */
+    }*/
+
     "fail if an unexpected method call is made" in {
       withExpectations {
         val m = mock[TestTrait]
