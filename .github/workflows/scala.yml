@@ -33,7 +33,7 @@ jobs:
         java-version: 11
         distribution: 'adopt'
     - name: Run tests
-      run: sbt ++2.12.17 test
+      run: sbt ++2.12.18 test
       
   scala_2_13:
 
@@ -47,4 +47,4 @@ jobs:
         java-version: 11
         distribution: 'adopt'
     - name: Run tests
-      run: sbt ++2.13.8 test
+      run: sbt ++2.13.12 test
