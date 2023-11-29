@@ -8,14 +8,14 @@ private[clazz] class Utils(using val quotes: Quotes):
   import quotes.reflect.*
 
   extension (tpe: TypeRepr)
-    def isPathDependent(ownerSymbol: Symbol): Boolean =
-      @tailrec
-      def loop(currentTpe: TypeRepr, names: List[String]): Boolean =
+    def collectPathDependent(ownerSymbol: Symbol): List[TypeRepr] =
+      def loop(currentTpe: TypeRepr, names: List[String]): List[TypeRepr] =
         currentTpe match
-          case AppliedType(inner, appliedTypes) => loop(inner, names)
-          case TypeRef(inner, name) if name == ownerSymbol.name && names.nonEmpty => true
+          case AppliedType(inner, appliedTypes) => loop(inner, names) ++ appliedTypes.flatMap(_.collectPathDependent(ownerSymbol))
+          case TypeRef(inner, name) if name == ownerSymbol.name && names.nonEmpty => List(tpe)
           case TypeRef(inner, name) => loop(inner, name :: names)
-          case _ => false
+          case _ => Nil
+
       loop(tpe, Nil)
 
     def pathDependentOverride(ownerSymbol: Symbol, newOwnerSymbol: Symbol, applyTypes: Boolean): TypeRepr =
@@ -84,10 +84,12 @@ private[clazz] class Utils(using val quotes: Quotes):
     val parameterTypes = prepareTypesFor(ownerTpe.typeSymbol).map(_.tpe).init
 
     def resTypeWithPathDependentOverrideFor(classSymbol: Symbol): TypeRepr =
-      rawTypes.last.pathDependentOverride(ownerTpe.typeSymbol, classSymbol, applyTypes = true)
+      val pd = rawTypes.last.collectPathDependent(ownerTpe.typeSymbol)
+      val pdUpdated = pd.map(_.pathDependentOverride(ownerTpe.typeSymbol, classSymbol, applyTypes = false))
+      rawTypes.last.substituteTypes(pd.map(_.typeSymbol), pdUpdated)
 
     def tpeWithSubstitutedPathDependentFor(classSymbol: Symbol): TypeRepr =
-      val pathDependentTypes = rawTypes.filter(_.isPathDependent(ownerTpe.typeSymbol))
+      val pathDependentTypes = rawTypes.flatMap(_.collectPathDependent(ownerTpe.typeSymbol))
       val pdUpdated = pathDependentTypes.map(_.pathDependentOverride(ownerTpe.typeSymbol, classSymbol, applyTypes = false))
       tpe.substituteTypes(pathDependentTypes.map(_.typeSymbol), pdUpdated)
 
