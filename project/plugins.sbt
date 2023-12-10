@@ -1,5 +1,5 @@
 
-addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "3.9.21")
+addSbtPlugin("org.xerial.sbt" % "sbt-sonatype" % "3.10.0")
 //addSbtPlugin("com.jsuereth" % "sbt-pgp" % "2.0.0-M2")
 addSbtPlugin("com.github.sbt" % "sbt-git" % "2.0.1")
 
