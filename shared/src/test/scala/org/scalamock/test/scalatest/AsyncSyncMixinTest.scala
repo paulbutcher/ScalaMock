@@ -24,22 +24,23 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.flatspec.AsyncFlatSpec
 import org.scalamock.scalatest.MockFactory
 import org.scalamock.scalatest.AsyncMockFactory
+import org.scalatest._
 
 /**
  *  Tests for issue #371
+ *  bug with assertDoesNotCompile https://github.com/scalatest/scalatest/issues/2283
  */
+@Ignore
 class AsyncSyncMixinTest extends AnyFlatSpec {
-
-  // scalatest bug with assertDoesNotCompile https://github.com/scalatest/scalatest/issues/2283
 
   "MockFactory" should "be mixed only with Any*Spec and not Async*Spec traits" in {
     assertCompiles("new AnyFlatSpec with MockFactory")
-    //assertDoesNotCompile("new AsyncFlatSpec with MockFactory")
+    assertDoesNotCompile("new AsyncFlatSpec with MockFactory")
   }
 
   "AsyncMockFactory" should "be mixed only with Async*Spec and not Any*Spec traits" in {
     assertCompiles("new AsyncFlatSpec with AsyncMockFactory")
-    //assertDoesNotCompile("new AnyFlatSpec with AsyncMockFactory")
+    assertDoesNotCompile("new AnyFlatSpec with AsyncMockFactory")
   }
 
 }

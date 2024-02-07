@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2015 ScalaMock Contributors (https://github.com/paulbutcher/ScalaMock/graphs/contributors)
+// Copyright (c) ScalaMock Contributors (https://github.com/paulbutcher/ScalaMock/graphs/contributors)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,10 @@ private[clazz] object MockMaker:
     import utils.quotes.reflect.*
     val tpe = TypeRepr.of[T]
     val isTrait = tpe.dealias.typeSymbol.flags.is(Flags.Trait)
+    val isJavaClass = tpe.classSymbol.exists(sym => sym.flags.is(Flags.JavaDefined) && !sym.flags.is(Flags.Trait) && !sym.flags.is(Flags.Abstract))
+
+    if (isJavaClass)
+      report.errorAndAbort("Can't mock a java class due to https://github.com/lampepfl/dotty/issues/18694. Extend it manually with scala and then mock")
 
     def asParent(tree: TypeTree): TypeTree | Term =
       val constructorFieldsFilledWithNulls: List[List[Term]] =

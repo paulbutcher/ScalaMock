@@ -56,8 +56,9 @@ A more complete example is on our [Quickstart](http://scalamock.org/quick-start/
 * Mock and Stub support
 * Macro Mocks and JVM Proxy Mocks
 * Scala.js support
-* built for Scala 2.11, 2.12, 2.13
+* built for Scala 2.12, 2.13, 3
 * Scala 2.10 support was included up to ScalaMock 4.2.0
+* Scala 2.11 support was included up to ScalaMock 5.2.0
 
 ## Using ScalaMock
 
@@ -69,6 +70,53 @@ For ScalaTest, to use ScalaMock in your Tests, add the following to your `build.
 libraryDependencies += Seq("org.scalamock" %% "scalamock" % "5.2.0" % Test,
     "org.scalatest" %% "scalatest" % "3.2.0" % Test)
 ```
+
+## Scala 3 Migration Notes
+
+1. Type should be specified for methods with by-name parameters
+```scala 3
+trait TestTrait:
+  def byNameParam(x: => Int): String
+
+val t = mock[TestTrait]
+
+// this one no longer compiles
+(t.byNameParam _).expects(*).returns("")
+
+// this one should be used instead
+(t.byNameParam(_: Int)).expects(*).returns("")
+``` 
+
+2.    
+* Not initialized vars are not supported anymore, use `scala.compiletime.uninitialized` instead
+* Vars are **not mockable** anymore
+
+```scala 3
+trait X:
+  var y: Int  // No longer compiles
+  
+  var y: Int = scala.compile.uninitialized // Should be used instead
+```
+
+
+ Mocking of non-abstract java classes is not available without workaround
+
+```java
+public class JavaClass {
+    public int simpleMethod(String b) { return 4; }
+}
+
+```
+
+```scala 3
+val m = mock[JavaClass] // No longer compiles
+
+class JavaClassExtended extends JavaClass
+
+val mm = mock[JavaClassExtended] // should be used instead
+```
+
+
 
 ## Documentation
 
