@@ -28,7 +28,7 @@ trait Defaultable[T] {
 
 trait LowPriorityDefaultable {
   
-  implicit def default[T] = new Defaultable[T] { val default = null.asInstanceOf[T] }
+  implicit def default[T]: Defaultable[T] = new Defaultable[T] { val default = null.asInstanceOf[T] }
 }
 
 object Defaultable extends LowPriorityDefaultable {

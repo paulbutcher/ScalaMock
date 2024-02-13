@@ -79,7 +79,7 @@ class StubFunctionTest extends AnyFreeSpec with MockFactory {
     "unless told otherwise" in {
       withExpectations {
         val m = stubFunction[String]
-        m.when().returns("a return value").twice
+        m.when().returns("a return value").twice()
         assertResult("a return value") { m() }
         assertResult("a return value") { m() }
         assertResult(null) { m() }
@@ -121,7 +121,7 @@ class StubFunctionTest extends AnyFreeSpec with MockFactory {
       intercept[ExpectationException](withExpectations {
         val m = stubFunction[String, Int, Int]
         m("foo", 42)
-        m.verify("foo", 42).twice
+        m.verify("foo", 42).twice()
       })
     }
       
@@ -131,7 +131,7 @@ class StubFunctionTest extends AnyFreeSpec with MockFactory {
         m("foo", 42)
         m("foo", 42)
         m("foo", 42)
-        m.verify("foo", 42).twice
+        m.verify("foo", 42).twice()
       })
     }
     
@@ -152,8 +152,8 @@ class StubFunctionTest extends AnyFreeSpec with MockFactory {
           m(1, 2)
           m(2, 1)
           m(2, 1)
-          m.verify(where { _ < _}).once
-          m.verify(where { _ > _}).twice
+          m.verify(where { _ < _}).once()
+          m.verify(where { _ > _}).twice()
         }
       }
     }
@@ -176,8 +176,8 @@ class StubFunctionTest extends AnyFreeSpec with MockFactory {
         repeat(2) { m(44) }
         inSequence {
           m.verify(42).repeated(3 to 7)
-          m.verify(43).once
-          m.verify(44).twice
+          m.verify(43).once()
+          m.verify(44).twice()
         }
       }
     }
@@ -189,8 +189,8 @@ class StubFunctionTest extends AnyFreeSpec with MockFactory {
         m(44)
         inSequence {
           m.verify(42).repeated(3 to 7)
-          m.verify(43).once
-          m.verify(44).twice
+          m.verify(43).once()
+          m.verify(44).twice()
         }
       })
     }
@@ -202,8 +202,8 @@ class StubFunctionTest extends AnyFreeSpec with MockFactory {
         repeat(1) { m(43) }
         inSequence {
           m.verify(42).repeated(3 to 7)
-          m.verify(43).once
-          m.verify(44).twice
+          m.verify(43).once()
+          m.verify(44).twice()
         }
       })
     }
@@ -215,7 +215,7 @@ class StubFunctionTest extends AnyFreeSpec with MockFactory {
         m(43)
         m(42)
         inSequence {
-          m.verify(42).anyNumberOfTimes
+          m.verify(42).anyNumberOfTimes()
           m.verify(43)
           m.verify(42)
         }
@@ -256,10 +256,10 @@ class StubFunctionTest extends AnyFreeSpec with MockFactory {
         m(1)
         m(4)
         inSequence {
-          m.verify(1).once
-          m.verify(2).never
-          m.verify(3).anyNumberOfTimes
-          m.verify(4).once
+          m.verify(1).once()
+          m.verify(2).never()
+          m.verify(3).anyNumberOfTimes()
+          m.verify(4).once()
         }
       }
     }
@@ -287,7 +287,7 @@ class StubFunctionTest extends AnyFreeSpec with MockFactory {
               m.verify("2.2.2.1")
               m.verify("2.2.2.2")
             }
-            m.verify("2.2.3").anyNumberOfTimes
+            m.verify("2.2.3").anyNumberOfTimes()
           }
           m.verify("2.3")
         }
@@ -332,8 +332,8 @@ class StubFunctionTest extends AnyFreeSpec with MockFactory {
         assertResult("m1") { m1(42) }
         assertResult("m2") { m2(42) }
         
-        m1.verify(42).once
-        m2.verify(42).once
+        m1.verify(42).once()
+        m2.verify(42).once()
       }      
     }
   }

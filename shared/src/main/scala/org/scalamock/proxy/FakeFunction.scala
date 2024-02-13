@@ -42,8 +42,8 @@ abstract class FakeFunction(mockContext: MockContext, name: Symbol)
   }
 
   private[proxy] def seq2Product(seq: Seq[AnyRef]): Product = seq match {
-    case List() => None
     case null => None
+    case Seq() => None
     case Seq(v1) => Tuple1(v1)
     case Seq(v1, v2) => (v1, v2)
     case Seq(v1, v2, v3) => (v1, v2, v3)
@@ -53,7 +53,6 @@ abstract class FakeFunction(mockContext: MockContext, name: Symbol)
     case Seq(v1, v2, v3, v4, v5, v6, v7) => (v1, v2, v3, v4, v5, v6, v7)
     case Seq(v1, v2, v3, v4, v5, v6, v7, v8) => (v1, v2, v3, v4, v5, v6, v7, v8)
     case Seq(v1, v2, v3, v4, v5, v6, v7, v8, v9) => (v1, v2, v3, v4, v5, v6, v7, v8, v9)
-    case Seq(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) => (v1, v2, v3, v4, v5, v6, v7, v8, v9, v10)
     case Seq(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10) => (v1, v2, v3, v4, v5, v6, v7, v8, v9, v10)
     case Seq(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11) => (v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11)
     case Seq(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12) => (v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12)

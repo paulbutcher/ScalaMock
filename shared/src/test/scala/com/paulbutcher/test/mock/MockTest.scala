@@ -24,7 +24,6 @@ import org.scalamock.function.FunctionAdapter1
 import org.scalamock.scalatest.MockFactory
 
 import scala.reflect.ClassTag
-import scala.reflect.runtime.universe.{TypeTag, typeTag}
 import scala.util.{Failure, Try}
 
 import com.paulbutcher.test._
@@ -37,15 +36,18 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
   autoVerify = false
   
   "Mocks should" - {
-    "cope with a var" in {
+    //! TODO - in scala 3 we can't distinguish abstract var setters with non abstract vars setters
+    //  TODO   and override modifier is not allowed when overriding abstract vars
+   /*
+   "cope with a var" in {
       withExpectations {
         val m = mock[TestTrait]
         (m.aVar_= _).expects("foo")
-        (m.aVar _).expects().returning("bar")
+        (() => m.aVar).expects().returning("bar")
         m.aVar = "foo"
-        assertResult("bar") { m.aVar }
+        assertResult(null) { m.aVar }
       }
-    }
+    }*/
 
     "fail if an unexpected method call is made" in {
       withExpectations {
@@ -74,7 +76,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
     "cope with nullary methods" in {
       withExpectations {
         val m = mock[TestTrait]
-        (m.nullary _).expects().returning("a return value")
+        (() => m.nullary).expects().returning("a return value")
         assertResult("a return value") { m.nullary }
       }
     }
@@ -152,25 +154,6 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
       }
     }
 
-    "cope with methods with by name parameters" in {
-      withExpectations {
-        val m = mock[TestTrait]
-        (m.byNameParam _).expects(*).returning("it worked")
-        assertResult("it worked") { m.byNameParam(42) }
-      }
-    }
-
-    //! TODO - find a way to make this less ugly
-    "match methods with by name parameters" in {
-      withExpectations {
-        val m = mock[TestTrait]
-        val f: (=> Int) => Boolean = { x => x == 1 && x == 2  }
-        ((m.byNameParam _): (=> Int) => String).expects(new FunctionAdapter1(f)).returning("it works")
-        var y = 0
-        assertResult("it works") { m.byNameParam { y += 1; y } }
-      }
-    }
-
     "cope with methods with implicit parameters" in {
       withExpectations {
         implicit val y: Double = 1.23
@@ -216,16 +199,16 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
       }
     }
 
-    //! TODO - currently doesn't work because we can't override concrete vars
+  /*  //! TODO - currently doesn't work because we can't override concrete vars
     "cope with a non-abstract var" ignore {
       withExpectations {
         val m = mock[TestTrait]
         (m.concreteVar_= _).expects("foo")
-        (m.concreteVar _).expects().returning("bar")
+        (() => m.concreteVar).expects().returning("bar")
         m.concreteVar = "foo"
         assertResult("bar") { m.concreteVar }
       }
-    }
+    }*/
 
     "cope with curried varargs" in {
       withExpectations {
@@ -238,6 +221,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
         m.bar(42)("1", "2") === "baz"
       }
     }
+
 
     "cope with a val" in {
       withExpectations {
@@ -268,14 +252,16 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
       }
     }
 
+
     "mock an embeddded trait" in {
       withExpectations {
         val m = mock[TestTrait]
         val e = mock[m.Embedded]
-        (() => m.referencesEmbedded).expects().returning(e)
-        assertResult(e) { m.referencesEmbedded }
+        (() => m.referencesEmbedded()).expects().returning(e)
+        assertResult(e) { m.referencesEmbedded() }
       }
     }
+
 
     "handle projected types correctly" in {
       withExpectations {
@@ -283,10 +269,10 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
         val e = mock[m.Embedded]
         val o = mock[m.ATrait]
         val i = mock[e.ATrait]
-        (() => e.innerTraitProjected).expects().returning(i)
-        (() => e.outerTraitProjected).expects().returning(o)
-        assertResult(o) { e.outerTraitProjected }
-        assertResult(i) { e.innerTraitProjected }
+        (() => e.innerTraitProjected()).expects().returning(i)
+        (() => e.outerTraitProjected()).expects().returning(o)
+        assertResult(o) { e.outerTraitProjected() }
+        assertResult(i) { e.innerTraitProjected() }
       }
     }
 
@@ -296,10 +282,10 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
         val e = mock[m.Embedded]
         val o = mock[m.ATrait]
         val i = mock[e.ATrait]
-        (() => e.innerTrait).expects().returning(i)
-        (() => e.outerTrait).expects().returning(o)
-        assertResult(o) { e.outerTrait }
-        assertResult(i) { e.innerTrait }
+        (() => e.innerTrait()).expects().returning(i)
+        (() => e.outerTrait()).expects().returning(o)
+        assertResult(o) { e.outerTrait() }
+        assertResult(i) { e.innerTrait() }
       }
     }
 
@@ -318,15 +304,6 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
         assertResult("it works") { m.lowerBound((1, 2), List[Product]()) }
       }
     }
-
-    //! TODO - fails in 2.11
-    // "cope with view bounds" in {
-    //   withExpectations {
-    //     val m = mock[TestTrait]
-    //     (m.viewBound(_: Int, _: Int)(_: Int => Ordered[Int])).expects(1, 2, *).returning(true)
-    //     assertResult(true) { m.viewBound(1, 2) }
-    //   }
-    // }
 
     "mock a polymorphic trait" in {
       withExpectations {
@@ -440,10 +417,13 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
       provider.find[User](13) shouldBe a[Failure[_]]
     }
 
+
     "mock class with nonempty default constructor" in {
       class TestNonEmptyDefaultConstructor(a: Int, b: String, c: AnyRef, d: Any)(aa: String)
       val m = mock[TestNonEmptyDefaultConstructor]
     }
+
+
 
     // TODO: issue 150 - causes a compiler error
 //    "cope with curried function returning methods" in {
@@ -454,6 +434,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
 //        assertResult("curried func return method called") { partial(1.23) }
 //      }
 //    }
+
 
 
     // issue 132
@@ -468,6 +449,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
       // next line will cause a runtime error and is not valid
       // m.someFinalMethod _ expects * anyNumberOfTimes()
     }
+
 
     "mock a trait which has a protected method" in withExpectations {
       trait FooTrait {

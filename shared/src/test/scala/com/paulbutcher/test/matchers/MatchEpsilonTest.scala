@@ -28,20 +28,20 @@ class MatchEpsilonTest extends AnyFreeSpec {
 
   "MatchEpsilon should" - {
     "match anything that's close to the given value" in {
-      assert(new MatchEpsilon(1.0) == 1.0)
-      assert(new MatchEpsilon(1.0) == 1.0f)
-      assert(new MatchEpsilon(1.0) == 1.0001)
-      assert(new MatchEpsilon(1.0) == 1.0001f)
-      assert(new MatchEpsilon(1.0) == 1)
+      assert(new MatchEpsilon(1.0).equals(1.0))
+      assert(new MatchEpsilon(1.0).equals(1.0f))
+      assert(new MatchEpsilon(1.0).equals(1.0001))
+      assert(new MatchEpsilon(1.0).equals(1.0001f))
+      assert(new MatchEpsilon(1.0).equals(1))
     }
     
     "not match anything that's not close enough" in {
-      assert(!(new MatchEpsilon(1.0) == 1.1))
-      assert(!(new MatchEpsilon(1.0) == 0.9))
+      assert(!(new MatchEpsilon(1.0).equals(1.1)))
+      assert(!(new MatchEpsilon(1.0).equals(0.9)))
     }
     
     "only match numbers" in {
-      assert(!(new MatchEpsilon(1.0) == "foo"))
+      assert(!(new MatchEpsilon(1.0).equals("foo")))
     }
   }
 }

@@ -20,6 +20,6 @@
 
 package com.paulbutcher.test
 
-class SpecializedClass[@specialized T] {
+trait SpecializedClass[@specialized T] {
   def identity(x: T) = x
 }

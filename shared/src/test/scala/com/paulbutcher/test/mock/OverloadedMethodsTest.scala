@@ -108,13 +108,14 @@ class OverloadedMethodsTest extends IsolatedSpec {
   }
 
   they should "mock PrintStream.print(String)" in { // test for issue #39
-    import java.io.{ OutputStream, PrintStream }
+    import java.io.{OutputStream, PrintStream}
     class MockablePrintStream extends PrintStream(mock[OutputStream], false)
 
     val m = mock[MockablePrintStream]
     (m.print(_: String)) expects ("foo")
     m.print("foo")
   }
+
 
   they should "handle type aliases correctly" in {
     type X = Int
@@ -133,6 +134,7 @@ class OverloadedMethodsTest extends IsolatedSpec {
 
     m.foo()(new ConcreteType())
   }
+
 
   override def newInstance = new OverloadedMethodsTest
 }

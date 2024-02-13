@@ -33,9 +33,9 @@ class HigherOrderFunctionsTest extends AnyFreeSpec with MockFactory {
       val f = mockFunction[Int, String]
 
       inSequence {
-        f expects (1) returning "one" once;
-        f expects (2) returning "two" once;
-        f expects (3) returning "three" once;
+        f.expects(1).returning("one").once();
+        f.expects(2).returning("two").once();
+        f.expects(3).returning("three").once();
       }
 
       assertResult(Seq("one", "two", "three")) {
@@ -61,10 +61,10 @@ class HigherOrderFunctionsTest extends AnyFreeSpec with MockFactory {
       val f = mockFunction[String, Int, String]
 
       inSequence {
-        f expects("initial", 0) returning "intermediate one" once;
-        f expects("intermediate one", 1) returning "intermediate two" once;
-        f expects("intermediate two", 2) returning "intermediate three" once;
-        f expects("intermediate three", 3) returning "final" once;
+        f.expects("initial", 0).returning("intermediate one").once();
+        f.expects("intermediate one", 1).returning("intermediate two"). once();
+        f.expects("intermediate two", 2).returning("intermediate three").once();
+        f.expects("intermediate three", 3).returning("final").once();
       }
 
       assertResult("final") {
