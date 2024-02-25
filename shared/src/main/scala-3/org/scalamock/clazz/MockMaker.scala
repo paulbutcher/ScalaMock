@@ -91,7 +91,7 @@ private[clazz] object MockMaker:
             Symbol.newVal(
               parent = classSymbol,
               name = definition.symbol.name,
-              tpe = definition.tpeWithSubstitutedPathDependentFor(classSymbol),
+              tpe = definition.tpeWithSubstitutedInnerTypesFor(classSymbol),
               flags = Flags.Override,
               privateWithin = Symbol.noSymbol
             )
@@ -99,7 +99,7 @@ private[clazz] object MockMaker:
             Symbol.newMethod(
               parent = classSymbol,
               name = definition.symbol.name,
-              tpe = definition.tpeWithSubstitutedPathDependentFor(classSymbol),
+              tpe = definition.tpeWithSubstitutedInnerTypesFor(classSymbol),
               flags = Flags.Override,
               privateWithin = Symbol.noSymbol
             )
@@ -177,7 +177,7 @@ private[clazz] object MockMaker:
                         "asInstanceOf"
                       ),
                       definition.tpe
-                        .resolveParamRefs(definition.resTypeWithPathDependentOverrideFor(classSymbol), args)
+                        .resolveParamRefs(definition.resTypeWithInnerTypesOverrideFor(classSymbol), args)
                         .asType match { case '[t] => List(TypeTree.of[t]) }
                     )
                   )
