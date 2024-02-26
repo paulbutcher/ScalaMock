@@ -21,7 +21,6 @@
 package org.scalamock.clazz
 
 import org.scalamock.context.MockContext
-
 import scala.quoted.*
 import scala.reflect.Selectable
 
@@ -42,8 +41,13 @@ private[clazz] object MockMaker:
     def asParent(tree: TypeTree): TypeTree | Term =
       val constructorFieldsFilledWithNulls: List[List[Term]] =
         tree.tpe.dealias.typeSymbol.primaryConstructor.paramSymss
-          .filter(_.exists(!_.isType))
-          .map(_.map(_.typeRef.asType match { case '[t] => '{ null.asInstanceOf[t] }.asTerm }))
+          .filterNot(_.exists(_.isType))
+          .map(_.map(_.info.widen match {
+            case t@AppliedType(inner, applied) =>
+              Select.unique('{null}.asTerm, "asInstanceOf").appliedToTypes(List(inner.appliedTo(tpe.typeArgs)))
+            case other =>
+              Select.unique('{null}.asTerm, "asInstanceOf").appliedToTypes(List(other))
+          }))
 
       if constructorFieldsFilledWithNulls.forall(_.isEmpty) then
         tree
@@ -51,7 +55,9 @@ private[clazz] object MockMaker:
         Select(
           New(TypeIdent(tree.tpe.typeSymbol)),
           tree.tpe.typeSymbol.primaryConstructor
-        ).appliedToArgss(constructorFieldsFilledWithNulls)
+        ).appliedToTypes(tree.tpe.typeArgs)
+         .appliedToArgss(constructorFieldsFilledWithNulls)
+
 
 
     val parents =
@@ -91,7 +97,7 @@ private[clazz] object MockMaker:
             Symbol.newVal(
               parent = classSymbol,
               name = definition.symbol.name,
-              tpe = definition.tpeWithSubstitutedPathDependentFor(classSymbol),
+              tpe = definition.tpeWithSubstitutedInnerTypesFor(classSymbol),
               flags = Flags.Override,
               privateWithin = Symbol.noSymbol
             )
@@ -99,7 +105,7 @@ private[clazz] object MockMaker:
             Symbol.newMethod(
               parent = classSymbol,
               name = definition.symbol.name,
-              tpe = definition.tpeWithSubstitutedPathDependentFor(classSymbol),
+              tpe = definition.tpeWithSubstitutedInnerTypesFor(classSymbol),
               flags = Flags.Override,
               privateWithin = Symbol.noSymbol
             )
@@ -177,7 +183,7 @@ private[clazz] object MockMaker:
                         "asInstanceOf"
                       ),
                       definition.tpe
-                        .resolveParamRefs(definition.resTypeWithPathDependentOverrideFor(classSymbol), args)
+                        .resolveParamRefs(definition.resTypeWithInnerTypesOverrideFor(classSymbol), args)
                         .asType match { case '[t] => List(TypeTree.of[t]) }
                     )
                   )

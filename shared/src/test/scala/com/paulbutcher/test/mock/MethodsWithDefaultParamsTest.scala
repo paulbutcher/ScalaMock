@@ -34,6 +34,8 @@ class MethodsWithDefaultParamsTest extends IsolatedSpec {
 
   trait TraitHavingMethodsWithDefaultParams {
     def withAllDefaultParams(a: String = "default", b: CaseClass = CaseClass(42)): String
+
+    def withDefaultParamAndTypeParam[T](a: String = "default", b: Int = 5): T
   }
 
   behavior of "Mocks"
@@ -82,6 +84,14 @@ class MethodsWithDefaultParamsTest extends IsolatedSpec {
 
     m.withAllDefaultParams()
     m.withAllDefaultParams("other", CaseClass(99))
+  }
+
+  they should "mock trait methods with type param and default parameters" in {
+    val m = mock[TraitHavingMethodsWithDefaultParams]
+
+    (m.withDefaultParamAndTypeParam[Int] _).expects("default", 5).returns(5)
+
+    m.withDefaultParamAndTypeParam[Int]("default", 5) shouldBe 5
   }
 
   override def newInstance = new MethodsWithDefaultParamsTest

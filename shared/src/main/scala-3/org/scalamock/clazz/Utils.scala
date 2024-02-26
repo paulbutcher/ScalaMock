@@ -3,22 +3,22 @@ package org.scalamock.clazz
 import scala.quoted.*
 import org.scalamock.context.MockContext
 
-import scala.annotation.tailrec
+import scala.annotation.{experimental, tailrec}
 private[clazz] class Utils(using val quotes: Quotes):
   import quotes.reflect.*
 
   extension (tpe: TypeRepr)
-    def collectPathDependent(ownerSymbol: Symbol): List[TypeRepr] =
+    def collectInnerTypes(ownerSymbol: Symbol): List[TypeRepr] =
       def loop(currentTpe: TypeRepr, names: List[String]): List[TypeRepr] =
         currentTpe match
-          case AppliedType(inner, appliedTypes) => loop(inner, names) ++ appliedTypes.flatMap(_.collectPathDependent(ownerSymbol))
+          case AppliedType(inner, appliedTypes) => loop(inner, names) ++ appliedTypes.flatMap(_.collectInnerTypes(ownerSymbol))
           case TypeRef(inner, name) if name == ownerSymbol.name && names.nonEmpty => List(tpe)
           case TypeRef(inner, name) => loop(inner, name :: names)
           case _ => Nil
 
       loop(tpe, Nil)
 
-    def pathDependentOverride(ownerSymbol: Symbol, newOwnerSymbol: Symbol, applyTypes: Boolean): TypeRepr =
+    def innerTypeOverride(ownerSymbol: Symbol, newOwnerSymbol: Symbol, applyTypes: Boolean): TypeRepr =
       @tailrec
       def loop(currentTpe: TypeRepr, names: List[(String, List[TypeRepr])], appliedTypes: List[TypeRepr]): TypeRepr =
         currentTpe match
@@ -53,55 +53,80 @@ private[clazz] class Utils(using val quotes: Quotes):
         case _ =>
           tpe
 
+    @experimental
     def resolveParamRefs(resType: TypeRepr, methodArgs: List[List[Tree]]) =
-      def loop(baseBindings: TypeRepr, typeRepr: TypeRepr): TypeRepr =
-        typeRepr match
-          case pr@ParamRef(bindings, idx) if bindings == baseBindings =>
-            methodArgs.head(idx).asInstanceOf[TypeTree].tpe
-
-          case AppliedType(tycon, args) =>
-            AppliedType(tycon, args.map(arg => loop(baseBindings, arg)))
-
-          case other => other
-
       tpe match
-        case pt: PolyType => loop(pt, resType)
-        case _ => resType
+        case baseBindings: PolyType =>
+          def loop(typeRepr: TypeRepr): TypeRepr =
+            typeRepr match
+              case pr@ParamRef(bindings, idx) if bindings == baseBindings =>
+                methodArgs.head(idx).asInstanceOf[TypeTree].tpe
+
+              case AppliedType(tycon, args) =>
+                AppliedType(loop(tycon), args.map(arg => loop(arg)))
+
+              case ff @ TypeRef(ref @ ParamRef(bindings, idx), name) =>
+                def getIndex(bindings: TypeRepr): Int =
+                  @tailrec
+                  def loop(bindings: TypeRepr, idx: Int): Int =
+                    bindings match
+                      case MethodType(_, _, method: MethodType) => loop(method, idx + 1)
+                      case _ => idx
+
+                  loop(bindings, 1)
+
+                val maxIndex = methodArgs.length
+                val parameterListIdx = maxIndex - getIndex(bindings)
+
+                TypeSelect(methodArgs(parameterListIdx)(idx).asInstanceOf[Term], name).tpe
+
+              case other => other
+
+          loop(resType)
+        case _ =>
+          resType
 
 
-    def collectTypes: List[TypeRepr] =
-      def loop(currentTpe: TypeRepr, params: List[TypeRepr]): List[TypeRepr] =
+    def collectTypes: (List[TypeRepr], TypeRepr) =
+      @tailrec
+      def loop(currentTpe: TypeRepr, argTypesAcc: List[List[TypeRepr]], resType: TypeRepr): (List[TypeRepr], TypeRepr) =
         currentTpe match
-          case PolyType(_, _, res)          => loop(res, Nil)
-          case MethodType(_, argTypes, res) => argTypes ++ loop(res, params)
-          case other                        => List(other)
-      loop(tpe, Nil)
+          case PolyType(_, _, res)          => loop(res, List.empty[TypeRepr] :: argTypesAcc, resType)
+          case MethodType(_, argTypes, res) => loop(res, argTypes :: argTypesAcc, resType)
+          case other                        => (argTypesAcc.reverse.flatten, other)
+      loop(tpe, Nil, TypeRepr.of[Nothing])
 
   case class MockableDefinition(idx: Int, symbol: Symbol, ownerTpe: TypeRepr):
     val mockValName = s"mock$$${symbol.name}$$$idx"
     val tpe = ownerTpe.memberType(symbol)
-    private val rawTypes = tpe.widen.collectTypes
+    private val (rawTypes, rawResType) = tpe.widen.collectTypes
     val parameterTypes = prepareTypesFor(ownerTpe.typeSymbol).map(_.tpe).init
 
-    def resTypeWithPathDependentOverrideFor(classSymbol: Symbol): TypeRepr =
-      val pd = rawTypes.last.collectPathDependent(ownerTpe.typeSymbol)
-      val pdUpdated = pd.map(_.pathDependentOverride(ownerTpe.typeSymbol, classSymbol, applyTypes = false))
-      rawTypes.last.substituteTypes(pd.map(_.typeSymbol), pdUpdated)
+    def resTypeWithInnerTypesOverrideFor(classSymbol: Symbol): TypeRepr =
+      updatePathDependent(rawResType, List(rawResType), classSymbol)
 
-    def tpeWithSubstitutedPathDependentFor(classSymbol: Symbol): TypeRepr =
-      val pathDependentTypes = rawTypes.flatMap(_.collectPathDependent(ownerTpe.typeSymbol))
-      val pdUpdated = pathDependentTypes.map(_.pathDependentOverride(ownerTpe.typeSymbol, classSymbol, applyTypes = false))
-      tpe.substituteTypes(pathDependentTypes.map(_.typeSymbol), pdUpdated)
+    def tpeWithSubstitutedInnerTypesFor(classSymbol: Symbol): TypeRepr =
+      updatePathDependent(tpe, rawResType :: rawTypes, classSymbol)
 
-    def prepareTypesFor(classSymbol: Symbol) = rawTypes
-      .map(_.pathDependentOverride(ownerTpe.typeSymbol, classSymbol, applyTypes = true))
+    private def updatePathDependent(where: TypeRepr, types: List[TypeRepr], classSymbol: Symbol): TypeRepr =
+      val pathDependentTypes = types.flatMap(_.collectInnerTypes(ownerTpe.typeSymbol))
+      val pdUpdated = pathDependentTypes.map(_.innerTypeOverride(ownerTpe.typeSymbol, classSymbol, applyTypes = false))
+      where.substituteTypes(pathDependentTypes.map(_.typeSymbol), pdUpdated)
+
+    def prepareTypesFor(classSymbol: Symbol) = (rawTypes :+ rawResType)
+      .map(_.innerTypeOverride(ownerTpe.typeSymbol, classSymbol, applyTypes = true))
       .map { typeRepr =>
         val adjusted =
           typeRepr.widen.mapParamRefWithWildcard match
             case TypeBounds(lower, upper) => upper
             case AppliedType(TypeRef(_, "<repeated>"), elemTyps) =>
               TypeRepr.typeConstructorOf(classOf[Seq[_]]).appliedTo(elemTyps)
-            case other => other
+            case TypeRef(_: ParamRef, _) =>
+              TypeRepr.of[Any]
+            case AppliedType(TypeRef(_: ParamRef, _), _) =>
+              TypeRepr.of[Any]
+            case other =>
+              other
         adjusted.asType match
           case '[t] => TypeTree.of[t]
     }
@@ -128,10 +153,11 @@ private[clazz] class Utils(using val quotes: Quotes):
 
     def apply(tpe: TypeRepr): List[MockableDefinition] =
       val methods = (tpe.typeSymbol.methodMembers.toSet -- TypeRepr.of[Object].typeSymbol.methodMembers).toList
-        .filter(sym => !sym.flags.is(Flags.Private) && !sym.flags.is(Flags.Final) && !sym.flags.is(Flags.Mutable))
-        .filterNot(sym => tpe.memberType(sym) match
-          case defaultParam @ ByNameType(AnnotatedType(_, Apply(Select(New(Inferred()), "<init>"), Nil))) => true
-          case _ => false
+        .filter(sym =>
+          !sym.flags.is(Flags.Private) &&
+          !sym.flags.is(Flags.Final) &&
+          !sym.flags.is(Flags.Mutable) &&
+          !sym.name.contains("$default$")
         )
         .zipWithIndex
         .map((sym, idx) => MockableDefinition(idx, sym, tpe))

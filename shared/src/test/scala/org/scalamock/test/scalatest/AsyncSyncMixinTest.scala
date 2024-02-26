@@ -20,13 +20,12 @@
 
 package org.scalamock.test.scalatest
 
-import org.scalatest.flatspec.AnyFlatSpec
-import org.scalatest._
+import org.scalatest.flatspec.{AnyFlatSpec, AsyncFlatSpec}
+import org.scalamock.scalatest.{MockFactory, AsyncMockFactory}
 
 /**
  *  Tests for issue #371
  */
-@Ignore
 class AsyncSyncMixinTest extends AnyFlatSpec {
 
   "MockFactory" should "be mixed only with Any*Spec and not Async*Spec traits" in {
