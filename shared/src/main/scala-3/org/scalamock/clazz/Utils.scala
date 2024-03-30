@@ -1,7 +1,6 @@
 package org.scalamock.clazz
 
 import scala.quoted.*
-import org.scalamock.context.MockContext
 
 import scala.annotation.{experimental, tailrec}
 private[clazz] class Utils(using val quotes: Quotes):
@@ -52,6 +51,22 @@ private[clazz] class Utils(using val quotes: Quotes):
           tycon.appliedTo(args.map(_.mapParamRefWithWildcard))
         case _ =>
           tpe
+
+    def resolveAndOrTypeParamRefs: TypeRepr =
+      tpe match {
+        case AndType(left: ParamRef, right: ParamRef) =>
+          TypeRepr.of[Any]
+        case AndType(left: ParamRef, right) =>
+          right.resolveAndOrTypeParamRefs
+        case AndType(left, right: ParamRef) =>
+          left.resolveAndOrTypeParamRefs
+        case OrType(_: ParamRef, _) =>
+          TypeRepr.of[Any]
+        case OrType(_, _: ParamRef) =>
+          TypeRepr.of[Any]
+        case other =>
+          other
+      }
 
     @experimental
     def resolveParamRefs(resType: TypeRepr, methodArgs: List[List[Tree]]) =
@@ -117,7 +132,7 @@ private[clazz] class Utils(using val quotes: Quotes):
       .map(_.innerTypeOverride(ownerTpe.typeSymbol, classSymbol, applyTypes = true))
       .map { typeRepr =>
         val adjusted =
-          typeRepr.widen.mapParamRefWithWildcard match
+          typeRepr.widen.mapParamRefWithWildcard.resolveAndOrTypeParamRefs match
             case TypeBounds(lower, upper) => upper
             case AppliedType(TypeRef(_, "<repeated>"), elemTyps) =>
               TypeRepr.typeConstructorOf(classOf[Seq[_]]).appliedTo(elemTyps)
