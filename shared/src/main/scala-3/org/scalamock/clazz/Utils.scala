@@ -54,15 +54,15 @@ private[clazz] class Utils(using val quotes: Quotes):
 
     def resolveAndOrTypeParamRefs: TypeRepr =
       tpe match {
-        case AndType(left: ParamRef, right: ParamRef) =>
+        case AndType(left @ (_: ParamRef | _: AppliedType), right @ (_: ParamRef | _: AppliedType)) =>
           TypeRepr.of[Any]
-        case AndType(left: ParamRef, right) =>
+        case AndType(left @ (_: ParamRef | _: AppliedType), right) =>
           right.resolveAndOrTypeParamRefs
-        case AndType(left, right: ParamRef) =>
+        case AndType(left, right @ (_: ParamRef | _: AppliedType)) =>
           left.resolveAndOrTypeParamRefs
-        case OrType(_: ParamRef, _) =>
+        case OrType(_: ParamRef | _: AppliedType, _) =>
           TypeRepr.of[Any]
-        case OrType(_, _: ParamRef) =>
+        case OrType(_, _: ParamRef | _: AppliedType) =>
           TypeRepr.of[Any]
         case other =>
           other
@@ -76,6 +76,12 @@ private[clazz] class Utils(using val quotes: Quotes):
             typeRepr match
               case pr@ParamRef(bindings, idx) if bindings == baseBindings =>
                 methodArgs.head(idx).asInstanceOf[TypeTree].tpe
+
+              case AndType(left, right) =>
+                AndType(loop(left), loop(right))
+                
+              case OrType(left, right) =>
+                OrType(loop(left), loop(right))
 
               case AppliedType(tycon, args) =>
                 AppliedType(loop(tycon), args.map(arg => loop(arg)))
