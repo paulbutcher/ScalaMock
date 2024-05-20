@@ -42,12 +42,11 @@ private[clazz] object MockMaker:
       val constructorFieldsFilledWithNulls: List[List[Term]] =
         tree.tpe.dealias.typeSymbol.primaryConstructor.paramSymss
           .filterNot(_.exists(_.isType))
-          .map(_.map(_.info.widen match {
-            case t@AppliedType(inner, applied) =>
-              Select.unique('{null}.asTerm, "asInstanceOf").appliedToTypes(List(inner.appliedTo(tpe.typeArgs)))
-            case other =>
-              Select.unique('{null}.asTerm, "asInstanceOf").appliedToTypes(List(other))
-          }))
+          .map(_.map{sym =>
+            val tpe = sym.info.widen
+            if tpe <:< TypeRepr.of[AnyRef] then '{null}.asTerm
+            else Select.unique('{null}.asTerm, "asInstanceOf").appliedToType(tpe)
+          })
 
       if constructorFieldsFilledWithNulls.forall(_.isEmpty) then
         tree

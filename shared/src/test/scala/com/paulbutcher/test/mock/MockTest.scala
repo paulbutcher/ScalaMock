@@ -488,5 +488,14 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
 
       "stub[HasNotifyMethod]" should compile
     }
+
+    "mock generic constructor arguments" in {
+      class WithOption(opt: Option[String])
+      class WithInt(i: Int)
+      class WithString(s: String)
+      "mock[WithOption]" should compile
+      "mock[WithInt]" should compile
+      "mock[WithString]" should compile
+    }
   }
 }
