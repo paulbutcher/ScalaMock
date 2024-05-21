@@ -172,6 +172,7 @@ private[clazz] class Utils(using val quotes: Quotes):
           !sym.flags.is(Flags.Private) &&
           !sym.flags.is(Flags.Final) &&
           !sym.flags.is(Flags.Mutable) &&
+          sym.privateWithin.isEmpty &&
           !sym.name.contains("$default$")
         )
         .zipWithIndex
