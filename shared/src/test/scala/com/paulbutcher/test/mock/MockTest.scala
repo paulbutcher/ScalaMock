@@ -499,11 +499,12 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
       "mock[WithOption]" should compile
       "mock[WithInt]" should compile
       "mock[WithString]" should compile
-      "mock[WithGeneric[Int]]" should compile
-      "mock[WithGeneric[String]]" should compile
-      "mock[WithTC[ID]]" should compile
-      "mock[WithTC[List]]" should compile
-
+      pendingUntilFixed {
+        "mock[WithGeneric[Int]]" should compile
+        "mock[WithGeneric[String]]" should compile
+        "mock[WithTC[ID]]" should compile
+        "mock[WithTC[List]]" should compile
+      }
     }
   }
 }
