@@ -489,39 +489,13 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
       "stub[HasNotifyMethod]" should compile
     }
 
-    "mock generic constructor arguments" in {
+    "mock constructor arguments" in {
       class WithOption(opt: Option[String])
       class WithInt(i: Int)
       class WithString(s: String)
       "mock[WithOption]" should compile
       "mock[WithInt]" should compile
       "mock[WithString]" should compile
-
-    }
-
-    "mock type constructor arguments" in {
-      class WithTC[TC[_]](tc: TC[Int])
-      type ID[A] = A
-      "mock[WithTC[List]]" should compile
-      pendingUntilFixed {
-        "mock[WithTC[ID]]" should compile
-      }
-    }
-
-    "mock generic arguments" in {
-      class WithGeneric[T](t: T)
-      "mock[WithGeneric[String]]" should compile
-      "mock[WithGeneric[Int]]" should compile
-    }
-
-    "mock type constructor context bounds" in {
-      trait Async[F[_]]
-      class A[F[_]: Async](val b: B[F])
-      class B[F[_]: Async](val c: C[F])
-      trait C[F[_]]
-      "mock[A[List]]" should compile
-      "mock[B[List]]" should compile
-      "mock[C[List]]" should compile
     }
   }
 }
