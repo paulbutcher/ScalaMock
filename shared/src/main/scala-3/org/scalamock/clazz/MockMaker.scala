@@ -56,11 +56,7 @@ private[clazz] object MockMaker:
         tree.tpe.dealias.typeSymbol.primaryConstructor.paramSymss
           .filterNot(_.exists(_.isType))
           .map(_.map{ sym =>
-            val classParamRef = tpe.widen match {
-              case AppliedType(_, params) => paramsMap.get(sym.info.typeSymbol)
-              case _ => None
-            }
-            val target = classParamRef.getOrElse(sym.info).widen.dealias
+            val target = paramsMap.getOrElse(sym.info.typeSymbol, sym.info).widen.dealias
             if target <:< TypeRepr.of[AnyVal] then
               Select.unique('{null}.asTerm, "asInstanceOf").appliedToType(target)
             else
