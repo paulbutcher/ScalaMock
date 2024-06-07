@@ -493,18 +493,25 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
       class WithOption(opt: Option[String])
       class WithInt(i: Int)
       class WithString(s: String)
-      class WithGeneric[T](t: T)
-      class WithTC[TC[_]](tc: TC[Int])
-      type ID[A] = A
       "mock[WithOption]" should compile
       "mock[WithInt]" should compile
       "mock[WithString]" should compile
+
+    }
+
+    "mock type constructor arguments" in {
+      class WithTC[TC[_]](tc: TC[Int])
+      type ID[A] = A
+      "mock[WithTC[List]]" should compile
       pendingUntilFixed {
-        "mock[WithGeneric[Int]]" should compile
-        "mock[WithGeneric[String]]" should compile
         "mock[WithTC[ID]]" should compile
-        "mock[WithTC[List]]" should compile
       }
+    }
+
+    "mock generic arguments" in {
+      class WithGeneric[T](t: T)
+      "mock[WithGeneric[String]]" should compile
+      "mock[WithGeneric[Int]]" should compile
     }
   }
 }

@@ -40,12 +40,31 @@ private[clazz] object MockMaker:
 
     def asParent(tree: TypeTree): TypeTree | Term =
       val constructorFieldsFilledWithNulls: List[List[Term]] =
+        // we don't care about any of the parameters, and just want to pass null, since all interesting parts will be mocked.
+        // that's simpler said than done, because if type of the argument is a primitive
+        // then null needs to be cast to that primitive type.
+        // the type could be a generic type though, which could resolve to a primitive, so we need to find the type the param
+        // should resolve to, and cast it if needed.
+        val paramsMap = {
+          val abstractParams = tree.tpe.dealias.typeSymbol.primaryConstructor.paramSymss.filter(_.exists(_.isType)).flatten
+          val resolvedParams = tpe.widen match
+            case AppliedType(_, params) => params
+            case _ => Nil
+          abstractParams.zip(resolvedParams).toMap
+        }
+
         tree.tpe.dealias.typeSymbol.primaryConstructor.paramSymss
           .filterNot(_.exists(_.isType))
-          .map(_.map{sym =>
-            val tpe = sym.info.widen
-            if tpe <:< TypeRepr.of[AnyRef] then '{null}.asTerm
-            else Select.unique('{null}.asTerm, "asInstanceOf").appliedToType(tpe)
+          .map(_.map{ sym =>
+            val classParamRef = tpe.widen match {
+              case AppliedType(_, params) => paramsMap.get(sym.info.typeSymbol)
+              case _ => None
+            }
+            val target = classParamRef.getOrElse(sym.info).widen.dealias
+            if target <:< TypeRepr.of[AnyVal] then
+              Select.unique('{null}.asTerm, "asInstanceOf").appliedToType(target)
+            else
+              '{null}.asTerm
           })
 
       if constructorFieldsFilledWithNulls.forall(_.isEmpty) then
