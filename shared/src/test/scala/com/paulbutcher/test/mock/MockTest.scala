@@ -513,5 +513,15 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
       "mock[WithGeneric[String]]" should compile
       "mock[WithGeneric[Int]]" should compile
     }
+
+    "mock type constructor context bounds" in {
+      trait Async[F[_]]
+      class A[F[_]: Async](val b: B[F])
+      class B[F[_]: Async](val c: C[F])
+      trait C[F[_]]
+      "mock[A[List]]" should compile
+      "mock[B[List]]" should compile
+      "mock[C[List]]" should compile
+    }
   }
 }
