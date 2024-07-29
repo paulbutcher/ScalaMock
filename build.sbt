@@ -1,6 +1,6 @@
 import sbtcrossproject.CrossPlugin.autoImport.crossProject
 
-lazy val scalatest = Def.setting("org.scalatest" %%% "scalatest" % "3.2.17")
+lazy val scalatest = Def.setting("org.scalatest" %%% "scalatest" % "3.2.19")
 lazy val specs2 = Def.setting("org.specs2" %%% "specs2-core" % "4.20.2")
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
