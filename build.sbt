@@ -4,11 +4,7 @@ lazy val scalatest = Def.setting("org.scalatest" %%% "scalatest" % "3.2.19")
 lazy val specs2 = Def.setting("org.specs2" %%% "specs2-core" % "4.20.8")
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
-  /**
-   *  Symbol.newClass is marked experimental, so we should use @experimental annotation in every test suite.
-   *  3.3.0 has a bug so we can omit this annotation
-   */
-  scalaVersion := "3.3.0",
+  scalaVersion := "3.3.3",
   scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-release:8")
 )
 
@@ -53,6 +49,7 @@ def crossScalaSettings = {
     crossScalaVersions := Seq("2.12.20", "2.13.14", scalaVersion.value),
     Compile / unmanagedSourceDirectories ++= addDirsByScalaVersion("src/main").value,
     Test / unmanagedSourceDirectories ++= addDirsByScalaVersion("src/test").value,
+    scalacOptions ++= (if (scalaVersion.value.startsWith("3")) Seq("-experimental") else Nil),
     libraryDependencies ++= {
       CrossVersion.partialVersion(scalaVersion.value) match {
         case Some((2, _)) =>
