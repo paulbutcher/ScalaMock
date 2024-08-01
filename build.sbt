@@ -4,7 +4,7 @@ lazy val scalatest = Def.setting("org.scalatest" %%% "scalatest" % "3.2.19")
 lazy val specs2 = Def.setting("org.specs2" %%% "specs2-core" % "4.20.8")
 
 val commonSettings = Defaults.coreDefaultSettings ++ Seq(
-  scalaVersion := "3.3.3",
+  scalaVersion := "3.4.2",
   scalacOptions ++= Seq("-deprecation", "-unchecked", "-feature", "-release:8")
 )
 
