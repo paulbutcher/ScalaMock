@@ -116,6 +116,9 @@ class JavaClassExtended extends JavaClass
 val mm = mock[JavaClassExtended] // should be used instead
 ```
 
+3.
+* Mockito makes use of Symbol.newClass which is marked as experimental; to avoid having to add the `@experimental`
+  attribute everywhere in tests, you can add the `Test / scalacOptions += "-experimental"` to your build.
 
 
 ## Documentation
