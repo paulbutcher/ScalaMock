@@ -192,7 +192,7 @@ private[clazz] object MockMaker:
                       Select.unique(
                         Apply(
                           Select.unique(Ref(mockFunctionValDef.symbol), "apply"),
-                          args.flatten.collect { case t: Term => t }
+                          args.flatten.collect { case t: Term => Select.unique(t, "asInstanceOf") }
                         ),
                         "asInstanceOf"
                       ),
