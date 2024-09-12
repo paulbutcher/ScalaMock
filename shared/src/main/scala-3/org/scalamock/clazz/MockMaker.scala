@@ -124,7 +124,8 @@ private[clazz] object MockMaker:
               privateWithin = Symbol.noSymbol
             )
 
-        List(mockFunctionSym, overrideSym)
+        if (definition.symbol.flags.is(Flags.Artifact)) Nil
+        else List(mockFunctionSym, overrideSym)
       },
       selfType = None
     )
@@ -143,7 +144,9 @@ private[clazz] object MockMaker:
       ClassDef(
         cls = classSymbol,
         parents = parents,
-        body = defaultMockName :: mockableDefinitions.flatMap { definition =>
+        body = defaultMockName :: mockableDefinitions.flatMap {
+          case definition if definition.symbol.flags.is(Flags.Artifact) => Nil
+          case definition =>
           val mockFunctionValDef: ValDef =
             val valSym = classSymbol.declaredField(definition.mockValName)
             val mockFunctionClassSymbol = valSym.typeRef.classSymbol.get
