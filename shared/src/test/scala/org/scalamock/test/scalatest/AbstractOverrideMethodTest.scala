@@ -26,13 +26,30 @@ import org.scalatest.matchers.should.Matchers
 
 class AbstractOverrideMethodTest extends AnyFlatSpec with Matchers with MockFactory {
   class A extends B with D
-  trait B extends C { def foo(): Int = 1 }
-  trait C { def foo(): Int }
-  trait D extends C { abstract override def foo(): Int = super.foo() * 2 }
+  trait B extends C {
+    def foo(): Int = 1
+    def bar[T](seq: Seq[T]): Seq[String] = seq.map(_.toString)
+    override def baz(a: String, b: Int): Int = a.size + b
+  }
+  trait C {
+    def foo(): Int
+    def bar[T](seq: Seq[T]): Seq[String]
+    def baz(a: String, b: Int): Int = (a.size * 2) + b
+  }
+  trait D extends C {
+    abstract override def foo(): Int = super.foo() * 2
+    abstract override def bar[T](seq: Seq[T]): Seq[String] = "first" +: super.bar(seq) :+ "last"
+    abstract override def baz(a: String, b: Int): Int = super.baz(a, b) + 1
+  }
 
   "ScalaTest suite" should "permit mocking classes build with stackable trait pattern" in {
     val mockedClass = mock[A]
     (mockedClass.foo _).expects().returning(42)
+    (mockedClass.bar _).expects(*).returning(Seq("a", "b", "c"))
+    (mockedClass.baz _).expects("A", 1).returning(2)
+    (mockedClass.baz _).expects("B", 1).never()
     mockedClass.foo() shouldBe 42
+    mockedClass.bar(Seq(1,2,3)) shouldBe Seq("a", "b", "c")
+    mockedClass.baz("A", 1) shouldBe 2
   }
 }
