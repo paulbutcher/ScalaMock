@@ -28,7 +28,7 @@ import scala.reflect.Selectable
 private[clazz] object MockMaker:
   val MockDefaultNameValName = "mock$special$mockName"
 
-  def instance[T: Type](mockType: MockType, ctx: Expr[MockContext], name: Option[Expr[String]])(using quotes: Quotes): Expr[T & Selectable] =
+  def instance[T: Type](mockType: MockType, ctx: Expr[MockContext], name: Option[Expr[String]])(using quotes: Quotes): Expr[T] =
     val utils = Utils(using quotes)
     import utils.quotes.reflect.*
     val tpe = TypeRepr.of[T]

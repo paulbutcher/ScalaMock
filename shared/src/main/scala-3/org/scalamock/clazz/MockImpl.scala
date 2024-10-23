@@ -27,20 +27,19 @@ import scala.quoted.*
 import org.scalamock.util.Defaultable
 import MockFunctionFinder.findMockFunction
 
-import scala.reflect.Selectable
 
 @scala.annotation.experimental
 private[clazz] object MockImpl:
-  def mock[T: Type](mockContext: Expr[MockContext])(using quotes: Quotes): Expr[T & Selectable] =
+  def mock[T: Type](mockContext: Expr[MockContext])(using quotes: Quotes): Expr[T] =
     MockMaker.instance[T](MockType.Mock, mockContext, name = None)
 
-  def stub[T: Type](mockContext: Expr[MockContext])(using quotes: Quotes): Expr[T & Selectable] =
+  def stub[T: Type](mockContext: Expr[MockContext])(using quotes: Quotes): Expr[T] =
     MockMaker.instance[T](MockType.Stub, mockContext, name = None)
 
-  def mockWithName[T: Type](mockName: Expr[String])(mockContext: Expr[MockContext])(using quotes: Quotes): Expr[T & Selectable] =
+  def mockWithName[T: Type](mockName: Expr[String])(mockContext: Expr[MockContext])(using quotes: Quotes): Expr[T] =
     MockMaker.instance[T](MockType.Mock, mockContext, Some(mockName))
 
-  def stubWithName[T: Type](mockName: Expr[String])(mockContext: Expr[MockContext])(using quotes: Quotes): Expr[T & Selectable] =
+  def stubWithName[T: Type](mockName: Expr[String])(mockContext: Expr[MockContext])(using quotes: Quotes): Expr[T] =
     MockMaker.instance[T](MockType.Stub, mockContext, Some(mockName))
 
 

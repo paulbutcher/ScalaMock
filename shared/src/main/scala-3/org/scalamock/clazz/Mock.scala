@@ -24,16 +24,14 @@ import org.scalamock.context.MockContext
 import org.scalamock.function.*
 import org.scalamock.util.Defaultable
 
-import scala.reflect.Selectable
-
 trait Mock:
   import scala.language.implicitConversions
 
-  inline def mock[T](implicit mockContext: MockContext): T & Selectable = ${MockImpl.mock[T]('{mockContext})}
-  inline def stub[T](implicit mockContext: MockContext): T & Selectable = ${MockImpl.stub[T]('{mockContext})}
+  inline def mock[T](implicit mockContext: MockContext): T = ${MockImpl.mock[T]('{mockContext})}
+  inline def stub[T](implicit mockContext: MockContext): T = ${MockImpl.stub[T]('{mockContext})}
 
-  inline def mock[T](mockName: String)(implicit mockContext: MockContext) : T & Selectable = ${MockImpl.mockWithName[T]('{mockName})('{mockContext})}
-  inline def stub[T](mockName: String)(implicit mockContext: MockContext): T & Selectable = ${MockImpl.stubWithName[T]('{mockName})('{mockContext})}
+  inline def mock[T](mockName: String)(implicit mockContext: MockContext) : T = ${MockImpl.mockWithName[T]('{mockName})('{mockContext})}
+  inline def stub[T](mockName: String)(implicit mockContext: MockContext): T = ${MockImpl.stubWithName[T]('{mockName})('{mockContext})}
 
   inline implicit def toMockFunction0[R: Defaultable](inline f: () => R): MockFunction0[R] = ${MockImpl.toMockFunction0[R]('{f})('{summon[Defaultable[R]]})}
   inline implicit def toMockFunction1[T1, R: Defaultable](inline f: T1 => R): MockFunction1[T1, R] = ${MockImpl.toMockFunction1[T1, R]('{f})('{summon[Defaultable[R]]})}
