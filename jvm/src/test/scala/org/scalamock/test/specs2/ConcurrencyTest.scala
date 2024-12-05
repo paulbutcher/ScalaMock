@@ -20,26 +20,24 @@
 
 package org.scalamock.test.specs2
 
-import scala.concurrent.Await
+import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import scala.concurrent.duration.Duration
-import scala.concurrent.duration.SECONDS
-
-import org.scalamock.specs2.MockContext
+import scala.concurrent.duration.{Duration, SECONDS}
+import org.scalamock.specs2.IsolatedMockFactory
 import org.scalamock.test.mockable.TestTrait
 import org.specs2.mutable.Specification
 
-class ConcurrencyTest extends Specification {
+class ConcurrencyTest extends Specification with IsolatedMockFactory {
 
-  "Futures should work" in new MockContext {
+  "Futures should work" in {
     val s = stubFunction[Int]
     s.when().returns(1)
     Await.result(Future { s() }, Duration(10, SECONDS)) must be_==(1)
     s.verify().once()
+    success
   }
 
-  "Concurrent mock access should work" in new MockContext {
+  "Concurrent mock access should work" in {
     val m = mock[TestTrait]
     (m.oneParamMethod _).expects(42).repeated(500000).returning("a")
 
@@ -48,5 +46,49 @@ class ConcurrencyTest extends Specification {
     }
 
     futures.foreach(future => Await.result(future, Duration(10, SECONDS)))
+    success
   }
+
+  case class MyClass(i: Int)
+
+  trait SlowTestTrait {
+    def oneParamMethod(param: MyClass): String
+    def otherMethod(): String
+  }
+
+  val m1 = stub[SlowTestTrait]
+  // This test fails flakily, so rerun it several times to confirm.
+  (1 to 10).foreach(i =>
+    s"Concurrent mock access should work ($i)" in {
+      val len = 500
+      val args = (0 to len).toList
+      (m1.otherMethod _).when().returns("ok")
+      args.foreach(i => (m1.oneParamMethod _).when(MyClass(i)).returns(i.toString))
+
+      val futures = args.map { i =>
+        Future {
+          m1.oneParamMethod(MyClass(i))
+        }
+      }
+
+      futures.foreach(future => Await.result(future, Duration(10, SECONDS)))
+      args.foreach { i =>
+        Future {
+          m1.otherMethod()
+        }
+      }
+      args.foreach { i =>
+        Future {
+          m1.oneParamMethod(MyClass(i))
+        }
+      }
+
+      eventually {
+        (1 to len).foreach { i =>
+          (m1.oneParamMethod _).verify(MyClass(i)).atLeastOnce()
+        }
+        success
+      }
+    })
+
 }
