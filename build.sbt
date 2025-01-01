@@ -63,3 +63,21 @@ def crossScalaSettings = {
     }
   )
 }
+
+inThisBuild(
+  List(
+    organization := "org.scalamock",
+    homepage := Some(url("http://scalamock.org/")),
+    licenses := List(
+      "MIT" -> url("https://opensource.org/licenses/MIT")
+    ),
+    developers := List(
+      Developer("paulbutcher", "Paul Butcher", "", url("http://paulbutcher.com/")),
+      Developer("barkhorn", "Philipp Meyerhoefer", "", url("https://github.com/barkhorn")),
+      Developer("goshacodes", "Georgii Kovalev", "", url("https://github.com/goshacodes"))
+    ),
+    sonatypeCredentialHost := "s01.oss.sonatype.org"
+  )
+)
+
+sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
