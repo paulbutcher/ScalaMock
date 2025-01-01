@@ -75,9 +75,6 @@ inThisBuild(
       Developer("paulbutcher", "Paul Butcher", "", url("http://paulbutcher.com/")),
       Developer("barkhorn", "Philipp Meyerhoefer", "", url("https://github.com/barkhorn")),
       Developer("goshacodes", "Georgii Kovalev", "", url("https://github.com/goshacodes"))
-    ),
-    sonatypeCredentialHost := "s01.oss.sonatype.org"
+    )
   )
 )
-
-sonatypeRepository := "https://s01.oss.sonatype.org/service/local"
