@@ -9,9 +9,7 @@ val commonSettings = Defaults.coreDefaultSettings ++ Seq(
     "-deprecation",
     "-unchecked",
     "-feature",
-    "-release:8",
-    "-experimental",
-    "-rewrite"
+    "-experimental"
   )
 )
 
