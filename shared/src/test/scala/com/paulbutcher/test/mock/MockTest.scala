@@ -425,15 +425,14 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
 
 
 
-    // TODO: issue 150 - causes a compiler error
-//    "cope with curried function returning methods" in {
-//      withExpectations {
-//        val m = mock[TestTrait]
-//        (m.curriedFuncReturn(_: Int)(_: Double)).expects(10, 1.23).returning("curried func return method called")
-//        val partial = m.curriedFuncReturn(10)
-//        assertResult("curried func return method called") { partial(1.23) }
-//      }
-//    }
+    "cope with curried function returning methods" in {
+      withExpectations {
+        val m = mock[TestTrait]
+        m.curriedFuncReturn.expects(10).returning((x: Double) => "curried func return method called")
+        val partial = m.curriedFuncReturn(10)
+        assertResult("curried func return method called") { partial(1.23) }
+      }
+    }
 
 
 
