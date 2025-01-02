@@ -64,10 +64,10 @@ class HigherOrderFunctionsTest extends AnyFreeSpec with MockFactory {
     "testFoldLeft" in {
       val f = stubFunction[String, Int, String]
 
-      f when("initial", 0) returns "intermediate one"
-      f when("intermediate one", 1) returns "intermediate two"
-      f when("intermediate two", 2) returns "intermediate three"
-      f when("intermediate three", 3) returns "final"
+      f `when`("initial", 0) `returns` "intermediate one"
+      f `when`("intermediate one", 1) `returns` "intermediate two"
+      f `when`("intermediate two", 2) `returns` "intermediate three"
+      f `when`("intermediate three", 3) `returns` "final"
 
       assertResult("final") {
         Seq(0, 1, 2, 3).foldLeft("initial")(f)

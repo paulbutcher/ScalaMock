@@ -25,14 +25,14 @@ import org.scalamock.handlers.{ CallHandler, Handlers }
 private[scalamock] trait MockContext {
   type ExpectationException <: Throwable
 
-  private[scalamock] var callLog: CallLog = _
-  private[scalamock] var currentExpectationContext: Handlers = _
-  private[scalamock] var expectationContext: Handlers = _
+  private[scalamock] var callLog: CallLog = scala.compiletime.uninitialized
+  private[scalamock] var currentExpectationContext: Handlers = scala.compiletime.uninitialized
+  private[scalamock] var expectationContext: Handlers = scala.compiletime.uninitialized
   private[scalamock] val mockNameGenerator: MockNameGenerator = new MockNameGenerator()
 
   protected def newExpectationException(message: String, methodName: Option[Symbol] = None): ExpectationException
 
-  private[scalamock] def add[E <: CallHandler[_]](e: E) = {
+  private[scalamock] def add[E <: CallHandler[?]](e: E) = {
     assert(currentExpectationContext != null, "Null expectation context - missing withExpectations?")
     currentExpectationContext.add(e)
     e

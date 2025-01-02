@@ -34,13 +34,13 @@ class OrderTest extends AnyWordSpec with MockFactory {
       "remove inventory" in {
         val mockWarehouse = stub[Warehouse]
         
-        (mockWarehouse.hasInventory _) when ("Talisker", 50) returns true
+        (mockWarehouse.hasInventory) `when` ("Talisker", 50) `returns` true
         
         val order = new Order("Talisker", 50)
         order.fill(mockWarehouse)
         
         assert(order.isFilled)
-        (mockWarehouse.remove _).verify("Talisker", 50).once()
+        (mockWarehouse.remove).verify("Talisker", 50).once()
       }
     }
     

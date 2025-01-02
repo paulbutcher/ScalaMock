@@ -22,9 +22,9 @@ package com.example
 
 import scala.math.{atan2, sqrt}
  
-class Controller(turtle: Turtle) {
+class Controller(turtle: Turtle):
  
-  def drawLine(start: (Double, Double), end: (Double, Double)): Unit = {
+  def drawLine(start: (Double, Double), end: (Double, Double)): Unit =
     moveTo(start)
  
     val initialAngle = turtle.getAngle
@@ -33,7 +33,6 @@ class Controller(turtle: Turtle) {
     turtle.turn(angle(deltaPos) - initialAngle)
     turtle.penDown()
     turtle.forward(distance(deltaPos))
-  }
  
   def delta(pos1: (Double, Double), pos2: (Double, Double)) = 
     (pos2._1 - pos1._1, pos2._2 - pos1._2)
@@ -44,7 +43,7 @@ class Controller(turtle: Turtle) {
   def angle(delta: (Double, Double)) = 
     atan2(delta._2, delta._1)
  
-  def moveTo(pos: (Double, Double)): Unit = {
+  def moveTo(pos: (Double, Double)): Unit =
     val initialPos = turtle.getPosition
     val initialAngle = turtle.getAngle
  
@@ -53,5 +52,3 @@ class Controller(turtle: Turtle) {
     turtle.penUp()
     turtle.turn(angle(deltaPos) - initialAngle)
     turtle.forward(distance(deltaPos))
-  }
-}

@@ -32,7 +32,7 @@ class JavaMockNamingTest extends IsolatedSpec {
 
   it should "have a sensible method name when mocking Java polymorphic interface" in {
     val myMock = mock[JavaGenericInterface[List[Int]]]
-    getMockMethodName(myMock.compare _) shouldBe "<mock-1> JavaGenericInterface[List[Int]].compare"
+    getMockMethodName(myMock.compare) shouldBe "<mock-1> JavaGenericInterface[List[Int]].compare"
   }
 
   override def newInstance = new JavaMockNamingTest

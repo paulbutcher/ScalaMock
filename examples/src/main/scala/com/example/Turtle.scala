@@ -20,7 +20,7 @@
 
 package com.example
 
-trait Turtle {
+trait Turtle:
   def penUp(): Unit
   def penDown(): Unit
   def forward(distance: Double): Unit
@@ -28,4 +28,3 @@ trait Turtle {
   def getAngle: Double
   def getPosition: (Double, Double)
   def setPosition(x: Double, y: Double): (Double, Double)
-}

@@ -120,7 +120,7 @@ object CallHandler {
   private[scalamock] val NO_MORE_THAN_TWICE = 0 to 2
 }
 
-trait Verify { self: CallHandler[_] =>
+trait Verify { self: CallHandler[?] =>
   
   private[scalamock] override def handle(call: Call) = sys.error("verify should appear after all code under test has been exercised")
   

@@ -17,7 +17,7 @@ trait MixedMockFactory extends AbstractMockFactory with MacroMock { this: TestSu
 
   object Proxy extends ProxyMockFactory {
     import org.scalamock.proxy._
-    def mock[T: ClassTag]: T with Mock = super.mock[T]
-    def stub[T: ClassTag]: T with Stub = super.stub[T]
+    def mock[T: ClassTag]: T & Mock = super.mock[T]
+    def stub[T: ClassTag]: T & Stub = super.stub[T]
   }
 }

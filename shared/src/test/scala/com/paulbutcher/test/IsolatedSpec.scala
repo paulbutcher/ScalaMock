@@ -39,5 +39,5 @@ abstract class IsolatedSpec extends AnyFlatSpec with MockFactory with Matchers w
   }
 
   // made this method mandatory to override due to https://github.com/scalatest/scalatest/issues/965
-  override def newInstance: Suite with OneInstancePerTest
+  override def newInstance: Suite & OneInstancePerTest
 }

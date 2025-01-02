@@ -44,10 +44,10 @@ class AbstractOverrideMethodTest extends AnyFlatSpec with Matchers with MockFact
 
   "ScalaTest suite" should "permit mocking classes build with stackable trait pattern" in {
     val mockedClass = mock[A]
-    (mockedClass.foo _).expects().returning(42)
-    (mockedClass.bar _).expects(*).returning(Seq("a", "b", "c"))
-    (mockedClass.baz _).expects("A", 1).returning(2)
-    (mockedClass.baz _).expects("B", 1).never()
+    ((() => mockedClass.foo())).expects().returning(42)
+    (mockedClass.bar).expects(*).returning(Seq("a", "b", "c"))
+    (mockedClass.baz).expects("A", 1).returning(2)
+    (mockedClass.baz).expects("B", 1).never()
     mockedClass.foo() shouldBe 42
     mockedClass.bar(Seq(1,2,3)) shouldBe Seq("a", "b", "c")
     mockedClass.baz("A", 1) shouldBe 2

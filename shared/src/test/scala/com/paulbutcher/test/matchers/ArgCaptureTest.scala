@@ -75,7 +75,7 @@ class ArgCaptureTest extends AnyFlatSpec with Matchers with MockFactory {
     val m = mock[TestTrait]
     val c1 = CaptureOne[Int]()
 
-    (m.oneParam _).expects(capture(c1)).once()
+    (m.oneParam).expects(capture(c1)).once()
     m.oneParam(42)
     c1.value should be (42)
   }
@@ -84,7 +84,7 @@ class ArgCaptureTest extends AnyFlatSpec with Matchers with MockFactory {
     val m = mock[TestTrait]
     val c = CaptureAll[Int]()
 
-    m.oneParam _ expects capture(c) repeat 3
+    m.oneParam `expects` capture(c) `repeat` 3
     m.oneParam(99)
     m.oneParam(17)
     m.oneParam(583)
@@ -96,7 +96,7 @@ class ArgCaptureTest extends AnyFlatSpec with Matchers with MockFactory {
     val m = mock[TestTrait]
     val c = CaptureAll[Any]()
 
-    (m.twoParams _).expects(capture(c), capture(c)).once()
+    (m.twoParams).expects(capture(c), capture(c)).once()
     m.twoParams(7, 3.0)
     c.values should be (Seq(7, 3.0))
   }

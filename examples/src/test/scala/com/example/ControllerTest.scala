@@ -37,12 +37,12 @@ class ControllerTest extends AnyFunSuite with MockFactory {
         (() => mockTurtle.getPosition).expects().returning(0.0, 0.0)
         (() => mockTurtle.getAngle).expects().returning(0.0)
       }
-      (mockTurtle.turn _).expects(~(Pi / 4))
-      (mockTurtle.forward _).expects(~sqrt(2.0))
+      (mockTurtle.turn).expects(~(Pi / 4))
+      (mockTurtle.forward).expects(~sqrt(2.0))
       (() => mockTurtle.getAngle).expects().returning(Pi / 4)
-      (mockTurtle.turn _).expects(~(-Pi / 4))
+      (mockTurtle.turn).expects(~(-Pi / 4))
       (() => mockTurtle.penDown()).expects()
-      (mockTurtle.forward _).expects(1.0)
+      (mockTurtle.forward).expects(1.0)
     }
  
     controller.drawLine((1.0, 1.0), (2.0, 1.0))

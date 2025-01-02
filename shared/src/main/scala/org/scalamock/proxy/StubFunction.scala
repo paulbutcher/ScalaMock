@@ -33,7 +33,7 @@ class StubFunction(mockContext: MockContext, name: Symbol) extends FakeFunction(
   def verifyHandler() = new VerifyHander
 
   private[proxy] class WhenHander extends ExpectationHandler {
-    override def apply(args: MockParameter[Any]*) = super.apply(args:_*).anyNumberOfTimes()
+    override def apply(args: MockParameter[Any]*) = super.apply(args*).anyNumberOfTimes()
   }
 
   private[proxy] class VerifyHander extends ExpectationHandler {

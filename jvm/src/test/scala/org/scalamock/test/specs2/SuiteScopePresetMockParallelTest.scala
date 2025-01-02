@@ -33,18 +33,18 @@ class SuiteScopePresetMockParallelTest extends Specification with IsolatedMockFa
   // please note that this test suite runs in isolated mode
 
   val mockWithExpectationsPredefined = mock[TestTrait]
-  (mockWithExpectationsPredefined.oneParamMethod _).expects(0).returning("predefined")
+  (mockWithExpectationsPredefined.oneParamMethod).expects(0).returning("predefined")
 
   "Specs2 suite" should {
     "allow to use mock defined suite scope with predefined expectations" in {
-      (mockWithExpectationsPredefined.oneParamMethod _).expects(1).returning("one")
+      (mockWithExpectationsPredefined.oneParamMethod).expects(1).returning("one")
 
       mockWithExpectationsPredefined.oneParamMethod(0) must_== "predefined"
       mockWithExpectationsPredefined.oneParamMethod(1) must_== "one"
     }
 
     "keep predefined mock expectations" in {
-      (mockWithExpectationsPredefined.oneParamMethod _).expects(2).returning("two")
+      (mockWithExpectationsPredefined.oneParamMethod).expects(2).returning("two")
 
       mockWithExpectationsPredefined.oneParamMethod(0) must_== "predefined"
       mockWithExpectationsPredefined.oneParamMethod(2) must_== "two"

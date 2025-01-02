@@ -40,7 +40,7 @@ class ConcurrencyTest extends AnyFlatSpec with MockFactory {
 
   it should "work with concurrent mock access" in {
     val m = mock[TestTrait]
-    (m.oneParamMethod _).expects(42).repeated(500000).returning("a")
+    (m.oneParamMethod).expects(42).repeated(500000).returning("a")
 
     val futures = (1 to 500000).map { _ =>
       Future { m.oneParamMethod(42) }

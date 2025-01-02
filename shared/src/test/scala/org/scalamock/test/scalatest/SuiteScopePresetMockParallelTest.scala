@@ -37,17 +37,17 @@ class SuiteScopePresetMockParallelTest extends AnyFlatSpec with Matchers with Pa
   override def newInstance = new SuiteScopePresetMockParallelTest
 
   val mockWithExpectationsPredefined = mock[TestTrait]
-  (mockWithExpectationsPredefined.oneParamMethod _).expects(0).returning("predefined")
+  (mockWithExpectationsPredefined.oneParamMethod).expects(0).returning("predefined")
 
   "ScalaTest suite" should "allow to use mock defined suite scope with predefined expectations" in {
-    (mockWithExpectationsPredefined.oneParamMethod _).expects(1).returning("one")
+    (mockWithExpectationsPredefined.oneParamMethod).expects(1).returning("one")
 
     mockWithExpectationsPredefined.oneParamMethod(0) shouldBe "predefined"
     mockWithExpectationsPredefined.oneParamMethod(1) shouldBe "one"
   }
 
   it should "keep predefined mock expectations" in {
-    (mockWithExpectationsPredefined.oneParamMethod _).expects(2).returning("two")
+    (mockWithExpectationsPredefined.oneParamMethod).expects(2).returning("two")
 
     mockWithExpectationsPredefined.oneParamMethod(0) shouldBe "predefined"
     mockWithExpectationsPredefined.oneParamMethod(2) shouldBe "two"

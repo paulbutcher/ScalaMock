@@ -23,12 +23,10 @@ package com.paulbutcher.test.matchers
 import org.scalamock.matchers.MatchAny
 import org.scalatest.flatspec.AnyFlatSpec
 
-class MatchAnyTest extends AnyFlatSpec {
+class MatchAnyTest extends AnyFlatSpec:
 
-  "MatchAny" should "match anything" in {
+  "MatchAny" should "match anything" in:
     assert(new MatchAny === 1.0)
     assert(new MatchAny === "")
     assert(new MatchAny === (0, 42))
     assert(new MatchAny === List(1, 2, 3))
-  }
-}

@@ -34,8 +34,8 @@ class BasicTest extends AnyFlatSpec with Matchers with MockFactory {
 
   "ScalaTest suite" should "allow to use mock defined in test case scope" in {
     val mockedTrait = mock[TestTrait]
-    (mockedTrait.oneParamMethod _).expects(1).returning("one")
-    (mockedTrait.oneParamMethod _).expects(2).returning("two")
+    (mockedTrait.oneParamMethod).expects(1).returning("one")
+    (mockedTrait.oneParamMethod).expects(2).returning("two")
     (() => mockedTrait.noParamMethod()).expects().returning("yey")
 
     mockedTrait.oneParamMethod(1) shouldBe "one"
@@ -45,7 +45,7 @@ class BasicTest extends AnyFlatSpec with Matchers with MockFactory {
 
   it should "use separate call logs for each test case" in {
     val mockedTrait = mock[TestTrait]
-    (mockedTrait.oneParamMethod _).expects(3).returning("three")
+    (mockedTrait.oneParamMethod).expects(3).returning("three")
 
      mockedTrait.oneParamMethod(3) shouldBe "three"
   }

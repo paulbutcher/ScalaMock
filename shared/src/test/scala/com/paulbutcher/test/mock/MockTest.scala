@@ -59,7 +59,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
     "allow expectations to be set" in {
       withExpectations {
         val m = mock[TestTrait]
-        (m.twoParams _).expects(42, 1.23).returning("a return value")
+        (m.twoParams).expects(42, 1.23).returning("a return value")
         assertResult("a return value") { m.twoParams(42, 1.23) }
       }
     }
@@ -67,7 +67,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
     "fail if a non-matching method call is made" in {
       withExpectations {
         val m = mock[TestTrait]
-        (m.twoParams _).expects(42, 1.23)
+        (m.twoParams).expects(42, 1.23)
         intercept[ExpectationException] { m.twoParams(1, 1.0) }
         m.twoParams(42, 1.23)
       }
@@ -86,7 +86,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
         val m1 = mock[TestTrait]
         val m2 = mock[TestTrait]
         val m3 = mock[TestTrait]
-        (m1.+ _).expects(m2).returning(m3)
+        (m1.+).expects(m2).returning(m3)
         assertResult(m3) { m1 + m2 }
       }
     }
@@ -95,7 +95,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
       withExpectations {
         val m = mock[TestTrait]
         (m.curried(_: Int)(_: Double)).expects(10, 1.23).returning("curried method called")
-        val partial = m.curried(10) _
+        val partial = m.curried(10)
         assertResult("curried method called") { partial(1.23) }
       }
     }
@@ -122,7 +122,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
     "cope with parameters of polymorphic type" in {
       withExpectations {
         val m = mock[TestTrait]
-        (m.polymorphicParam _).expects((42, 1.23)).returning("it works")
+        (m.polymorphicParam).expects((42, 1.23)).returning("it works")
         assertResult("it works") { m.polymorphicParam((42, 1.23)) }
       }
     }
@@ -130,7 +130,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
     "cope with methods with repeated parameters" in {
       withExpectations {
         val m = mock[TestTrait]
-        (m.repeatedParam _).expects(42, Seq("foo", "bar"))
+        (m.repeatedParam).expects(42, Seq("foo", "bar"))
         m.repeatedParam(42, "foo", "bar")
       }
     }
@@ -143,13 +143,13 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
       withExpectations {
         val m = mock[ClassWithSeqTParam]
 
-        (m.run _).expects(Seq(1, 2, 3)).returning(100)
+        (m.run).expects(Seq(1, 2, 3)).returning(100)
         assertResult(100) { m.run(Seq(1, 2, 3)) }
 
-        (m.run _).expects(*).returning(200)
+        (m.run).expects(*).returning(200)
         assertResult(200) { m.run(Seq(5, 55)) }
 
-        (m.run _).expects(Seq()).returning(300)
+        (m.run).expects(Seq()).returning(300)
         assertResult(300) { m.run(Seq.empty) }
       }
     }
@@ -167,7 +167,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
       withExpectations {
         val m = mock[TestTrait]
         val x = new SomeOtherClass
-        (m.referencesSomeOtherPackage _).expects(x).returning(x)
+        (m.referencesSomeOtherPackage).expects(x).returning(x)
         assertResult(x) { m.referencesSomeOtherPackage(x) }
       }
     }
@@ -185,7 +185,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
       withExpectations {
         val m = mock[TestTrait]
         val x = new yet.another.pkg.YetAnotherClass
-        (m.explicitPackageReference _).expects(x).returning(x)
+        (m.explicitPackageReference).expects(x).returning(x)
         assertResult(x) { m.explicitPackageReference(x) }
       }
     }
@@ -217,7 +217,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
         }
 
         val m = mock[Foo]
-        (m.bar(_: Int)(_: Seq[_])).expects(42, Seq("1", "2")).returning("baz").once()
+        (m.bar(_: Int)(_: Seq[?])).expects(42, Seq("1", "2")).returning("baz").once()
         m.bar(42)("1", "2") === "baz"
       }
     }
@@ -247,7 +247,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
     "cope with non-abstract methods" in {
       withExpectations {
         val m = mock[TestTrait]
-        (m.withImplementation _).expects(42).returning(1234)
+        (m.withImplementation).expects(42).returning(1234)
         assertResult(1234) { m.withImplementation(42) }
       }
     }
@@ -292,7 +292,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
     "cope with upper bounds" in {
       withExpectations {
         val m = mock[TestTrait]
-        (m.upperBound _).expects((42, "foo")).returning(2)
+        (m.upperBound).expects((42, "foo")).returning(2)
         assertResult(2) { m.upperBound((42, "foo")) }
       }
     }
@@ -300,7 +300,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
     "cope with lower bounds" in {
       withExpectations {
         val m = mock[TestTrait]
-        (m.lowerBound _).expects((1, 2), List[Product]()).returning("it works")
+        (m.lowerBound).expects((1, 2), List[Product]()).returning("it works")
         assertResult("it works") { m.lowerBound((1, 2), List[Product]()) }
       }
     }
@@ -308,7 +308,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
     "mock a polymorphic trait" in {
       withExpectations {
         val m = mock[PolymorphicTrait[String]]
-        (m.method[Double] _).expects(42, "foo", 1.23).returning("a return value")
+        (m.method[Double]).expects(42, "foo", 1.23).returning("a return value")
         assertResult("a return value") { m.method(42, "foo", 1.23) }
       }
     }
@@ -319,8 +319,8 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
         val e = mock[m.Embedded[Double]]
         val o = mock[m.ATrait[String, Double]]
         val i = mock[e.ATrait[String, Double]]
-        (e.innerTrait _).expects("foo", 1.23).returning(i)
-        (e.outerTrait _).expects("bar", 4.56).returning(o)
+        (e.innerTrait).expects("foo", 1.23).returning(i)
+        (e.outerTrait).expects("bar", 4.56).returning(o)
         assertResult(o) { e.outerTrait("bar", 4.56) }
         assertResult(i) { e.innerTrait("foo", 1.23) }
       }
@@ -329,7 +329,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
     "mock a class" in {
       withExpectations {
         val m = mock[TestClass]
-        (m.m _).expects(42, "foo").returning((123, "bar"))
+        (m.m).expects(42, "foo").returning((123, "bar"))
         assertResult((123, "bar")) { m.m(42, "foo") }
       }
     }
@@ -337,7 +337,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
     "mock a specialized class [Int]" in {
       withExpectations {
         val m1x1 = mock[SpecializedClass[Int]]
-        (m1x1.identity _).expects(42).returning(43)
+        (m1x1.identity).expects(42).returning(43)
         assertResult(43) {
           m1x1.identity(42)
         }
@@ -347,12 +347,12 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
     "mock a specialized class [Int,String]" in {
       withExpectations {
         val m1x2 = mock[SpecializedClass2[Int,String]]
-        (m1x2.identity2 _).expects(42,"43").returning((44,"45"))
+        (m1x2.identity2).expects(42,"43").returning((44,"45"))
         assertResult((44,"45")) {
           m1x2.identity2(42,"43")
         }
 
-        (m1x2.identity _).expects(42).returning(43)
+        (m1x2.identity).expects(42).returning(43)
         assertResult(43) {
           m1x2.identity(42)
         }
@@ -362,12 +362,12 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
     "mock a specialized class [Int,Int]" in {
       withExpectations {
         val m1x3 = mock[SpecializedClass2[Int,Int]]
-        (m1x3.identity2 _).expects(42,43).returning((44,45))
+        (m1x3.identity2).expects(42,43).returning((44,45))
         assertResult((44,45)) {
           m1x3.identity2(42,43)
         }
 
-        (m1x3.identity _).expects(42).returning(43)
+        (m1x3.identity).expects(42).returning(43)
         assertResult(43) {
           m1x3.identity(42)
         }
@@ -377,7 +377,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
     "mock a specialized class [String]" in {
       withExpectations {
         val m1x5 = mock[SpecializedClass[String]]
-        (m1x5.identity _).expects("one").returning("four")
+        (m1x5.identity).expects("one").returning("four")
         assertResult("four") { m1x5.identity("one") }
       }
     }
@@ -385,7 +385,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
     "mock a specialized class [List[String]]" in {
       withExpectations {
         val m2 = mock[SpecializedClass[List[String]]]
-        (m2.identity _).expects(List("one", "two", "three")).returning(List("four", "five", "six"))
+        (m2.identity).expects(List("one", "two", "three")).returning(List("four", "five", "six"))
         assertResult(List("four", "five", "six")) { m2.identity(List("one", "two", "three")) }
       }
     }
@@ -393,14 +393,14 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
     "allow to be declared as var" in { // test for issue #62
       withExpectations {
         var m = mock[TestTrait]
-        (m.oneParam _).expects(42).returning("foo")
+        m.oneParam.expects(42).returning("foo")
         assertResult("foo") { m.oneParam(42) }
       }
     }
 
     "mock Function1[A, B] trait" in withExpectations { // test for issue #69
       val f = mock[Function1[Any, Boolean]]
-      (f.apply _).expects(*).returning(true)
+      (f.apply).expects(*).returning(true)
       f("this is something") shouldBe true
     }
 
@@ -413,8 +413,8 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
 
       val provider = mock[DataProviderComponent]
 
-      (provider.find[User](_: Int)(_: ClassTag[User])) expects (13, *) returning (Failure[User](new Exception()))
-      provider.find[User](13) shouldBe a[Failure[_]]
+      (provider.find[User](_: Int)(using _: ClassTag[User])) `expects` (13, *) `returning` (Failure[User](new Exception()))
+      provider.find[User](13) shouldBe a[Failure[?]]
     }
 
 
@@ -445,7 +445,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
       }
 
       val m = mock[FinalMethodTrait]  //test will not compile if the test fails (cannot override final member)
-      (m.somePublicMethod _).expects(*).anyNumberOfTimes()
+      (m.somePublicMethod).expects(*).anyNumberOfTimes()
       // next line will cause a runtime error and is not valid
       // m.someFinalMethod _ expects * anyNumberOfTimes()
     }
@@ -459,7 +459,7 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
       }
 
       val m = mock[FooTrait]
-      (m.somePublicMethod _).expects(*).anyNumberOfTimes()
+      (m.somePublicMethod).expects(*).anyNumberOfTimes()
       // next lines will cause a runtime error and are not valid
       // m.privateMethod _ expects() anyNumberOfTimes()
       // m.protectedMethod _ expects() anyNumberOfTimes()
@@ -469,10 +469,10 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
       val m = mock[TestTrait]
 
       inAnyOrderWithLogging {
-        (m.oneParam _).expects(*).twice()
+        (m.oneParam).expects(*).twice()
       }
       inSequenceWithLogging {
-        (m.twoParams _).expects(*, *).once()
+        (m.twoParams).expects(*, *).once()
         (m.overloaded(_: Int)).expects(*).once()
       }
       m.oneParam(5)

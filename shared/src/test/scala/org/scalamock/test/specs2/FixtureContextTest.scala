@@ -38,7 +38,7 @@ class FixtureContextTest extends Specification {
   }
 
   trait TestSetupWithExpectationsPredefined extends TestSetup {
-    (mockedTrait.oneParamMethod _).expects(input).returning(output)
+    (mockedTrait.oneParamMethod).expects(input).returning(output)
   }
 
   trait TestSetupWithHandlerCalledDuringInitialization extends TestSetupWithExpectationsPredefined {
@@ -47,22 +47,22 @@ class FixtureContextTest extends Specification {
 
   "Specs2 suite" should {
     "allow to use mock defined in fixture-context" in new TestSetup {
-      (mockedTrait.oneParamMethod _).expects(input).returning(output)
-      (mockedTrait.oneParamMethod _).expects(2).returning("two")
+      (mockedTrait.oneParamMethod).expects(input).returning(output)
+      (mockedTrait.oneParamMethod).expects(2).returning("two")
 
       mockedTrait.oneParamMethod(input) must_== output
       mockedTrait.oneParamMethod(2) must_== "two"
     }
 
     "allow to use mock defined in fixture-context with expectations predefined" in new TestSetupWithExpectationsPredefined {
-      (mockedTrait.oneParamMethod _).expects(2).returning("two")
+      (mockedTrait.oneParamMethod).expects(2).returning("two")
 
       mockedTrait.oneParamMethod(input) must_== output
       mockedTrait.oneParamMethod(2) must_== "two"
     }
 
     "allow mock defined in fixture-context to be used during context initialization" in new TestSetupWithHandlerCalledDuringInitialization {
-      (mockedTrait.oneParamMethod _).expects(2).returning("two")
+      (mockedTrait.oneParamMethod).expects(2).returning("two")
 
       mockedTrait.oneParamMethod(2) must_== "two"
     }

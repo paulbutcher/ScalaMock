@@ -52,7 +52,7 @@ class ErrorReportingTest extends AnyFlatSpec with Matchers with TestSuiteRunner 
     class TestedSuite extends AnyFunSuite with MockFactory {
       test("execute block of code") {
         val mockedTrait = mock[TestTrait]
-        (mockedTrait.oneParamMethod _).expects(1).returning("one")
+        (mockedTrait.oneParamMethod).expects(1).returning("one")
         mockedTrait.oneParamMethod(3)
       }
     }
@@ -67,7 +67,7 @@ class ErrorReportingTest extends AnyFlatSpec with Matchers with TestSuiteRunner 
     class TestedSuite extends AnyFunSuite with MockFactory {
       test("execute block of code") {
         val mockedTrait = mock[TestTrait]
-        (mockedTrait.oneParamMethod _).expects(1).returning("one")
+        (mockedTrait.oneParamMethod).expects(1).returning("one")
         throw new NullPointerException;
       }
     }
@@ -83,7 +83,7 @@ class ErrorReportingTest extends AnyFlatSpec with Matchers with TestSuiteRunner 
         val mockA = mock[TestTrait]
         val mockB = mock[TestTrait]
 
-        (mockA.oneParamMethod _).expects(3)
+        (mockA.oneParamMethod).expects(3)
         mockB.oneParamMethod(3)
       }
     }
@@ -110,7 +110,7 @@ class ErrorReportingTest extends AnyFlatSpec with Matchers with TestSuiteRunner 
 
       test("execute block of code") {
         val mockedTrait = mock[TestTrait]
-        (mockedTrait.polymorphicMethod _).expects(List(1)).returning("one")
+        (mockedTrait.polymorphicMethod).expects(List(1)).returning("one")
 
         suiteScopeMock.noParamMethod()
         mockedTrait.oneParamMethod(3)

@@ -26,21 +26,26 @@ private[scalamock] class UnorderedHandlers(logging: Boolean = false) extends Han
   
   def handle(call: Call): Option[Any] = this.synchronized {
     if (logging) println(s"handling unordered call $call")
-    for (handler <- handlers) {
-      val r = handler.handle(call)
-      if (r.isDefined)
-        return r
+    util.boundary {
+      for (handler <- handlers) {
+        val r = handler.handle(call)
+        if (r.isDefined)
+          util.boundary.break(r)
+      }
+      None
     }
-    None
+
   }
   
   def verify(call: Call): Boolean = this.synchronized {
     if (logging) println(s"verifying unordered call $call")
-    for (handler <- handlers) {
-      if (handler.verify(call))
-        return true
+    util.boundary {
+      for (handler <- handlers) {
+        if (handler.verify(call))
+          util.boundary.break(true)
+      }
+      false
     }
-    false
   }
   
   protected val prefix = "inAnyOrder"

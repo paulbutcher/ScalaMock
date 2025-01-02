@@ -27,7 +27,7 @@ class JavaMocksTest extends IsolatedSpec {
 
   it should "mock Java generics" in {
     val m = mock[JavaGenericInterface[Int]]
-    (m.simpleMethod _) expects ("two") returning 42
+    (m.simpleMethod) `expects` ("two") `returning` 42
 
     m.simpleMethod("two") shouldBe 42
   }
@@ -36,8 +36,8 @@ class JavaMocksTest extends IsolatedSpec {
       class JavaClassWithBridgeMethodExtended extends JavaClassWithBridgeMethod
       val m = mock[JavaClassWithBridgeMethodExtended]
   
-      (m.compare _).expects(Integer.valueOf(5)).returning(1)
-      (m.compare _).expects(Integer.valueOf(6)).returning(2)
+      (m.compare).expects(Integer.valueOf(5)).returning(1)
+      (m.compare).expects(Integer.valueOf(6)).returning(2)
   
       def useBridgeMethod[T](gen: JavaGenericInterface[T], x: T) = {
         gen.compare(x)
@@ -58,20 +58,20 @@ class JavaMocksTest extends IsolatedSpec {
 
   it should "mock a Java interface" in {
     val m = mock[JavaInterface]
-    (m.m _).expects(42, "foo").returning("a return value")
+    (m.m).expects(42, "foo").returning("a return value")
     assertResult("a return value") { m.m(42, "foo") }
   }
 
     it should "mock a Polymorhpic Java interface" in { // test for issue #24
       val m = mock[PolymorphicJavaInterface]
-      (m.simplePolymorphicMethod _).expects("foo").returning(44)
+      (m.simplePolymorphicMethod).expects("foo").returning(44)
       assertResult(44) { m.simplePolymorphicMethod[Int]("foo") }
     }
 
   it should "mock a Polymorhpic Java interface (type parametrized method parameter)" in {
     val m = mock[PolymorphicJavaInterface]
     val arg = new java.util.ArrayList[String]
-    (m.polymorphicMethod[String] _).expects(arg).returning("foo")
+    (m.polymorphicMethod[String]).expects(arg).returning("foo")
 
     m.polymorphicMethod(arg) shouldBe "foo"
   }

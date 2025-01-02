@@ -31,24 +31,21 @@ import org.scalatest.matchers.should.Matchers
  *
  *  Test for issue #35
  */
-class SuiteScopeProxyMockTest extends AnyFlatSpec with Matchers with OneInstancePerTest with MockFactory {
+class SuiteScopeProxyMockTest extends AnyFlatSpec with Matchers with OneInstancePerTest with MockFactory:
   // please note that this test suite mixes in OneInstancePerTest trait
 
   override def newInstance = new SuiteScopeProxyMockTest
 
   val mockWithoutExpectationsPredefined = mock[TestTrait]
 
-  "ScalaTest suite" should "allow to use mock defined suite scope" in {
+  "ScalaTest suite" should "allow to use mock defined suite scope" in:
     mockWithoutExpectationsPredefined.expects(Symbol("oneParamMethod"))(1).returning("one")
     mockWithoutExpectationsPredefined.expects(Symbol("oneParamMethod"))(2).returning("two")
 
     mockWithoutExpectationsPredefined.oneParamMethod(1) shouldBe "one"
     mockWithoutExpectationsPredefined.oneParamMethod(2) shouldBe "two"
-  }
 
-  it should "allow to use mock defined suite scope in more than one test case" in {
+  it should "allow to use mock defined suite scope in more than one test case" in:
     mockWithoutExpectationsPredefined.expects(Symbol("oneParamMethod"))(3).returning("three")
 
     mockWithoutExpectationsPredefined.oneParamMethod(3) shouldBe "three"
-  }
-}

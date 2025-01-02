@@ -20,16 +20,13 @@
 
 package com.example
 
-class Order(product: String, quantity: Int) {
+class Order(product: String, quantity: Int):
   
-  def fill(warehouse: Warehouse): Unit = {
-    if (warehouse.hasInventory(product, quantity)) {
+  def fill(warehouse: Warehouse): Unit =
+    if warehouse.hasInventory(product, quantity) then
       warehouse.remove(product, quantity)
       filled = true
-    }
-  }
   
   def isFilled = filled
   
   private var filled = false
-}
