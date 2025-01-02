@@ -34,7 +34,7 @@ class MockParameter[T] protected (private[scalamock] val value: AnyRef, dummy: B
 
   override def hashCode() = value.##
 
-  override def equals(that: Any) = value equals that
+  override def equals(that: Any) = value `equals` that
 
   override def toString = value.toString
 }

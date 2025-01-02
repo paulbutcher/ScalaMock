@@ -33,10 +33,10 @@ class OverloadedMethodsTest extends IsolatedSpec {
     }
 
     val fooMock = mock[Foo]
-    (fooMock.overloaded[Double] _) expects (1.0) returning "one"
+    (fooMock.overloaded[Double]) `expects` (1.0) `returning` "one"
     fooMock.overloaded(1.0) shouldBe "one"
 
-    (fooMock.overloaded(_: String)) expects ("2") returning "two"
+    (fooMock.overloaded(_: String)) `expects` ("2") `returning` "two"
     fooMock.overloaded("2") shouldBe "two"
   }
 
@@ -48,10 +48,10 @@ class OverloadedMethodsTest extends IsolatedSpec {
 
     val fooMock = mock[Foo]
 
-    (fooMock.overloaded[Double]: Double => String) expects (1.0) returning "one"
+    (fooMock.overloaded[Double]: Double => String) `expects` (1.0) `returning` "one"
     fooMock.overloaded(1.0) shouldBe "one"
 
-    (fooMock.overloaded[Double]: (Double, String) => String).expects(2.0, "foo") returning "two"
+    (fooMock.overloaded[Double]: (Double, String) => String).expects(2.0, "foo") `returning` "two"
     fooMock.overloaded(2.0, "foo") shouldBe "two"
   }
 
@@ -63,10 +63,10 @@ class OverloadedMethodsTest extends IsolatedSpec {
 
     val fooMock = mock[Foo]
 
-    (fooMock.overloaded[Double]: Double => String) expects (1.0) returning "one"
+    (fooMock.overloaded[Double]: Double => String) `expects` (1.0) `returning` "one"
     fooMock.overloaded(1.0) shouldBe "one"
 
-    (fooMock.overloaded[Double, String]: (Double, String) => String).expects(2.0, "foo") returning "two"
+    (fooMock.overloaded[Double, String]: (Double, String) => String).expects(2.0, "foo") `returning` "two"
     fooMock.overloaded(2.0, "foo") shouldBe "two"
   }
 
@@ -78,10 +78,10 @@ class OverloadedMethodsTest extends IsolatedSpec {
 
     val fooMock = mock[Foo]
 
-    (fooMock.overloaded[Double]: (Double, String) => String) expects (1.0, "foo") returning "one"
+    (fooMock.overloaded[Double]: (Double, String) => String) `expects` (1.0, "foo") `returning` "one"
     fooMock.overloaded(1.0, "foo") shouldBe "one"
 
-    (fooMock.overloaded[String, Double]: (String, Double) => String).expects("foo", 2.0) returning "two"
+    (fooMock.overloaded[String, Double]: (String, Double) => String).expects("foo", 2.0) `returning` "two"
     fooMock.overloaded("foo", 2.0) shouldBe "two"
   }
 
@@ -95,14 +95,14 @@ class OverloadedMethodsTest extends IsolatedSpec {
 
   they should "cope with polymorphic overloaded methods" in {
     val m = mock[TestTrait]
-    (m.overloaded[Double] _).expects(1.23).returning("polymorphic method called")
+    (m.overloaded[Double]).expects(1.23).returning("polymorphic method called")
     assertResult("polymorphic method called") { m.overloaded(1.23) }
   }
 
   they should "choose between polymorphic and non-polymorphic overloaded methods correctly" in {
     val m = mock[TestTrait]
     (m.overloaded(_: Int)).expects(42).returning("non-polymorphic called")
-    (m.overloaded[Int] _).expects(42).returning("polymorphic called")
+    (m.overloaded[Int]).expects(42).returning("polymorphic called")
     assertResult("non-polymorphic called") { m.overloaded(42) }
     assertResult("polymorphic called") { m.overloaded[Int](42) }
   }
@@ -112,7 +112,7 @@ class OverloadedMethodsTest extends IsolatedSpec {
     class MockablePrintStream extends PrintStream(mock[OutputStream], false)
 
     val m = mock[MockablePrintStream]
-    (m.print(_: String)) expects ("foo")
+    (m.print(_: String)) `expects` ("foo")
     m.print("foo")
   }
 
@@ -130,7 +130,7 @@ class OverloadedMethodsTest extends IsolatedSpec {
     }
 
     val m = mock[Foo]
-    (m.foo()(_: ConcreteType)) expects (*)
+    (m.foo()(_: ConcreteType)) `expects` (*)
 
     m.foo()(new ConcreteType())
   }

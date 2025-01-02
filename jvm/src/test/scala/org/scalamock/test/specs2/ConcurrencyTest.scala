@@ -39,7 +39,7 @@ class ConcurrencyTest extends Specification with IsolatedMockFactory {
 
   "Concurrent mock access should work" in {
     val m = mock[TestTrait]
-    (m.oneParamMethod _).expects(42).repeated(500000).returning("a")
+    (m.oneParamMethod).expects(42).repeated(500000).returning("a")
 
     val futures = (1 to 500000).map { _ =>
       Future { m.oneParamMethod(42) }
@@ -62,8 +62,8 @@ class ConcurrencyTest extends Specification with IsolatedMockFactory {
     s"Concurrent mock access should work ($i)" in {
       val len = 500
       val args = (0 to len).toList
-      (m1.otherMethod _).when().returns("ok")
-      args.foreach(i => (m1.oneParamMethod _).when(MyClass(i)).returns(i.toString))
+      ((() => m1.otherMethod())).when().returns("ok")
+      args.foreach(i => (m1.oneParamMethod).when(MyClass(i)).returns(i.toString))
 
       val futures = args.map { i =>
         Future {
@@ -85,7 +85,7 @@ class ConcurrencyTest extends Specification with IsolatedMockFactory {
 
       eventually {
         (1 to len).foreach { i =>
-          (m1.oneParamMethod _).verify(MyClass(i)).atLeastOnce()
+          (m1.oneParamMethod).verify(MyClass(i)).atLeastOnce()
         }
         success
       }

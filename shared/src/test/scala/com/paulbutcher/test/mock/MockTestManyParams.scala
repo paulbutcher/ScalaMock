@@ -33,140 +33,140 @@ class MockTestManyParams extends AnyFreeSpec with MockFactory with Matchers {
     "mock a trait containing method with many params" in withExpectations {
       val m = mock[ManyParamsTrait]
 
-      (m.methodWith1Ints _).expects(1).returning(99)
+      (m.methodWith1Ints).expects(1).returning(99)
       assertResult(99) { m.methodWith1Ints(1)}
 
-      (m.methodWith2Ints _).expects(1,1).returning(98)
+      (m.methodWith2Ints).expects(1,1).returning(98)
       assertResult(98) { m.methodWith2Ints(1,1)}
 
-      (m.methodWith3Ints _).expects(1,1,1).returning(97)
+      (m.methodWith3Ints).expects(1,1,1).returning(97)
       assertResult(97) { m.methodWith3Ints(1,1,1)}
 
-      (m.methodWith4Ints _).expects(1,1,1,1).returning(96)
+      (m.methodWith4Ints).expects(1,1,1,1).returning(96)
       assertResult(96) { m.methodWith4Ints(1,1,1,1)}
 
-      (m.methodWith5Ints _).expects(1,1,1,1,1).returning(95)
+      (m.methodWith5Ints).expects(1,1,1,1,1).returning(95)
       assertResult(95) { m.methodWith5Ints(1,1,1,1,1)}
 
-      (m.methodWith6Ints _).expects(1,1,1,1,1,1).returning(94)
+      (m.methodWith6Ints).expects(1,1,1,1,1,1).returning(94)
       assertResult(94) { m.methodWith6Ints(1,1,1,1,1,1)}
 
-      (m.methodWith7Ints _).expects(1,1,1,1,1,1,1).returning(93)
+      (m.methodWith7Ints).expects(1,1,1,1,1,1,1).returning(93)
       assertResult(93) { m.methodWith7Ints(1,1,1,1,1,1,1)}
 
-      (m.methodWith8Ints _).expects(1,1,1,1,1,1,1,1).returning(92)
+      (m.methodWith8Ints).expects(1,1,1,1,1,1,1,1).returning(92)
       assertResult(92) { m.methodWith8Ints(1,1,1,1,1,1,1,1)}
 
-      (m.methodWith9Ints _).expects(1,1,1,1,1,1,1,1,1).returning(91)
+      (m.methodWith9Ints).expects(1,1,1,1,1,1,1,1,1).returning(91)
       assertResult(91) { m.methodWith9Ints(1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith10Ints _).expects(1,1,1,1,1,1,1,1,1,1).returning(90)
+      (m.methodWith10Ints).expects(1,1,1,1,1,1,1,1,1,1).returning(90)
       assertResult(90) { m.methodWith10Ints(1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith11Ints _).expects(1,1,1,1,1,1,1,1,1,1,1).returning(89)
+      (m.methodWith11Ints).expects(1,1,1,1,1,1,1,1,1,1,1).returning(89)
       assertResult(89) { m.methodWith11Ints(1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith12Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1).returning(88)
+      (m.methodWith12Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1).returning(88)
       assertResult(88) { m.methodWith12Ints(1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith13Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1).returning(87)
+      (m.methodWith13Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1).returning(87)
       assertResult(87) { m.methodWith13Ints(1,1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith14Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(86)
+      (m.methodWith14Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(86)
       assertResult(86) { m.methodWith14Ints(1,1,1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith15Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(85)
+      (m.methodWith15Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(85)
       assertResult(85) { m.methodWith15Ints(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith16Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(84)
+      (m.methodWith16Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(84)
       assertResult(84) { m.methodWith16Ints(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith17Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(83)
+      (m.methodWith17Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(83)
       assertResult(83) { m.methodWith17Ints(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith18Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(82)
+      (m.methodWith18Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(82)
       assertResult(82) { m.methodWith18Ints(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith19Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(81)
+      (m.methodWith19Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(81)
       assertResult(81) { m.methodWith19Ints(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith20Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(80)
+      (m.methodWith20Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(80)
       assertResult(80) { m.methodWith20Ints(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith21Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(79)
+      (m.methodWith21Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(79)
       assertResult(79) { m.methodWith21Ints(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith22Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(78)
+      (m.methodWith22Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(78)
       assertResult(78) { m.methodWith22Ints(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)}
     }
 
     "mock a class containing method with many params" in withExpectations {
       val m = mock[ManyParamsClass]
 
-      (m.methodWith1Ints _).expects(1).returning(99)
+      (m.methodWith1Ints).expects(1).returning(99)
       assertResult(99) { m.methodWith1Ints(1)}
 
-      (m.methodWith2Ints _).expects(1,1).returning(98)
+      (m.methodWith2Ints).expects(1,1).returning(98)
       assertResult(98) { m.methodWith2Ints(1,1)}
 
-      (m.methodWith3Ints _).expects(1,1,1).returning(97)
+      (m.methodWith3Ints).expects(1,1,1).returning(97)
       assertResult(97) { m.methodWith3Ints(1,1,1)}
 
-      (m.methodWith4Ints _).expects(1,1,1,1).returning(96)
+      (m.methodWith4Ints).expects(1,1,1,1).returning(96)
       assertResult(96) { m.methodWith4Ints(1,1,1,1)}
 
-      (m.methodWith5Ints _).expects(1,1,1,1,1).returning(95)
+      (m.methodWith5Ints).expects(1,1,1,1,1).returning(95)
       assertResult(95) { m.methodWith5Ints(1,1,1,1,1)}
 
-      (m.methodWith6Ints _).expects(1,1,1,1,1,1).returning(94)
+      (m.methodWith6Ints).expects(1,1,1,1,1,1).returning(94)
       assertResult(94) { m.methodWith6Ints(1,1,1,1,1,1)}
 
-      (m.methodWith7Ints _).expects(1,1,1,1,1,1,1).returning(93)
+      (m.methodWith7Ints).expects(1,1,1,1,1,1,1).returning(93)
       assertResult(93) { m.methodWith7Ints(1,1,1,1,1,1,1)}
 
-      (m.methodWith8Ints _).expects(1,1,1,1,1,1,1,1).returning(92)
+      (m.methodWith8Ints).expects(1,1,1,1,1,1,1,1).returning(92)
       assertResult(92) { m.methodWith8Ints(1,1,1,1,1,1,1,1)}
 
-      (m.methodWith9Ints _).expects(1,1,1,1,1,1,1,1,1).returning(91)
+      (m.methodWith9Ints).expects(1,1,1,1,1,1,1,1,1).returning(91)
       assertResult(91) { m.methodWith9Ints(1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith10Ints _).expects(1,1,1,1,1,1,1,1,1,1).returning(90)
+      (m.methodWith10Ints).expects(1,1,1,1,1,1,1,1,1,1).returning(90)
       assertResult(90) { m.methodWith10Ints(1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith11Ints _).expects(1,1,1,1,1,1,1,1,1,1,1).returning(89)
+      (m.methodWith11Ints).expects(1,1,1,1,1,1,1,1,1,1,1).returning(89)
       assertResult(89) { m.methodWith11Ints(1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith12Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1).returning(88)
+      (m.methodWith12Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1).returning(88)
       assertResult(88) { m.methodWith12Ints(1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith13Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1).returning(87)
+      (m.methodWith13Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1).returning(87)
       assertResult(87) { m.methodWith13Ints(1,1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith14Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(86)
+      (m.methodWith14Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(86)
       assertResult(86) { m.methodWith14Ints(1,1,1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith15Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(85)
+      (m.methodWith15Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(85)
       assertResult(85) { m.methodWith15Ints(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith16Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(84)
+      (m.methodWith16Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(84)
       assertResult(84) { m.methodWith16Ints(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith17Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(83)
+      (m.methodWith17Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(83)
       assertResult(83) { m.methodWith17Ints(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith18Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(82)
+      (m.methodWith18Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(82)
       assertResult(82) { m.methodWith18Ints(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith19Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(81)
+      (m.methodWith19Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(81)
       assertResult(81) { m.methodWith19Ints(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith20Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(80)
+      (m.methodWith20Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(80)
       assertResult(80) { m.methodWith20Ints(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith21Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(79)
+      (m.methodWith21Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(79)
       assertResult(79) { m.methodWith21Ints(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)}
 
-      (m.methodWith22Ints _).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(78)
+      (m.methodWith22Ints).expects(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1).returning(78)
       assertResult(78) { m.methodWith22Ints(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1)}
     }
   }

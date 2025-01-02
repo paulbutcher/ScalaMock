@@ -44,11 +44,11 @@ class ControllerTest extends AnyFunSuite with MockFactory {
     controller.drawLine((1.0, 1.0), (2.0, 1.0))
     
     inSequence {
-      (mockTurtle.turn _).verify(~(Pi / 4))
-      (mockTurtle.forward _).verify(~sqrt(2.0))
-      (mockTurtle.turn _).verify(~(-Pi / 4))
+      (mockTurtle.turn).verify(~(Pi / 4))
+      (mockTurtle.forward).verify(~sqrt(2.0))
+      (mockTurtle.turn).verify(~(-Pi / 4))
       (() => mockTurtle.penDown()).verify()
-      (mockTurtle.forward _).verify(1.0)
+      (mockTurtle.forward).verify(1.0)
     }
   }
 }

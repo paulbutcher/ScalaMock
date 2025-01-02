@@ -24,15 +24,13 @@ import org.scalamock.scalatest.MockFactory
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class ArgThatTest extends AnyFlatSpec with Matchers with MockFactory {
+class ArgThatTest extends AnyFlatSpec with Matchers with MockFactory:
 
   behavior of "ArgThat"
 
-  it should "check predicate while matching arguments" in {
+  it should "check predicate while matching arguments" in:
     val startsWithPredicate = argThat((x: String) => x.startsWith("A"))
     startsWithPredicate.equals("Alice") shouldBe true
     startsWithPredicate.equals("Anna") shouldBe true
     startsWithPredicate.equals("Bob") shouldBe false
     intercept[ClassCastException] { startsWithPredicate.equals(55) } // 55 is not a String
-  }
-}

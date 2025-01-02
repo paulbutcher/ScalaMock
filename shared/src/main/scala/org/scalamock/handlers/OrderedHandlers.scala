@@ -26,16 +26,16 @@ private[scalamock] class OrderedHandlers(logging: Boolean = false) extends Handl
   
   val handleFn = new Function1[Call, Option[Any]] {
     
-    def apply(call: Call): Option[Any] = {
+    def apply(call: Call): Option[Any] = util.boundary {
       for (i <- currentIndex until handlers.length) {
         val handler = handlers(i)
         val r = handler.handle(call)
         if (r.isDefined) {
           currentIndex = i
-          return r
+          util.boundary.break(r)
         }
         if (!handler.isSatisfied)
-          return None
+          util.boundary.break(None)
       }
       None
     }
@@ -50,12 +50,12 @@ private[scalamock] class OrderedHandlers(logging: Boolean = false) extends Handl
   
   val verifyFn = new Function1[Call, Boolean] {
     
-    def apply(call: Call): Boolean = {
+    def apply(call: Call): Boolean = util.boundary {
       for (i <- currentIndex until handlers.length) {
         val handler = handlers(i)
         if (handler.verify(call)) {
           currentIndex = i
-          return true
+          util.boundary.break(true)
         }
       }
       false

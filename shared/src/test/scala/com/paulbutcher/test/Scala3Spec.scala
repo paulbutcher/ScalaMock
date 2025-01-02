@@ -24,7 +24,7 @@ class Scala3Spec extends AnyFunSpec with MockFactory with Matchers {
 
     val m = mock[Test]
 
-    (m.method _).expects(*, *).returns(0)
+    (m.method).expects(*, *).returns(0)
     m.method(1, new A with B) shouldBe 0
   }
 
@@ -42,7 +42,7 @@ class Scala3Spec extends AnyFunSpec with MockFactory with Matchers {
 
     val obj = new B with C {}
 
-    (m.methodWithGenericIntersection _).expects(obj).returns(())
+    (m.methodWithGenericIntersection).expects(obj).returns(())
 
     m.methodWithGenericIntersection(obj)
   }
@@ -63,7 +63,7 @@ class Scala3Spec extends AnyFunSpec with MockFactory with Matchers {
 
     val obj = new C with B {}
 
-    (m.methodWithGenericIntersection[C] _).expects(obj).returns(())
+    (m.methodWithGenericIntersection[C]).expects(obj).returns(())
 
     m.methodWithGenericIntersection(obj)
   }
@@ -82,7 +82,7 @@ class Scala3Spec extends AnyFunSpec with MockFactory with Matchers {
 
     val obj = new B with C {}
 
-    (m.methodWithGenericIntersection[C] _).expects(obj).returns(())
+    (m.methodWithGenericIntersection[C]).expects(obj).returns(())
 
     m.methodWithGenericIntersection(obj)
   }
@@ -101,7 +101,7 @@ class Scala3Spec extends AnyFunSpec with MockFactory with Matchers {
 
     val obj = new B with C {}
 
-    (m.methodWithGenericIntersection[B, C] _).expects(obj).returns(())
+    (m.methodWithGenericIntersection[B, C]).expects(obj).returns(())
 
     m.methodWithGenericIntersection(obj)
   }
@@ -123,7 +123,7 @@ class Scala3Spec extends AnyFunSpec with MockFactory with Matchers {
 
     val obj = new B with C with D {}
 
-    (m.methodWithGenericIntersection[B, C, D] _).expects(obj).returns(())
+    (m.methodWithGenericIntersection[B, C, D]).expects(obj).returns(())
 
     m.methodWithGenericIntersection(obj)
   }
@@ -144,7 +144,7 @@ class Scala3Spec extends AnyFunSpec with MockFactory with Matchers {
 
     val obj = new B with C with D {}
 
-    (m.methodWithGenericIntersection[B, C] _).expects(obj).returns(())
+    (m.methodWithGenericIntersection[B, C]).expects(obj).returns(())
 
     m.methodWithGenericIntersection(obj)
   }
@@ -165,8 +165,8 @@ class Scala3Spec extends AnyFunSpec with MockFactory with Matchers {
     val obj1 = new C {}
     val obj2 = new B {}
 
-    (m.methodWithGenericUnion[C] _).expects(obj1).returns(())
-    (m.methodWithGenericUnion[C] _).expects(obj2).returns(())
+    (m.methodWithGenericUnion[C]).expects(obj1).returns(())
+    (m.methodWithGenericUnion[C]).expects(obj2).returns(())
 
     m.methodWithGenericUnion(obj1)
     m.methodWithGenericUnion(obj2)
@@ -188,8 +188,8 @@ class Scala3Spec extends AnyFunSpec with MockFactory with Matchers {
     val obj1 = new C {}
     val obj2 = new B {}
 
-    (m.methodWithGenericUnion[C] _).expects(obj1).returns(())
-    (m.methodWithGenericUnion[C] _).expects(obj2).returns(())
+    (m.methodWithGenericUnion[C]).expects(obj1).returns(())
+    (m.methodWithGenericUnion[C]).expects(obj2).returns(())
 
     m.methodWithGenericUnion(obj1)
     m.methodWithGenericUnion(obj2)
@@ -257,8 +257,8 @@ class Scala3Spec extends AnyFunSpec with MockFactory with Matchers {
     val obj = new A[B] with B {}
     val obj2 = new A[A[B]] with B {}
 
-    (m.complexMethod1[B] _).expects(obj).returns(obj)
-    (m.complexMethod2[B] _).expects(obj2).returns(new A[B] {})
+    (m.complexMethod1[B]).expects(obj).returns(obj)
+    (m.complexMethod2[B]).expects(obj2).returns(new A[B] {})
 
     m.complexMethod1[B](obj)
     m.complexMethod2[B](obj2)
@@ -271,7 +271,7 @@ class Scala3Spec extends AnyFunSpec with MockFactory with Matchers {
 
     val m = mock[Test]
 
-    (m.method _).expects(*).returns((_: Int) => "f")
+    (m.method).expects(*).returns((_: Int) => "f")
     m.method(1)(0) shouldBe "f"
 
   }

@@ -26,8 +26,7 @@ import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
 class DefaultAccessMockTest extends AnyFlatSpec with MockFactory with Matchers {
-  "mockign classes with members with JMV default access" should "work" in {
+  "mockign classes with members with JMV default access" should "work" in:
     class DefaultExtended extends JavaClassWithDefaultAccess()
     val m = mock[DefaultExtended]
-  }
 }

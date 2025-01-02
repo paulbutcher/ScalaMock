@@ -93,7 +93,7 @@ class ProxyMockTest extends AnyFreeSpec with MockFactory {
       withExpectations {
         val m = mock[TestTrait]
         m.expects(Symbol("curried"))(10, 1.23).returning("curried method called")
-        val partial = m.curried(10) _
+        val partial = m.curried(10)
         assertResult("curried method called") { partial(1.23) }
       }
     }

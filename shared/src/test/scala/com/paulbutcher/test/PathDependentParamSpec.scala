@@ -41,7 +41,7 @@ class PathDependentParamSpec extends AnyFunSpec with Matchers with MockFactory {
   it("path dependent in return type") {
     val pathDependent = mock[PathDependent]
 
-    (pathDependent.call0[IntCommand] _).expects(cmd).returns(5)
+    (pathDependent.call0[IntCommand]).expects(cmd).returns(5)
 
     assert(pathDependent.call0(cmd) == 5)
   }
@@ -73,7 +73,7 @@ class PathDependentParamSpec extends AnyFunSpec with Matchers with MockFactory {
   it("path dependent in tycon return type") {
     val pathDependent = mock[PathDependent]
 
-    (pathDependent.call4[IntCommand] _).expects(cmd).returns(Some(5))
+    (pathDependent.call4[IntCommand]).expects(cmd).returns(Some(5))
 
     assert(pathDependent.call4(cmd) == Some(5))
   }
@@ -89,7 +89,7 @@ class PathDependentParamSpec extends AnyFunSpec with Matchers with MockFactory {
   it("path dependent tycon in return type") {
     val pathDependent = mock[PathDependent]
 
-    (pathDependent.call6[IntCommand] _).expects(cmd).returns(Some(5))
+    (pathDependent.call6[IntCommand]).expects(cmd).returns(Some(5))
 
     assert(pathDependent.call6(cmd) == Some(5))
   }

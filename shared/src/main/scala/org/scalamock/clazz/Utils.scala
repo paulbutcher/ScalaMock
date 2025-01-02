@@ -141,7 +141,7 @@ private[clazz] class Utils(using val quotes: Quotes):
           typeRepr.widen.mapParamRefWithWildcard.resolveAndOrTypeParamRefs match
             case TypeBounds(lower, upper) => upper
             case AppliedType(TypeRef(_, "<repeated>"), elemTyps) =>
-              TypeRepr.typeConstructorOf(classOf[Seq[_]]).appliedTo(elemTyps)
+              TypeRepr.typeConstructorOf(classOf[Seq[?]]).appliedTo(elemTyps)
             case TypeRef(_: ParamRef, _) =>
               TypeRepr.of[Any]
             case AppliedType(TypeRef(_: ParamRef, _), _) =>

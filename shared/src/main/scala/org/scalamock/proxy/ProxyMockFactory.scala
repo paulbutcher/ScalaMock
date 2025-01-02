@@ -35,7 +35,7 @@ trait ProxyMockFactory {
 
   private def createProxy[T : ClassTag, F : ClassTag](handler: InvocationHandler) = {
     val classLoader = Thread.currentThread.getContextClassLoader
-    val interfaces = Array[Class[_]](classTag[T].runtimeClass, classTag[F].runtimeClass)
+    val interfaces = Array[Class[?]](classTag[T].runtimeClass, classTag[F].runtimeClass)
     try {
       JavaProxy.newProxyInstance(classLoader, interfaces, handler).asInstanceOf[T & F & scala.reflect.Selectable]
     } catch {

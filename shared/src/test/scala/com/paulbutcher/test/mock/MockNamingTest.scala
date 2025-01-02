@@ -35,7 +35,7 @@ class MockNamingTest extends IsolatedSpec {
   }
 
   it should "have a sensible method name when mocking one parameter method" in {
-    getMockMethodName(m.oneParam _) shouldBe "<mock> TestTrait.oneParam"
+    getMockMethodName(m.oneParam) shouldBe "<mock> TestTrait.oneParam"
   }
 
   it should "have a sensible method name when mocking curried method" in {
@@ -43,11 +43,11 @@ class MockNamingTest extends IsolatedSpec {
   }
 
   it should "have a sensible method name when mocking an operator" in {
-    getMockMethodName(m.+ _) shouldBe "<mock> TestTrait.+"
+    getMockMethodName(m.+) shouldBe "<mock> TestTrait.+"
   }
 
   it should "have a sensible method name when mocking polymorphic method" in {
-    getMockMethodName(m.polymorphic(_: List[_])) shouldBe "<mock> TestTrait.polymorphic[T]"
+    getMockMethodName(m.polymorphic(_: List[?])) shouldBe "<mock> TestTrait.polymorphic[T]"
   }
 
   it should "have a sensible method name when mocking overloaded method" in {
@@ -56,17 +56,17 @@ class MockNamingTest extends IsolatedSpec {
 
   it should "have a sensible method name when mocking a class" in {
     val myMock = mock[TestClass]
-    getMockMethodName(myMock.m _) shouldBe "<mock-1> TestClass.m"
+    getMockMethodName(myMock.m) shouldBe "<mock-1> TestClass.m"
   }
 
   it should "have a sensible method name when mocking polymorphic trait" in {
     val myMock = mock[PolymorphicTrait[List[Int]]]
-    getMockMethodName(myMock.method[Map[Int, String]] _) shouldBe "<mock-1> PolymorphicTrait[List[Int]].method[U]"
+    getMockMethodName(myMock.method[Map[Int, String]]) shouldBe "<mock-1> PolymorphicTrait[List[Int]].method[U]"
   }
 
   it can "be named using string literal" in {
     val myMock = mock[TestTrait]("mock name")
-    getMockMethodName(myMock.oneParam _) shouldBe "<mock name> TestTrait.oneParam"
+    getMockMethodName(myMock.oneParam) shouldBe "<mock name> TestTrait.oneParam"
   }
 
   it should "should have its name evaluated during mock construction" in {
@@ -74,8 +74,8 @@ class MockNamingTest extends IsolatedSpec {
     val mocks = for (idx <- 1 to 2) yield mock[TestTrait](prefix + idx)
     prefix = "changed"
 
-    getMockMethodName(mocks(0).oneParam _) shouldBe "<mock1> TestTrait.oneParam"
-    getMockMethodName(mocks(1).oneParam _) shouldBe "<mock2> TestTrait.oneParam"
+    getMockMethodName(mocks(0).oneParam) shouldBe "<mock1> TestTrait.oneParam"
+    getMockMethodName(mocks(1).oneParam) shouldBe "<mock2> TestTrait.oneParam"
   }
 
   it should "have sensible default name assigned" in {
@@ -86,14 +86,14 @@ class MockNamingTest extends IsolatedSpec {
   it should "have consistent names of mocked methods" in {
     val myMock = mock[TestTrait]
     getMockMethodName(() => myMock.noParams()) shouldBe "<mock-1> TestTrait.noParams"
-    getMockMethodName(myMock.twoParams _) shouldBe "<mock-1> TestTrait.twoParams" // not <mock-2>
+    getMockMethodName(myMock.twoParams) shouldBe "<mock-1> TestTrait.twoParams" // not <mock-2>
   }
 
   it should "should have differentiating default name assigned" in {
     val myMock1 = mock[TestTrait]
     val myMock2 = mock[TestTrait]
-    getMockMethodName(myMock2.oneParam _) shouldBe "<mock-2> TestTrait.oneParam"
-    getMockMethodName(myMock1.oneParam _) shouldBe "<mock-1> TestTrait.oneParam"
+    getMockMethodName(myMock2.oneParam) shouldBe "<mock-2> TestTrait.oneParam"
+    getMockMethodName(myMock1.oneParam) shouldBe "<mock-1> TestTrait.oneParam"
   }
 
   override def newInstance = new MockNamingTest

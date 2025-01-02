@@ -56,7 +56,7 @@ class MatchersTest extends IsolatedSpec {
   behavior of "MatchAny"
 
   it should "match anything" in withExpectations {
-    (testMock.polymorphic _).expects(*).repeat(3)
+    (testMock.polymorphic).expects(*).repeat(3)
 
     testMock.polymorphic(List("55"))
     testMock.polymorphic(List(1, 2, 3))
@@ -66,8 +66,8 @@ class MatchersTest extends IsolatedSpec {
   behavior of "where matcher"
 
   it can "be used to create complex predicates (one parameter)" in withExpectations {
-    (userDatabaseMock.storeUser _).expects(where { (user: User) => user.age > 18 && user.name.startsWith("A") }).returning("matched").twice()
-    (userDatabaseMock.storeUser _).expects(*).returning("unmatched").once()
+    (userDatabaseMock.storeUser).expects(where { (user: User) => user.age > 18 && user.name.startsWith("A") }).returning("matched").twice()
+    (userDatabaseMock.storeUser).expects(*).returning("unmatched").once()
 
     userDatabaseMock.storeUser(User("Adam", 22)) shouldBe "matched"
     userDatabaseMock.storeUser(User("Eve", 21)) shouldBe "unmatched"
@@ -75,8 +75,8 @@ class MatchersTest extends IsolatedSpec {
   }
 
   it can "be used to create complex predicates (two parameters)" in withExpectations {
-    (testMock.twoParams _).expects(where { (x, y) => x + y > 100 }).returning("matched").twice()
-    (testMock.twoParams _).expects(*, *).returning("unmatched").once()
+    (testMock.twoParams).expects(where { (x, y) => x + y > 100 }).returning("matched").twice()
+    (testMock.twoParams).expects(*, *).returning("unmatched").once()
 
     testMock.twoParams(99, 2.0) shouldBe "matched"
     testMock.twoParams(50, 49.0) shouldBe "unmatched"
@@ -86,12 +86,12 @@ class MatchersTest extends IsolatedSpec {
   behavior of "assertArgs matcher"
 
   it can "be used to fail tests early (one parameter)" in withExpectations {
-    (userDatabaseMock.storeUser _).expects(assertArgs { (user: User) =>
+    (userDatabaseMock.storeUser).expects(assertArgs { (user: User) =>
       user.age shouldBe 18
       user.name should startWith("A")
     }).returning("matched")
 
-    (userDatabaseMock.storeUser _).expects(assertArgs { (user: User) =>
+    (userDatabaseMock.storeUser).expects(assertArgs { (user: User) =>
       user.age shouldBe 21
       user.name should startWith("E")
     }).returning("matched2")
@@ -101,7 +101,7 @@ class MatchersTest extends IsolatedSpec {
   }
 
   it can "be used to fail tests early (two parameters)" in withExpectations {
-    (testMock.twoParams _).expects(assertArgs { (x, y) =>
+    (testMock.twoParams).expects(assertArgs { (x, y) =>
       x + y shouldBe >(100.0)
     }).returning("matched")
 
@@ -111,13 +111,13 @@ class MatchersTest extends IsolatedSpec {
   behavior of "argThat matcher"
 
   it can "be used to create complex predicates" in withExpectations {
-    (userDatabaseMock.addUserAddress _)
+    (userDatabaseMock.addUserAddress)
       .expects(*, argThat { (address: Address) => address.city == "Berlin" })
       .returning("matched")
-    (userDatabaseMock.addUserAddress _)
+    (userDatabaseMock.addUserAddress)
       .expects(*, argThat("Someone in London") { (address: Address) => address.city == "London" })
       .returning("matched")
-    (userDatabaseMock.addUserAddress _).expects(*, *).returning("unmatched")
+    (userDatabaseMock.addUserAddress).expects(*, *).returning("unmatched")
 
     userDatabaseMock.addUserAddress(User("John", 23), Address("Berlin", "Turmstrasse 12")) shouldBe "matched"
     userDatabaseMock.addUserAddress(User("John", 23), Address("Warsaw", "Marszalkowska 123")) shouldBe "unmatched"
@@ -125,7 +125,7 @@ class MatchersTest extends IsolatedSpec {
   }
 
   it should "be displayed correctly" in withExpectations {
-    val expectation = (userDatabaseMock.addUserAddress _).expects(*, argThat { (_: Address) => true }).never()
+    val expectation = (userDatabaseMock.addUserAddress).expects(*, argThat { (_: Address) => true }).never()
     expectation.toString() should include("UserDatabase.addUserAddress(*, argThat[Address])")
   }
 
@@ -134,11 +134,11 @@ class MatchersTest extends IsolatedSpec {
   it can "be used to fail tests early when assertions are not met" in withExpectations {
     val testUser = User("John", 23)
 
-    (userDatabaseMock.addUserAddress _)
+    (userDatabaseMock.addUserAddress)
       .expects(*, argAssert { (address: Address) =>
         address.city shouldBe "Berlin" })
       .returning("matched")
-    (userDatabaseMock.addUserAddress _)
+    (userDatabaseMock.addUserAddress)
       .expects(*, argAssert("Someone in London") { (address: Address) =>
         address.city shouldBe "London" })
       .returning("matched")
@@ -150,7 +150,7 @@ class MatchersTest extends IsolatedSpec {
   it should "fail tests immediately when assertion fails" in withExpectations {
     val testUser = User("John", 23)
 
-    (userDatabaseMock.addUserAddress _)
+    (userDatabaseMock.addUserAddress)
       .expects(*, argAssert { (address: Address) =>
         address.city shouldBe "London" })
 
@@ -163,16 +163,16 @@ class MatchersTest extends IsolatedSpec {
   }
 
   it should "be displayed correctly" in withExpectations {
-    val expectation = (userDatabaseMock.addUserAddress _).expects(*, argAssert{ (_: Address) => ()}).never()
+    val expectation = (userDatabaseMock.addUserAddress).expects(*, argAssert{ (_: Address) => ()}).never()
     expectation.toString() should include("UserDatabase.addUserAddress(*, argAssert[Address])")
   }
 
   behavior of "custom matcher"
 
   it can "be used to create complex predicates" in withExpectations {
-    (userDatabaseMock.addUserAddress _).expects(UserMatcher("Alan"), *).returning("matched")
-    (userDatabaseMock.addUserAddress _).expects(UserMatcher("Bob"), *).returning("matched")
-    (userDatabaseMock.addUserAddress _).expects(*, *).returning("unmatched")
+    (userDatabaseMock.addUserAddress).expects(UserMatcher("Alan"), *).returning("matched")
+    (userDatabaseMock.addUserAddress).expects(UserMatcher("Bob"), *).returning("matched")
+    (userDatabaseMock.addUserAddress).expects(*, *).returning("unmatched")
 
     userDatabaseMock.addUserAddress(User("Alan", 23), Address("Berlin", "Turmstrasse 12")) shouldBe "matched"
     userDatabaseMock.addUserAddress(User("Craig", 23), Address("Warsaw", "Marszalkowska 123")) shouldBe "unmatched"
@@ -180,7 +180,7 @@ class MatchersTest extends IsolatedSpec {
   }
 
   it should "be displayed correctly" in withExpectations {
-    val expectation = (userDatabaseMock.addUserAddress _).expects(UserMatcher("Alan"), *).never()
+    val expectation = (userDatabaseMock.addUserAddress).expects(UserMatcher("Alan"), *).never()
     expectation.toString() should include("UserDatabase.addUserAddress(UserMatcher(name=Alan), *)")
   }
 

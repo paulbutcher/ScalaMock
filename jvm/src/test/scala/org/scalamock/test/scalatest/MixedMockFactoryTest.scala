@@ -4,11 +4,10 @@ import org.scalamock.scalatest.MixedMockFactory
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 
-class MixedMockFactoryTest extends AnyFlatSpec with MixedMockFactory with Matchers {
-  "mixed mocks" should "work" in {
-    trait Foo {
+class MixedMockFactoryTest extends AnyFlatSpec with MixedMockFactory with Matchers:
+  "mixed mocks" should "work" in:
+    trait Foo:
       def getI: Int
-    }
     val m = mock[Foo]
     val p = Proxy.mock[Foo]
 
@@ -17,5 +16,3 @@ class MixedMockFactoryTest extends AnyFlatSpec with MixedMockFactory with Matche
 
     m.getI should be(42)
     p.getI should be(5)
-  }
-}

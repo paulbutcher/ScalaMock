@@ -39,13 +39,13 @@ class StubTest extends IsolatedSpec {
   }
 
   it should "return what they're told to" in withExpectations {
-    (m.twoParams _).when(42, 1.23).returns("a return value")
+    (m.twoParams).when(42, 1.23).returns("a return value")
     m.twoParams(42, 1.23) shouldBe "a return value"
   }
 
   it should "handle chained expectations" in {
-    (m.oneParam _).when(*).returns("1").twice()
-    (m.oneParam _).when(*).returns("2").once()
+    (m.oneParam).when(*).returns("1").twice()
+    (m.oneParam).when(*).returns("2").once()
 
     m.oneParam(1) shouldBe "1"
     m.oneParam(2) shouldBe "1"
@@ -56,13 +56,13 @@ class StubTest extends IsolatedSpec {
   it should "verify calls" in withExpectations {
     m.twoParams(42, 1.23)
     m.twoParams(42, 1.23)
-    (m.twoParams _).verify(42, 1.23).twice()
+    (m.twoParams).verify(42, 1.23).twice()
   }
 
   it should "fail when verification fails because of parameter mismatch" in {
     demandExpectationException {
       m.twoParams(42, 1.00)
-      (m.twoParams _).verify(42, 1.23).once()
+      (m.twoParams).verify(42, 1.23).once()
     }
   }
 
@@ -70,7 +70,7 @@ class StubTest extends IsolatedSpec {
     demandExpectationException {
       m.twoParams(42, 1.23)
       m.twoParams(42, 1.23)
-      (m.twoParams _).verify(42, 1.23).once()
+      (m.twoParams).verify(42, 1.23).once()
     }
   }
   override def newInstance = new StubTest

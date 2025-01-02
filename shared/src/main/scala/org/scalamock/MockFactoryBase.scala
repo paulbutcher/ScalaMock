@@ -83,7 +83,7 @@ trait MockFactoryBase extends AbstractMockFactoryBase with MockContext {
   }
 
   private def verifyExpectations(): Unit = {
-    callLog foreach expectationContext.verify _
+    callLog.foreach(expectationContext.verify)
 
     val oldCallLog = callLog
     val oldExpectationContext = expectationContext

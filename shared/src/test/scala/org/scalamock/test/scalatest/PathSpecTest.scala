@@ -30,10 +30,10 @@ class PathSpecTest extends funspec.PathAnyFunSpec with Matchers with PathMockFac
 
   describe("PathSpec") {
     val mockFun = mockFunction[String, Unit]
-    mockFun expects "top-level"
+    mockFun `expects` "top-level"
 
     describe("can handle stackable expectations") {
-      mockFun expects "mid-level"
+      mockFun `expects` "mid-level"
       mockFun("top-level")
 
       it("does not throw exception if all expectations are met") {
@@ -52,7 +52,7 @@ class PathSpecTest extends funspec.PathAnyFunSpec with Matchers with PathMockFac
   
     it("can have expectations checked at the end of root suite") {
       val mockFun = mockFunction[String, Unit]("mockFun")
-      mockFun expects "bottom-level"
+      mockFun `expects` "bottom-level"
       val caught = intercept[TestFailedException] {
         verifyExpectations()
       }

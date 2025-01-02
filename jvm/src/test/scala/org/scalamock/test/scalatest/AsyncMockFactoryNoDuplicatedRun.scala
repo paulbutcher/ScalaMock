@@ -29,31 +29,24 @@ import org.scalatest.matchers.should.Matchers
 /**
   * Test to ensure AsyncMockFactory only run test once
   */
-class AsyncMockFactoryNoDuplicatedRun extends AsyncFlatSpec with Matchers with AsyncMockFactory {
-  trait TestTrait {
+class AsyncMockFactoryNoDuplicatedRun extends AsyncFlatSpec with Matchers with AsyncMockFactory:
+  trait TestTrait:
     def mockMethod(): Int
-  }
 
-  class ClassUnderTest(protected val testTrait: TestTrait) {
-    def methodUnderTest(): Future[Int] = {
+  class ClassUnderTest(protected val testTrait: TestTrait):
+    def methodUnderTest(): Future[Int] =
       TestCounter.alreadyRun = TestCounter.alreadyRun + 1
       Future(testTrait.mockMethod())
-    }
-  }
 
-  object TestCounter {
+  object TestCounter:
     var alreadyRun: Int = 0
-  }
 
-  "AsyncMockFactory" should "run test case provided successfully" in {
+  "AsyncMockFactory" should "run test case provided successfully" in:
     val mockTrait = mock[TestTrait]
     val returnVal = 100
     (() => mockTrait.mockMethod()).expects().returning(returnVal)
     val classUnderTest = new ClassUnderTest(mockTrait)
     classUnderTest.methodUnderTest().map(_ shouldBe returnVal)
-  }
 
-  "AsyncMockFactory" should "have run test case provided only once" in {
+  "AsyncMockFactory" should "have run test case provided only once" in:
     Future(TestCounter.alreadyRun shouldBe 1)
-  }
-}
