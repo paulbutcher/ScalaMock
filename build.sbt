@@ -32,3 +32,18 @@ lazy val examples = project in file("examples") settings(
     specs2.value % Test
   )
 ) dependsOn scalamock.jvm
+
+inThisBuild(
+  List(
+    organization := "org.scalamock",
+    homepage := Some(url("http://scalamock.org/")),
+    licenses := List(
+      "MIT" -> url("https://opensource.org/licenses/MIT")
+    ),
+    developers := List(
+      Developer("paulbutcher", "Paul Butcher", "", url("http://paulbutcher.com/")),
+      Developer("barkhorn", "Philipp Meyerhoefer", "", url("https://github.com/barkhorn")),
+      Developer("goshacodes", "Georgii Kovalev", "", url("https://github.com/goshacodes"))
+    )
+  )
+)
