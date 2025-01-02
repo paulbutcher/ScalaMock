@@ -7,40 +7,8 @@ on:
     branches: [ master ]
 
 jobs:
-  scala_2_12:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK
-      uses: actions/setup-java@v4
-      with:
-        java-version: 11
-        distribution: 'adopt'
-    - uses: sbt/setup-sbt@v1
-    - name: Run tests
-      run: sbt ++2.12.18 test
-      
-  scala_2_13:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK
-      uses: actions/setup-java@v4
-      with:
-        java-version: 11
-        distribution: 'adopt'
-    - uses: sbt/setup-sbt@v1
-    - name: Run tests
-      run: sbt ++2.13.12 test
-
   scala_3:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK
@@ -50,4 +18,4 @@ jobs:
           distribution: 'adopt'
       - uses: sbt/setup-sbt@v1
       - name: Run tests
-        run: sbt ++3.3.0 test
+        run: sbt ++3.4.2 test
