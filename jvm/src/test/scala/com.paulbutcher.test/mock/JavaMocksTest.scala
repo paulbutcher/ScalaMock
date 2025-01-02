@@ -20,7 +20,9 @@
 
 package com.paulbutcher.test.mock
 
-import com.paulbutcher.test._
+import com.paulbutcher.test.*
+
+import java.util.concurrent.Callable
 
 class JavaMocksTest extends IsolatedSpec {
   behavior of "ScalaMock while mocking Java classes and interfaces"
@@ -122,6 +124,22 @@ class JavaMocksTest extends IsolatedSpec {
       m.overloadedGeneric("one") shouldBe "first"
       m.overloadedGeneric(2) shouldBe "second"
     }
+
+  it should "mock a Java interface with an overloaded method (with type params)" in {
+    val m = mock[JavaInterfaceWithOverloadedMethods[String]]
+
+    val callable: Callable[String] = () => "two"
+    (m.send(_: String))
+      .expects("one")
+      .returning(())
+
+    (m.send(_: String, _: Callable[String]))
+      .expects("one", callable)
+      .returning(())
+
+    m.send("one")
+    m.send("one", callable)
+  }
 
   override def newInstance = new JavaMocksTest
 }
