@@ -464,6 +464,14 @@ class MockTest extends AnyFreeSpec with MockFactory with Matchers {
       // m.protectedMethod _ expects() anyNumberOfTimes()
     }
 
+    "mock a trait with curried varargs" in withExpectations {
+      val foo = mock[TestTrait]
+
+      (foo.curriedVarargs((_: Seq[Int])*)((_: Seq[String])*)).expects(Seq(1, 2), Seq("foo")).returns(())
+
+      foo.curriedVarargs(1, 2)("foo")
+    }
+
     "log all calls" in withExpectations {
       val m = mock[TestTrait]
 

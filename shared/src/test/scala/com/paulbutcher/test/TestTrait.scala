@@ -38,6 +38,7 @@ trait TestTrait {
   
   def curried(x: Int)(y: Double): String
   def curriedFuncReturn(x: Int): Double => String
+  def curriedVarargs(x: Int*)(y: String*): Unit
   def polymorphic[T](x: List[T]): String
   def polycurried[T1, T2](x: T1)(y: T2): (T1, T2)
   def polymorphicParam(x: (Int, Double)): String
