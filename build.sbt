@@ -13,7 +13,20 @@ val commonSettings = Defaults.coreDefaultSettings ++ Seq(
   )
 )
 
-lazy val scalamock = crossProject(JSPlatform, JVMPlatform) in file(".") settings(
+lazy val root = project.in(file("."))
+  .settings(
+    publish / skip := true
+  )
+  .aggregate(
+    scalamock.jvm,
+    scalamock.js,
+    zio.jvm,
+    zio.js
+  )
+
+lazy val scalamock = crossProject(JSPlatform, JVMPlatform)
+  .in(file("core"))
+  .settings(
     commonSettings,
     name := "scalamock",
     Compile / packageBin / publishArtifact := true,
@@ -25,10 +38,26 @@ lazy val scalamock = crossProject(JSPlatform, JVMPlatform) in file(".") settings
     libraryDependencies ++= Seq(
       scalatest.value % Optional,
       specs2.value % Optional
-    )
+    ),
   )
 
-lazy val examples = project in file("examples") settings(
+lazy val zio = crossProject(JSPlatform, JVMPlatform)
+  .in(file("zio"))
+  .settings(
+    name := "scalamock-zio",
+    commonSettings,
+    libraryDependencies ++= {
+      val zioVersion = "2.1.14"
+      Seq(
+        "dev.zio" %%% "zio" % zioVersion,
+        "dev.zio" %%% "zio-test" % zioVersion % Test,
+        "dev.zio" %%% "zio-test-sbt" % zioVersion % Test
+      )
+    }
+  )
+  .dependsOn(scalamock)
+
+lazy val examples = project in file("core/examples") settings(
   commonSettings,
   name := "ScalaMock Examples",
   publish / skip := true,
@@ -52,3 +81,4 @@ inThisBuild(
     )
   )
 )
+
