@@ -182,7 +182,7 @@ class MySpec extends CatsEffectSuite, CatsEffectStubs:
         times <- foo.foo.timesIO
       yield times
       
-    assertIO(times == 2)
+    assertIO(times == 3)
   
   test("one arg"):
     val foo: Stub[Foo] = stub[Foo]
