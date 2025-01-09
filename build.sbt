@@ -20,10 +20,10 @@ lazy val root = project.in(file("."))
   .aggregate(
     scalamock.jvm,
     scalamock.js,
-    zio.jvm,
-    zio.js,
-    `cats-effect`.jvm,
-    `cats-effect`.js
+    `scalamock-zio`.jvm,
+    `scalamock-zio`.js,
+    `scalamock-cats-effect`.jvm,
+    `scalamock-cats-effect`.js
   )
 
 lazy val scalamock = crossProject(JSPlatform, JVMPlatform)
@@ -31,10 +31,6 @@ lazy val scalamock = crossProject(JSPlatform, JVMPlatform)
   .settings(
     commonSettings,
     name := "scalamock",
-    Compile / packageBin / publishArtifact := true,
-    Compile / packageDoc / publishArtifact := true,
-    Compile / packageSrc / publishArtifact := true,
-    Test / publishArtifact := false,
     Compile / doc / scalacOptions ++= Opts.doc.title("ScalaMock") ++
       Opts.doc.version(version.value) ++ Seq("-doc-root-content", "rootdoc.txt", "-version"),
     libraryDependencies ++= Seq(
@@ -43,15 +39,11 @@ lazy val scalamock = crossProject(JSPlatform, JVMPlatform)
     ),
   )
 
-lazy val zio = crossProject(JSPlatform, JVMPlatform)
+lazy val `scalamock-zio` = crossProject(JSPlatform, JVMPlatform)
   .in(file("zio"))
   .settings(
     name := "scalamock-zio",
     commonSettings,
-    Compile / packageBin / publishArtifact := true,
-    Compile / packageDoc / publishArtifact := true,
-    Compile / packageSrc / publishArtifact := true,
-    Test / publishArtifact := false,
     libraryDependencies ++= {
       val zioVersion = "2.1.14"
       Seq(
@@ -63,21 +55,34 @@ lazy val zio = crossProject(JSPlatform, JVMPlatform)
   )
   .dependsOn(scalamock)
 
-lazy val `cats-effect` = crossProject(JSPlatform, JVMPlatform)
+
+lazy val `scalamock-cats-effect` = crossProject(JSPlatform, JVMPlatform)
   .in(file("cats-effect"))
   .settings(
     name := "scalamock-cats-effect",
     commonSettings,
-    Compile / packageBin / publishArtifact := true,
-    Compile / packageDoc / publishArtifact := true,
-    Compile / packageSrc / publishArtifact := true,
-    Test / publishArtifact := false,
     libraryDependencies ++= Seq(
       "org.typelevel" %% "cats-effect" % "3.5.7",
       "org.typelevel" %% "munit-cats-effect" % "2.0.0" % Test
     )
   )
   .dependsOn(scalamock)
+
+lazy val `scalamock-zio-jvm` = `scalamock-zio`.jvm.settings(
+  name := "scalamock-zio"
+)
+
+lazy val `scalamock-zio-js` = `scalamock-zio`.js.settings(
+  name := "scalamock-zio"
+)
+
+lazy val `scalamock-cats-effect-jvm` = `scalamock-cats-effect`.jvm.settings(
+  name := "scalamock-cats-effect"
+)
+
+lazy val `scalamock-cats-effect-js` = `scalamock-cats-effect`.js.settings(
+  name := "scalamock-cats-effect"
+)
 
 lazy val examples = project in file("core/examples") settings(
   commonSettings,
