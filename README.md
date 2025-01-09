@@ -5,7 +5,7 @@ Native Scala mocking.
 Official website: [scalamock.org](https://scalamock.org/)
 
 
-## Scala 3 new API (since 7.0.0)
+## Scala 3 new API (since 7.0.1)
 Scalamock internals and new API relies on Scala 3 experimental API, so prerequisites are:
 ```scala
 scalaVersion := "3.4.2" // or higher
@@ -17,11 +17,11 @@ Test / scalacOptions += "-experimental"
 ```scala
 libraryDependencies ++= Seq(
   // core module
-  "org.scalamock" %% "scalamock" % "7.0.0",
+  "org.scalamock" %% "scalamock" % "7.0.1",
   // zio integration
-  "org.scalamock" %% "scalamock-zio" % "7.0.0",
+  "org.scalamock" %% "scalamock-zio" % "7.0.1",
   // cats-effect integration
-  "org.scalamock" %% "scalamock-cats-effect" % "7.0.0"
+  "org.scalamock" %% "scalamock-cats-effect" % "7.0.1"
 )
 ```
 

@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicReference
 import scala.quoted.{Expr, Quotes, Type}
 import scala.util.{NotGiven, TupledFunction}
 
-/** Indicates that object of type [[T]] was generated */
+/** Indicates that object of type T was generated */
 opaque type Stub[+T] <: T = T
 
 trait Stubs:
@@ -18,7 +18,7 @@ trait Stubs:
    */
   final def resetStubs(): Unit = stubs.clearAll()
 
-  /** Generates an object of type [[T]] with possibility to record methods arguments and set-up method results */
+  /** Generates an object of type T with possibility to record methods arguments and set-up method results */
   inline def stub[T]: Stub[T] = stubImpl[T]
 
   extension [F](inline f: F)
@@ -136,7 +136,7 @@ trait Stubs:
      *   foo.foo2(1, 1)
      *
      *   foo.foo1.times(1) // 0
-     *   foo.foo1.times(2) // 2
+     *   foo.foo1.times(3) // 2
      *   foo.foo2.times((1, 1)) // 1
      * }}}
      */
