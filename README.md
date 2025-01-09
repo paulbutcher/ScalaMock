@@ -166,9 +166,9 @@ import munit.CatsEffectSuite
 import org.scalamock.stubs.{Stub, CatsEffectStubs}
 
 trait Foo:
-  def foo: UIO[Int]
-  def foo1(x: Int): UIO[Int]
-  def foo2(x: Int, y: Int): IO[String, Int]
+  def foo: IO[Int]
+  def foo1(x: Int): IO[Int]
+  def foo2(x: Int, y: Int): IO[Int]
 
 class MySpec extends CatsEffectSuite, CatsEffectStubs:
   test("no args"):
