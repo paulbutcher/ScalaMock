@@ -23,46 +23,20 @@ package org.scalamock.clazz
 import scala.quoted.*
 
 object MockFunctionFinder:
-  def ticketMessage = "Please open a ticket at https://github.com/paulbutcher/ScalaMock/issues"
   /**
    * Given something of the structure <|o.m _|> where o is a mock object
    * and m is a method, find the corresponding MockFunction instance
    */
   @scala.annotation.experimental
   def findMockFunction[M: Type](f: Expr[Any])(using quotes: Quotes): Expr[M] =
-    val utils = Utils(using quotes)
+    val utils = new Utils(using quotes)
     import utils.quotes.reflect.*
-
-    def transcribeTree(term: Term, types: List[TypeTree] = Nil): Expr[M] =
-      term match
-        case Select(mock, methodName) =>
-          val mockTpe = mock.tpe.widenTermRefByName match
-            case AndType(tpe, _) => tpe
-            case tpe => tpe
-
-          val name = utils.MockableDefinitions.find(mockTpe, methodName, TypeRepr.of[M].typeArgs.init, types.map(_.tpe))
-          // looks like `selectDynamic` should work with raw names, but it doesn't
-          // https://github.com/lampepfl/dotty/issues/18612
-          '{
-             ${mock.asExpr}
-               .asInstanceOf[scala.reflect.Selectable]
-               .selectDynamic(${Expr(scala.reflect.NameTransformer.encode(name))})
-               .asInstanceOf[M]
-          }
-
-        case Inlined(_, _, term) => transcribeTree(term)
-        case Block(stats @ List(_: ValDef), term) => Block(stats, transcribeTree(term).asTerm).asExprOf[M] // var m = mock[T]
-        case Block(List(DefDef(_, _, _, Some(term))), _) => transcribeTree(term)
-        case Typed(term, teps) => transcribeTree(term)
-        case Lambda(_, term) => transcribeTree(term)
-        case Apply(term, _) => transcribeTree(term)
-        case TypeApply(term, types) => transcribeTree(term, types)
-        case Ident(fun) =>
-          report.errorAndAbort(
-            s"please declare '$fun' as MockFunctionX or StubFunctionX (e.g val $fun: MockFunction1[X, R] = ... if it has 1 parameter)"
-          )
-        case _ =>
-          report.errorAndAbort(
-            s"ScalaMock: unrecognised structure ${term.show(using Printer.TreeStructure)}. " + ticketMessage
-          )
-    transcribeTree(f.asTerm)
+    val (term, method) = utils.searchTermWithMethod(f.asTerm, TypeRepr.of[M].typeArgs.init)
+    // looks like `selectDynamic` should work with raw names, but it doesn't
+    // https://github.com/lampepfl/dotty/issues/18612
+    '{
+      ${ term.asExpr }
+        .asInstanceOf[scala.reflect.Selectable]
+        .selectDynamic(${ Expr(scala.reflect.NameTransformer.encode(method.mockValName)) })
+        .asInstanceOf[M]
+    }

@@ -21,7 +21,9 @@ lazy val root = project.in(file("."))
     scalamock.jvm,
     scalamock.js,
     zio.jvm,
-    zio.js
+    zio.js,
+    `cats-effect`.jvm,
+    `cats-effect`.js
   )
 
 lazy val scalamock = crossProject(JSPlatform, JVMPlatform)
@@ -46,6 +48,10 @@ lazy val zio = crossProject(JSPlatform, JVMPlatform)
   .settings(
     name := "scalamock-zio",
     commonSettings,
+    Compile / packageBin / publishArtifact := true,
+    Compile / packageDoc / publishArtifact := true,
+    Compile / packageSrc / publishArtifact := true,
+    Test / publishArtifact := false,
     libraryDependencies ++= {
       val zioVersion = "2.1.14"
       Seq(
@@ -54,6 +60,22 @@ lazy val zio = crossProject(JSPlatform, JVMPlatform)
         "dev.zio" %%% "zio-test-sbt" % zioVersion % Test
       )
     }
+  )
+  .dependsOn(scalamock)
+
+lazy val `cats-effect` = crossProject(JSPlatform, JVMPlatform)
+  .in(file("cats-effect"))
+  .settings(
+    name := "scalamock-cats-effect",
+    commonSettings,
+    Compile / packageBin / publishArtifact := true,
+    Compile / packageDoc / publishArtifact := true,
+    Compile / packageSrc / publishArtifact := true,
+    Test / publishArtifact := false,
+    libraryDependencies ++= Seq(
+      "org.typelevel" %% "cats-effect" % "3.5.7",
+      "org.typelevel" %% "munit-cats-effect" % "2.0.0" % Test
+    )
   )
   .dependsOn(scalamock)
 

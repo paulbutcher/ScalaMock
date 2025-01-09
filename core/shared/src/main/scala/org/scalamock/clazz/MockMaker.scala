@@ -33,57 +33,8 @@ private[clazz] object MockMaker:
     val utils = Utils(using quotes)
     import utils.quotes.reflect.*
     val tpe = TypeRepr.of[T]
-    val isTrait = tpe.dealias.typeSymbol.flags.is(Flags.Trait)
-    val isJavaClass = tpe.classSymbol.exists(sym => sym.flags.is(Flags.JavaDefined) && !sym.flags.is(Flags.Trait) && !sym.flags.is(Flags.Abstract))
-
-    if (isJavaClass)
-      report.errorAndAbort("Can't mock a java class due to https://github.com/lampepfl/dotty/issues/18694. Extend it manually with scala and then mock")
-
-    def asParent(tree: TypeTree): TypeTree | Term =
-      val constructorFieldsFilledWithNulls: List[List[Term]] =
-        // we don't care about any of the parameters, and just want to pass null, since all interesting parts will be mocked.
-        // that's simpler said than done, because if type of the argument is a primitive
-        // then null needs to be cast to that primitive type.
-        // the type could be a generic type though, which could resolve to a primitive, so we need to find the type the param
-        // should resolve to, and cast it if needed.
-        val paramsMap = {
-          val abstractParams = tree.tpe.dealias.typeSymbol.primaryConstructor.paramSymss.filter(_.exists(_.isType)).flatten
-          val resolvedParams = tpe.widen match
-            case AppliedType(_, params) => params
-            case _ => Nil
-          abstractParams.zip(resolvedParams).toMap
-        }
-
-        tree.tpe.dealias.typeSymbol.primaryConstructor.paramSymss
-          .filterNot(_.exists(_.isType))
-          .map(_.map{ sym =>
-            val target = paramsMap.getOrElse(sym.info.typeSymbol, sym.info).widen.dealias
-            if target <:< TypeRepr.of[AnyVal] then
-              Select.unique('{null}.asTerm, "asInstanceOf").appliedToType(target)
-            else
-              '{null}.asTerm
-          })
-
-      if constructorFieldsFilledWithNulls.forall(_.isEmpty) then
-        tree
-      else
-        Select(
-          New(TypeIdent(tree.tpe.typeSymbol)),
-          tree.tpe.typeSymbol.primaryConstructor
-        ).appliedToTypes(tree.tpe.typeArgs)
-         .appliedToArgss(constructorFieldsFilledWithNulls)
-
-
-
-    val parents =
-      if isTrait then
-        List(TypeTree.of[Object], asParent(TypeTree.of[T]), TypeTree.of[Selectable])
-      else
-        List(asParent(TypeTree.of[T]), TypeTree.of[Selectable])
-
-
     val mockableDefinitions = utils.MockableDefinitions(tpe)
-
+    val parents = utils.parentsOf[T]
     def createDefaultMockNameSymbol(classSymbol: Symbol) =
       Symbol.newVal(classSymbol, MockDefaultNameValName, TypeRepr.of[String], Flags.EmptyFlags, Symbol.noSymbol)
 
@@ -198,7 +149,7 @@ private[clazz] object MockMaker:
                         "asInstanceOf"
                       ),
                       definition.tpe
-                        .resolveParamRefs(definition.resTypeWithInnerTypesOverrideFor(classSymbol), args)
+                        .prepareResType(definition.resTypeWithInnerTypesOverrideFor(classSymbol), args)
                         .asType match { case '[t] => List(TypeTree.of[t]) }
                     )
                   )

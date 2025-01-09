@@ -33,7 +33,7 @@ class ControllerTest extends AnyFunSuite with MockFactory {
  
     inSequence {
       inAnyOrder {
-        (() => mockTurtle.penUp()).expects()
+        (() => mockTurtle.penUp()).expects().returns(())
         (() => mockTurtle.getPosition).expects().returning(0.0, 0.0)
         (() => mockTurtle.getAngle).expects().returning(0.0)
       }
