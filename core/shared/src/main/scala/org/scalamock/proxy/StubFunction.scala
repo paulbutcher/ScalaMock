@@ -1,0 +1,43 @@
+// Copyright (c) 2011-2015 ScalaMock Contributors (https://github.com/paulbutcher/ScalaMock/graphs/contributors)
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+package org.scalamock.proxy
+
+import org.scalamock.context.{Call, MockContext}
+import org.scalamock.handlers.{CallHandler, Verify}
+import org.scalamock.matchers.MockParameter
+
+class StubFunction(mockContext: MockContext, name: Symbol) extends FakeFunction(mockContext, name) {
+
+  def onUnexpected(call: Call) = null
+
+  def whenHandler() = new WhenHander
+
+  def verifyHandler() = new VerifyHander
+
+  private[proxy] class WhenHander extends ExpectationHandler {
+    override def apply(args: MockParameter[Any]*) = super.apply(args*).anyNumberOfTimes()
+  }
+
+  private[proxy] class VerifyHander extends ExpectationHandler {
+    override def makeHandler(matcher: (Product) => Boolean) =
+      new CallHandler[Any](StubFunction.this, matcher) with Verify
+  }
+}
