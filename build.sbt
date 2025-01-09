@@ -20,10 +20,10 @@ lazy val root = project.in(file("."))
   .aggregate(
     scalamock.jvm,
     scalamock.js,
-    zio.jvm,
-    zio.js,
-    `cats-effect`.jvm,
-    `cats-effect`.js
+    `scalamock-zio`.jvm,
+    `scalamock-zio`.js,
+    `scalamock-cats-effect`.jvm,
+    `scalamock-cats-effect`.js
   )
 
 lazy val scalamock = crossProject(JSPlatform, JVMPlatform)
@@ -43,7 +43,8 @@ lazy val scalamock = crossProject(JSPlatform, JVMPlatform)
     ),
   )
 
-lazy val zio = crossProject(JSPlatform, JVMPlatform)
+lazy val `scalamock-zio` = crossProject(JSPlatform, JVMPlatform)
+  .withoutSuffixFor(JVMPlatform)
   .in(file("zio"))
   .settings(
     name := "scalamock-zio",
@@ -63,7 +64,8 @@ lazy val zio = crossProject(JSPlatform, JVMPlatform)
   )
   .dependsOn(scalamock)
 
-lazy val `cats-effect` = crossProject(JSPlatform, JVMPlatform)
+lazy val `scalamock-cats-effect` = crossProject(JSPlatform, JVMPlatform)
+  .withoutSuffixFor(JVMPlatform)
   .in(file("cats-effect"))
   .settings(
     name := "scalamock-cats-effect",
