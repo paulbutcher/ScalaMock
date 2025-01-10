@@ -1,5 +1,7 @@
 package org.scalamock.stubs
 
+import org.scalamock.stubs.internal.ArgExpectation
+
 import java.util.concurrent.atomic.AtomicReference
 import scala.quoted.{Expr, Quotes, Type}
 import scala.util.{NotGiven, TupledFunction}
@@ -146,6 +148,23 @@ trait Stubs:
       args: UntupledOne[Args]
     ): Int =
       callsImpl[F, Args, R](f).count(_ == args)
+    
+    inline def expectedWith[Args <: NonEmptyTuple, R](
+      using TupledFunction[F, Args => R]
+    )(
+      args: UntupledOne[Args]
+    )(using log: CallLog): ArgExpectation = new ArgExpectation:
+      protected def actualTimes: Int =
+        callsImpl[F, Args, R](f).count(_ == args)
+
+    inline def expectedWhere[Args <: NonEmptyTuple, R](
+      using TupledFunction[F, Args => R]
+    )(
+      args: UntupledOne[Args] => Boolean
+    )(using log: CallLog): ArgExpectation = new ArgExpectation:
+      protected def actualTimes: Int =
+        callsImpl[F, Args, R](f).count(args)
+    
 
   private[stubs] class Created:
     private val stubs: AtomicReference[List[Stub[Any]]] = new AtomicReference(Nil)
@@ -168,10 +187,13 @@ trait Stubs:
     private[CallLog] case class InternalCall(methodName: String, args: List[List[(Any, StubArgumentLog[Any])]])
     case class Call(methodName: String, args: List[List[Any]])
     private val callsRef: AtomicReference[List[InternalCall]] = new AtomicReference[List[InternalCall]](Nil)
-
+    // TODO expectationsRef
+    
     def write(methodName: String, args: List[List[(Any, StubArgumentLog[Any])]]) =
       callsRef.getAndUpdate(calls => InternalCall(methodName, args) :: calls)
 
+    //TODO def verify()
+    
     def methods: List[String] = callsRef.get().map(_.methodName)
     def calls: List[Call] = callsRef.get().map { call => Call(call.methodName, call.args.map(_.map(_._1))) }
 
