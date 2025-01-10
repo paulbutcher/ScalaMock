@@ -8,12 +8,13 @@ Official website: [scalamock.org](https://scalamock.org/)
 ## Scala 3 alternative API (since 7.0.1)
 Alternative API offers you:
 
-1. No thrown exceptions or argument matchers by default.
-2. Support of functional effects like `ZIO/CE`.
+1. No thrown exceptions by default
+2. No argument matchers, you can get arguments instead and match them yourself
+3. Support for functional effects like `ZIO or cats-effect IO`
 
 If it is not what you need consider looking into `Standard API examples` section.
 
-Scalamock internals and alternative API relies on Scala 3 experimental API, so prerequisites are:
+Scalamock internals rely on Scala 3 experimental API, so prerequisites are:
 ```scala
 scalaVersion := "3.4.2" // or higher
 Test / scalacOptions += "-experimental"
