@@ -44,7 +44,7 @@ class MySpec extends AnyFunSpec, Matchers, Stubs:
     
     foo.foo.returns(10)
     foo.foo shouldBe 10 // method returns set result
-    foo.times shouldBe 1 // number of times method called
+    foo.foo.times shouldBe 1 // number of times method called
 
   test("one arg"):
     val foo: Stub[Foo] = stub[Foo]
@@ -55,8 +55,8 @@ class MySpec extends AnyFunSpec, Matchers, Stubs:
 
     foo.foo1(1) shouldBe 2
     foo.foo1(2) shouldBe 0
-    foo.times shouldBe 2
-    foo.calls shouldBe List(1, 2) // get arguments
+    foo.foo1.times shouldBe 2
+    foo.foo1.calls shouldBe List(1, 2) // get arguments
 
 
   test("two args"):
@@ -68,9 +68,9 @@ class MySpec extends AnyFunSpec, Matchers, Stubs:
     
     foo.foo2(0, 0) shouldBe 1
     foo.foo2(2, 3) shouldBe 0
-    foo.times shouldBe 2
-    foo.calls shouldBe List((0, 0), (2, 3)) // get arguments
-    foo.times((0, 0)) shouldBe 1 // get number of times arguments caught
+    foo.foo2.times shouldBe 2
+    foo.foo2.calls shouldBe List((0, 0), (2, 3)) // get arguments
+    foo.foo2.times((0, 0)) shouldBe 1 // get number of times arguments caught
       
 ```
 
