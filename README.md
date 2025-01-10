@@ -216,7 +216,7 @@ class MySpec extends CatsEffectSuite, CatsEffectStubs:
 
 ```
 
-## Old API examples
+## Standard API examples
 
 ### Expectations-First Style
 
