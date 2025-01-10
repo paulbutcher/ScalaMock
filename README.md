@@ -5,10 +5,15 @@ Native Scala mocking.
 Official website: [scalamock.org](https://scalamock.org/)
 
 
-## Scala 3 new API (since 7.0.1)
-If new API is not what you need consider looking into `Standard API examples` section.
+## Scala 3 alternative API (since 7.0.1)
+Alternative API offers you:
 
-Scalamock internals and new API relies on Scala 3 experimental API, so prerequisites are:
+1. No thrown exceptions or argument matchers by default.
+2. Support of functional effects like `ZIO/CE`.
+
+If it is not what you need consider looking into `Standard API examples` section.
+
+Scalamock internals and alternative API relies on Scala 3 experimental API, so prerequisites are:
 ```scala
 scalaVersion := "3.4.2" // or higher
 Test / scalacOptions += "-experimental"
