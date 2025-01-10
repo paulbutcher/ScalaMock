@@ -88,7 +88,7 @@ trait Stubs:
      *   foo.foo2(1, 1)
      *
      *   foo.foo1.calls // List(2, 2)
-     *   foo.foo2.calls // List((0, 0))
+     *   foo.foo2.calls // List((0, 0), (1, 1))
      * }}}
      */
     inline def calls[Args <: NonEmptyTuple, R](
