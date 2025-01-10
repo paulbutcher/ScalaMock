@@ -6,6 +6,8 @@ Official website: [scalamock.org](https://scalamock.org/)
 
 
 ## Scala 3 new API (since 7.0.1)
+If new API is not what you need consider looking into `Standard API examples` section.
+
 Scalamock internals and new API relies on Scala 3 experimental API, so prerequisites are:
 ```scala
 scalaVersion := "3.4.2" // or higher
