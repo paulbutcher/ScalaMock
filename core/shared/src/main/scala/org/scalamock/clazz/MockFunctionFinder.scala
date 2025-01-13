@@ -31,12 +31,6 @@ object MockFunctionFinder:
   def findMockFunction[M: Type](f: Expr[Any])(using quotes: Quotes): Expr[M] =
     val utils = new Utils(using quotes)
     import utils.quotes.reflect.*
-    val (term, method) = utils.searchTermWithMethod(f.asTerm, TypeRepr.of[M].typeArgs.init)
-    // looks like `selectDynamic` should work with raw names, but it doesn't
-    // https://github.com/lampepfl/dotty/issues/18612
-    '{
-      ${ term.asExpr }
-        .asInstanceOf[scala.reflect.Selectable]
-        .selectDynamic(${ Expr(scala.reflect.NameTransformer.encode(method.mockValName)) })
-        .asInstanceOf[M]
-    }
+    utils
+      .searchTermWithMethod(f.asTerm, TypeRepr.of[M].typeArgs.init)
+      .selectReflect[M](_.mockValName)

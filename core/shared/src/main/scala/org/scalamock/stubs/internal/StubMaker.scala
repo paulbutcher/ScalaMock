@@ -95,86 +95,39 @@ private[stubs] class StubMaker(
             DefDef(
               symbol = method.symbol.overridingSymbol(classSymbol),
               params => Some {
-                '{
-                  ${method.functionRef(classSymbol)}.get() match {
-                    case None =>
-                      throw new NotImplementedError()
-                    case Some(fun) =>
-                      ${
-                        val args = params.map {_.collect { case term: Term => term }}.filterNot(_.isEmpty)
-                        val (argsToUpdate, result) = args match
-                          case Nil =>
-                            ('{ () }.asTerm, '{fun(())}.asTerm)
-                          case params =>
-                            val tupledArgs = params.flatten match
-                              case Nil => report.errorAndAbort("Unexpected error occurred, please open an issue")
-                              case arg :: Nil => arg
-                              case args => tupled(args)
-
-                            val result = '{fun.apply(${tupledArgs.asExpr}.asInstanceOf)}.asTerm
-                            (tupledArgs, result)
-
-                        val updateCalls = '{
-                          ${ method.callsRef(classSymbol) }.getAndUpdate(_ :+ ${ argsToUpdate.asExpr })
-                          ${ method.recordCall(params) }
-                        }
-
-                        val resTpe = method.tpe
-                          .prepareResType(method.resTypeWithInnerTypesOverrideFor(classSymbol), params)
-
-                        resTpe.asType match
-                          case '[res] =>
-                            Expr.summon[StubIO[?]] match
+                val resTpe = method.tpe.prepareResType(method.resTypeWithInnerTypesOverrideFor(classSymbol), params)
+                resTpe.asType match
+                  case '[res] =>
+                    val ioOpt = Expr.summon[StubIO[?]].filter(_.isMatches(resTpe))
+                    '{
+                      ${ method.functionRef(classSymbol) }.get() match
+                        case None =>
+                          ${
+                            ioOpt match
+                              case None =>
+                                '{throw new NotImplementedError()}
+                              case Some(io) =>
+                                '{${io}.die(new NotImplementedError())}
+                          }
+                        case Some(fun) =>
+                          ${
+                            val tupledArgs = tupled(params.flatMap {_.collect { case term: Term => term }}).asExpr
+                            val result = '{fun(${tupledArgs})}
+                            val updateCalls = '{
+                              ${ method.callsRef(classSymbol) }.getAndUpdate(_ :+ ${ tupledArgs })
+                              ${ method.recordCall(params) }
+                            }
+                            ioOpt match
                               case None =>
                                 '{
                                   ${ updateCalls }
-                                  ${ result.asExpr }.asInstanceOf[res]
+                                  ${ result }.asInstanceOf[res]
                                 }
                               case Some(io) =>
-                                val ioTerm = io.asTerm
-                                val ioTpe = ioTerm.tpe.select(ioTerm.tpe.typeSymbol.typeMember("Underlying"))
-                                if resTpe <:< AppliedType(ioTpe, List(TypeRepr.of[Any], TypeRepr.of[Any])) then
-                                  val (errorArgTpe, resArgTpe) = resTpe.dealias.typeArgs match
-                                    case List(_, err, res) => (err, res)
-                                    case List(err, res) => (err, res)
-                                    case List(res) => (TypeRepr.of[Nothing], res)
-                                    case _ => report.errorAndAbort(s"$resTpe is not a type constructor")
-                                  TypeApply(
-                                    Select.unique(
-                                      Apply(
-                                        Apply(
-                                          TypeApply(
-                                            Select.unique(ioTerm, "flatMap"),
-                                            List(
-                                              Inferred(TypeRepr.of[Nothing]),
-                                              Inferred(errorArgTpe),
-                                              Inferred(TypeRepr.of[Unit]),
-                                              Inferred(resArgTpe)
-                                            )
-                                          ),
-                                          List(
-                                            Apply(
-                                              TypeApply(Select.unique(ioTerm, "succeed"), List(TypeTree.of[Unit])),
-                                              List(updateCalls.asTerm)
-                                            )
-                                          )
-                                        ),
-                                        List('{ (_: Unit) => ${ result.asExpr }.asInstanceOf[res] }.asTerm)
-                                      ),
-                                      "asInstanceOf"
-                                    ),
-                                    List(TypeTree.of[res])
-                                  ).asExprOf[res]
-                                else
-                                  '{
-                                    ${ updateCalls }
-                                    ${ result.asExpr }.asInstanceOf[res]
-                                  }
-
-                      }
-                  }
-                }.asTerm.changeOwner(method.symbol.overridingSymbol(classSymbol))
-              }
+                                io.wrap(resTpe, updateCalls, result).asExprOf[res]
+                          }
+                    }.asTerm.changeOwner(method.symbol.overridingSymbol(classSymbol))
+                }
             )
         )
       } :+ DefDef(
@@ -216,33 +169,16 @@ private[stubs] class StubMaker(
   def returnsMacro[F: Type](select: Expr[F], returns: Expr[F]): Expr[Unit] =
     returnsInternal(select.asTerm, '{ (_: Unit) => ${returns}}.asTerm, Nil)
 
-  private def returnsInternal(
-    select: Term,
-    returns: Term,
-    argTypes: List[TypeRepr]
-  ) =
-    val (term, method) = searchTermWithMethod(select, argTypes)
-    '{
-      ${ term.asExpr }
-        .asInstanceOf[scala.reflect.Selectable]
-        .selectDynamic(${ Expr(method.mockValName) })
-        .asInstanceOf[AtomicReference[Option[Any => Any]]]
-        .set(Some(${ returns.asExpr }.asInstanceOf[Any => Any]))
-    }
+  private def returnsInternal(select: Term, returns: Term, argTypes: List[TypeRepr]) =
+    val function = searchTermWithMethod(select, argTypes)
+      .selectReflect[AtomicReference[Option[Any => Any]]](_.mockValName)
+    '{ ${function}.set(Some(${ returns.asExpr }.asInstanceOf[Any => Any])) }
 
 
-  def callsMacro[F: Type, Args: Type, R: Type](
-    select: Expr[F]
-  ): Expr[List[Args]] =
-    val (term, method) = searchTermWithMethod(select.asTerm, tupleTypeToList(TypeRepr.of[Args]))
-    '{
-      ${ term.asExpr }
-        .asInstanceOf[scala.reflect.Selectable]
-        .selectDynamic(${ Expr(method.callsValName) })
-        .asInstanceOf[AtomicReference[List[Args]]]
-        .get()
-    }
-
+  def callsMacro[F: Type, Args: Type, R: Type](select: Expr[F]): Expr[List[Args]] =
+    val args = searchTermWithMethod(select.asTerm, tupleTypeToList(TypeRepr.of[Args]))
+      .selectReflect[AtomicReference[List[Args]]](_.callsValName)
+    '{ ${args}.get() }
 
 
   @tailrec
@@ -256,13 +192,18 @@ private[stubs] class StubMaker(
         acc :+ tpe
 
 
-  private def tupled(args: List[Term]) =
-    args.foldRight[Term]('{ EmptyTuple }.asTerm) { (el, acc) =>
-      Select
-        .unique(acc, "*:")
-        .appliedToTypes(List(el.tpe, acc.tpe))
-        .appliedToArgs(List(el))
-    }
+  private def tupled(args: List[Term]): Term =
+    args match
+      case Nil => '{()}.asTerm
+      case oneArg :: Nil => oneArg
+      case args =>
+        args.foldRight[Term]('{ EmptyTuple }.asTerm) { (el, acc) =>
+          Select
+            .unique(acc, "*:")
+            .appliedToTypes(List(el.tpe, acc.tpe))
+            .appliedToArgs(List(el))
+        }
+
 
   extension (method: MockableDefinition)
     private def callsRef(classSymbol: Symbol): Expr[AtomicReference[List[Any]]] =
@@ -271,18 +212,15 @@ private[stubs] class StubMaker(
     private def functionRef(classSymbol: Symbol): Expr[AtomicReference[Option[Any => Any]]] =
       Ref(classSymbol.declaredField(method.mockValName)).asExprOf[AtomicReference[Option[Any => Any]]]
 
+    private def show: String =
+      given Printer[TypeRepr] = Printer.TypeReprShortCode
+      s"${method.ownerTpe.show}.${method.symbol.name}${method.tpe.show}"
+
     private def recordCall(params: List[List[Tree]]): Expr[Unit] =
       Expr.summon[Stubs#CallLog] match
         case None =>
           '{}
         case Some(callLog) =>
-          given Printer[TypeRepr] = Printer.TypeReprShortCode
-          val typeParams = method.tpe match
-            case PolyType(params, _, _) => params.mkString("[", ",", "]")
-            case _ => ""
-
-          val methodName = s"${method.ownerTpe.show}.${method.symbol.name}$typeParams"
-
           val args = params.map {_.collect { case term: Term => term }}.filterNot(_.isEmpty)
           val writers = args.map { args =>
             args.map { arg =>
@@ -296,4 +234,48 @@ private[stubs] class StubMaker(
             }
           }
           val writersExpr = Expr.ofList(writers.map(writers => Expr.ofList(writers)))
-          '{ ${callLog}.write(${Expr(methodName)}, ${writersExpr}) }
+          '{ ${callLog}.write(${Expr(method.show)}, ${writersExpr}) }
+
+
+  extension (io: Expr[StubIO[?]])
+    private def isMatches(resTpe: TypeRepr): Boolean =
+      val ioTerm = io.asTerm
+      val ioTpe = ioTerm.tpe.select(ioTerm.tpe.typeSymbol.typeMember("Underlying"))
+      resTpe <:< AppliedType(ioTpe, List(TypeRepr.of[Any], TypeRepr.of[Any]))
+
+    private def wrap(resTpe: TypeRepr, updateCalls: Expr[Unit], result: Expr[Any]): Term =
+      val ioTerm = io.asTerm
+      val (errorArgTpe, resArgTpe) = resTpe.dealias.typeArgs match
+        case List(_, err, res) => (err, res)
+        case List(err, res) => (err, res)
+        case List(res) => (TypeRepr.of[Nothing], res)
+        case _ => report.errorAndAbort(s"$resTpe is not a type constructor")
+
+      resTpe.asType match
+        case '[res] =>
+          TypeApply(
+            Select.unique(
+              Apply(
+                Apply(
+                  TypeApply(
+                    Select.unique(ioTerm, "flatMap"),
+                    List(
+                      Inferred(TypeRepr.of[Nothing]),
+                      Inferred(errorArgTpe),
+                      Inferred(TypeRepr.of[Unit]),
+                      Inferred(resArgTpe)
+                    )
+                  ),
+                  List(
+                    Apply(
+                      TypeApply(Select.unique(ioTerm, "succeed"), List(TypeTree.of[Unit])),
+                      List(updateCalls.asTerm)
+                    )
+                  )
+                ),
+                List('{ (_: Unit) => ${ result }.asInstanceOf[res] }.asTerm)
+              ),
+              "asInstanceOf"
+            ),
+            List(TypeTree.of[res])
+          )

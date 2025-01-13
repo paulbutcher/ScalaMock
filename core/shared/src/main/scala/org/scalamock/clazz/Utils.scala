@@ -58,7 +58,18 @@ private[scalamock] class Utils(using val quotes: Quotes):
       List(asParent(TypeTree.of[T]), TypeTree.of[scala.reflect.Selectable])
 
 
-  def searchTermWithMethod(term: Term, argTypes: List[TypeRepr], appliedTypes: List[TypeTree] = Nil): (Term, MockableDefinition) =
+  case class StubWithMethod(stub: Term, method: MockableDefinition):
+    def selectReflect[T: Type](name: MockableDefinition => String): Expr[T] =
+      '{
+        ${ stub.asExpr }
+          .asInstanceOf[scala.reflect.Selectable]
+          // https://github.com/lampepfl/dotty/issues/18612
+          .selectDynamic(${ Expr(scala.reflect.NameTransformer.encode(name(method))) })
+          .asInstanceOf[T]
+      }
+
+
+  def searchTermWithMethod(term: Term, argTypes: List[TypeRepr], appliedTypes: List[TypeTree] = Nil): StubWithMethod =
     term match
       case Select(mock, methodName) =>
         val tpe =
@@ -71,7 +82,7 @@ private[scalamock] class Utils(using val quotes: Quotes):
               other
 
         val method = MockableDefinitions.find(tpe, methodName, argTypes, appliedTypes.map(_.tpe))
-        (mock, method)
+        StubWithMethod(mock, method)
 
       case Block(_, Inlined(_, _, Inlined(_, _, term: Select))) =>
         searchTermWithMethod(term, argTypes)
@@ -80,8 +91,8 @@ private[scalamock] class Utils(using val quotes: Quotes):
         searchTermWithMethod(term, argTypes)
 
       case Block(stats@List(_: ValDef), term) =>  // var m = mock[T]
-        val (underlying, method) = searchTermWithMethod(term, argTypes)
-        (Block(stats, underlying), method)
+        val StubWithMethod(underlying, method) = searchTermWithMethod(term, argTypes)
+        StubWithMethod(Block(stats, underlying), method)
 
       case Block(List(DefDef(_, _, _, Some(term))), _) =>
         searchTermWithMethod(term, argTypes)

@@ -5,7 +5,10 @@ import zio.{UIO, ZIO, IO}
 import scala.util.{NotGiven, TupledFunction}
 
 trait ZIOStubs extends Stubs:
-  given StubIO[IO] = new StubIO[IO]:
+  final given StubIO[IO] = new StubIO[IO]:
+    def die(ex: Throwable): UIO[Nothing] =
+      ZIO.die(ex)
+      
     def succeed[T](t: => T): UIO[T] =
       ZIO.succeed(t)
 
