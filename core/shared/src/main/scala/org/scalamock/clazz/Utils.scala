@@ -63,7 +63,8 @@ private[scalamock] class Utils(using val quotes: Quotes):
       '{
         ${ stub.asExpr }
           .asInstanceOf[scala.reflect.Selectable]
-          .selectDynamic(${ Expr(name(method)) })
+          // https://github.com/lampepfl/dotty/issues/18612
+          .selectDynamic(${ Expr(scala.reflect.NameTransformer.encode(name(method))) })
           .asInstanceOf[T]
       }
 
