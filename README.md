@@ -120,8 +120,7 @@ class MySpec extends ZIOSpecDefault, ZIOStubs:
         for
           _ <- foo.foo.returnsZIO(ZIO.succeed(10))
           _ <- foo.foo.repeatN(10)
-          times <- foo.foo.timesZIO
-          result = assertTrue(times == 11)
+          result = assertTrue(foo.foo.times == 11)
         yield result,
       test("one arg"):
         val foo: Stub[Foo] = stub[Foo]
@@ -131,13 +130,11 @@ class MySpec extends ZIOSpecDefault, ZIOStubs:
             case _ => ZIO.succeed(0)
           one <- foo.foo1(1)
           two <- foo.foo1(2)
-          times <- foo.foo1.timesZIO
-          calls <- foo.foo1.callsZIO
           result = assertTrue(
-            times == 2, 
+            foo.foo1.times == 2, 
             one == 1,
             two == 0,
-            calls == List(1, 2)
+            foo.foo1.calls == List(1, 2)
           )
         yield result,
       test("two args"):
@@ -148,13 +145,10 @@ class MySpec extends ZIOSpecDefault, ZIOStubs:
             case _ => ZIO.succeed(0)
           one <- foo.foo2(0, 0)
           two <- foo.foo2(2, 2)
-          times <- foo.foo2.timesZIO
-          calls <- foo.foo2.callsZIO
-          twoZerosTimes <- foo.foo2.timesZIO((0, 0))
           result = assertTrue(
-            times == 2, 
-            calls == List((0, 0), (2, 2)),
-            twoZerosTimes == 1,
+            foo.foo2.times == 2,
+            foo.foo2.calls == List((0, 0), (2, 2)),
+            foo.foo2.times((0, 0)) == 1,
             one == 1, 
             two == 0
           )

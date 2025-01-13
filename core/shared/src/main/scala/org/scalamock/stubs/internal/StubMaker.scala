@@ -1,7 +1,7 @@
 package org.scalamock.stubs.internal
 
 import org.scalamock.clazz.Utils
-import org.scalamock.stubs.{StubArgumentLog, Stub, StubIO, Stubs}
+import org.scalamock.stubs.{Stub, StubIO, Stubs}
 
 import java.util.concurrent.atomic.AtomicReference
 import scala.annotation.tailrec
@@ -15,11 +15,12 @@ private[stubs] class StubMaker(
   override def newApi = true
 
   def newInstance[T: Type](
-    collector: Expr[Stubs#Created]
+    collector: Expr[CreatedStubs]
   ): Expr[Stub[T]] =
     val tpe = TypeRepr.of[T]
     val parents = parentsOf[T]
     val methods = MockableDefinitions(tpe)
+    val log = Expr.summon[Stubs#CallLog]
 
     val classSymbol = Symbol.newClass(
       parent = Symbol.spliceOwner,
@@ -62,13 +63,26 @@ private[stubs] class StubMaker(
                 privateWithin = Symbol.noSymbol
               ),
           )
-        } :+ Symbol.newMethod(
-          parent = classSymbol,
-          name = ClearStubsMethodName,
-          tpe = TypeRepr.of[Unit],
-          flags = Flags.EmptyFlags,
-          privateWithin = Symbol.noSymbol
-        ),
+        } ::: List(
+          Some(
+            Symbol.newMethod(
+              parent = classSymbol,
+              name = ClearStubsMethodName,
+              tpe = TypeRepr.of[Unit],
+              flags = Flags.EmptyFlags,
+              privateWithin = Symbol.noSymbol
+            )
+          ),
+          log.map { _ =>
+            Symbol.newVal(
+              parent = classSymbol,
+              name = UniqueStubIdx,
+              tpe = TypeRepr.of[Int],
+              flags = Flags.EmptyFlags,
+              privateWithin = Symbol.noSymbol
+            )
+          }
+        ).flatten,
       selfType = None
     )
 
@@ -115,7 +129,7 @@ private[stubs] class StubMaker(
                             val result = '{fun(${tupledArgs})}
                             val updateCalls = '{
                               ${ method.callsRef(classSymbol) }.getAndUpdate(_ :+ ${ tupledArgs })
-                              ${ method.recordCall(params) }
+                              ${ log.fold('{}) { callLog => '{ ${callLog}.internal.write(${StubWithMethod(This(classSymbol), method).show}) } } }
                             }
                             ioOpt match
                               case None =>
@@ -130,19 +144,32 @@ private[stubs] class StubMaker(
                 }
             )
         )
-      } :+ DefDef(
-        symbol = classSymbol.methodMember(ClearStubsMethodName).head,
-        _ =>
-          Some(
-            Block(
-              methods.map { method => '{
-                ${ method.callsRef(classSymbol) }.set(Nil)
-                ${ method.functionRef(classSymbol) }.set(None)
-              }.asTerm },
-              '{}.asTerm
-            )
+      } :::
+      List(
+        Some(
+          DefDef(
+            symbol = classSymbol.methodMember(ClearStubsMethodName).head,
+            _ =>
+              Some(
+                Block(
+                  methods.map { method => '{
+                    ${ method.callsRef(classSymbol) }.set(Nil)
+                    ${ method.functionRef(classSymbol) }.set(None)
+                  }.asTerm },
+                  '{}.asTerm
+                )
+              )
           )
-      )
+        ),
+        log.map { log =>
+          ValDef(
+            symbol = classSymbol.declaredField(UniqueStubIdx),
+            Some {
+              '{${log}.internal.nextIdx}.asTerm
+            }
+          )
+        }
+      ).flatten
     )
 
     val instance = Block(
@@ -180,6 +207,38 @@ private[stubs] class StubMaker(
       .selectReflect[AtomicReference[List[Args]]](_.callsValName)
     '{ ${args}.get() }
 
+  def parseMethods(calls: Expr[Seq[Any]]): Expr[List[String]] =
+    Expr.ofList {
+      parseCalls(calls.asTerm).map {
+        case select: Select =>
+          searchTermWithMethod(select, Nil).show
+
+        case Lambda(paramClause, term) =>
+          searchTermWithMethod(term, paramClause.map(_.tpt.tpe)).show
+
+        case Inlined(_, _, Lambda(paramClause, term)) =>
+          searchTermWithMethod(term, paramClause.map(_.tpt.tpe)).show
+
+        case tree =>
+          report.errorAndAbort(s"Not a method selection: ${tree.show(using Printer.TreeStructure)}")
+      }
+    }
+
+  @tailrec
+  private def parseCalls(term: Term): List[Term] =
+    term match
+      case Inlined(_, _, term) =>
+        parseCalls(term)
+
+      case Typed(Repeated(List(term: Inlined), _), _) =>
+        parseCalls(term)
+
+      case Typed(Repeated(lambdas, _), _) =>
+        lambdas
+
+      case other =>
+        report.errorAndAbort(s"Unknown tree: ${other.show(using Printer.TreeStructure)}")
+
 
   @tailrec
   private def tupleTypeToList(tpe: TypeRepr, acc: List[TypeRepr] = Nil): List[TypeRepr] =
@@ -204,6 +263,13 @@ private[stubs] class StubMaker(
             .appliedToArgs(List(el))
         }
 
+  extension (value: StubWithMethod)
+    def show: Expr[String] = '{
+      val idx = ${value.selectReflect[Int](_ => UniqueStubIdx)}
+      val method = ${Expr(value.method.show)}
+      s"<stub-$idx> $method"
+    }
+
 
   extension (method: MockableDefinition)
     private def callsRef(classSymbol: Symbol): Expr[AtomicReference[List[Any]]] =
@@ -214,27 +280,7 @@ private[stubs] class StubMaker(
 
     private def show: String =
       given Printer[TypeRepr] = Printer.TypeReprShortCode
-      s"${method.ownerTpe.show}.${method.symbol.name}${method.tpe.show}"
-
-    private def recordCall(params: List[List[Tree]]): Expr[Unit] =
-      Expr.summon[Stubs#CallLog] match
-        case None =>
-          '{}
-        case Some(callLog) =>
-          val args = params.map {_.collect { case term: Term => term }}.filterNot(_.isEmpty)
-          val writers = args.map { args =>
-            args.map { arg =>
-              arg.tpe.asType match
-                case '[t] =>
-                  '{
-                    val writer = ${Expr.summon[StubArgumentLog[t]].getOrElse(report.errorAndAbort("error"))}
-                      .asInstanceOf[StubArgumentLog[Any]]
-                    (${arg.asExpr}, writer)
-                  }
-            }
-          }
-          val writersExpr = Expr.ofList(writers.map(writers => Expr.ofList(writers)))
-          '{ ${callLog}.write(${Expr(method.show)}, ${writersExpr}) }
+      s"Stub[${method.ownerTpe.show}].${method.symbol.name}${method.tpe.show}"
 
 
   extension (io: Expr[StubIO[?]])

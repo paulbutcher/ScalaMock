@@ -55,38 +55,44 @@ object ZIOSpec extends ZIOSpecDefault, ZIOStubs:
         for
           _ <- foo.zeroArgsTask.returnsZIO(ZIO.none)
           _ <- foo.zeroArgsTask.repeatN(10)
-          times <- foo.zeroArgsTask.timesZIO
-          result = assertTrue(times == 11)
-        yield result,
+        yield assertTrue(foo.zeroArgsTask.times == 11),
       test("two args and cleanup"):
         for
           _ <- foo.twoArgsIOFail.returnsZIO(_ => ZIO.fail(2))
           _ <- foo.twoArgsIOFail(1, "").orElse(ZIO.none)
           calls <- foo.twoArgsIOFail.callsZIO
           times2 <- foo.zeroArgsTask.timesZIO
-          result = assertTrue(calls == List((1, "")), times2 == 0)
+          result = assertTrue(
+            foo.twoArgsIOFail.calls == List((1, "")),
+            foo.zeroArgsTask.times == 0
+          )
         yield result,
       test("one arg"):
         for
           _ <- foo.oneArgIO.returnsZIO(_ => ZIO.none)
           _ <- foo.oneArgIO(1)
-          times <- foo.oneArgIO.timesZIO
-          calls <- foo.oneArgIO.callsZIO
-          result = assertTrue(times == 1, calls == List(1))
+          result = assertTrue(
+            foo.oneArgIO.times == 1,
+            foo.oneArgIO.calls == List(1)
+          )
         yield result,
       test("type args one param"):
         for
           _ <- foo.typeArgsOptUIO[String].returnsZIO(_ => ZIO.some("foo"))
           result <- foo.typeArgsOptUIO[String]("foo")
-          times <- foo.typeArgsOptUIO.timesZIO
-          calls <- foo.typeArgsOptUIO.callsZIO
-        yield assertTrue(result.contains("foo"), times == 1, calls == List("foo")),
+        yield assertTrue(
+          result.contains("foo"),
+          foo.typeArgsOptUIO.times == 1,
+          foo.typeArgsOptUIO.calls == List("foo")
+        ),
       test("type args two params"):
         for
           _ <- foo.typeArgsOptUIOTwoParams[Int].returnsZIO(_ => ZIO.some(1))
           result <- foo.typeArgsOptUIOTwoParams[Int](1, 2).repeatN(1)
-          times <- foo.typeArgsOptUIOTwoParams.timesZIO
-          calls <- foo.typeArgsOptUIOTwoParams.callsZIO
-        yield assertTrue(result.contains(1), times == 2, calls == List((1, 2), (1, 2)))
+        yield assertTrue(
+          result.contains(1), 
+          foo.typeArgsOptUIOTwoParams.times == 2,
+          foo.typeArgsOptUIOTwoParams.calls == List((1, 2), (1, 2))
+        )
     ) @@ TestAspect.before(ZIO.succeed(resetStubs())) @@ TestAspect.sequential
 

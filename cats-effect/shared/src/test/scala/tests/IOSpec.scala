@@ -24,34 +24,32 @@ class IOSpec extends CatsEffectSuite, CatsEffectStubs:
 
     def typeArgsOptIOTwoParams[A](value: A, other: A): IO[Option[A]]
 
-  val foo = stub[Foo]
-
-
   test("zero args"):
+    given log: CallLog = CallLog()
+    val foo = stub[Foo]
     val result = for
       _ <- foo.zeroArgsIO.returnsIO(IO.none[String])
       _ <- foo.zeroArgsIO
       _ <- foo.zeroArgsIO
-      times <- foo.zeroArgsIO.timesIO
-    yield times
+    yield foo.zeroArgsIO.times
 
     assertIO(result, 2)
 
   test("one arg"):
+    val foo = stub[Foo]
     val result = for
       _ <- foo.oneArgIO.returnsIO:
         case 1 => IO(None)
         case _ => IO(Some("1"))
       _ <- foo.oneArgIO(1)
       _ <- foo.oneArgIO(2)
-      times <- foo.oneArgIO.timesIO
-      calls <- foo.oneArgIO.callsIO
-    yield (times, calls)
+    yield (foo.oneArgIO.times, foo.oneArgIO.calls)
 
     assertIO(result, (2, List(1, 2)))
 
 
   test("two args"):
+    val foo = stub[Foo]
     val result =
       for
         _ <- foo.twoArgsIO.returnsIO:
@@ -67,6 +65,7 @@ class IOSpec extends CatsEffectSuite, CatsEffectStubs:
 
 
   test("type args one param"):
+    val foo = stub[Foo]
     val result = for
       _ <- foo.typeArgsOptIO[String].returnsIO:
         case "foo" => IO(Some("foo"))
@@ -79,6 +78,7 @@ class IOSpec extends CatsEffectSuite, CatsEffectStubs:
     assertIO(result, (Some("foo"), 1, List("foo")))
 
   test("type args two params"):
+    val foo = stub[Foo]
     val result = for
       _ <- foo.typeArgsOptIOTwoParams[Int].returnsIO:
         case (1, 2) => IO(Some(1))

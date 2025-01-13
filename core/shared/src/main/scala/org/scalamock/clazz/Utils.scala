@@ -77,7 +77,7 @@ private[scalamock] class Utils(using val quotes: Quotes):
             case AppliedType(tycon, List(typ)) if newApi && tycon =:= TypeRepr.of[Stub] =>
               typ
             case tpe if newApi =>
-              report.errorAndAbort(s"API is only available on Stub[T]")
+              report.errorAndAbort(s"This syntax is only available on Stub[T]")
             case other =>
               other
 

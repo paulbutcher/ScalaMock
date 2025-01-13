@@ -1,10 +1,11 @@
 package org.scalamock.stubs
 
-import zio.{UIO, ZIO, IO}
+import zio.{IO, UIO, ZIO}
 
 import scala.util.{NotGiven, TupledFunction}
 
 trait ZIOStubs extends Stubs:
+
   final given StubIO[IO] = new StubIO[IO]:
     def die(ex: Throwable): UIO[Nothing] =
       ZIO.die(ex)
@@ -31,15 +32,15 @@ trait ZIOStubs extends Stubs:
       value: UntupledOne[Args] => IO[E, R]
     ): UIO[Unit] = ZIO.succeed(f.returns[Args, IO[E, R]](value))
 
-    /** Same as [[calls]], but returns ZIO */
+    /** Same as [[calls]], but returns ZIO. You still can just use [[calls]] instead. */
     inline def callsZIO[Args <: NonEmptyTuple, R](
       using TupledFunction[F, Args => R]
     ): UIO[List[UntupledOne[Args]]] = ZIO.succeed(f.calls[Args, R])
 
-    /** Same as [[times]], but returns ZIO */
+    /** Same as [[times]], but returns ZIO. You still can just use [[times]] instead. */
     inline def timesZIO: UIO[Int] = ZIO.succeed(f.times)
 
-    /** Same as [[times]] with concrete arguments, but returns ZIO */
+    /** Same as [[times]] with concrete arguments, but returns ZIO. You still can just use [[times]] instead. */
     inline def timesZIO[Args <: NonEmptyTuple, R](
       using TupledFunction[F, Args => R]
     )(
