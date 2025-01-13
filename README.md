@@ -16,7 +16,7 @@ If it is not what you need consider looking into `Standard API examples` section
 
 Scalamock internals rely on Scala 3 experimental API, so prerequisites are:
 ```scala
-scalaVersion := "3.4.2" // or higher
+scalaVersion := "3.4.3" // or higher
 Test / scalacOptions += "-experimental"
 ```
 
