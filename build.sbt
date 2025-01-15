@@ -53,6 +53,8 @@ lazy val `scalamock-zio` = crossProject(JSPlatform, JVMPlatform)
       )
     }
   )
+  .jsSettings(name := "scalamock-zio")
+  .jvmSettings(name := "scalamock-zio")
   .dependsOn(scalamock)
 
 
@@ -66,23 +68,9 @@ lazy val `scalamock-cats-effect` = crossProject(JSPlatform, JVMPlatform)
       "org.typelevel" %% "munit-cats-effect" % "2.0.0" % Test
     )
   )
+  .jsSettings(name := "scalamock-cats-effect")
+  .jvmSettings(name := "scalamock-cats-effect")
   .dependsOn(scalamock)
-
-lazy val `scalamock-zio-jvm` = `scalamock-zio`.jvm.settings(
-  name := "scalamock-zio"
-)
-
-lazy val `scalamock-zio-js` = `scalamock-zio`.js.settings(
-  name := "scalamock-zio"
-)
-
-lazy val `scalamock-cats-effect-jvm` = `scalamock-cats-effect`.jvm.settings(
-  name := "scalamock-cats-effect"
-)
-
-lazy val `scalamock-cats-effect-js` = `scalamock-cats-effect`.js.settings(
-  name := "scalamock-cats-effect"
-)
 
 lazy val examples = project in file("core/examples") settings(
   commonSettings,
