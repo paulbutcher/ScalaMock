@@ -19,6 +19,11 @@ Scalamock internals rely on Scala 3 experimental API, so prerequisites are:
 scalaVersion := "3.4.3" // or higher
 Test / scalacOptions += "-experimental"
 ```
+### Why 3.4.3 and not LTS?
+More details here https://github.com/ScalaMock/ScalaMock/issues/567, but shortly:
+1. scalamock 7 uses `TupledFunction` and it currently can't be used without `-experimental` compiler flag, which **won't be** backported to LTS 3.3 
+2. scalamock 6 takes anvantage of scala compiler bug allowing to omit annotating everything as `@experimental`   
+
 
 ### Dependencies
 
