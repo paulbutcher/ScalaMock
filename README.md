@@ -120,8 +120,7 @@ class MySpec extends ZIOSpecDefault, ZIOStubs:
         for
           _ <- foo.foo.returnsZIO(ZIO.succeed(10))
           _ <- foo.foo.repeatN(10)
-          result = assertTrue(foo.foo.times == 11)
-        yield result,
+        yield assertTrue(foo.foo.times == 11),
       test("one arg"):
         val foo: Stub[Foo] = stub[Foo]
         for
