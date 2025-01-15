@@ -6,7 +6,7 @@ If you have a problem and want to ask questions or get help, the best places to 
 
 #### **Did you find a bug?**
 
-* **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/paulbutcher/ScalaMock/issues).
+* **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/ScalaMock/ScalaMock/issues).
 
 * If you're unable to find an open issue addressing the problem, open a new one. Be sure to include a **title and clear description**, as much relevant information as possible, and a **code sample** or an **executable test case** demonstrating the expected behavior that is not occurring.
 
@@ -28,7 +28,7 @@ If you have a problem and want to ask questions or get help, the best places to 
 
 #### **Do you want to contribute to the documentation?**
 
-* https://scalamock.org is automatically generated from the `gh-pages` [branch](https://github.com/paulbutcher/ScalaMock/tree/gh-pages). You can submit a Pull Request against it if you want to contribute.
+* https://scalamock.org is automatically generated from the `gh-pages` [branch](https://github.com/ScalaMock/ScalaMock/tree/gh-pages). You can submit a Pull Request against it if you want to contribute.
 
 #### **Help other ScalaMock users**
 

@@ -8,7 +8,7 @@ private[scalamock] class Utils(using val quotes: Quotes):
   def newApi = false
 
   import quotes.reflect.*
-  def ticketMessage = "Please open a ticket at https://github.com/paulbutcher/ScalaMock/issues"
+  def ticketMessage = "Please open a ticket at https://github.com/ScalaMock/ScalaMock/issues"
 
   def parentsOf[T: Type]: List[TypeTree | Term] =
     val tpe = TypeRepr.of[T]

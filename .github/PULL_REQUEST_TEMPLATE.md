@@ -1,6 +1,6 @@
 # Pull Request Checklist
 
-* [ ] I agree to licence my contributions under the [MIT licence](https://github.com/paulbutcher/ScalaMock/blob/master/LICENCE)
+* [ ] I agree to licence my contributions under the [MIT licence](https://github.com/ScalaMock/ScalaMock/blob/master/LICENCE)
 * [ ] I have added copyright headers to new files
 * [ ] I have added tests for any changed functionality
 
