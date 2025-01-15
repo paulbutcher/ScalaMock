@@ -31,18 +31,20 @@ trait CatsEffectStubs extends Stubs:
       value: UntupledOne[Args] => IO[R]
     ): IO[Unit] = IO(f.returns[Args, IO[R]](value))
 
-    /** Same as [[calls]], but returns IO */
+    /** Same as [[calls]], but returns IO. You still can just use [[calls]] instead. */
     inline def callsIO[Args <: NonEmptyTuple, R](
       using TupledFunction[F, Args => R]
     ): IO[List[UntupledOne[Args]]] = IO(f.calls[Args, R])
 
-    /** Same as [[times]], but returns IO */
+    /** Same as [[times]], but returns IO. You still can just use [[times]] instead. */
     inline def timesIO: IO[Int] = IO(f.times)
 
-    /** Same as [[times]] with concrete arguments, but returns IO */
+    /** Same as [[times]] with concrete arguments, but returns IO. You still can just use [[times]] instead. */
     inline def timesIO[Args <: NonEmptyTuple, R](
       using TupledFunction[F, Args => R]
     )(
       args: UntupledOne[Args]
     ): IO[Int] =
       IO(f.times[Args, R](args))
+
+    

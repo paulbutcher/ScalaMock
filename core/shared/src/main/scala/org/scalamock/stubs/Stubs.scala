@@ -9,7 +9,7 @@ opaque type Stub[+T] <: T = T
 
 trait Stubs:
   /** Collects all generated stubs */
-  final given stubs: Created = Created()
+  final given stubs: internal.CreatedStubs = internal.CreatedStubs()
 
   /**
    *  Resets all recorded stub functions and arguments.
@@ -147,56 +147,33 @@ trait Stubs:
     ): Int =
       callsImpl[F, Args, R](f).count(_ == args)
 
-  private[stubs] class Created:
-    private val stubs: AtomicReference[List[Stub[Any]]] = new AtomicReference(Nil)
+    inline def isBefore(inline other: Any)(using log: CallLog): Boolean =
+      val List(fString, gString) = parseMethodsImpl(f, other)
+      val actual = log.internal.calledMethods
+      actual.indexOf(gString, actual.indexOf(fString)) != -1
 
-    def bind[T](stub: Stub[T]): Stub[T] =
-      stubs.updateAndGet(stub :: _)
-      stub
+    inline def isAfter(inline other: Any)(using log: CallLog): Boolean =
+      val List(fString, gString) = parseMethodsImpl(f, other)
+      val actual = log.internal.calledMethods
+      actual.indexOf(fString, actual.indexOf(gString)) != -1
 
-    def clearAll(): Unit =
-      stubs.updateAndGet { stubs =>
-        stubs.foreach:
-          _
-            .asInstanceOf[scala.reflect.Selectable]
-            .applyDynamic(internal.ClearStubsMethodName)()
-        stubs
-      }
-
-  /* This API is not stable enough, may be changed in the future */
   class CallLog:
-    private[CallLog] case class InternalCall(methodName: String, args: List[List[(Any, StubArgumentLog[Any])]])
-    case class Call(methodName: String, args: List[List[Any]])
-    private val callsRef: AtomicReference[List[InternalCall]] = new AtomicReference[List[InternalCall]](Nil)
+    override def toString: String = internal.calledMethods.mkString("\n")
 
-    def write(methodName: String, args: List[List[(Any, StubArgumentLog[Any])]]) =
-      callsRef.getAndUpdate(calls => InternalCall(methodName, args) :: calls)
+    object internal:
+      private val methodsRef: AtomicReference[List[String]] = AtomicReference(Nil)
+      private val uniqueIdx: AtomicReference[Int] = AtomicReference(0)
+      def nextIdx: Int = uniqueIdx.updateAndGet(_ + 1)
+      def write(methodName: String): Unit = { methodsRef.getAndUpdate(methodName :: _); () }
+      def clear(): Unit =
+        methodsRef.set(Nil)
+        uniqueIdx.set(0)
+      def calledMethods: List[String] = internal.methodsRef.get().reverse
 
-    def methods: List[String] = callsRef.get().map(_.methodName)
-    def calls: List[Call] = callsRef.get().map { call => Call(call.methodName, call.args.map(_.map(_._1))) }
-
-    def full: String =
-      callsRef.get().reverse.map { call =>
-        s"""
-            |Method: ${call.methodName}${
-                call.args.zipWithIndex.map { (list, idx) =>
-                  s"""
-                     |Argument list $idx:
-                     |${
-                    list.zipWithIndex
-                      .map { case ((arg, writer), idx) => s"$idx: ${writer.log(arg)}" }
-                      .mkString("\n")
-                  }
-                     |""".stripMargin
-                }.mkString("\n")
-              }
-            |----------------------
-            |""".stripMargin
-        }.mkString("")
 
 
 private
-inline def stubImpl[T](using collector: Stubs#Created): Stub[T] =
+inline def stubImpl[T](using collector: internal.CreatedStubs): Stub[T] =
   ${ stubMacro[T]('{ collector }) }
 
 private
@@ -219,7 +196,11 @@ inline def timesImpl[F, Args, R](inline f: F): Int =
   ${ timesMacro[F, Args, R]('{ f }) }
 
 private
-def stubMacro[T: Type](collector: Expr[Stubs#Created])(using Quotes): Expr[Stub[T]] =
+inline def parseMethodsImpl(inline calls: Any*): List[String] =
+  ${ parseMethodsMacro('{ calls }) }
+
+private
+def stubMacro[T: Type](collector: Expr[internal.CreatedStubs])(using Quotes): Expr[Stub[T]] =
   new internal.StubMaker().newInstance[T](collector)
 
 private
@@ -237,6 +218,10 @@ def callsMacro[F: Type, Args: Type, R: Type](f: Expr[F])(using quotes: Quotes): 
 private
 def timesMacro[F: Type, Args: Type, R: Type](f: Expr[F])(using quotes: Quotes): Expr[Int] =
   '{ ${ new internal.StubMaker().callsMacro[F, Args, R](f) }.length }
+
+private
+def parseMethodsMacro(calls: Expr[Seq[Any]])(using quotes: Quotes): Expr[List[String]] =
+  new internal.StubMaker().parseMethods(calls)
 
 private[stubs] type UntupledOne[X <: NonEmptyTuple] = X match
   case head *: EmptyTuple => head
