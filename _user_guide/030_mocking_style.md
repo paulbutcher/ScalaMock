@@ -6,7 +6,12 @@ permalink: /user-guide/mocking_style/
 
 # Choosing your mocking style 
 
+
 ScalaMock supports two different mocking styles---*expectations-first* and *record-then-verify*. These styles can be mixed within a single test.
+
+> Note that these chapters are not applicable to ScalaMock 7 experimental API. Only *record-then-verify* style is supported there.
+
+> This is because you can't fail an expectation without throwing an exception and this makes more trouble than benefit. Instead I offer you possibility to get number of times method was called and method arguments with which method was called directly, so you can check them with your testing framework
 
 ## Expectations-First Style
 
@@ -35,9 +40,9 @@ Expectations can then be set using `expects`:
   val heaterMock = mock[Heater]
   val coffeeMachine = new CoffeeMachine(heaterMock)
 
-  (heaterMock.isReady _).expects().returning(true)
-  (heaterMock.setPowerState _).expects(PowerState.On)
-  (heaterMock.setPowerState _).expects(PowerState.Off)
+  heaterMock.isReady.expects().returning(true)
+  heaterMock.setPowerState.expects(PowerState.On)
+  heaterMock.setPowerState.expects(PowerState.Off)
   
   coffeeMachine.makeCoffee()
 }
@@ -56,18 +61,18 @@ Of course, in order to increase test readability you can define expectations, th
   
   // expectations for making a black coffee:
   
-  (heaterMock.setPowerState _).expects(PowerState.On)
-  (heaterMock.setPowerState _).expects(PowerState.Off)
+  heaterMock.setPowerState.expects(PowerState.On)
+  heaterMock.setPowerState.expects(PowerState.Off)
   
   coffeeMachine.makeBlackCoffee()
   
   // expectations for making a coffee with milk:
   
-  (milkContainerMock.isEmpty _).expects().returns(false)
-  (milkContainerMock.fetchMilk _).expects(MilkPortions.SmallCoffee)
+  milkContainerMock.isEmpty.expects().returns(false)
+  milkContainerMock.fetchMilk.expects(MilkPortions.SmallCoffee)
   
-  (heaterMock.setPowerState _).expects(PowerState.On)
-  (heaterMock.setPowerState _).expects(PowerState.Off)
+  heaterMock.setPowerState.expects(PowerState.On)
+  heaterMock.setPowerState.expects(PowerState.Off)
   
   coffeeMachine.makeCoffeeWithMilk()
 }
@@ -100,12 +105,12 @@ Return values that are used by the system under test can be set up by using `whe
   val heaterStub = stub[Heater]
   val coffeeMachine = new CoffeeMachine(heaterStub)
 
-  (heaterStub.isReady _).when().returns(true)
+  heaterStub.isReady.when().returns(true)
 
   coffeeMachine.makeCoffee()
 
-  (heaterStub.setPowerState _).verify(PowerState.On)
-  (heaterStub.setPowerState _).verify(PowerState.Off)
+  heaterStub.setPowerState.verify(PowerState.On)
+  heaterStub.setPowerState.verify(PowerState.Off)
 }
 ```
 
@@ -146,11 +151,11 @@ val winner = Player(id=222, nickname="Boris", country=Countries.Russia)
   val playerDatabaseStub = stub[PlayerDatabase]
   
   // expectations
-  (countryLeaderBoardMock.addVictoryForCountry _).expects(Countries.Russia)
+  countryLeaderBoardMock.addVictoryForCountry.expects(Countries.Russia)
 
   // defining stubs
-  (playerDatabaseStub.getPlayerById _).when(loser.id).returns(loser)
-  (playerDatabaseStub.getPlayerById _).when(winner.id).returns(winner)
+  playerDatabaseStub.getPlayerById.when(loser.id).returns(loser)
+  playerDatabaseStub.getPlayerById.when(winner.id).returns(winner)
 
   // run system under test
   val matchResultObserver = new MatchResultObserver(playerDatabaseStub, playerLeaderBoardStub, countryLeaderBoardMock)
@@ -168,8 +173,8 @@ The above example using only *Expectations-first* style:
   val countryLeaderBoardMock = mock[CountryLeaderBoard]
   val playerDatabaseMock = mock[PlayerDatabase]
   
-  (countryLeaderBoardMock.addVictoryForCountry _).expects(Countries.Russia)
-  (playerLeaderBoardMock.addVictoryForPlayer _).expects(*).anyNumberOfTimes() // we don't care
+  countryLeaderBoardMock.addVictoryForCountry.expects(Countries.Russia).returns(())
+  playerLeaderBoardMock.addVictoryForPlayer.expects(*).returns(()).anyNumberOfTimes() // we don't care
 
   (playerDatabaseMock.getPlayerById _).expects(loser.id).returning(loser)
   (playerDatabaseMock.getPlayerById _).expects(winner.id).returning(winner)
@@ -192,15 +197,15 @@ The same example using only *Record-then-Verify* style:
   val playerDatabaseStub = stub[PlayerDatabase]
   
   // defining stubs
-  (playerDatabaseStub.getPlayerById _).when(loser.id).returns(loser)
-  (playerDatabaseStub.getPlayerById _).when(winner.id).returns(winner)
+  playerDatabaseStub.getPlayerById.when(loser.id).returns(loser)
+  playerDatabaseStub.getPlayerById.when(winner.id).returns(winner)
 
   // run system under test
   val matchResultObserver = new MatchResultObserver(playerDatabaseStub, playerLeaderBoardStub, countryLeaderBoardStub)
   matchResultObserver.recordMatchResult(MatchResult(winner=winner.id, loser=loser.id))
 
   // expectations
-  (countryLeaderBoardStub.addVictoryForCountry _).verify(Countries.Russia)
+  countryLeaderBoardStub.addVictoryForCountry.verify(Countries.Russia)
 }
 ```
 

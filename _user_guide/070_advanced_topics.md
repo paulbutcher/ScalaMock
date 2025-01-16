@@ -6,119 +6,253 @@ permalink: /user-guide/advanced_topics/
 
 # Advanced topics
 
-## Mocking overloaded, curried and polymorphic methods
+## ScalaMock 7
+If you are want plain old scalamock examples, please refer to [ScalaMock](./070_advanced_topics.md#scalamock) section.
 
-Overloaded, curried and polymorphic methods can be mocked by specifying either argument types or type parameters.
 
-### Example 1 - Overloaded methods
+### Mocking 0-parameter method
 
 ```scala
-trait Foo {
+trait Foo:
+  def bar(): Int
+  def buz: Int
+
+val fooMock = mock[Foo]
+
+fooMock.bar().returns(0)
+fooMock.buz.returns(0)
+```
+
+### Overloaded methods
+
+```scala
+trait Foo:
   def overloaded(x: Int): String
   def overloaded(x: String): String
   def overloaded[T](x: T): String
-}
+
 
 val fooMock = mock[Foo]
 
-(fooMock.overloaded(_: Int)).expects(10)
-(fooMock.overloaded(_: String)).expects("foo")
-(fooMock.overloaded[Double] _).expects(1.23)
+(fooMock.overloaded(_: Int)).returns(_ => "")
+(fooMock.overloaded(_: String)).returns(_ => "")
+fooMock.overloaded[Double].returns(_ => "")
 ```
 
-You may also prefer to use this slightly different syntax:
+Also you can inline it to use later on:
 
 ```scala
-(fooMock.overloaded _: Int => String).expects(10)  // or
-(fooMock.overloaded _: Int => String) expects (10) // or
-(fooMock.overloaded(_: Int)) expects (10)
+
+inline def overloadedInt = fooMock.overloaded(_: Int)
+
+overloadedInt.returns(_ => "")
+overloadedInt.times
+
 ```
 
-### Example 2 - Polymorphic methods
+### Polymorphic methods
 
 ```scala
-trait Foo {
+trait Foo:
   def polymorphic[T](x: List[T]): String
-}
+
 
 val fooMock = mock[Foo]
 
-(fooMock.polymorphic(_: List[Int])).expects(List(1, 2, 3))            // or
-(fooMock.polymorphic[Int] _).expects(List(1, 2, 3))                   // or
-(fooMock.polymorphic _ : List[Int] => String).expects(List(1, 2, 3))
+fooMock.polymorphic[Int].returns:
+  case List(1, 2, 3) => ""
+  case _ => "0"
+
+// also you can specify argument types if compiler somehow can't resolve a method
+(fooMock.polymorphic[Int](_: List[Int])).returns:
+  case List(1, 2, 3) => ""
+  case _ => "0"
 ```
 
-### Example 3 - Curried methods 
+### Curried methods 
 
 ```scala
-trait Foo {
+trait Foo:
   def curried(x: Int)(y: Double): String
-}
+
 
 val fooMock = mock[Foo]
 
-(fooMock.curried(_: Int)(_: Double)).expects(10, 1.23)
+(fooMock.curried(_: Int)(_: Double)).returns:
+  case (10, 1.23) => ""
+
+// this also can be inlined and used
+
+inline def curried = fooMock.curried(_: Int)(_: Double)
+
+curried.returns(_ => ")
+
 ```
 
-### Example 4 - Methods with implicit parameters 
+### Methods with using parameters 
+
+```scala
+class Codec()
+
+trait Memcached:
+  def get(key: String)(using Codec): Option[Int]
+
+val memcachedMock = mock[Memcached]
+
+given Codec = new Codec
+(memcachedMock.get(_ : String)(using _: Codec)).returns((x, y) => Some(123))
+
+// this also can be inlined and used
+
+inline def withUsingParams = memcachedMock.get(_ : String)(using _: Codec)
+
+withUsingParams.returns(_ => Some(123))
+```
+
+### Repeated parameters
+
+Repeated parameters are represented as a Seq. For example, given:
+
+```scala
+trait Foo:
+  def takesRepeatedParameter(x: Int, ys: String*): Unit
+  def takesRepeatedParamCurried(x: Int*)(y: String*): Unit
+```
+you can set an expectation with:
+
+```scala
+fooMock.takesRepeatedParameter.expects(42, Seq("red", "green", "blue")).returns(())
+
+(fooMock.takesRepeatedParamCurried((_: Seq[Int])*)((_: Seq[String])*)).returns((seq1, seq2) => ())
+
+// this also can be inlined and used later on
+
+inline def multipleRepeatedCurried = fooMock.takesRepeatedParamCurried((_: Seq[Int])*)((_: Seq[String])*)
+
+multipleRepeatedCurried.returns((seq1, seq2) => ())
+
+```
+
+## ScalaMock
+
+### Mocking 0-parameter method
+
+```scala
+trait Foo:
+  def bar(): Int
+  def buz: Int
+
+val fooMock = mock[Foo]
+
+(() => fooMock.bar()).expects(10).returns(0)
+(() => fooMock.buz).expects(10).returns(0)
+```
+
+### Mocking overloaded, curried and polymorphic methods
+
+Overloaded, curried and polymorphic methods can be mocked by specifying either argument types or type parameters.
+
+#### Overloaded methods
+
+```scala
+trait Foo:
+  def overloaded(x: Int): String
+  def overloaded(x: String): String
+  def overloaded[T](x: T): String
+
+
+val fooMock = mock[Foo]
+
+(fooMock.overloaded(_: Int)).expects(10).returns("")
+(fooMock.overloaded(_: String)).expects("foo").returns("")
+fooMock.overloaded[Double].expects(1.23).returns("")
+```
+
+#### Polymorphic methods
+
+```scala
+trait Foo:
+  def polymorphic[T](x: List[T]): String
+
+
+val fooMock = mock[Foo]
+
+fooMock.polymorphic[Int].expects(List(1, 2, 3)).returns("")
+
+// also you can specify argument types if compiler somehow can't resolve a method
+(fooMock.polymorphic[Int](_: List[Int])).expects(List(1, 2, 3)).returns("") 
+```
+
+#### Curried methods 
+
+```scala
+trait Foo:
+  def curried(x: Int)(y: Double): String
+
+
+val fooMock = mock[Foo]
+
+(fooMock.curried(_: Int)(_: Double)).expects(10, 1.23).returns("")
+```
+
+#### Methods with implicit parameters 
 
 This case is very similar to curried methods. All you need to do is to help the Scala compiler know that `memcachedMock.get _` should be converted to `MockFunction2`. For example:
 
 ```scala
 class Codec()
 
-trait Memcached {
-  def get(key: String)(implicit codec: Codec): Option[Int]
-}
+trait Memcached:
+  def get(key: String)(using Codec): Option[Int]
 
 val memcachedMock = mock[Memcached]
 
-implicit val codec = new Codec
-(memcachedMock.get(_ : String)(_ : Codec)).expects("some_key", *).returning(Some(123))
+given Codec = new Codec
+(memcachedMock.get(_ : String)(using _: Codec)).expects("some_key", *).returning(Some(123))
 ```
 
-### Example 5 - Repeated parameters
+#### Repeated parameters
 
 Repeated parameters are represented as a Seq. For example, given:
 
 ```scala
-trait Foo {
-  def takesRepeatedParameter(x: Int, ys: String*)
-}
+trait Foo:
+  def takesRepeatedParameter(x: Int, ys: String*): Unit
 ```
 you can set an expectation with:
 
 ```scala
-(fooMock.takesRepeatedParameter _).expects(42, Seq("red", "green", "blue"))
+fooMock.takesRepeatedParameter.expects(42, Seq("red", "green", "blue")).returns(())
 ```
 
-## Returning values (onCall)
+### Returning values (onCall)
 
-By default mocks and stubs return `null`. You can return predefined value using the `returning()` method, or in the case of stubs, `returns()`. When the returned value depends on function arguments, you can return the computed value (or throw a computed exception) with `onCall()`. For example:
+You can return predefined value using the `returning()` method, or in the case of stubs, `returns()`. When the returned value depends on function arguments, you can return the computed value (or throw a computed exception) with `onCall()`. For example:
 
 ```scala
-trait Foo {
+trait Foo:
     def increment(a: Int): Int
-}
+
 
 val fooMock = mock[Foo]
 
-(fooMock.increment _) expects(12) returning(13)
+fooMock.increment.expects(12).returning(13)
 fooMock.increment(12) shouldBe 13 
 
-(fooMock.increment _) expects(*) onCall { arg: Int => arg + 1}
+fooMock.increment.expects(*).onCall { arg: Int => arg + 1}
 fooMock.increment(100) shouldBe 101
 
-(fooMock.increment _) expects(*) onCall { arg: Int => throw new RuntimeException("message") }
+fooMock.increment.expects(*).onCall { arg: Int => throw new RuntimeException("message") }
 intercept[RuntimeException] { fooMock.increment(0) }
 ```
+
 ```scala
 val mockIncrement = mockFunction[Int, Int]
-mockIncrement expects (*) onCall { arg: Int => arg + 1 }
+mockIncrement.expects(*).onCall { arg: Int => arg + 1 }
 mockIncrement(10) shouldBe  11 
 ```
 
-## Call count
+### Call count
 
 By default, mocks expect exactly one call while stubs allow any number of calls.
 For stubs, an exact number of calls can be specified in the verification phase.
@@ -126,7 +260,7 @@ For mocks, alternative constraints can be set with `repeat()`:
 
 ```scala
 mockedFunction.expects(42).returns(42).repeat(3 to 7)
-mockedFunction expects (3) repeat 10
+mockedFunction.expects(3).repeat(10)
 ```
 
 There are various aliases for common expectations and styles:
@@ -164,28 +298,29 @@ mockedFunction5(5)
 
 For a full list, see `org.scalamock.CallHandler`.
 
-## Exceptions
+### Exceptions
 
 Instead of a return value, mocks and stubs can be instructed to throw an exception. This can be achieved either by throwing exception in the `onCall` handler or by using the `throws` method.
 
 
-### Example 1 - throws method
+#### throws method
 
 ```scala
-trait Foo {
+trait Foo:
   def increment(a: Int): Int
-}
+
 
 val fooMock = mock[Foo]
 
-(fooMock.increment _) expects (5) throws new RuntimeException("message")
+fooMock.increment.expects(5).throws(new RuntimeException("message"))
 
 intercept[RuntimeException] { fooMock.increment(5) }
 ```
 
-### Example 2 - throwing from the `onCall` handler
+####  throwing from the `onCall` handler
+
 ```scala
-(fooMock.increment _) expects(*) onCall { arg: Int => 
+fooMock.increment.expects(*).onCall { arg: Int => 
   if (arg == 0) 
       throw new RuntimeException("message") 
   else
@@ -195,25 +330,25 @@ intercept[RuntimeException] { fooMock.increment(5) }
 intercept[RuntimeException] { fooMock.increment(0) }
 ```
 
-## Partial Functions
+### Partial Functions
 
-### Example 1
+#### Example 1
 
 ```scala    
 val m = mockFunction[Int, String]
-val mp = new PartialFunction[Int, String] {
+val mp = new PartialFunction[Int, String]:
   def isDefinedAt(x: Int) = true
   def apply(v1: Int) = m(v1)
-}
 
-m expects 42 returning "foo" once()
+
+m.expects(42).returning("foo").once()
 
 mp(42) shouldBe "foo"
 ```
 
-## Raw types
+### Raw types
 
-### Example 1
+#### Example 1
 
 Try this solution if you get this error:
 
@@ -241,19 +376,19 @@ public interface RawTypeInterface {
 }
 ```
 
-## Log Calls
+### Log Calls
 
-### Example 1
+#### Example 1
 
 ```scala
 inAnyOrderWithLogging { // or inSequenceWithLogging
-  someMock.foo _ expects() returning 42 anyNumberOfTimes()
+  someMock.foo.expects().returning(42).anyNumberOfTimes()
 }
 ```
 
 This will print all invocations of call handlers and verifiers with the corresponding calls.
 
-## Argument Capture
+### Argument Capture
 
 (since ScalaMock 4.2.0)
 Using the Capture feature in `org.scalamock.matchers.ArgCapture`, it is easy and convenient to allow wildcard matches but assert on the results later on.
@@ -264,7 +399,7 @@ It is possible to store either a single value in a `CaptureOne`, or a `Seq` or v
     val m = mock[TestTrait]
     val c1 = CaptureOne[Int]()
 
-    m.oneParam _ expects capture(c1) once()
+    m.oneParam.expects(capture(c1)).once()
     m.oneParam(42)
     c1.value should be (42)
   }
@@ -273,7 +408,7 @@ It is possible to store either a single value in a `CaptureOne`, or a `Seq` or v
     val m = mock[TestTrait]
     val c = CaptureAll[Int]()
 
-    m.oneParam _ expects capture(c) repeat 3
+    m.oneParam.expects(capture(c)).repeat(3)
     m.oneParam(99)
     m.oneParam(17)
     m.oneParam(583)
@@ -282,7 +417,7 @@ It is possible to store either a single value in a `CaptureOne`, or a `Seq` or v
   }
 ```
 
-## Using ScalaMock without ScalaTest/Specs2
+### Using ScalaMock without ScalaTest/Specs2
 
 You just need to implement your own subtype of `MockFactoryBase`. Technically you can adapt ScalaMock to be used inside JUnit, µTest, etc this way, or any other framework really.
 
@@ -290,24 +425,24 @@ You just need to implement your own subtype of `MockFactoryBase`. Technically yo
 import org.scalamock.MockFactoryBase
 import org.scalamock.clazz.Mock
 
-object NoScalaTestExample extends Mock {
-  trait Cat {
+object NoScalaTestExample extends Mock:
+  trait Cat:
     def meow(): Unit
     def isHungry: Boolean
-  }
 
-  class MyMockFactoryBase extends MockFactoryBase {
+
+  class MyMockFactoryBase extends MockFactoryBase:
     override type ExpectationException = Exception
     override protected def newExpectationException(message: String, methodName: Option[Symbol]): Exception =
       throw new Exception(s"$message, $methodName")
 
     def verifyAll(): Unit = withExpectations(() => ())
-  }
+  
 
   implicit var mc: MyMockFactoryBase = _
   var cat: Cat = _
 
-  def main(args: Array[String]): Unit = {
+  def main(args: Array[String]): Unit =
     // given: I have a mock context
     mc = new MyMockFactoryBase
     // and am mocking a cat
@@ -322,21 +457,4 @@ object NoScalaTestExample extends Mock {
 
     // and the mock verifies
     mc.verifyAll()
-  }
-}
-```
-
-
-## Mocking 0-parameter function and parameterless function 
-
-```scala
-trait Foo {
-  def bar(): Int
-  def buz: Int
-}
-
-val fooMock = mock[Foo]
-
-(() => fooMock.bar()).expects(10)
-(() => fooMock.buz).expects(10)
 ```
