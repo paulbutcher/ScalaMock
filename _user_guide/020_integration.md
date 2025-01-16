@@ -51,7 +51,7 @@ class CoffeeMachineTest extends FlatSpec with ShouldMatchers with MockFactory {
 
   "CoffeeMachine" should "not turn on the heater when the water container is empty" in {
       val waterContainerMock = mock[WaterContainer]
-      (waterContainerMock.isEmpty _).expects().returning(true)
+      waterContainerMock.isEmpty.expects().returning(true)
       // ...
   }
 }
@@ -68,9 +68,9 @@ class ExchangeRateListingTest extends AsyncFlatSpec with AsyncMockFactory {
 
   "ExchangeRateListing" should "eventually return the exchange rate between passed Currencies when getExchangeRate is invoked" in {
       val currencyDatabaseStub = stub[CurrencyDatabase]
-      (currencyDatabaseStub.getCurrency _).when(eur.id).returns(eur)
-      (currencyDatabaseStub.getCurrency _).when(gpb.id).returns(gpb)
-      (currencyDatabaseStub.getCurrency _).when(aud.id).returns(aud)
+      currencyDatabaseStub.getCurrency.when(eur.id).returns(eur)
+      currencyDatabaseStub.getCurrency.when(gpb.id).returns(gpb)
+      currencyDatabaseStub.getCurrency.when(aud.id).returns(aud)
       
       val listing = new ExchangeRateListing(currencyDatabaseStub)
       
@@ -95,7 +95,7 @@ class BasicCoffeeMachineTest extends Specification {
   "CoffeeMachine" should {
     "not turn on the heater when the water container is empty" in new MockContext {
         val waterContainerMock = mock[WaterContainer]
-        (waterContainerMock.isEmpty _).expects().returning(true)
+        waterContainerMock.isEmpty.expects().returning(true)
         // ...
     }
 }

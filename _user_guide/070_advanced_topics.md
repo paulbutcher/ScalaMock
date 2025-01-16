@@ -6,9 +6,9 @@ permalink: /user-guide/advanced_topics/
 
 # Advanced topics
 
-## ScalaMock 7
-If you are want plain old scalamock examples, please refer to [ScalaMock](./070_advanced_topics.md#scalamock) section.
+If you are looking for plain old scalamock examples, please refer to [ScalaMock](./070_advanced_topics.md#scalamock) section.
 
+## ScalaMock 7
 
 ### Mocking 0-parameter method
 
@@ -85,7 +85,7 @@ val fooMock = mock[Foo]
 
 inline def curried = fooMock.curried(_: Int)(_: Double)
 
-curried.returns(_ => ")
+curried.returns(_ => "")
 
 ```
 
@@ -123,11 +123,13 @@ you can set an expectation with:
 ```scala
 fooMock.takesRepeatedParameter.expects(42, Seq("red", "green", "blue")).returns(())
 
-(fooMock.takesRepeatedParamCurried((_: Seq[Int])*)((_: Seq[String])*)).returns((seq1, seq2) => ())
+(fooMock.takesRepeatedParamCurried((_: Seq[Int])*)((_: Seq[String])*))
+  .returns((seq1, seq2) => ())
 
 // this also can be inlined and used later on
 
-inline def multipleRepeatedCurried = fooMock.takesRepeatedParamCurried((_: Seq[Int])*)((_: Seq[String])*)
+inline def multipleRepeatedCurried = fooMock
+  .takesRepeatedParamCurried((_: Seq[Int])*)((_: Seq[String])*)
 
 multipleRepeatedCurried.returns((seq1, seq2) => ())
 
@@ -399,7 +401,7 @@ It is possible to store either a single value in a `CaptureOne`, or a `Seq` or v
     val m = mock[TestTrait]
     val c1 = CaptureOne[Int]()
 
-    m.oneParam.expects(capture(c1)).once()
+    m.oneParam.expects(capture(c1)).returns(()).once()
     m.oneParam(42)
     c1.value should be (42)
   }
@@ -408,7 +410,7 @@ It is possible to store either a single value in a `CaptureOne`, or a `Seq` or v
     val m = mock[TestTrait]
     val c = CaptureAll[Int]()
 
-    m.oneParam.expects(capture(c)).repeat(3)
+    m.oneParam.expects(capture(c)).returns(()).repeat(3)
     m.oneParam(99)
     m.oneParam(17)
     m.oneParam(583)
@@ -448,9 +450,9 @@ object NoScalaTestExample extends Mock:
     // and am mocking a cat
     cat = mc.mock[Cat]
     // and the cat meows
-    cat.meow _ expects() once()
+    cat.meow.expects().returns(()).once()
     // and the cat is always hungry
-    cat.isHungry _ expects() returning true anyNumberOfTimes()
+    cat.isHungry.expects().returning(true).anyNumberOfTimes()
 
     // then the cat needs feeding
     assert(cat.isHungry)
