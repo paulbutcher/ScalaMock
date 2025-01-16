@@ -1,228 +1,60 @@
-# ScalaMock 
+![GitHub Release](https://img.shields.io/github/v/release/scalamock/scalamock?color=blue])
 
-Native Scala mocking.
+# What is ScalaMock? 
 
-Official website: [scalamock.org](https://scalamock.org/)
+ScalaMock is native Scala mocking framework.
 
+---
+Mocking is a software testing technique that involves creating simulated components,
+known as mocks or stubs, to mimic the behavior of real components in a system.
+The purpose of such testing is to isolate and evaluate specific parts of a software application 
+by replacing real dependencies with mocks or stubs.
 
-## Scala 3 alternative API (since 7.0.1)
-Alternative API offers you:
+---
 
-1. No thrown exceptions by default
-2. No argument matchers, you can get arguments instead and match them yourself
-3. Support for functional effects like `ZIO or cats-effect IO`
+Full documentation is on official website: [scalamock.org](https://scalamock.org/)
 
-If it is not what you need consider looking into `Standard API examples` section.
+## ScalaMock 7 
 
-Scalamock internals rely on Scala 3 experimental API, so prerequisites are:
+### Prerequisites
+ScalaMock 7 works only with scala 3.4+
+More details about it here https://github.com/ScalaMock/ScalaMock/issues/567, but shortly:
+1. scalamock 7 uses `TupledFunction` and it currently can't be used without `-experimental` compiler flag, which **won't be** backported to LTS 3.3
+2. scalamock 6 takes anvantage of scala compiler bug allowing to omit annotating everything as `@experimental`
+
 ```scala
 scalaVersion := "3.4.3" // or higher
 Test / scalacOptions += "-experimental"
 ```
-### Why 3.4.3 and not LTS?
-More details here https://github.com/ScalaMock/ScalaMock/issues/567, but shortly:
-1. scalamock 7 uses `TupledFunction` and it currently can't be used without `-experimental` compiler flag, which **won't be** backported to LTS 3.3 
-2. scalamock 6 takes anvantage of scala compiler bug allowing to omit annotating everything as `@experimental`   
 
+### Alternative experimental API
+Offers you:
+
+1. Concise and powerful syntax with no complexity overhead
+2. Data based approach. You can get arguments or number of times method was called
+3. No exceptions thrown
+4. Support for functional effects like `ZIO` or `cats-effect IO`
 
 ### Dependencies
 
 ```scala
 libraryDependencies ++= Seq(
   // core module
-  "org.scalamock" %% "scalamock" % "7.0.1",
+  "org.scalamock" %% "scalamock" % "<latest version in badge>",
   // zio integration
-  "org.scalamock" %% "scalamock-zio" % "7.0.1",
+  "org.scalamock" %% "scalamock-zio" % "latest version in badge",
   // cats-effect integration
-  "org.scalamock" %% "scalamock-cats-effect" % "7.0.1"
+  "org.scalamock" %% "scalamock-cats-effect" % "latest version in badge"
 )
 ```
 
-### Basic API
+### QuickStart
 
-```scala 3
-import org.scalatest.funspec.AnyFunSpec
-import org.scalatest.matchers.should.Matchers
-import org.scalamock.stubs.{Stub, Stubs}
+Quickstart is [here](https://scalamock.org/quick-start/).
 
-trait Foo:
-  def foo: Int
-  def foo1(x: Int): Int
-  def foo2(x: Int, y: Int): Int
+ZIO/CE integration is [here](https://scalamock.org/user-guide/integration/).
 
-class MySpec extends AnyFunSpec, Matchers, Stubs:
-
-  test("no args"):
-    val foo: Stub[Foo] = stub[Foo]
-    
-    foo.foo.returns(10)
-    foo.foo shouldBe 10 // method returns set result
-    foo.foo.times shouldBe 1 // number of times method called
-
-  test("one arg"):
-    val foo: Stub[Foo] = stub[Foo]
-    
-    foo.foo1.returns:
-      case 1 => 2
-      case _ => 0
-
-    foo.foo1(1) shouldBe 2
-    foo.foo1(2) shouldBe 0
-    foo.foo1.times shouldBe 2
-    foo.foo1.calls shouldBe List(1, 2) // get arguments
-
-
-  test("two args"):
-    val foo: Stub[Foo] = stub[Foo]
-    
-    foo.foo2.returns:
-      case (0, 0) => 1
-      case _ => 0
-    
-    foo.foo2(0, 0) shouldBe 1
-    foo.foo2(2, 3) shouldBe 0
-    foo.foo2.times shouldBe 2
-    foo.foo2.calls shouldBe List((0, 0), (2, 3)) // get arguments
-    foo.foo2.times((0, 0)) shouldBe 1 // get number of times arguments caught
-      
-```
-
-### ZIO API
-Dependencies:
-```scala
-libraryDependencies ++= {
-  val zioVersion = "2.1.14"
-  Seq(
-    "dev.zio" %%% "zio" % zioVersion,
-    "dev.zio" %%% "zio-test" % zioVersion % Test,
-    "dev.zio" %%% "zio-test-sbt" % zioVersion % Test
-  )
-}
-```
-
-Examples:
-```scala 3
-import zio.*
-import zio.test.*
-import org.scalamock.stubs.{Stub, ZIOStubs}
-
-trait Foo:
-  def foo: UIO[Int]
-  def foo1(x: Int): UIO[Int]
-  def foo2(x: Int, y: Int): IO[String, Int]
-
-class MySpec extends ZIOSpecDefault, ZIOStubs:
-
-  override def spec: Spec[TestEnvironment & Scope, Any] =
-    suite("check expectations with zio")(
-      test("no args"):
-        val foo: Stub[Foo] = stub[Foo]
-        for
-          _ <- foo.foo.returnsZIO(ZIO.succeed(10))
-          _ <- foo.foo.repeatN(10)
-        yield assertTrue(foo.foo.times == 11),
-      test("one arg"):
-        val foo: Stub[Foo] = stub[Foo]
-        for
-          _ <- foo.foo1.returnsZIO:
-            case 1 => ZIO.succeed(1)
-            case _ => ZIO.succeed(0)
-          one <- foo.foo1(1)
-          two <- foo.foo1(2)
-          result = assertTrue(
-            foo.foo1.times == 2, 
-            one == 1,
-            two == 0,
-            foo.foo1.calls == List(1, 2)
-          )
-        yield result,
-      test("two args"):
-        val foo: Stub[Foo] = stub[Foo]
-        for
-          _ <- foo.foo2.returnsZIO:
-            case (0, 0) => ZIO.succeed(1)
-            case _ => ZIO.succeed(0)
-          one <- foo.foo2(0, 0)
-          two <- foo.foo2(2, 2)
-          result = assertTrue(
-            foo.foo2.times == 2,
-            foo.foo2.calls == List((0, 0), (2, 2)),
-            foo.foo2.times((0, 0)) == 1,
-            one == 1, 
-            two == 0
-          )
-        yield result
-    )
-```
-
-
-### Cats Effect API
-Dependencies:
-```scala
-libraryDependencies ++= Seq(
-  "org.typelevel" %% "cats-effect" % "3.5.7",
-  "org.typelevel" %% "munit-cats-effect" % "2.0.0" % Test
-)
-```
-
-Examples:
-```scala 3
-import cats.effect.IO
-import munit.CatsEffectSuite
-import org.scalamock.stubs.{Stub, CatsEffectStubs}
-
-trait Foo:
-  def foo: IO[Int]
-  def foo1(x: Int): IO[Int]
-  def foo2(x: Int, y: Int): IO[Int]
-
-class MySpec extends CatsEffectSuite, CatsEffectStubs:
-  test("no args"):
-    val foo: Stub[Foo] = stub[Foo]
-    val times = 
-      for
-        _ <- foo.foo.returnsIO(IO(10))
-        _ <- foo.foo
-        _ <- foo.foo
-        _ <- foo.foo
-        times <- foo.foo.timesIO
-      yield times
-      
-    assertIO(times == 3)
-  
-  test("one arg"):
-    val foo: Stub[Foo] = stub[Foo]
-    val result =
-      for
-        _ <- foo.foo1.returnsIO:
-          case 1 => IO(1)
-          case _ => IO(0)
-        one <- foo.foo1(1)
-        two <- foo.foo1(2)
-        times <- foo.foo1.timesIO
-        calls <- foo.foo1.callsIO
-      yield (times, one, two, calls)
-    
-    assertIO(result, (2, 1, 0, List(1, 2))
-
-  test("two args"):
-    val foo: Stub[Foo] = stub[Foo]
-    val result = for
-      _ <- foo.foo2.returnsIO:
-        case (0, 0) => IO(1)
-        case _ => IO(0)
-      one <- foo.foo2(0, 0)
-      two <- foo.foo2(2, 2)
-      times <- foo.foo2.timesIO
-      calls <- foo.foo2.callsIO
-      twoZerosTimes <- foo.foo2.timesIO((0, 0))
-    yield (times, calls, twoZerosTimes, one, two)
-
-    assertIO(result, (2, List((0, 0), (2, 2)), 1, 1, 0))
-
-```
-
-## Standard API examples
+## ScalaMock
 
 ### Expectations-First Style
 
@@ -336,12 +168,6 @@ class JavaClassExtended extends JavaClass
 
 val mm = mock[JavaClassExtended] // should be used instead
 ```
-
-3.
-* Scala makes use of Symbol.newClass which is marked as experimental; to avoid having to add the `@experimental`
-  attribute everywhere in tests, you can add the `Test / scalacOptions += "-experimental"` to your build. Note
-  that this option is only available in scala 3.4.0+
-
 
 ## Documentation
 

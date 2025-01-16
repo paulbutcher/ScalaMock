@@ -2,7 +2,7 @@ package tests
 
 import cats.effect.IO
 import munit.CatsEffectSuite
-import org.scalamock.stubs.CatsEffectStubs
+import org.scalamock.stubs.{CallLog, CatsEffectStubs}
 
 class IOSpec extends CatsEffectSuite, CatsEffectStubs:
 

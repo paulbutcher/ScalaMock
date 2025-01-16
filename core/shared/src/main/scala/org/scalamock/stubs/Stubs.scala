@@ -177,20 +177,6 @@ trait Stubs:
       val actual = log.internal.calledMethods
       actual.indexOf(fString, actual.indexOf(gString)) != -1
 
-  class CallLog:
-    override def toString: String = internal.calledMethods.mkString("\n")
-
-    object internal:
-      private val methodsRef: AtomicReference[List[String]] = AtomicReference(Nil)
-      private val uniqueIdx: AtomicReference[Int] = AtomicReference(0)
-      def nextIdx: Int = uniqueIdx.updateAndGet(_ + 1)
-      def write(methodName: String): Unit = { methodsRef.getAndUpdate(methodName :: _); () }
-      def clear(): Unit =
-        methodsRef.set(Nil)
-        uniqueIdx.set(0)
-      def calledMethods: List[String] = internal.methodsRef.get().reverse
-
-
 
 private
 inline def stubImpl[T](using collector: internal.CreatedStubs): Stub[T] =
