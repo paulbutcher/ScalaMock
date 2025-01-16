@@ -21,7 +21,7 @@
 package org.scalamock.stubs.internal
 
 import org.scalamock.clazz.Utils
-import org.scalamock.stubs.{Stub, StubIO, Stubs}
+import org.scalamock.stubs.{CallLog, Stub, StubIO, Stubs}
 
 import java.util.concurrent.atomic.AtomicReference
 import scala.annotation.tailrec
@@ -40,7 +40,7 @@ private[stubs] class StubMaker(
     val tpe = TypeRepr.of[T]
     val parents = parentsOf[T]
     val methods = MockableDefinitions(tpe)
-    val log = Expr.summon[Stubs#CallLog]
+    val log = Expr.summon[CallLog]
 
     val classSymbol = Symbol.newClass(
       parent = Symbol.spliceOwner,

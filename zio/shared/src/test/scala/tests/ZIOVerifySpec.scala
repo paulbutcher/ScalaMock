@@ -1,6 +1,6 @@
 package tests
 
-import org.scalamock.stubs.{Stub, ZIOStubs}
+import org.scalamock.stubs.{CallLog, Stub, ZIOStubs}
 import tests.ZIOSpec.{suite, test}
 import zio.{IO, Scope, UIO, ZIO}
 import zio.test.{Spec, TestEnvironment, ZIOSpecDefault, assertTrue}

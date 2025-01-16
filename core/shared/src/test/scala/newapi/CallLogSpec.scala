@@ -1,6 +1,6 @@
 package newapi
 
-import org.scalamock.stubs.Stubs
+import org.scalamock.stubs.{CallLog, Stubs}
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers
 
