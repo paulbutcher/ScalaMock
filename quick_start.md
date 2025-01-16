@@ -166,8 +166,8 @@ Fortunately, mocking is useful in this kind of situation because instead of test
 ```scala
 class FakePlayerDatabase extends PlayerDatabase:
   override def getPlayerById(playerId: PlayerId) : Player =
-    if (playerId == 222) return Player(222, "boris", Countries.Russia)
-    else if (playerId == 333) return Player(333, "hans", Countries.Germany)
+    if playerId == 222 then Player(222, "boris", Countries.Russia)
+    else if playerId == 333 then Player(333, "hans", Countries.Germany)
     else ???
   
 ```
@@ -445,8 +445,8 @@ Fortunately, mocking is useful in this kind of situation because instead of test
 ```scala
 class FakePlayerDatabase extends PlayerDatabase {
     override def getPlayerById(playerId: PlayerId) : Player = {
-        if (playerId == 222) return Player(222, "boris", Countries.Russia)
-        else if (playerId == 333) return Player(333, "hans", Countries.Germany)
+        if (playerId == 222) Player(222, "boris", Countries.Russia)
+        else if (playerId == 333) Player(333, "hans", Countries.Germany)
         else ???
     }
 }
@@ -510,7 +510,7 @@ class MatchResultObserverTest extends FlatSpec with MockFactory {
     val userDetailsServiceStub = stub[PlayerDatabase]
 
     // set expectations
-    countryLeaderBoardMock.addVictoryForCountry..expects(Countries.Russia).returns(())
+    countryLeaderBoardMock.addVictoryForCountry.expects(Countries.Russia).returns(())
 
     // configure stubs
     userDetailsServiceStub.getPlayerById.when(loser.id).returns(loser)

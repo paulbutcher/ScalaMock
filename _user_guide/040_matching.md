@@ -89,7 +89,7 @@ leaderBoardMock.addPointsForPlayer.expects(where {
 ### Example 2
 ```scala
 mockedFunction = mockFunction[Double, Double, Unit] // (Double, Double) => Unit
-mockedFunction expects (where { _ < _ }) // expects that arg1 < arg2 
+mockedFunction.expects.(where { _ < _ }).returns(()) // expects that arg1 < arg2 
 ```
 
 

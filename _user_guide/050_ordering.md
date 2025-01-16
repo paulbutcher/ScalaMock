@@ -38,8 +38,8 @@ By default, expectations can be satisfied in any order. For example:
 
 ```scala
 val mockedFunction = mockFunction[Int, Unit]
-mockedFunction expects (1) returns ()
-mockedFunction expects (2)
+mockedFunction.expects(1).returns(())
+mockedFunction.expects(2).returns(())
 ```
 
 can be satisfied by:
@@ -55,8 +55,8 @@ A specific sequence can be enforced with `inSequence`:
 
 ```scala
 inSequence {
-  mockedFunction expects (1)
-  mockedFunction expects (2)
+  mockedFunction.expects(1).returns(())
+  mockedFunction.expects(2).returns(())
 }
 mockedFunction(2) // throws ExpectationException
 mockedFunction(1)
@@ -66,12 +66,12 @@ Multiple sequences can be specified. As long as the calls within each sequence h
 
 ```scala
 inSequence {
-  mockedFunction expects (1)
-  mockedFunction expects (2)
+  mockedFunction.expects(1).returns(())
+  mockedFunction.expects(2).returns(())
 }
 inSequence {
-  mockedFunction expects (3)
-  mockedFunction expects (4)
+  mockedFunction.expects(3).returns(())
+  mockedFunction.expects(4).returns(())
 }
 ```
 
@@ -89,18 +89,18 @@ mockedFunction(4)
 To specify that there is no constraint on ordering, use `inAnyOrder` (just remember that there is an implicit `inAnyOrder` at the top level). Calls to `inSequence` and `inAnyOrder` can be arbitrarily nested. For example:
 
 ```scala
-mockedObject.a.expects()
+mockedObject.a.expects().returns(())
 inSequence {
-  mockedObject.b.expects()
+  mockedObject.b.expects().returns(())
   inAnyOrder {
-    mockedObject.c.expects()
+    mockedObject.c.expects().returns(())
     inSequence {
-      mockedObject.d.expects()
-      mockedObject.e.expects()
+      mockedObject.d.expects().returns(())
+      mockedObject.e.expects().returns(())
     }
-    mockedObject.f.expects()
+    mockedObject.f.expects().returns(())
   }
-  mockedObject.g.expects()
+  mockedObject.g.expects().returns(())
 }
 ```
 
