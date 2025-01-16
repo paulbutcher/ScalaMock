@@ -6,13 +6,39 @@ permalink: /user-guide/ordering/
 
 # Ordering
 
-## Default behaviour
+
+## ScalaMock 7
+
+Basic support of call ordering is added via CallLog. It should be declared before creating a stub
+
+```scala
+given CallLog = CallLog()
+
+val foo = stub[Foo]
+val bar = stub[Bar]
+
+// setup stubs
+foo.foo.returns(_ => 1)
+bar.bar.returns(_ => 2)
+
+// call methods (this is usually called internally in some other class)
+foo.foo(1)
+bar.bar(1)
+
+foo.foo.isBefore(bar.bar) // true
+bar.bar.isAfter(foo.foo) // true
+
+```
+
+## ScalaMock
+
+### Default behaviour
 
 By default, expectations can be satisfied in any order. For example:
 
 ```scala
 val mockedFunction = mockFunction[Int, Unit]
-mockedFunction expects (1)
+mockedFunction expects (1) returns ()
 mockedFunction expects (2)
 ```
 
@@ -23,7 +49,7 @@ mockedFunction(2)
 mockedFunction(1)
 ```
 
-## Ordered expectations
+### Ordered expectations
 
 A specific sequence can be enforced with `inSequence`:
 
@@ -58,23 +84,23 @@ mockedFunction(2)
 mockedFunction(4)
 ```
 
-## In any order expectations
+### In any order expectations
 
 To specify that there is no constraint on ordering, use `inAnyOrder` (just remember that there is an implicit `inAnyOrder` at the top level). Calls to `inSequence` and `inAnyOrder` can be arbitrarily nested. For example:
 
 ```scala
-(mockedObject.a _).expects()
+mockedObject.a.expects()
 inSequence {
-  (mockedObject.b _).expects()
+  mockedObject.b.expects()
   inAnyOrder {
-    (mockedObject.c _).expects()
+    mockedObject.c.expects()
     inSequence {
-      (mockedObject.d _).expects()
-      (mockedObject.e _).expects()
+      mockedObject.d.expects()
+      mockedObject.e.expects()
     }
-    (mockedObject.f _).expects()
+    mockedObject.f.expects()
   }
-  (mockedObject.g _).expects()
+  mockedObject.g.expects()
 }
 ```
 

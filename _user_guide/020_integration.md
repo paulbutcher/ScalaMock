@@ -6,9 +6,39 @@ permalink: /user-guide/integration/
 
 # Integration with testing frameworks
 
-ScalaMock can be used in tests written using the [ScalaTest](http://scalatest.org) or [Specs2](http://etorreborre.github.io/specs2/) frameworks.
+Plain old scalamock can be used in tests written using [ScalaTest](http://scalatest.org) or [Specs2](http://etorreborre.github.io/specs2/) frameworks.
 
-## ScalaTest 
+ScalaMock 7 experimental API can be used with any testing framework. 
+[MUnit](https://scalameta.org/munit/), [zio-test](https://zio.dev/reference/test/), [munit-cats-effect](https://github.com/typelevel/munit-cats-effect) or any other you like.
+
+## ScalaMock 7
+
+### ScalaTest, Specs2, MUnit
+Just mixin `org.scalamock.stubs.Stubs` and you are all set.
+
+### zio-test
+
+Add dependency:
+```scala
+libraryDependencies += "org.scalamock" %% "scalamock-zio" % "7.1.0" % Test
+```
+
+Mixin `org.scalamock.stubs.ZIOStubs` where additional `returnsZIO` method is available and you are all set.
+
+### munit cats-effect
+
+Add dependency:
+```scala
+libraryDependencies += "org.scalamock" %% "scalamock-cats-effect" % "7.1.0" % Test
+```
+
+Mixin `org.scalamock.stubs.CatsEffectStubs` where additional `returnsIO` method is available and you are all set.
+
+
+
+## ScalaMock
+
+### ScalaTest 
 
 To provide mocking support in ScalaTest suites just mix your suite with `org.scalamock.scalatest.MockFactory`:
 
@@ -51,7 +81,7 @@ class ExchangeRateListingTest extends AsyncFlatSpec with AsyncMockFactory {
 }
 ```
 
-## Specs2
+### Specs2
 
 To use ScalaMock in Specs2 tests you should run each test case in a separate fixture context that implements `org.scalamock.specs2.MockContext`:
 

@@ -5,6 +5,7 @@ permalink: /user-guide/matching/
 ---
 
 # Argument matching
+> Note that this chapter is not related to scalamock 7 experimental API. There are no argument matchers.
 
 ScalaMock supports three types of generalised matching: 
 
@@ -16,7 +17,7 @@ Wildcard values are specified with an `*` (asterisk). For example:
 
 ```scala
 val mockedFunction = mockFunction[String, Object, Unit] // (String, Object) => Unit
-mockedFunction expects ("foo", *)
+mockedFunction.expects("foo", *).returns(())
 ```
 will match any of the following:
 
@@ -31,7 +32,7 @@ mockedFunction("foo", null)
 Epsilon matching is useful when dealing with floating point values. An epsilon match is specified with the `~` (tilde) operator:
 
 ```scala
-mockedFunction expects (~42.0)
+mockedFunction.expects(~42.0).returns(())
 ```
 
 will match:
@@ -80,9 +81,9 @@ Now imagine that we want to set an expectation that `addPointsForPlayer` is call
 To achieve that in ScalaMock we can use `where` as follows:
 
 ```scala
-(leaderBoardMock.addPointsForPlayer _) expects (where {
+leaderBoardMock.addPointsForPlayer.expects(where {
   (player: Player, points: Int) => player.id == 789 && points == 100
-}) 
+}).returns(())
 ```
 
 ### Example 2

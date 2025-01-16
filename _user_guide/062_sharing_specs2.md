@@ -5,6 +5,7 @@ permalink: /user-guide/sharing-specs2/
 ---
 
 # Sharing mocks and expectations in Specs2
+> Note that this is not related to ScalaMock 7 experimental API
 
 To use ScalaMock in Specs2 tests you can either:
 
@@ -27,7 +28,7 @@ class BasicCoffeeMachineTest extends Specification {
    "CoffeeMachine" should {
         "not turn on the heater when the water container is empty" in new MockContext {
             val waterContainerMock = mock[WaterContainer]
-            (waterContainerMock.isEmpty _).expects().returning(true)
+            waterContainerMock.isEmpty.expects().returning(true)
             // ...
         }
 
@@ -59,7 +60,7 @@ class CoffeeMachineTest extends Specification {
   // you can extend and combine fixture-contexts
   trait OverfullWaterContainerTest extends Test {
     // you can set expectations and use mocks in fixture-context
-    (waterContainerMock.isOverfull _).expects().returning(true)
+    waterContainerMock.isOverfull.expects().returning(true)
 
     // and define helper functions
     def complexLogic() {
@@ -73,7 +74,7 @@ class CoffeeMachineTest extends Specification {
          val heaterMock = mock[Heater]
          val waterContainerMock = mock[WaterContainer]
          val coffeeMachine = new CoffeeMachine(waterContainerMock, heaterMock)
-         (waterContainerMock.isEmpty _).expects().returning(true)
+         waterContainerMock.isEmpty.expects().returning(true)
          // ...
      }
 
@@ -100,7 +101,7 @@ class IsolatedCoffeeMachineTest extends Specification with IsolatedMockFactory {
   val coffeeMachine = new CoffeeMachine(waterContainerMock, heaterMock)
 
   // you can set common expectations in suite scope
-  (heaterMock.isReady _).expects().returning(true)
+  heaterMock.isReady.expects().returning(true)
 
   // test setup
   coffeeMachine.powerOn()

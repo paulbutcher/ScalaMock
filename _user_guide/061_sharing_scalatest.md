@@ -5,6 +5,7 @@ permalink: /user-guide/sharing-scalatest/
 ---
 
 # Sharing mocks and expectations in ScalaTest
+> Note that this is not related to ScalaMock 7 experimental API
 
 Sometimes multiple test cases need to work with the same mocks (and more generally, the same fixtures: files, sockets, database connections, etc.). There are many techniques to avoid duplicating fixture code across test cases in ScalaTest, but ScalaMock recommends and officially supports these two:
 
@@ -34,14 +35,14 @@ class CoffeeMachineTest extends FlatSpec with ShouldMatchers with OneInstancePer
    val coffeeMachine = new CoffeeMachine(waterContainerMock, heaterMock)
    
    // you can set common expectations in the suite scope
-   (heaterMock.isReady _).expects().returning(true)
+   heaterMock.isReady.expects().returning(true)
    
    // and perform common test setup
    coffeeMachine.powerOn()
    
    "CoffeeMachine" should "not turn on the heater when the water container is empty" in {
        coffeeMachine.isOn shouldBe true
-       (waterContainerMock.isEmpty _).expects().returning(true)
+       waterContainerMock.isEmpty.expects().returning(true)
         
        // ...
        coffeeMachine.powerOff()
@@ -75,14 +76,14 @@ class CoffeeMachineTest extends FlatSpec with ShouldMatchers with MockFactory {
    
    "CoffeeMachine" should "not turn on the heater when the water container is empty" in new Test {
        coffeeMachine.isOn shouldBe true
-       (waterContainerMock.isEmpty _).expects().returning(true)
+       waterContainerMock.isEmpty.expects().returning(true)
        // ...
    }
    
    // you can extend and combine fixture-contexts
    trait OverfullWaterContainerTest extends Test {
        // you can set expectations and use mocks in the fixture-context
-       (waterContainerMock.isOverfull _).expects().returning(true)
+       waterContainerMock.isOverfull.expects().returning(true)
    
        // and define helper functions
        def sharedComplexLogic() {
