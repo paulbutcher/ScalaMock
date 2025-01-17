@@ -65,9 +65,9 @@ To be able to mock things, you need to mix-in the `org.scalamock.stubs.Stubs` in
 For example, we can check that the name is actually used in the call to our formatter, and that it is called once (and only once):
 
 ```scala
-import org.scalamock.scalatest.MockFactory
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
+import org.scalamock.stubs.Stubs
 
 class ReallySimpleExampleTest extends AnyFunSuite, Matchers, Stubs:
   test("sayHello"):
@@ -75,7 +75,7 @@ class ReallySimpleExampleTest extends AnyFunSuite, Matchers, Stubs:
 
     formatterStub.format.returns(_ => "Ah, Mr Bond. I've been expecting you")
 
-    Greetings.sayHello("Mr Bond", mockFormatter) shouldBe "Ah, Mr Bond. I've been expecting you"
+    Greetings.sayHello("Mr Bond", formatterStub) shouldBe "Ah, Mr Bond. I've been expecting you"
 
     formatterStub.format.times shouldBe 1 // method called exactly once
     formatterStub.format.calls shouldBe List("Mr Bond") // check that name is Mr Bond, this list has one item per each method invokation
@@ -91,7 +91,7 @@ Also you can set up result depending on method arguments.
 
     formatterStub.format.returns(name => s"Ah, $name. I've been expecting you")
 
-    Greetings.sayHello("Mr Grinch", mockFormatter) shouldBe "Ah, Mr Grinch. I've been expecting you"
+    Greetings.sayHello("Mr Grinch", formatterStub) shouldBe "Ah, Mr Grinch. I've been expecting you"
 
     formatterStub.format.times shouldBe 1 // method called exactly once
     formatterStub.format.calls shouldBe List("Mr Grinch") // name is Mr Grinch
@@ -202,7 +202,7 @@ To provide mocking support in ScalaTest suites just mix your suite with `org.sca
 import org.scalamock.stubs.Stubs
 import org.scalatest.FlatSpec
 
-class MatchResultObserverTest extends FlatSpec with MockFactory {
+class MatchResultObserverTest extends FlatSpec, Stubs:
 
   val winner = Player(id = 222, nickname = "boris", country = Countries.Russia)
   val loser = Player(id = 333, nickname = "hans", country = Countries.Germany)
@@ -235,7 +235,6 @@ class MatchResultObserverTest extends FlatSpec with MockFactory {
     assert(userDetailsServiceStub.getPlayerById.isBefore(countryLeaderBoardStub.addVictoryForCountry))
 
   }
-}
 ```
 
 ## ScalaMock
