@@ -54,6 +54,10 @@ Quickstart is [here](https://scalamock.org/quick-start/).
 
 ZIO/CE integration is [here](https://scalamock.org/user-guide/integration/).
 
+Examples:
+1. [ScalaTest + Scala Future](./core/jvm/src/test/scala/newapi/UserAuthServiceSpec.scala)
+2. [zio-test](./zio/shared/src/test/scala/tests/ZIOUserAuthServiceSpec.scala)
+3. [munit-cats-effect](./cats-effect/shared/src/test/scala/tests/CEUserAuthServiceSpec.scala)
 ## ScalaMock
 
 ### Expectations-First Style
